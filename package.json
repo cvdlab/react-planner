@@ -1,0 +1,24 @@
+{
+  "name": "metior",
+  "version": "0.0.1",
+  "description": "An online plan designer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cvdlab/metior.git"
+  },
+  "keywords": [
+    "metior",
+    "plan",
+    "svg",
+    "3d"
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/cvdlab/metior/issues"
+  },
+  "homepage": "https://github.com/cvdlab/metior#readme"
+}
