@@ -7,12 +7,13 @@ import ReactDimensions from 'react-dimensions';
 
 import * as projectActions from '../actions/project';
 import * as viewer2dActions from '../actions/viewer2d';
+import Layout from './layout.jsx';
 
 
 class App extends React.Component {
   render() {
     let {containerWidth, containerHeight, ...props} = this.props;
-    return <div width={containerWidth} height={containerHeight} {...props}></div>;
+    return <Layout width={containerWidth} height={containerHeight} {...props} />;
   }
 }
 
