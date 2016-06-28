@@ -5,9 +5,9 @@ import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 import ReactDimensions from 'react-dimensions';
 
-import * as projectActions from '../actions/project';
-import * as viewer2dActions from '../actions/viewer2d';
-import * as editingActions from '../actions/editing';
+import * as projectActions from '../actions/projectActions';
+import * as viewer2dActions from '../actions/viewer2dActions';
+import * as editingActions from '../actions/editingActions';
 import Layout from './layout.jsx';
 
 

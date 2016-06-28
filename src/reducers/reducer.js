@@ -1,8 +1,8 @@
 import {ViewerHelper} from 'react-svg-pan-zoom';
 import * as constants from '../constants';
 import {Map, fromJS} from 'immutable';
-import viewer2dReducer from './viewer2d';
-import editingReducer from './editing';
+import viewer2dReducer from './viewer2dReducer';
+import editingReducer from './editingReducer';
 
 export const initialState = new Map({
   mode: constants.MODE_IDLE,
