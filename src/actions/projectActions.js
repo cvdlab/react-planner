@@ -1,9 +1,10 @@
 import {browserUpload,browserDownload}  from '../utils/browser';
 import {NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, LOAD_PROJECT_FROM_FILE, SAVE_PROJECT_TO_FILE} from '../constants';
 
-export function loadProject() {
+export function loadProject(data) {
   return {
-    type: LOAD_PROJECT
+    type: LOAD_PROJECT,
+    data
   }
 }
 

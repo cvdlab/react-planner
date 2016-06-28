@@ -3,6 +3,7 @@ import * as constants from '../constants';
 import {Map, fromJS} from 'immutable';
 import viewer2dReducer from './viewer2dReducer';
 import editingReducer from './editingReducer';
+import projectReducer from './projectReducer';
 
 export const initialState = new Map({
   mode: constants.MODE_IDLE,
@@ -21,7 +22,7 @@ export default function appReducers(state, action) {
     case constants.SAVE_PROJECT:
     case constants.LOAD_PROJECT_FROM_FILE:
     case constants.SAVE_PROJECT_TO_FILE:
-      return state;
+      return projectReducer(state, action);
 
     case constants.SELECT_TOOL_PAN:
     case constants.SELECT_TOOL_ZOOM_IN:
