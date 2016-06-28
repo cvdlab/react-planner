@@ -1,4 +1,5 @@
 import React from 'react';
+import Toolbar from './toolbar/toolbar.jsx';
 
 export default function (props) {
 
@@ -10,7 +11,7 @@ export default function (props) {
 
   return (
     <div style={{display: "flex", flexFlow: "row nowrap", height}}>
-      <div class="toolbar" style={{width: toolbarWidth, height}} {...rest}></div>
+      <Toolbar style={{width: toolbarWidth, height}} {...rest} />
       <div class="viewer" style={{width: viewerWidth, height}}{...rest}></div>
       <div class="sidebar" style={{width: sidebarWidth, height}}{...rest}></div>
     </div>

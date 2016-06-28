@@ -40,3 +40,4 @@ console.group("Metior");
 console.info("Metior is ready");
 console.info("console.log(Metior)");
 console.log(Metior);
+console.groupEnd();

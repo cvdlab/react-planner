@@ -7,6 +7,7 @@ import ReactDimensions from 'react-dimensions';
 
 import * as projectActions from '../actions/project';
 import * as viewer2dActions from '../actions/viewer2d';
+import * as editingActions from '../actions/editing';
 import Layout from './layout.jsx';
 
 
@@ -24,7 +25,8 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return {
     projectActions: bindActionCreators(Object.assign({}, projectActions), dispatch),
-    viewer2dActions: bindActionCreators(Object.assign({}, viewer2dActions), dispatch)
+    viewer2dActions: bindActionCreators(Object.assign({}, viewer2dActions), dispatch),
+    editingActions: bindActionCreators(Object.assign({}, editingActions), dispatch)
   }
 }
 
