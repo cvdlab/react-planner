@@ -27,6 +27,7 @@ export default function appReducers(state, action) {
     case constants.SAVE_PROJECT_TO_FILE:
       return projectReducer(state, action);
 
+    case constants.UPDATE_2D_CAMERA:
     case constants.SELECT_TOOL_PAN:
     case constants.SELECT_TOOL_ZOOM_IN:
     case constants.SELECT_TOOL_ZOOM_OUT:

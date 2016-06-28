@@ -1,11 +1,11 @@
 import {Record, List, Map} from 'immutable';
 
 export const Scene = Record({
-  pixelPerUnit: -1,
-  unit: "",
+  pixelPerUnit: 100,
+  unit: "m",
   layers: new Map(),
-  width: -1,
-  height: -1
+  width: 2000,
+  height: 2000
 });
 
 export const Layer = Record({
