@@ -1,0 +1,14 @@
+/* ACTIONS */
+export const NEW_PROJECT = 'NEW_PROJECT';
+export const LOAD_PROJECT = 'LOAD_PROJECT';
+export const SAVE_PROJECT = 'SAVE_PROJECT';
+export const LOAD_PROJECT_FROM_FILE = 'LOAD_PROJECT_FROM_FILE';
+export const SAVE_PROJECT_FROM_FILE = 'SAVE_PROJECT_FROM_FILE';
+export const UPDATE_2D_CAMERA = 'UPDATE_2D_CAMERA';
+
+
+/* MODES */
+export const MODE_IDLE = 'IDLE';
+export const MODE_2D_ZOOM_IN = 'MODE_2D_ZOOM_IN';
+export const MODE_2D_ZOOM_OUT = 'MODE_2D_ZOOM_OUT';
+export const MODE_2D_PAN = 'MODE_2D_PAN';

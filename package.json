@@ -2,8 +2,12 @@
   "name": "metior",
   "version": "0.0.1",
   "description": "An online plan designer",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
+    "start": "npm run watch",
+    "serve": "webpack-dev-server",
+    "watch": "webpack-dev-server --inline",
+    "build": "webpack --production",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -20,5 +24,25 @@
   "bugs": {
     "url": "https://github.com/cvdlab/metior/issues"
   },
-  "homepage": "https://github.com/cvdlab/metior#readme"
+  "homepage": "https://github.com/cvdlab/metior#readme",
+  "dependencies": {
+    "babel-core": "6.9.1",
+    "babel-loader": "6.2.4",
+    "babel-plugin-transform-object-rest-spread": "6.8.0",
+    "babel-preset-es2015": "6.9.0",
+    "babel-preset-react": "6.11.1",
+    "immutable": "3.8.1",
+    "open-browser-webpack-plugin": "0.0.2",
+    "react": "15.1.0",
+    "react-addons-perf": "^15.1.0",
+    "react-dom": "15.1.0",
+    "react-icons": "2.1.0",
+    "react-redux": "4.4.5",
+    "react-svg-pan-zoom": "1.3.1",
+    "redux": "3.5.2",
+    "redux-thunk": "2.1.0",
+    "three": "0.78.0",
+    "webpack": "1.13.1",
+    "webpack-dev-server": "1.14.1"
+  }
 }
