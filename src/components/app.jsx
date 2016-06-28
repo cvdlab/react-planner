@@ -3,20 +3,21 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
+import ReactDimensions from 'react-dimensions';
 
 import * as projectActions from '../actions/project';
 import * as viewer2dActions from '../actions/viewer2d';
 
+
 class App extends React.Component {
   render() {
-    return <div></div>
+    let {containerWidth, containerHeight, ...props} = this.props;
+    return <div width={containerWidth} height={containerHeight} {...props}></div>;
   }
 }
 
 function mapStateToProps(state) {
-  return {
-    state
-  };
+  return {state};
 }
 
 function mapDispatchToProps(dispatch) {
@@ -26,4 +27,7 @@ function mapDispatchToProps(dispatch) {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+
+App = connect(mapStateToProps, mapDispatchToProps)(App);
+App = ReactDimensions()(App);
+export default App;
