@@ -4,9 +4,12 @@ import {Map, fromJS} from 'immutable';
 import viewer2dReducer from './viewer2dReducer';
 import editingReducer from './editingReducer';
 import projectReducer from './projectReducer';
+import {Scene} from '../models';
 
 export const initialState = new Map({
   mode: constants.MODE_IDLE,
+
+  scene: new Scene(),
 
   viewer2d: new Map({
     state: fromJS(ViewerHelper.getDefaultValue())
