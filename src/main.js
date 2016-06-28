@@ -36,7 +36,7 @@ Metior.actions = {
   projectActions: require('./actions/projectActions'),
   viewer2d: require('./actions/viewer2dActions')
 };
-console.group("Metior");
+console.groupCollapsed("Metior");
 console.info("Metior is ready");
 console.info("console.log(Metior)");
 console.log(Metior);
