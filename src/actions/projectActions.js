@@ -38,8 +38,9 @@ export function saveProjectToFile() {
     dispatch({type: SAVE_PROJECT_TO_FILE});
 
     var state = getState();
+    let scene = state.get('scene').toJS();
 
-    browserDownload(state);
+    browserDownload(scene);
     dispatch(saveProject());
   };
 }
