@@ -1,6 +1,7 @@
 import React from 'react';
 import Toolbar from './toolbar/toolbar.jsx';
 import Viewer from './viewer.jsx';
+import Sidebar from './sidebar/sidebar.jsx';
 
 export default function ({width, height, ...rest}) {
 
@@ -12,7 +13,7 @@ export default function ({width, height, ...rest}) {
     <div style={{display: "flex", flexFlow: "row nowrap", height}}>
       <Toolbar style={{width: toolbarWidth, height}} {...rest} />
       <Viewer style={{width: viewerWidth, height}} width={viewerWidth} height={height} {...rest} />
-      <div class="sidebar" style={{width: sidebarWidth, height}}{...rest}></div>
+      <Sidebar style={{width: sidebarWidth, height}}{...rest} width={sidebarWidth} height={height}></Sidebar>
     </div>
   );
 }
