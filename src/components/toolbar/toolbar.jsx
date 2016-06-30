@@ -12,7 +12,7 @@ import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW
 import ToolbarButton from './toolbar-button.jsx';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
-export default function Toolbar({state, projectActions, viewer2dActions, editingActions, viewer3DActions}) {
+export default function Toolbar({state, projectActions, viewer2DActions, editingActions, viewer3DActions}) {
 
   let mode = state.get('mode');
 
@@ -41,17 +41,17 @@ export default function Toolbar({state, projectActions, viewer2dActions, editing
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip="Zoom in"
-                     onClick={event => viewer2dActions.selectToolZoomIn()}>
+                     onClick={event => viewer2DActions.selectToolZoomIn()}>
         <IconZoomPlus />
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_2D_ZOOM_OUT].includes(mode)} tooltip="Zoom out"
-                     onClick={event => viewer2dActions.selectToolZoomOut()}>
+                     onClick={event => viewer2DActions.selectToolZoomOut()}>
         <IconZoomMinus />
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_2D_PAN].includes(mode)} tooltip="Pan"
-                     onClick={event => viewer2dActions.selectToolPan()}>
+                     onClick={event => viewer2DActions.selectToolPan()}>
         <IconPan />
       </ToolbarButton>
     </aside>

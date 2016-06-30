@@ -8,7 +8,7 @@ export const SAVE_PROJECT_TO_FILE = 'SAVE_PROJECT_TO_FILE';
 // ACTIONS editing
 export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 
-// ACTIONS viewer2d
+// ACTIONS viewer2D
 export const SELECT_TOOL_ZOOM_IN = 'SELECT_TOOL_ZOOM_IN';
 export const SELECT_TOOL_ZOOM_OUT = 'SELECT_TOOL_ZOOM_OUT';
 export const SELECT_TOOL_PAN = 'SELECT_TOOL_PAN';

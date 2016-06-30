@@ -19,13 +19,13 @@ export default class Viewer2D extends React.Component {
   render() {
     let props = this.props;
 
-    let {scene, width, height, viewer2d, viewer2dActions, mode} = props;
+    let {scene, width, height, viewer2D, viewer2DActions, mode} = props;
 
-    let onChange = event => viewer2dActions.updateCameraView(event.value);
+    let onChange = event => viewer2DActions.updateCameraView(event.value);
     let viewerTool = TOOLS_MAP.hasOwnProperty(mode) ? TOOLS_MAP[mode] : TOOL_NONE;
 
     return (
-      <Viewer value={viewer2d.state} onChange={onChange} tool={viewerTool} width={width} height={height}>
+      <Viewer value={viewer2D.state} onChange={onChange} tool={viewerTool} width={width} height={height}>
         <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
           <Scene scene={scene}/>
         </svg>
@@ -39,6 +39,6 @@ Viewer2D.propTypes = {
   scene: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
   height: React.PropTypes.number.isRequired,
-  viewer2d: React.PropTypes.object.isRequired,
-  viewer2dActions: React.PropTypes.object.isRequired
+  viewer2D: React.PropTypes.object.isRequired,
+  viewer2DActions: React.PropTypes.object.isRequired
 };
