@@ -4,15 +4,9 @@ import viewer2DReducer from './viewer2d-reducer';
 import editingReducer from './editing-reducer';
 import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
-import {Scene} from '../models';
+import {State} from '../models';
 
-export const initialState = new Map({
-  mode: constants.MODE_IDLE,
-
-  scene: new Scene(),
-
-  viewer2D: new Map()
-});
+export const initialState = new State();
 
 export default function appReducers(state, action) {
   state = state || initialState;

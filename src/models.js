@@ -1,4 +1,5 @@
 import {Record, List, Map} from 'immutable';
+import {MODE_IDLE} from './constants';
 
 export const Scene = Record({
   pixelPerUnit: 100,
@@ -52,4 +53,8 @@ export const Area = Record({
   patternDirection: 0
 });
 
-
+export const State = Record({
+  mode: MODE_IDLE,
+  scene: new Scene(),
+  viewer2D: new Map()
+});
