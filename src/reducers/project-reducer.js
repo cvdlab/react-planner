@@ -1,12 +1,16 @@
 import {List, Map, Iterable, fromJS, Seq} from "immutable";
 import {ViewerHelper} from 'react-svg-pan-zoom';
 
-import {LOAD_PROJECT} from '../constants';
-import {Scene, Layer, Vertex, Line, Hole, Area} from "../models";
+import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
+import {State, Scene, Layer, Vertex, Line, Hole, Area} from "../models";
 
 export default function (state, action) {
 
   switch (action.type) {
+
+    case NEW_PROJECT:
+      return new State();
+
     case LOAD_PROJECT:
       return loadProject(state, action.data);
 
