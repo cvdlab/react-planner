@@ -1,9 +1,9 @@
 import {ViewerHelper} from 'react-svg-pan-zoom';
 import * as constants from '../constants';
 import {Map, fromJS} from 'immutable';
-import viewer2dReducer from './viewer2dReducer';
-import editingReducer from './editingReducer';
-import projectReducer from './projectReducer';
+import viewer2dReducer from './viewer2d-reducer';
+import editingReducer from './editing-reducer';
+import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
 import {Scene} from '../models';
 
