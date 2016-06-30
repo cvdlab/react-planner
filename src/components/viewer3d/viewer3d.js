@@ -4,9 +4,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
 import json2scene from './json2scene';
-import OrbitControls from './OrbitControls';
+import OrbitControls from './orbit-controls';
 
-export default class Viewer3D extends React.Component {
+export default class Scene3DViewer extends React.Component {
 
   componentDidMount() {
 
@@ -21,7 +21,7 @@ export default class Viewer3D extends React.Component {
     renderer.setClearColor(new Three.Color(0xffffff));
     renderer.setSize(width, height);
 
-    // DATA
+    // LOAD DATA
     let planData = json2scene(data);
 
     scene.add(planData.plan);
@@ -50,23 +50,61 @@ export default class Viewer3D extends React.Component {
     let light = new Three.AmbientLight(0xafafaf); // soft white light
     scene.add(light);
 
+    // Add another light
+
+    let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
+    spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+    scene.add(spotLight1);
+
+    // OBJECT PICKING
+    let toIntersect = [planData.plan];
+    let mouse = new Three.Vector2();
+    let raycaster = new Three.Raycaster();
+
+    renderer.domElement.addEventListener('mousedown', (event) => {
+      this.lastMousePosition.x = event.clientX / window.innerWidth * 2 - 1;
+      this.lastMousePosition.y = -event.clientY / window.innerHeight * 2 + 1;
+    }, false);
+
+    renderer.domElement.addEventListener('mouseup', (event) => {
+      event.preventDefault();
+
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+      if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
+        raycaster.setFromCamera(mouse, camera);
+        let intersects = raycaster.intersectObjects(toIntersect, true);
+        if (intersects.length > 0) {
+          intersects[0].object.interact && intersects[0].object.interact();
+        }
+      }
+    }, false);
+
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
 
-    // create trackball controls
+    // create orbit controls
     let orbitController = new OrbitControls(camera, renderer.domElement);
 
     render();
     function render() {
       orbitController.update();
-      requestAnimationFrame(render);
+
+      spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
+      camera.updateMatrix();
+      camera.updateMatrixWorld();
+
       renderer.render(scene, camera);
+      requestAnimationFrame(render);
     }
 
+    this.lastMousePosition = {};
     this.orbitControls = orbitController;
     this.renderer = renderer;
     this.camera = camera;
     this.scene = scene;
+    this.planData = planData;
   }
 
   componentWillUnmount() {
@@ -85,6 +123,21 @@ export default class Viewer3D extends React.Component {
 
     camera.updateProjectionMatrix();
 
+    if (nextProps.scene !== this.props.scene) {
+
+      this.scene.remove(this.planData.plan);
+      this.planData = json2scene(nextProps.scene);
+      this.scene.add(this.planData.plan);
+
+      // OBJECT PICKING
+      let toIntersect = [this.planData.plan];
+      let mouse = new Three.Vector2();
+      let raycaster = new Three.Raycaster();
+      var onDocumentMouseDownTrackball = initPickingOrbit(camera, toIntersect, mouse, raycaster);
+      renderer.domElement.addEventListener('mousedown', onDocumentMouseDownTrackball, false);
+
+    }
+
     renderer.setSize(width, height);
     renderer.render(scene, camera);
   }
@@ -96,7 +149,7 @@ export default class Viewer3D extends React.Component {
   }
 }
 
-Viewer3D.propTypes = {
+Scene3DViewer.propTypes = {
   mode: React.PropTypes.string.isRequired,
   scene: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,

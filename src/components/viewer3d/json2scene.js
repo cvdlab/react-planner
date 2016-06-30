@@ -21,7 +21,7 @@ export default function parseData(sceneData) {
       let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
         layer.vertices.get(line.vertices.get(1)),
         line.height,
-        line.thickness, holes);
+        line.thickness, holes, line.id);
 
       plan.add(wall);
     });

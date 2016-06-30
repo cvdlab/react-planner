@@ -354,7 +354,7 @@ module.exports = OrbitControls = function ( object, domElement ) {
 			} else {
 
 				// camera neither orthographic nor perspective
-				console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - pan disabled.' );
+				console.warn( 'WARNING: orbit-controls.js encountered an unknown camera type - pan disabled.' );
 				scope.enablePan = false;
 
 			}
@@ -377,7 +377,7 @@ module.exports = OrbitControls = function ( object, domElement ) {
 
 		} else {
 
-			console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.' );
+			console.warn( 'WARNING: orbit-controls.js encountered an unknown camera type - dolly/zoom disabled.' );
 			scope.enableZoom = false;
 
 		}
@@ -398,7 +398,7 @@ module.exports = OrbitControls = function ( object, domElement ) {
 
 		} else {
 
-			console.warn( 'WARNING: OrbitControls.js encountered an unknown camera type - dolly/zoom disabled.' );
+			console.warn( 'WARNING: orbit-controls.js encountered an unknown camera type - dolly/zoom disabled.' );
 			scope.enableZoom = false;
 
 		}
