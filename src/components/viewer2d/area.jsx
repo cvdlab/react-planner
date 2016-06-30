@@ -1,9 +1,8 @@
 import React from 'react';
 
 
-export default function Area(props) {
+export default function Area({area, vertices}) {
 
-  let {area, vertices} = props;
   let path = "";
   let first = true;
 

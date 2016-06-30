@@ -14,25 +14,20 @@ const TOOLS_MAP = {
 };
 
 
-export default class Viewer2D extends React.Component {
+export default function Viewer2D({scene, width, height, viewer2D, viewer2DActions, mode}) {
 
-  render() {
-    let props = this.props;
+  let onChange = event => viewer2DActions.updateCameraView(event.value);
+  let viewerTool = TOOLS_MAP.hasOwnProperty(mode) ? TOOLS_MAP[mode] : TOOL_NONE;
 
-    let {scene, width, height, viewer2D, viewer2DActions, mode} = props;
-
-    let onChange = event => viewer2DActions.updateCameraView(event.value);
-    let viewerTool = TOOLS_MAP.hasOwnProperty(mode) ? TOOLS_MAP[mode] : TOOL_NONE;
-
-    return (
-      <Viewer value={viewer2D.state} onChange={onChange} tool={viewerTool} width={width} height={height}>
-        <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
-          <Scene scene={scene}/>
-        </svg>
-      </Viewer>
-    );
-  }
+  return (
+    <Viewer value={viewer2D.state} onChange={onChange} tool={viewerTool} width={width} height={height}>
+      <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
+        <Scene scene={scene}/>
+      </svg>
+    </Viewer>
+  );
 }
+
 
 Viewer2D.propTypes = {
   mode: React.PropTypes.string.isRequired,

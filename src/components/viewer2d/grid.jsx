@@ -3,9 +3,9 @@ import Line from './line.jsx';
 import Area from './area.jsx';
 import {Range} from 'immutable';
 
-export default function Grid(props) {
+export default function Grid({scene}) {
 
-  let {pixelPerUnit, unit, width, height} = props.scene;
+  let {pixelPerUnit, unit, width, height} = scene;
 
   let patternID = 'grid-pattern';
 

@@ -8,16 +8,14 @@ const {pow, sqrt, asin, PI} = Math;
 
 function twoPointsDistance(x1, y1, x2, y2) {
   return sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
-};
+}
 
 function angleBetweenTwoPoints(distance, y1, y2) {
   return asin((y1 - y2) / distance);
-};
+}
 
 
-export default function Line(props) {
-
-  let {line, vertices, holes} = props;
+export default function Line({line, vertices, holes}) {
 
   let vertex0 = vertices.get(line.vertices.get(0));
   let vertex1 = vertices.get(line.vertices.get(1));

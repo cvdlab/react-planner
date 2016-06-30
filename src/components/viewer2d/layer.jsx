@@ -2,9 +2,9 @@ import React from 'react';
 import Line from './line.jsx';
 import Area from './area.jsx';
 
-export default function Layer(props) {
+export default function Layer({layer}) {
 
-  let {lines, areas, vertices, holes} = props.layer;
+  let {lines, areas, vertices, holes} = layer;
 
   return (
     <g>

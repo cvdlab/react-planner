@@ -2,9 +2,7 @@ import React from 'react';
 import Toolbar from './toolbar/toolbar.jsx';
 import Viewer from './viewer.jsx';
 
-export default function (props) {
-
-  let {width, height, ...rest} = props;
+export default function ({width, height, ...rest}) {
 
   let toolbarWidth = 30;
   let sidebarWidth = 270;
