@@ -3,23 +3,11 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {createStore, applyMiddleware, compose} from 'redux';
-import {Provider} from 'react-redux';
-import thunk from 'redux-thunk';
-
 import App from './components/app.jsx';
-import reducers from './reducers/reducer';
-
-let middlewares = compose(
-  applyMiddleware(thunk),
-  window.devToolsExtension ? window.devToolsExtension() : f => f
-);
-let store = createStore(reducers, null, middlewares);
+import store from './reducers/store';
 
 ReactDOM.render(
-  React.createElement(Provider, {store},
-    React.createElement(App)
-  ),
+  React.createElement(App, {store}),
   document.getElementById('app')
 );
 
