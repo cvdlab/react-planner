@@ -14,8 +14,12 @@ export const SELECT_TOOL_ZOOM_OUT = 'SELECT_TOOL_ZOOM_OUT';
 export const SELECT_TOOL_PAN = 'SELECT_TOOL_PAN';
 export const UPDATE_2D_CAMERA = 'UPDATE_2D_CAMERA';
 
+//ACTIONS viewer3d
+export const SELECT_TOOL_3D_VIEW = 'SELECT_TOOL_3D_VIEW';
+
 //MODES
 export const MODE_IDLE = 'IDLE';
 export const MODE_2D_ZOOM_IN = 'MODE_2D_ZOOM_IN';
 export const MODE_2D_ZOOM_OUT = 'MODE_2D_ZOOM_OUT';
 export const MODE_2D_PAN = 'MODE_2D_PAN';
+export const MODE_3D_VIEW = 'MODE_3D_VIEW';

@@ -34,7 +34,8 @@ Metior.dispatch = store.dispatch;
 Metior.getState = () => store.getState().toJS();
 Metior.actions = {
   projectActions: require('./actions/projectActions'),
-  viewer2d: require('./actions/viewer2dActions')
+  viewer2d: require('./actions/viewer2dActions'),
+  viewer3d: require('./actions/viewer3d-actions')
 };
 console.groupCollapsed("Metior");
 console.info("Metior is ready");

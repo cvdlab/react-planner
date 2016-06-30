@@ -4,6 +4,7 @@ import {Map, fromJS} from 'immutable';
 import viewer2dReducer from './viewer2dReducer';
 import editingReducer from './editingReducer';
 import projectReducer from './projectReducer';
+import viewer3DReducer from './viewer3d-reducer';
 import {Scene} from '../models';
 
 export const initialState = new Map({
@@ -37,6 +38,8 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_EDIT:
       return editingReducer(state, action);
 
+    case constants.SELECT_TOOL_3D_VIEW:
+      return viewer3DReducer(state, action);
 
     default:
       return state;
