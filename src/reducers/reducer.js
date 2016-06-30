@@ -1,4 +1,3 @@
-import {ViewerHelper} from 'react-svg-pan-zoom';
 import * as constants from '../constants';
 import {Map, fromJS} from 'immutable';
 import viewer2DReducer from './viewer2d-reducer';
@@ -12,9 +11,7 @@ export const initialState = new Map({
 
   scene: new Scene(),
 
-  viewer2D: new Map({
-    state: fromJS(ViewerHelper.getDefaultValue())
-  })
+  viewer2D: new Map()
 });
 
 export default function appReducers(state, action) {

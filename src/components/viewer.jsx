@@ -6,7 +6,7 @@ import {MODE_3D_VIEW} from '../constants';
 export default function Viewer({width, height, state, viewer2DActions}) {
   let scene = state.get('scene');
   let mode = state.get('mode');
-  let viewer2D = state.get('viewer2D').toJS();
+  let viewer2D = state.get('viewer2D');
 
   let viewer = (mode === MODE_3D_VIEW) ?
       React.createElement(Viewer3D, {scene, mode, width, height})

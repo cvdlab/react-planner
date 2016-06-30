@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import {Viewer, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
+import {Viewer, ViewerHelper, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
 import {MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT} from '../../constants';
 import Scene from './scene.jsx';
 
@@ -16,11 +16,19 @@ const TOOLS_MAP = {
 
 export default function Viewer2D({scene, width, height, viewer2D, viewer2DActions, mode}) {
 
+  if (!viewer2D.has('mode')) {
+    viewer2D = ViewerHelper.getDefaultValue();
+    viewer2D = ViewerHelper.fitSVGToViewer(viewer2D, scene.width, scene.height, width, height);
+  } else {
+    viewer2D = viewer2D.toJS();
+  }
+
+
   let onChange = event => viewer2DActions.updateCameraView(event.value);
   let viewerTool = TOOLS_MAP.hasOwnProperty(mode) ? TOOLS_MAP[mode] : TOOL_NONE;
 
   return (
-    <Viewer value={viewer2D.state} onChange={onChange} tool={viewerTool} width={width} height={height}>
+    <Viewer value={viewer2D} onChange={onChange} tool={viewerTool} width={width} height={height}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <Scene scene={scene}/>
       </svg>

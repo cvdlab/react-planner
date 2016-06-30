@@ -12,7 +12,7 @@ import {fromJS} from 'immutable';
 export default function (state, action) {
   switch (action.type) {
     case UPDATE_2D_CAMERA:
-      return state.setIn(['viewer2D', 'state'], fromJS(action.value));
+      return state.set('viewer2D', fromJS(action.value));
 
     case SELECT_TOOL_PAN:
           return state.set('mode', MODE_2D_PAN);

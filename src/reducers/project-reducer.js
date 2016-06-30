@@ -1,4 +1,5 @@
 import {List, Map, Iterable, fromJS, Seq} from "immutable";
+import {ViewerHelper} from 'react-svg-pan-zoom';
 
 import {LOAD_PROJECT} from '../constants';
 import {Scene, Layer, Vertex, Line, Hole, Area} from "../models";
@@ -42,6 +43,8 @@ function loadProject(state, data) {
 
   let scene = readScene(data);
 
-  return state.set('scene', scene);
+
+  return state.set('scene', scene)
+    .set('viewer2D', new Map()); //reset 2d camera
 }
 
