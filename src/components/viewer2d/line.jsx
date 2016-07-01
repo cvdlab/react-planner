@@ -24,15 +24,11 @@ export default function Line({line, vertices, holes}) {
 
   let x1, y1, x2, y2;
   if (vertex0.x <= vertex1.x) {
-    x1 = vertex0.x;
-    y1 = vertex0.y;
-    x2 = vertex1.x;
-    y2 = vertex1.y;
+    ({x: x1, y: y1} = vertex0);
+    ({x: x2, y: y2} = vertex1);
   } else {
-    x1 = vertex1.x;
-    y1 = vertex1.y;
-    x2 = vertex0.x;
-    y2 = vertex0.y;
+    ({x: x1, y: y1} = vertex1);
+    ({x: x2, y: y2} = vertex0);
   }
 
   let lenght = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
