@@ -1,8 +1,7 @@
 import Three from 'three';
 import createShapeWall from './line-creator';
 import createArea from './area-creator';
-import {HELVETIKER} from './libs/helvetiker_regular.typeface.js';
-
+import createGrid from './grid-creator';
 
 export default function parseData(sceneData) {
   let plan = new Three.Object3D();
@@ -45,64 +44,8 @@ export default function parseData(sceneData) {
 
   // Add a grid to the plan
 
-  let size = Math.sqrt(Math.pow(boundingBox.max.x - boundingBox.min.x, 2) - Math.pow(boundingBox.max.z - boundingBox.min.z, 2));
-  let step = sceneData.pixelPerUnit;
-
-  let grid = new Three.Object3D();
-  let fontLoader = new Three.FontLoader();
-  let font = fontLoader.parse(HELVETIKER); // For measures
-  let material;
-  let counter = 0;
-
-  for (let i = 0; i <= size * 2; i += 1) {
-
-    if (counter % step == 0 || counter % (step / 5) == 0) {
-
-      let geometry = new Three.Geometry();
-      geometry.vertices.push(new Three.Vector3(0, 0, -i));
-      geometry.vertices.push(new Three.Vector3(size * 2, 0, -i));
-
-      geometry.vertices.push(new Three.Vector3(i, 0, 0));
-      geometry.vertices.push(new Three.Vector3(i, 0, -size * 2));
-
-
-      if (counter % step == 0) {
-
-
-        material = new Three.LineBasicMaterial({color: 0x000000});
-
-
-        let shape = new Three.TextGeometry(counter, {
-          size: 16,
-          height: 1,
-          font: font
-        });
-
-        let wrapper = new Three.MeshBasicMaterial({color: 0x000000});
-        let words1 = new Three.Mesh(shape, wrapper);
-        let words2 = new Three.Mesh(shape, wrapper);
-
-        words1.rotation.x -= Math.PI / 2;
-        words2.rotation.x -= Math.PI / 2;
-
-        words1.position.set(-90, 0, -i);
-        words2.position.set(i - 20, 0, 50);
-
-        grid.add(words1);
-        grid.add(words2);
-
-
-      } else if (counter % (step / 5) == 0) {
-        material = new Three.LineBasicMaterial({color: 0xaaaaaa});
-      }
-      grid.add(new Three.LineSegments(geometry, material));
-    }
-
-    counter++;
-
-  }
-
-  plan.add(grid);
+  let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
+  grid.rotation.z += Math.PI;
 
   // Set center of plan in the origin
 
@@ -115,5 +58,10 @@ export default function parseData(sceneData) {
   plan.position.y -= center[1];
   plan.position.z -= center[2];
 
-  return {boundingBox: boundingBox, plan: plan};
+  grid.position.x -= center[0];
+  grid.position.y -= center[1];
+  grid.position.z -= center[2];
+
+
+  return {boundingBox: boundingBox, plan: plan, grid: grid};
 }

@@ -5,6 +5,7 @@ import ReactDOM from 'react-dom';
 import Three from 'three';
 import json2scene from './scene-creator';
 import OrbitControls from './libs/orbit-controls';
+import diff from 'immutablediff';
 
 export default class Scene3DViewer extends React.Component {
 
@@ -24,7 +25,8 @@ export default class Scene3DViewer extends React.Component {
     // LOAD DATA
     let planData = json2scene(data);
 
-    scene.add(planData.plan);
+    scene.add(planData.plan);    
+    scene.add(planData.grid);
 
     // CAMERA
     let viewSize = 900;
@@ -125,6 +127,10 @@ export default class Scene3DViewer extends React.Component {
     camera.updateProjectionMatrix();
 
     if (nextProps.scene !== this.props.scene) {
+
+      let changedValues = diff(this.props.scene, nextProps.scene);
+
+      console.log(changedValues.toJS());
 
       this.scene.remove(this.planData.plan);
       this.planData = json2scene(nextProps.scene);
