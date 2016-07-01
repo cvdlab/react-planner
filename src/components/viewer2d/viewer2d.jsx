@@ -14,7 +14,7 @@ const TOOLS_MAP = {
 };
 
 
-export default function Viewer2D({scene, width, height, viewer2D, viewer2DActions, mode}) {
+export default function Viewer2D({scene, width, height, viewer2D, mode}, {viewer2DActions}) {
 
   if (!viewer2D.has('mode')) {
     viewer2D = ViewerHelper.getDefaultValue();
@@ -42,6 +42,9 @@ Viewer2D.propTypes = {
   scene: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
   height: React.PropTypes.number.isRequired,
-  viewer2D: React.PropTypes.object.isRequired,
+  viewer2D: React.PropTypes.object.isRequired
+};
+
+Viewer2D.contextTypes = {
   viewer2DActions: React.PropTypes.object.isRequired
 };
