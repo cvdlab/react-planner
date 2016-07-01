@@ -375,7 +375,7 @@
       },
       "holes": {
         "hld": {
-          "id": "2",
+          "id": "hld",
           "type": "door",
           "offset": 0.5,
           "line": "ld",
@@ -384,7 +384,7 @@
           "altitude": 0
         },
         "hab": {
-          "id": "1",
+          "id": "hab",
           "type": "window",
           "offset": 0.5,
           "line": "ab",
@@ -393,7 +393,7 @@
           "altitude": 100
         },
         "hbc": {
-          "id": "2",
+          "id": "hbc",
           "type": "door",
           "offset": 0.5,
           "line": "bc",
@@ -402,7 +402,7 @@
           "altitude": 0
         },
         "hcd": {
-          "id": "2",
+          "id": "hcd",
           "type": "window",
           "offset": 0.5,
           "line": "cd",
@@ -411,7 +411,7 @@
           "altitude": 100
         },
         "hde": {
-          "id": "2",
+          "id": "hde",
           "type": "window",
           "offset": 0.5,
           "line": "de",
@@ -420,7 +420,7 @@
           "altitude": 100
         },
         "hef": {
-          "id": "2",
+          "id": "hef",
           "type": "window",
           "offset": 0.5,
           "line": "ef",
@@ -429,7 +429,7 @@
           "altitude": 100
         },
         "hgh": {
-          "id": "2",
+          "id": "hgh",
           "type": "window",
           "offset": 0.5,
           "line": "gh",
@@ -438,7 +438,7 @@
           "altitude": 100
         },
         "hhi": {
-          "id": "2",
+          "id": "hhi",
           "type": "window",
           "offset": 0.5,
           "line": "hi",
@@ -447,7 +447,7 @@
           "altitude": 100
         },
         "hij": {
-          "id": "2",
+          "id": "hij",
           "type": "door",
           "offset": 0.5,
           "line": "ij",
@@ -456,7 +456,7 @@
           "altitude": 0
         },
         "hkl": {
-          "id": "2",
+          "id": "hkl",
           "type": "door",
           "offset": 0.5,
           "line": "kl",
@@ -465,7 +465,7 @@
           "altitude": 0
         },
         "hgj": {
-          "id": "2",
+          "id": "hgj",
           "type": "door",
           "offset": 0.5,
           "line": "gj",
@@ -474,7 +474,7 @@
           "altitude": 0
         },
         "hfl": {
-          "id": "2",
+          "id": "hfl",
           "type": "door",
           "offset": 0.5,
           "line": "fl",
@@ -483,7 +483,7 @@
           "altitude": 0
         },
         "hai": {
-          "id": "2",
+          "id": "hai",
           "type": "window",
           "offset": 0.5,
           "line": "ai",
@@ -492,7 +492,7 @@
           "altitude": 100
         },
         "hkb": {
-          "id": "2",
+          "id": "hkb",
           "type": "door",
           "offset": 0.5,
           "line": "kb",
