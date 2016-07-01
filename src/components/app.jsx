@@ -25,10 +25,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    projectActions: bindActionCreators(Object.assign({}, projectActions), dispatch),
-    viewer2DActions: bindActionCreators(Object.assign({}, viewer2DActions), dispatch),
-    editingActions: bindActionCreators(Object.assign({}, editingActions), dispatch),
-    viewer3DActions: bindActionCreators(Object.assign({}, viewer3DActions), dispatch)
+    projectActions: bindActionCreators(projectActions, dispatch),
+    viewer2DActions: bindActionCreators(viewer2DActions, dispatch),
+    editingActions: bindActionCreators(editingActions, dispatch),
+    viewer3DActions: bindActionCreators(viewer3DActions, dispatch)
   }
 }
 
