@@ -3,8 +3,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
-import json2scene from './json2scene';
-import OrbitControls from './orbit-controls';
+import json2scene from './scene-creator';
+import OrbitControls from './libs/orbit-controls';
 
 export default class Scene3DViewer extends React.Component {
 

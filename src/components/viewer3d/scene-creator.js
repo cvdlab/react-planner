@@ -1,7 +1,7 @@
 import Three from 'three';
-import createShapeWall from './wall-creator';
+import createShapeWall from './line-creator';
 import createArea from './area-creator';
-import {HELVETIKER} from './helvetiker_regular.typeface.js';
+import {HELVETIKER} from './libs/helvetiker_regular.typeface.js';
 
 
 export default function parseData(sceneData) {
