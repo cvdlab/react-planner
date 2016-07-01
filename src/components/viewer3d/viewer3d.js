@@ -11,6 +11,8 @@ export default class Scene3DViewer extends React.Component {
 
   componentDidMount() {
 
+    let editingActions = this.context.editingActions;
+
     let {width, height} = this.props;
     let data = this.props.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
@@ -23,7 +25,7 @@ export default class Scene3DViewer extends React.Component {
     renderer.setSize(width, height);
 
     // LOAD DATA
-    let planData = parseData(data);
+    let planData = parseData(data, editingActions);
 
     scene.add(planData.plan);
     scene.add(planData.grid);
@@ -131,35 +133,16 @@ export default class Scene3DViewer extends React.Component {
       let changedValues = diff(this.props.scene, nextProps.scene);
 
       this.scene.remove(this.planData.plan);
-      this.planData = parseData(nextProps.scene);
+      this.planData = parseData(nextProps.scene, this.context.editingActions);
       this.scene.add(this.planData.plan);
 
-      console.log(changedValues.toJS());
-      updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS());
-      
+      //updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS());
+
+
       // OBJECT PICKING
       let toIntersect = [this.planData.plan];
       let mouse = new Three.Vector2();
-      let raycaster = new Three.Raycaster();
-      renderer.domElement.addEventListener('mousedown', (event) => {
-        this.lastMousePosition.x = event.offsetX / width * 2 - 1;
-        this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
-      }, false);
-
-      renderer.domElement.addEventListener('mouseup', (event) => {
-        event.preventDefault();
-
-        mouse.x = (event.offsetX / width) * 2 - 1;
-        mouse.y = -(event.offsetY / height) * 2 + 1;
-
-        if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
-          raycaster.setFromCamera(mouse, camera);
-          let intersects = raycaster.intersectObjects(toIntersect, true);
-          if (intersects.length > 0) {
-            intersects[0].object.interact && intersects[0].object.interact();
-          }
-        }
-      }, false);
+      let raycaster = new Three.Raycaster();      
     }
 
     renderer.setSize(width, height);
@@ -178,4 +161,8 @@ Scene3DViewer.propTypes = {
   scene: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
   height: React.PropTypes.number.isRequired
+};
+
+Scene3DViewer.contextTypes = {
+  editingActions: React.PropTypes.object.isRequired
 };

@@ -1,6 +1,6 @@
 import Three from 'three';
 
-export default function createShapeWall(vertex0, vertex1, height, thickness, holes, wallID) {
+export default function createShapeWall(vertex0, vertex1, height, thickness, holes, wallID, isSelected) {
 
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
@@ -31,9 +31,14 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     bevelSize: thickness / 2
   });
 
+  let wallColor = new Three.Color(1, 1, 1);
+  if (isSelected) {
+    wallColor = new Three.Color(1, 0.76, 0);
+  }
+
   let wall = new Three.Mesh(extrudedGeometry, new Three.MeshLambertMaterial({
     side: Three.DoubleSide,
-    color: 0xffffff
+    color: wallColor
   }));
 
   wall.position.z -= thickness / 2; // I extrude on the middle line
@@ -46,17 +51,15 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
   // Add Object picking interations:
 
-  wall.selected = false;
-
-  wall.interact = () => {
-    if (wall.selected) {
-      wall.material.color = new Three.Color(1, 1, 1);
-
-    } else {
-      wall.material.color = new Three.Color(1, 0.76, 0);
-    }
-    wall.selected = !wall.selected
-  };
+  // wall.interact = () => {
+  //   if (wall.selected) {
+  //     wall.material.color = new Three.Color(1, 1, 1);
+  //
+  //   } else {
+  //     wall.material.color = new Three.Color(1, 0.76, 0);
+  //   }
+  //   wall.selected = !wall.selected
+  // };
 
   return pivot;
 }
