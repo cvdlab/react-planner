@@ -14,7 +14,7 @@ export default function (state, action) {
       return state.set('mode', MODE_IDLE);
 
     case SELECT_AREA:
-      return state.set('scene', selectLine(scene, action.layerID, action.areaID));
+      return state.set('scene', selectArea(scene, action.layerID, action.areaID));
 
     case SELECT_HOLE:
       return state.set('scene', selectHole(scene, action.layerID, action.holeID));
