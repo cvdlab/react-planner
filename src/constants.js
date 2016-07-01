@@ -7,6 +7,9 @@ export const SAVE_PROJECT_TO_FILE = 'SAVE_PROJECT_TO_FILE';
 
 // ACTIONS editing
 export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
+export const SELECT_LINE = 'SELECT_LINE';
+export const SELECT_HOLE = 'SELECT_HOLE';
+export const SELECT_AREA = 'SELECT_AREA';
 
 // ACTIONS viewer2D
 export const SELECT_TOOL_ZOOM_IN = 'SELECT_TOOL_ZOOM_IN';
