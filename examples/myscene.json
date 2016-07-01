@@ -1,0 +1,570 @@
+{
+  "pixelPerUnit": 100,
+  "unit": "m",
+  "layers": {
+    "layer-floor-1": {
+      "id": "layer-floor-1",
+      "altitude": 0,
+      "vertices": {
+        "a": {
+          "id": "a",
+          "x": 30,
+          "y": 30,
+          "lines": [
+            "ab",
+            "ai"
+          ],
+          "areas": [
+            "abki"
+          ]
+        },
+        "b": {
+          "id": "b",
+          "x": 600,
+          "y": 30,
+          "lines": [
+            "ab",
+            "bc",
+            "kb"
+          ],
+          "areas": [
+            "abki",
+            "bcdk"
+          ]
+        },
+        "c": {
+          "id": "c",
+          "x": 1300,
+          "y": 30,
+          "lines": [
+            "bc",
+            "cd"
+          ],
+          "areas": [
+            "bcdk"
+          ]
+        },
+        "d": {
+          "id": "d",
+          "x": 1300,
+          "y": 600,
+          "lines": [
+            "cd",
+            "de",
+            "ld"
+          ],
+          "areas": [
+            "bcdk",
+            "ldef"
+          ]
+        },
+        "e": {
+          "id": "e",
+          "x": 1300,
+          "y": 1000,
+          "lines": [
+            "de",
+            "ef"
+          ],
+          "areas": [
+            "ldef"
+          ]
+        },
+        "f": {
+          "id": "f",
+          "x": 800,
+          "y": 1000,
+          "lines": [
+            "ef",
+            "fg",
+            "fl"
+          ],
+          "areas": [
+            "ldef",
+            "jlfg"
+          ]
+        },
+        "g": {
+          "id": "g",
+          "x": 500,
+          "y": 1000,
+          "lines": [
+            "fg",
+            "gh",
+            "gj"
+          ],
+          "areas": [
+            "jlfg",
+            "hijg"
+          ]
+        },
+        "h": {
+          "id": "h",
+          "x": 30,
+          "y": 1000,
+          "lines": [
+            "gh",
+            "hi",
+            "hj"
+          ],
+          "areas": [
+            "hijg"
+          ]
+        },
+        "i": {
+          "id": "i",
+          "x": 30,
+          "y": 600,
+          "lines": [
+            "hi",
+            "ai"
+          ],
+          "areas": [
+            "abki",
+            "hijg"
+          ]
+        },
+        "j": {
+          "id": "j",
+          "x": 500,
+          "y": 600,
+          "lines": [
+            "hj",
+            "jk",
+            "gj"
+          ],
+          "areas": [
+            "jlfg",
+            "hijg"
+          ]
+        },
+        "k": {
+          "id": "k",
+          "x": 600,
+          "y": 600,
+          "lines": [
+            "jk",
+            "kl",
+            "kb"
+          ],
+          "areas": [
+            "abki",
+            "bcdk"
+          ]
+        },
+        "l": {
+          "id": "l",
+          "x": 800,
+          "y": 600,
+          "lines": [
+            "kl",
+            "ld",
+            "fl"
+          ],
+          "areas": [
+            "ldef",
+            "jlfg"
+          ]
+        }
+      },
+      "lines": {
+        "ab": {
+          "id": "ab",
+          "type": "wall",
+          "vertices": [
+            "a",
+            "b"
+          ],
+          "holes": [
+            "hab"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "bc": {
+          "id": "bc",
+          "type": "wall",
+          "vertices": [
+            "b",
+            "c"
+          ],
+          "holes": [
+            "hbc"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "cd": {
+          "id": "cd",
+          "type": "wall",
+          "vertices": [
+            "c",
+            "d"
+          ],
+          "holes": [
+            "hcd"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "de": {
+          "id": "de",
+          "type": "wall",
+          "vertices": [
+            "d",
+            "e"
+          ],
+          "holes": [
+            "hde"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "ef": {
+          "id": "ef",
+          "type": "wall",
+          "vertices": [
+            "e",
+            "f"
+          ],
+          "holes": [
+            "hef"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "fg": {
+          "id": "fg",
+          "type": "wall",
+          "vertices": [
+            "f",
+            "g"
+          ],
+          "holes": [],
+          "height": 300,
+          "thickness": 20
+        },
+        "gh": {
+          "id": "gh",
+          "type": "wall",
+          "vertices": [
+            "g",
+            "h"
+          ],
+          "holes": [
+            "hgh"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "hi": {
+          "id": "hi",
+          "type": "wall",
+          "vertices": [
+            "h",
+            "i"
+          ],
+          "holes": [
+            "hhi"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "ij": {
+          "id": "ij",
+          "type": "wall",
+          "vertices": [
+            "i",
+            "j"
+          ],
+          "holes": [
+            "hij"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "jk": {
+          "id": "jk",
+          "type": "wall",
+          "vertices": [
+            "j",
+            "k"
+          ],
+          "holes": [],
+          "height": 300,
+          "thickness": 20
+        },
+        "kl": {
+          "id": "kl",
+          "type": "wall",
+          "vertices": [
+            "k",
+            "l"
+          ],
+          "holes": [
+            "hkl"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "gj": {
+          "id": "gj",
+          "type": "wall",
+          "vertices": [
+            "g",
+            "j"
+          ],
+          "holes": [
+            "hgj"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "fl": {
+          "id": "fl",
+          "type": "wall",
+          "vertices": [
+            "f",
+            "l"
+          ],
+          "holes": [
+            "hfl"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "ai": {
+          "id": "ai",
+          "type": "wall",
+          "vertices": [
+            "a",
+            "i"
+          ],
+          "holes": [
+            "hai"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "kb": {
+          "id": "kb",
+          "type": "wall",
+          "vertices": [
+            "k",
+            "b"
+          ],
+          "holes": [
+            "hkb"
+          ],
+          "height": 300,
+          "thickness": 20
+        },
+        "ld": {
+          "id": "ld",
+          "type": "wall",
+          "vertices": [
+            "l",
+            "d"
+          ],
+          "holes": [
+            "hld"
+          ],
+          "height": 300,
+          "thickness": 20
+        }
+      },
+      "holes": {
+        "hld": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "ld",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        },
+        "hab": {
+          "id": "1",
+          "type": "window",
+          "offset": 0.5,
+          "line": "ab",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hbc": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "bc",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        },
+        "hcd": {
+          "id": "2",
+          "type": "window",
+          "offset": 0.5,
+          "line": "cd",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hde": {
+          "id": "2",
+          "type": "window",
+          "offset": 0.5,
+          "line": "de",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hef": {
+          "id": "2",
+          "type": "window",
+          "offset": 0.5,
+          "line": "ef",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hgh": {
+          "id": "2",
+          "type": "window",
+          "offset": 0.5,
+          "line": "gh",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hhi": {
+          "id": "2",
+          "type": "window",
+          "offset": 0.5,
+          "line": "hi",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hij": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "ij",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        },
+        "hkl": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "kl",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        },
+        "hgj": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "gj",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        },
+        "hfl": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "fl",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        },
+        "hai": {
+          "id": "2",
+          "type": "window",
+          "offset": 0.5,
+          "line": "ai",
+          "width": 100,
+          "height": 100,
+          "altitude": 100
+        },
+        "hkb": {
+          "id": "2",
+          "type": "door",
+          "offset": 0.5,
+          "line": "kb",
+          "width": 75,
+          "height": 190,
+          "altitude": 0
+        }
+      },
+      "areas": {
+        "abki": {
+          "id": "abki",
+          "type": "room",
+          "vertices": [
+            "a",
+            "b",
+            "k",
+            "i"
+          ],
+          "patternColor": "#c77ed0",
+          "patternDirection": "0"
+        },
+        "bcdk": {
+          "id": "bcdk",
+          "type": "room",
+          "vertices": [
+            "b",
+            "c",
+            "d",
+            "k"
+          ],
+          "patternColor": "#0fc2e8",
+          "patternDirection": "70"
+        },
+        "ldef": {
+          "id": "ldef",
+          "type": "room",
+          "vertices": [
+            "l",
+            "d",
+            "e",
+            "f"
+          ],
+          "patternColor": "#16ae67 ",
+          "patternDirection": "140"
+        },
+        "jlfg": {
+          "id": "jlfg",
+          "type": "room",
+          "vertices": [
+            "j",
+            "l",
+            "f",
+            "g"
+          ],
+          "patternColor": "#358ea1",
+          "patternDirection": "210"
+        },
+        "hijg": {
+          "id": "hijg",
+          "type": "room",
+          "vertices": [
+            "h",
+            "i",
+            "j",
+            "g"
+          ],
+          "patternColor": "#c0ad64 ",
+          "patternDirection": "280"
+        }
+      }
+    }
+  },
+  "width": 1500,
+  "height": 1100
+}
