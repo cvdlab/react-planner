@@ -25,8 +25,10 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_ZOOM_OUT:
       return viewer2DReducer(state, action);
 
-
     case constants.SELECT_TOOL_EDIT:
+    case constants.SELECT_LINE:
+    case constants.SELECT_AREA:
+    case constants.SELECT_HOLE:
       return editingReducer(state, action);
 
     case constants.SELECT_TOOL_3D_VIEW:

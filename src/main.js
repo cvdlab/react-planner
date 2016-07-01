@@ -18,18 +18,18 @@ ReactDOM.render(
 /*************************************************************************
  ****************************** DEBUG ************************************
  *************************************************************************/
-let Metior = window.Metior = {};
-Metior.ReactPerf = require('react-addons-perf');
-Metior.store = store;
-Metior.dispatch = store.dispatch;
-Metior.getState = () => store.getState().toJS();
-Metior.actions = {
+window.Metior = {
+  ReactPerf: require('react-addons-perf'),
+  store: store,
+  dispatch: store.dispatch,
+  getState: () => store.getState().toJS(),
   projectActions: require('./actions/project-actions'),
-  viewer2D: require('./actions/viewer2d-actions'),
-  viewer3D: require('./actions/viewer3d-actions')
+  editingActions: require('./actions/editing-actions'),
+  viewer2DActions: require('./actions/viewer2d-actions'),
+  viewer3DActions: require('./actions/viewer3d-actions')
 };
 console.groupCollapsed("Metior");
 console.info("Metior is ready");
 console.info("console.log(Metior)");
-console.log(Metior);
+console.log(window.Metior);
 console.groupEnd();

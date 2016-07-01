@@ -13,11 +13,29 @@ import Layout from './layout.jsx';
 
 
 class App extends React.Component {
+
+  getChildContext() {
+    return {
+      projectActions: this.props.projectActions,
+      viewer2DActions: this.props.viewer2DActions,
+      editingActions: this.props.editingActions,
+      viewer3DActions: this.props.viewer3DActions
+    }
+  }
+
   render() {
     let {containerWidth, containerHeight, ...props} = this.props;
     return <Layout width={containerWidth} height={containerHeight} {...props} />;
   }
 }
+
+App.childContextTypes = {
+  projectActions: React.PropTypes.object,
+  viewer2DActions: React.PropTypes.object,
+  editingActions: React.PropTypes.object,
+  viewer3DActions: React.PropTypes.object
+};
+
 
 function mapStateToProps(state) {
   return {state};
@@ -25,10 +43,10 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   return {
-    projectActions: bindActionCreators(Object.assign({}, projectActions), dispatch),
-    viewer2DActions: bindActionCreators(Object.assign({}, viewer2DActions), dispatch),
-    editingActions: bindActionCreators(Object.assign({}, editingActions), dispatch),
-    viewer3DActions: bindActionCreators(Object.assign({}, viewer3DActions), dispatch)
+    projectActions: bindActionCreators(projectActions, dispatch),
+    viewer2DActions: bindActionCreators(viewer2DActions, dispatch),
+    editingActions: bindActionCreators(editingActions, dispatch),
+    viewer3DActions: bindActionCreators(viewer3DActions, dispatch)
   }
 }
 

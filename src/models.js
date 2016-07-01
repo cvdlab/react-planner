@@ -32,7 +32,8 @@ export const Line = Record({
   vertices: new List(),
   holes: new List(),
   height: 1,
-  thickness: 1
+  thickness: 1,
+  selected: false
 });
 
 export const Hole = Record({
@@ -42,7 +43,8 @@ export const Hole = Record({
   line: "",
   width: -1,
   height: -1,
-  altitude: 0
+  altitude: 0,
+  selected: false
 });
 
 export const Area = Record({
@@ -50,7 +52,8 @@ export const Area = Record({
   type: "",
   vertices: new List(),
   patternColor: "#000000",
-  patternDirection: 0
+  patternDirection: 0,
+  selected: false
 });
 
 export const State = Record({

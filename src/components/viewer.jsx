@@ -3,7 +3,7 @@ import Viewer2D from './viewer2d/viewer2d.jsx';
 import Viewer3D from './viewer3d/viewer3d';
 import {MODE_3D_VIEW} from '../constants';
 
-export default function Viewer({width, height, state, viewer2DActions}) {
+export default function Viewer({width, height, state}, {viewer2DActions}) {
   let scene = state.get('scene');
   let mode = state.get('mode');
   let viewer2D = state.get('viewer2D');
@@ -18,7 +18,10 @@ export default function Viewer({width, height, state, viewer2DActions}) {
 Viewer.propTypes = {
   state: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired
+};
+
+Viewer.contextTypes = {
   viewer2DActions: React.PropTypes.object.isRequired
 };
 

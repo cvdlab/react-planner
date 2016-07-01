@@ -4,12 +4,13 @@ import Area from './area.jsx';
 
 export default function Layer({layer}) {
 
-  let {lines, areas, vertices, holes} = layer;
+  let {lines, areas, vertices, holes, id: layerID} = layer;
 
   return (
     <g>
-      {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} area={area} vertices={vertices}/>)}
-      {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} line={line} vertices={vertices} holes={holes}/>)}
+      {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} layerID={layerID} area={area} vertices={vertices}/>)}
+      {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} layerID={layerID} line={line} vertices={vertices}
+                                                      holes={holes}/>)}
     </g>
   );
 
