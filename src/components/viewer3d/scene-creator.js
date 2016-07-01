@@ -3,26 +3,33 @@ import createShapeWall from './line-creator';
 import createArea from './area-creator';
 import createGrid from './grid-creator';
 
-export default function parseData(sceneData) {
+export function parseData(sceneData) {
+
+  let sceneGraph = {
+    pixelPerUnit: sceneData.pixelPerUnit,
+    unit: sceneData.unit,
+    layers: {},
+    width: sceneData.width,
+    height: sceneData.height
+  };
+
   let plan = new Three.Object3D();
 
   sceneData.layers.forEach(layer => {
 
-    // Import walls
+    sceneGraph.layers[layer.id] = {
+      lines: {},
+      holes: {},
+      areas: {}
+    };
+
+    // Import lines
     layer.lines.forEach(line => {
 
-      let holes = [];
-
-      line.holes.forEach(holeID => {
-        holes.push(layer.holes.get(holeID));
-      });
-
-      let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
-        layer.vertices.get(line.vertices.get(1)),
-        line.height,
-        line.thickness, holes, line.id);
+      let wall = createWall(layer, line);
 
       plan.add(wall);
+      sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
 
     // Import areas
@@ -33,7 +40,11 @@ export default function parseData(sceneData) {
         vertices.push(layer.vertices.get(vertexID));
       });
 
-      plan.add(createArea(vertices, parseInt(area.patternColor.substring(1), 16)));
+      let area3D = createArea(vertices, parseInt(area.patternColor.substring(1), 16));
+      plan.add(area3D);
+      sceneGraph.layers[layer.id].areas[area.id] = area3D;
+
+
     });
   });
 
@@ -62,6 +73,53 @@ export default function parseData(sceneData) {
   grid.position.y -= center[1];
   grid.position.z -= center[2];
 
+  return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
+}
 
-  return {boundingBox: boundingBox, plan: plan, grid: grid};
+export function updateScene(sceneGraph, sceneData, scene, diffArray) {
+
+  diffArray.forEach(diff => {
+    /* First of all I need to find the object I need to update */
+    let modifiedPath = diff.path.split("/");
+
+    if (modifiedPath.length > 2) {
+      console.log(modifiedPath);
+      console.log(sceneGraph);
+      console.log("1 ", sceneGraph[modifiedPath[1]]);
+      console.log("2 ", sceneGraph[modifiedPath[1]][modifiedPath[2]]);
+      console.log("3 ", sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]]);
+
+      switch (modifiedPath[3]) {
+        case "layer":
+          break;
+        case "vertices":
+          break;
+        case "line":
+          console.log(sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]]);
+          let wall = createWall(sceneData[[modifiedPath[1]][modifiedPath[2]]],
+            sceneData[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]]);
+          scene.remove(sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]][modifiedPath[4]]);
+          scene.add(wall);
+          sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]][modifiedPath[4]] = wall;
+          return sceneGraph;
+          break;
+      }
+
+    }
+  });
+}
+
+function createWall(layer, line) {
+  let holes = [];
+
+  line.holes.forEach(holeID => {
+    holes.push(layer.holes.get(holeID));
+  });
+
+  let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
+    layer.vertices.get(line.vertices.get(1)),
+    line.height,
+    line.thickness, holes, line.id);
+
+  return wall;
 }

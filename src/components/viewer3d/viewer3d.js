@@ -3,7 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
-import json2scene from './scene-creator';
+import {parseData, updateScene} from './scene-creator';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 
@@ -23,9 +23,9 @@ export default class Scene3DViewer extends React.Component {
     renderer.setSize(width, height);
 
     // LOAD DATA
-    let planData = json2scene(data);
+    let planData = parseData(data);
 
-    scene.add(planData.plan);    
+    scene.add(planData.plan);
     scene.add(planData.grid);
 
     // CAMERA
@@ -130,12 +130,13 @@ export default class Scene3DViewer extends React.Component {
 
       let changedValues = diff(this.props.scene, nextProps.scene);
 
-      console.log(changedValues.toJS());
-
       this.scene.remove(this.planData.plan);
-      this.planData = json2scene(nextProps.scene);
+      this.planData = parseData(nextProps.scene);
       this.scene.add(this.planData.plan);
 
+      console.log(changedValues.toJS());
+      updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS());
+      
       // OBJECT PICKING
       let toIntersect = [this.planData.plan];
       let mouse = new Three.Vector2();
