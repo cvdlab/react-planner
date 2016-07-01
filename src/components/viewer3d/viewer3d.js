@@ -133,9 +133,25 @@ export default class Scene3DViewer extends React.Component {
       let toIntersect = [this.planData.plan];
       let mouse = new Three.Vector2();
       let raycaster = new Three.Raycaster();
-      var onDocumentMouseDownTrackball = initPickingOrbit(camera, toIntersect, mouse, raycaster);
-      renderer.domElement.addEventListener('mousedown', onDocumentMouseDownTrackball, false);
+      renderer.domElement.addEventListener('mousedown', (event) => {
+        this.lastMousePosition.x = event.clientX / window.innerWidth * 2 - 1;
+        this.lastMousePosition.y = -event.clientY / window.innerHeight * 2 + 1;
+      }, false);
 
+      renderer.domElement.addEventListener('mouseup', (event) => {
+        event.preventDefault();
+
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+        if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
+          raycaster.setFromCamera(mouse, camera);
+          let intersects = raycaster.intersectObjects(toIntersect, true);
+          if (intersects.length > 0) {
+            intersects[0].object.interact && intersects[0].object.interact();
+          }
+        }
+      }, false);
     }
 
     renderer.setSize(width, height);
