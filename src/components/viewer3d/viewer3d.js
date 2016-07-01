@@ -62,15 +62,16 @@ export default class Scene3DViewer extends React.Component {
     let raycaster = new Three.Raycaster();
 
     renderer.domElement.addEventListener('mousedown', (event) => {
-      this.lastMousePosition.x = event.clientX / window.innerWidth * 2 - 1;
-      this.lastMousePosition.y = -event.clientY / window.innerHeight * 2 + 1;
+      this.lastMousePosition.x = event.offsetX / width * 2 - 1;
+      this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
     }, false);
 
     renderer.domElement.addEventListener('mouseup', (event) => {
       event.preventDefault();
 
-      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      mouse.x = (event.offsetX / width) * 2 - 1;
+      mouse.y = -(event.offsetY / height) * 2 + 1;
+
 
       if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
         raycaster.setFromCamera(mouse, camera);
@@ -134,15 +135,15 @@ export default class Scene3DViewer extends React.Component {
       let mouse = new Three.Vector2();
       let raycaster = new Three.Raycaster();
       renderer.domElement.addEventListener('mousedown', (event) => {
-        this.lastMousePosition.x = event.clientX / window.innerWidth * 2 - 1;
-        this.lastMousePosition.y = -event.clientY / window.innerHeight * 2 + 1;
+        this.lastMousePosition.x = event.offsetX / width * 2 - 1;
+        this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
       }, false);
 
       renderer.domElement.addEventListener('mouseup', (event) => {
         event.preventDefault();
 
-        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        mouse.x = (event.offsetX / width) * 2 - 1;
+        mouse.y = -(event.offsetY / height) * 2 + 1;
 
         if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
           raycaster.setFromCamera(mouse, camera);
