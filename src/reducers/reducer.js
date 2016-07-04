@@ -32,6 +32,7 @@ export default function appReducers(state, action) {
       return editingReducer(state, action);
 
     case constants.SELECT_TOOL_3D_VIEW:
+    case constants.SELECT_TOOL_3D_FIRST_PERSON:
       return viewer3DReducer(state, action);
 
     default:
