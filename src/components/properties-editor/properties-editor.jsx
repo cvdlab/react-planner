@@ -11,17 +11,17 @@ export default function PropertiesEditor({element}, {editingActions}) {
       <ul style={{listStyle: "none", padding: "0px"}}>
         <li style={{marginBottom: "5px"}}>
           <label style={{width: "70px", display: "inline-block"}}>Height</label>
-          <input type="text" defaultValue={element.height}/>
+          <input type="text" style={{width: "100px"}} defaultValue={element.height}/>
         </li>
 
         <li style={{marginBottom: "5px"}}>
           <label style={{width: "70px", display: "inline-block"}}>Width</label>
-          <input type="text" defaultValue={element.width}/>
+          <input type="text" style={{width: "100px"}} defaultValue={element.width}/>
         </li>
 
         <li style={{marginBottom: "5px"}}>
           <label style={{width: "70px", display: "inline-block"}}>Material</label>
-          <select>
+          <select style={{width: "100px"}}>
             <option value="1">Non disponibile</option>
             <option value="2">Cemento</option>
             <option value="3">Vetro</option>
