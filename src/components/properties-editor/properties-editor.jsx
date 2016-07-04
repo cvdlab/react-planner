@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-export default function PropertiesEditor({element}) {
+export default function PropertiesEditor({element}, {editingActions}) {
   return (
     <div>
       <ul style={{listStyle: "none", padding: "0px"}}>
@@ -32,7 +32,10 @@ export default function PropertiesEditor({element}) {
       </ul>
 
       <div style={{textAlign:"right"}}>
-        <button style={{backgroundColor: "red", border: 0, color: "white", margin: "3px"}}>Annulla</button>
+        <button
+          onClick={event => editingActions.unselectAll()}
+          style={{backgroundColor: "red", border: 0, color: "white", margin: "3px"}}>Annulla
+        </button>
         <button style={{backgroundColor: "green", border: 0, color: "white", margin: "3px"}}>Salva</button>
       </div>
 
@@ -44,4 +47,8 @@ export default function PropertiesEditor({element}) {
 
 PropertiesEditor.propTypes = {
   element: PropTypes.object.isRequired
+};
+
+PropertiesEditor.contextTypes = {
+  editingActions: PropTypes.object.isRequired
 };
