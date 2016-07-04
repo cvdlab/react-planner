@@ -17,6 +17,10 @@ export default function Area({layerID, area, vertices}, {editingActions}) {
     });
 
   let patternID = `pattern_${area.id}_area`;
+  let onClick = event => {
+    editingActions.selectArea(layerID, area.id);
+    event.stopPropagation();
+  };
 
   return (
     <g>
@@ -27,7 +31,7 @@ export default function Area({layerID, area, vertices}, {editingActions}) {
                 style={area.selected ? STYLE_SELECTED : STYLE_BASE}/>
         </pattern>
       </defs>
-      <path d={path} fill={`url(#${patternID})`} onClick={event => editingActions.selectArea(layerID, area.id)}/>
+      <path d={path} fill={`url(#${patternID})`} onClick={onClick}/>
     </g>
   )
 

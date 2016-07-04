@@ -10,6 +10,7 @@ export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 export const SELECT_LINE = 'SELECT_LINE';
 export const SELECT_HOLE = 'SELECT_HOLE';
 export const SELECT_AREA = 'SELECT_AREA';
+export const UNSELECT_ALL = 'UNSELECT_ALL';
 
 // ACTIONS viewer2D
 export const SELECT_TOOL_ZOOM_IN = 'SELECT_TOOL_ZOOM_IN';

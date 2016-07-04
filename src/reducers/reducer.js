@@ -29,6 +29,7 @@ export default function appReducers(state, action) {
     case constants.SELECT_LINE:
     case constants.SELECT_AREA:
     case constants.SELECT_HOLE:
+    case constants.UNSELECT_ALL:
       return editingReducer(state, action);
 
     case constants.SELECT_TOOL_3D_VIEW:
