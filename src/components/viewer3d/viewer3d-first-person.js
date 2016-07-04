@@ -88,11 +88,11 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     // POINTER LOCK
 
-    renderer.domElement.requestPointerLock = document.body.requestPointerLock ||
+    document.body.requestPointerLock = document.body.requestPointerLock ||
       document.body.mozRequestPointerLock ||
       document.body.webkitRequestPointerLock;
 
-    renderer.domElement.requestPointerLock();
+    document.body.requestPointerLock();
 
     camera.position.set(0, 0, 0);
 
