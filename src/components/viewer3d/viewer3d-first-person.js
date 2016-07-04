@@ -127,10 +127,10 @@ export default class Viewer3DFirstPerson extends React.Component {
           moveRight = true;
           break;
 
-        case 32: // space
+        /*case 32: // space
           if (canJump === true) velocity.y += 350;
           canJump = false;
-          break;
+          break;*/
 
       }
 
@@ -226,7 +226,7 @@ export default class Viewer3DFirstPerson extends React.Component {
       var isOnObject = true;
 
       var time = performance.now();
-      var delta = ( time - prevTime ) / 1000;
+      var delta = ( time - prevTime ) / 200;
 
       velocity.x -= velocity.x * 10.0 * delta;
       velocity.z -= velocity.z * 10.0 * delta;
@@ -282,7 +282,6 @@ export default class Viewer3DFirstPerson extends React.Component {
   }
 
   componentWillUnmount() {
-    this.orbitControls.dispose();
   }
 
   componentWillReceiveProps(nextProps) {
