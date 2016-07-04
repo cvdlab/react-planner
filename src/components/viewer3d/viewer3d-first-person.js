@@ -31,9 +31,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     /********************************/
 
 
-
-
-
     let editingActions = this.context.editingActions;
 
     let {width, height} = this.props;
@@ -79,11 +76,15 @@ export default class Viewer3DFirstPerson extends React.Component {
     // Add another light
 
     let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
-    spotLight1.position.set(cameraPositionX, cameraPositionY + 1000, cameraPositionZ);
-    scene.add(spotLight1);
+    spotLight1.position.set(1000, 0, -1000);
+    console.log(spotLight1.target);
+    spotLight1.target.position.set(50, 50000, 0);
+    spotLight1.target.rotation.z += Math.PI / 2;
 
-    var spotLightHelper = new Three.SpotLightHelper( spotLight1 );
-    scene.add( spotLightHelper );
+    camera.add(spotLight1);
+
+    var spotLightHelper = new Three.SpotLightHelper(spotLight1);
+    camera.add(spotLightHelper);
 
 
     // POINTER LOCK
@@ -128,9 +129,9 @@ export default class Viewer3DFirstPerson extends React.Component {
           break;
 
         /*case 32: // space
-          if (canJump === true) velocity.y += 350;
-          canJump = false;
-          break;*/
+         if (canJump === true) velocity.y += 350;
+         canJump = false;
+         break;*/
 
       }
 
@@ -172,6 +173,23 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     /**********************************************/
 
+
+    // Pointer
+
+    let pointer = new Three.Object3D();
+
+    let pointerGeometry = new Three.Geometry();
+    pointerGeometry.vertices.push(new Three.Vector3(-10, 0, 0));
+    pointerGeometry.vertices.push(new Three.Vector3(0, 10, 0));
+    pointerGeometry.vertices.push(new Three.Vector3(10, 0, 0));
+    pointerGeometry.vertices.push(new Three.Vector3(10, 0, 0));
+
+    let yRotation = this.controls.getObject().rotation.y;
+    let xRotation = this.controls.getObject().children[0].rotation.x;
+
+
+    pointer.add(new Three.Line());
+
     // // OBJECT PICKING
     // let toIntersect = [planData.plan];
     // let mouse = new Three.Vector2();
@@ -210,12 +228,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     function render() {
       // orbitController.update();
 
-      // spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
-      // camera.updateMatrix();
-      // camera.updateMatrixWorld();
-
-
-
       /*********************/
       //raycaster.ray.origin.copy( controls.getObject().position );
       //raycaster.ray.origin.y -= 10;
@@ -233,23 +245,23 @@ export default class Viewer3DFirstPerson extends React.Component {
 
       velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
 
-      if ( moveForward ) velocity.z -= 400.0 * delta;
-      if ( moveBackward ) velocity.z += 400.0 * delta;
+      if (moveForward) velocity.z -= 400.0 * delta;
+      if (moveBackward) velocity.z += 400.0 * delta;
 
-      if ( moveLeft ) velocity.x -= 400.0 * delta;
-      if ( moveRight ) velocity.x += 400.0 * delta;
+      if (moveLeft) velocity.x -= 400.0 * delta;
+      if (moveRight) velocity.x += 400.0 * delta;
 
-      if ( isOnObject === true ) {
-        velocity.y = Math.max( 0, velocity.y );
+      if (isOnObject === true) {
+        velocity.y = Math.max(0, velocity.y);
 
         canJump = true;
       }
 
-      controls.getObject().translateX( velocity.x * delta );
-      controls.getObject().translateY( velocity.y * delta );
-      controls.getObject().translateZ( velocity.z * delta );
+      controls.getObject().translateX(velocity.x * delta);
+      controls.getObject().translateY(velocity.y * delta);
+      controls.getObject().translateZ(velocity.z * delta);
 
-      if ( controls.getObject().position.y < 10 ) {
+      if (controls.getObject().position.y < 10) {
 
         velocity.y = 0;
         controls.getObject().position.y = 10;
@@ -261,12 +273,6 @@ export default class Viewer3DFirstPerson extends React.Component {
       prevTime = time;
 
       /*********************************************/
-
-
-
-
-
-
 
 
       renderer.render(scene, camera);
