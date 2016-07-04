@@ -6,10 +6,33 @@ import Three from 'three';
 import {parseData, updateScene} from './scene-creator';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
+import {initPointerLock} from "./pointer-lock-navigation";
 
 export default class Viewer3DFirstPerson extends React.Component {
 
   componentDidMount() {
+
+    /********************************/
+    var canJump = false;
+
+    var prevTime = performance.now();
+    var velocity = new Three.Vector3();
+
+
+    var controlsEnabled = true;
+
+    var moveForward = false;
+    var moveBackward = false;
+    var moveLeft = false;
+    var moveRight = false;
+    var canJump = false;
+
+
+    /********************************/
+
+
+
+
 
     let editingActions = this.context.editingActions;
 
@@ -26,17 +49,16 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     // LOAD DATA
     let planData = parseData(data, editingActions);
+    //planData.grid.rotation.z += Math.PI;
 
     scene.add(planData.plan);
-    scene.add(planData.grid);
+    //scene.add(planData.grid);
 
     // CAMERA
     let viewSize = 900;
     let aspectRatio = width / height;
-    let camera = new Three.OrthographicCamera(
-      -aspectRatio * viewSize / 2, aspectRatio * viewSize / 2,
-      -viewSize / 2, viewSize / 2,
-      -100000, 100000);
+    let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
+
     scene.add(camera);
 
     // Set position for the camera
@@ -44,7 +66,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 4;
     let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
     camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
-    camera.up = new Three.Vector3(0, -1, 0);
+    camera.up = new Three.Vector3(0, 1, 0);
 
     // HELPER AXIS
     let axisHelper = new Three.AxisHelper(100);
@@ -57,55 +79,202 @@ export default class Viewer3DFirstPerson extends React.Component {
     // Add another light
 
     let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
-    spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+    spotLight1.position.set(cameraPositionX, cameraPositionY + 1000, cameraPositionZ);
     scene.add(spotLight1);
 
-    // OBJECT PICKING
-    let toIntersect = [planData.plan];
-    let mouse = new Three.Vector2();
-    let raycaster = new Three.Raycaster();
-
-    renderer.domElement.addEventListener('mousedown', (event) => {
-      this.lastMousePosition.x = event.offsetX / width * 2 - 1;
-      this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
-    }, false);
-
-    renderer.domElement.addEventListener('mouseup', (event) => {
-      event.preventDefault();
-
-      mouse.x = (event.offsetX / width) * 2 - 1;
-      mouse.y = -(event.offsetY / height) * 2 + 1;
+    var spotLightHelper = new Three.SpotLightHelper( spotLight1 );
+    scene.add( spotLightHelper );
 
 
-      if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
-        raycaster.setFromCamera(mouse, camera);
-        let intersects = raycaster.intersectObjects(toIntersect, true);
-        if (intersects.length > 0) {
-          intersects[0].object.interact && intersects[0].object.interact();
-        }
+    // POINTER LOCK
+
+    renderer.domElement.requestPointerLock = document.body.requestPointerLock ||
+      document.body.mozRequestPointerLock ||
+      document.body.webkitRequestPointerLock;
+
+    renderer.domElement.requestPointerLock();
+
+    camera.position.set(0, 0, 0);
+
+    this.controls = initPointerLock(camera, renderer.domElement);
+    this.controls.getObject().position.set(-50, 0, -100);
+    scene.add(this.controls.getObject());
+
+
+    /**********************************************/
+
+    var onKeyDown = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // up
+        case 87: // w
+          moveForward = true;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = true;
+          break;
+
+        case 40: // down
+        case 83: // s
+          moveBackward = true;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = true;
+          break;
+
+        case 32: // space
+          if (canJump === true) velocity.y += 350;
+          canJump = false;
+          break;
+
       }
-    }, false);
+
+    };
+
+    var onKeyUp = function (event) {
+
+      switch (event.keyCode) {
+
+        case 38: // up
+        case 87: // w
+          moveForward = false;
+          break;
+
+        case 37: // left
+        case 65: // a
+          moveLeft = false;
+          break;
+
+        case 40: // down
+        case 83: // s
+          moveBackward = false;
+          break;
+
+        case 39: // right
+        case 68: // d
+          moveRight = false;
+          break;
+
+      }
+
+    };
+
+    document.addEventListener('keydown', onKeyDown, false);
+    document.addEventListener('keyup', onKeyUp, false);
+
+    let raycaster = new Three.Raycaster(new Three.Vector3(), new Three.Vector3(0, -1, 0), 0, 10);
+
+
+    /**********************************************/
+
+    // // OBJECT PICKING
+    // let toIntersect = [planData.plan];
+    // let mouse = new Three.Vector2();
+    // let raycaster = new Three.Raycaster();
+    //
+    // renderer.domElement.addEventListener('mousedown', (event) => {
+    //   this.lastMousePosition.x = event.offsetX / width * 2 - 1;
+    //   this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
+    // }, false);
+    //
+    // renderer.domElement.addEventListener('mouseup', (event) => {
+    //   event.preventDefault();
+    //
+    //   mouse.x = (event.offsetX / width) * 2 - 1;
+    //   mouse.y = -(event.offsetY / height) * 2 + 1;
+    //
+    //
+    //   if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
+    //     raycaster.setFromCamera(mouse, camera);
+    //     let intersects = raycaster.intersectObjects(toIntersect, true);
+    //     if (intersects.length > 0) {
+    //       intersects[0].object.interact && intersects[0].object.interact();
+    //     }
+    //   }
+    // }, false);
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
 
     // create orbit controls
-    let orbitController = new OrbitControls(camera, renderer.domElement);
+    // let orbitController = new OrbitControls(camera, renderer.domElement);
+
+    let controls = this.controls;
 
     render();
     function render() {
-      orbitController.update();
+      // orbitController.update();
 
-      spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
-      camera.updateMatrix();
-      camera.updateMatrixWorld();
+      // spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
+      // camera.updateMatrix();
+      // camera.updateMatrixWorld();
+
+
+
+      /*********************/
+      //raycaster.ray.origin.copy( controls.getObject().position );
+      //raycaster.ray.origin.y -= 10;
+
+      //var intersections = raycaster.intersectObjects( objects );
+
+      //var isOnObject = intersections.length > 0;
+      var isOnObject = true;
+
+      var time = performance.now();
+      var delta = ( time - prevTime ) / 1000;
+
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
+
+      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+
+      if ( moveForward ) velocity.z -= 400.0 * delta;
+      if ( moveBackward ) velocity.z += 400.0 * delta;
+
+      if ( moveLeft ) velocity.x -= 400.0 * delta;
+      if ( moveRight ) velocity.x += 400.0 * delta;
+
+      if ( isOnObject === true ) {
+        velocity.y = Math.max( 0, velocity.y );
+
+        canJump = true;
+      }
+
+      controls.getObject().translateX( velocity.x * delta );
+      controls.getObject().translateY( velocity.y * delta );
+      controls.getObject().translateZ( velocity.z * delta );
+
+      if ( controls.getObject().position.y < 10 ) {
+
+        velocity.y = 0;
+        controls.getObject().position.y = 10;
+
+        canJump = true;
+
+      }
+
+      prevTime = time;
+
+      /*********************************************/
+
+
+
+
+
+
+
 
       renderer.render(scene, camera);
       requestAnimationFrame(render);
     }
 
     this.lastMousePosition = {};
-    this.orbitControls = orbitController;
+    // this.orbitControls = orbitController;
     this.renderer = renderer;
     this.camera = camera;
     this.scene = scene;
