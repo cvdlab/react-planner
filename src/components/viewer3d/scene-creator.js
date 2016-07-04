@@ -80,44 +80,56 @@ export function parseData(sceneData, editingActions) {
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
-export function updateScene(sceneGraph, sceneData, scene, diffArray) {
+export function updateScene(sceneGraph, sceneData, scene, diffArray, editingActions) {
 
   diffArray.forEach(diff => {
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
 
     console.log(modifiedPath);
+    console.log("SceneData?", sceneData[modifiedPath[1]]);
 
-    let layer = sceneData[[modifiedPath[1]][modifiedPath[2]]];
+    let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
+
+    let changedObjectType = modifiedPath[3];
+    let changedObject = layer[modifiedPath[3]].get(modifiedPath[4]);
+
     console.log("layer ", layer);
-
+    console.log("changedObjectType ", changedObjectType);
+    console.log("changedObject ", changedObject);
 
     if (modifiedPath.length > 2) {
-      console.log(modifiedPath);
-      console.log(sceneGraph);
-      console.log("1 ", sceneGraph[modifiedPath[1]]);
-      console.log("2 ", sceneGraph[modifiedPath[1]][modifiedPath[2]]);
-      console.log("3 ", sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]]);
 
       switch (modifiedPath[3]) {
         case "layer":
           break;
         case "vertices":
           break;
-        case "line":
-          console.log(sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]]);
-          console.log(sceneData[[modifiedPath[1]][modifiedPath[2]]]);
-          let wall = createWall(sceneData[[modifiedPath[1]][modifiedPath[2]]],
-            sceneData[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]]);
-          scene.remove(sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]][modifiedPath[4]]);
+        case "lines":
+          console.log("Ok it's a line");
+
+          let interactFunction = () => {
+            return editingActions.selectLine(layer.id, changedObject.id)
+          };
+          console.log("ChangedObject: ", changedObject);
+          console.log("lineID? ", changedObject.id);
+
+          let wall = createWall(layer,
+            changedObject, interactFunction());
+
+          console.log("wall? ", wall);
+          let graphLayer = sceneGraph[modifiedPath[1]].get([modifiedPath[2]]);
+          let oldWall = graphLayer[modifiedPath[3]].get([modifiedPath[4]]);
+          console.log(oldWall);
+          scene.remove(oldWall);
           scene.add(wall);
           sceneGraph[modifiedPath[1]][modifiedPath[2]][modifiedPath[3]][modifiedPath[4]] = wall;
-          return sceneGraph;
           break;
       }
 
     }
   });
+  return sceneGraph;
 }
 
 function createWall(layer, line, interactFunction) {

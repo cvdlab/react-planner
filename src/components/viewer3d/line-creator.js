@@ -19,7 +19,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   let rectShape = createShape(wallCoord);
 
   holes.forEach(hole => {
-    let holeCoords = createHoleShape(vertex0, vertex1, hole.width, hole.height, hole.offset, hole.altitude);
+    let holeCoords = createHoleShape(vertex0, vertex1, hole.width, hole.height, hole.offset, hole.altitude + 0.001);
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
   });
@@ -48,19 +48,6 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   pivot.position.z -= vertex0.y;
 
   pivot.add(wall);
-
-  // Add Object picking interations:
-
-  // wall.interact = () => {
-  //   if (wall.selected) {
-  //     wall.material.color = new Three.Color(1, 1, 1);
-  //
-  //   } else {
-  //     wall.material.color = new Three.Color(1, 0.76, 0);
-  //   }
-  //   wall.selected = !wall.selected
-  // };
-
   return pivot;
 }
 
