@@ -2,7 +2,7 @@ import React from 'react';
 
 const STYLE = {borderTop: "1px solid #222222", borderBottom: "1px solid #48494E"};
 const STYLE_TITLE = {
-  fontSize: "10px",
+  fontSize: "11px",
   color: "#EBEBEB",
   padding: "5px 0 8px 15px",
   backgroundColor: "#2E2F33",
@@ -11,10 +11,10 @@ const STYLE_TITLE = {
   margin: "0px"
 };
 const STYLE_CONTENT = {
-  fontSize: "10px",
+  fontSize: "11px",
   color: "#EBEBEB",
   border: "1px solid #222222",
-  padding: "5px 0 5px 15px",
+  padding: "5px 15px 5px 15px",
   backgroundColor: "#2E2F33",
   textShadow: "-1px -1px 2px rgba(0, 0, 0, 1)"
 };

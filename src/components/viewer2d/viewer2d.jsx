@@ -14,7 +14,7 @@ const TOOLS_MAP = {
 };
 
 
-export default function Viewer2D({scene, width, height, viewer2D, mode}, {viewer2DActions}) {
+export default function Viewer2D({scene, width, height, viewer2D, mode}, {editingActions, viewer2DActions}) {
 
   if (!viewer2D.has('mode')) {
     viewer2D = ViewerHelper.getDefaultValue();
@@ -24,11 +24,12 @@ export default function Viewer2D({scene, width, height, viewer2D, mode}, {viewer
   }
 
 
+  let onClick = event => editingActions.unselectAll();
   let onChange = event => viewer2DActions.updateCameraView(event.value);
   let viewerTool = TOOLS_MAP.hasOwnProperty(mode) ? TOOLS_MAP[mode] : TOOL_NONE;
 
   return (
-    <Viewer value={viewer2D} onChange={onChange} tool={viewerTool} width={width} height={height}>
+    <Viewer value={viewer2D} onChange={onChange} onClick={onClick} tool={viewerTool} width={width} height={height}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <Scene scene={scene}/>
       </svg>
@@ -46,5 +47,6 @@ Viewer2D.propTypes = {
 };
 
 Viewer2D.contextTypes = {
-  viewer2DActions: React.PropTypes.object.isRequired
+  viewer2DActions: React.PropTypes.object.isRequired,
+  editingActions: React.PropTypes.object.isRequired
 };

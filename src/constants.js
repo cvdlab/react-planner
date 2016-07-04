@@ -10,6 +10,7 @@ export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 export const SELECT_LINE = 'SELECT_LINE';
 export const SELECT_HOLE = 'SELECT_HOLE';
 export const SELECT_AREA = 'SELECT_AREA';
+export const UNSELECT_ALL = 'UNSELECT_ALL';
 
 // ACTIONS viewer2D
 export const SELECT_TOOL_ZOOM_IN = 'SELECT_TOOL_ZOOM_IN';
@@ -19,6 +20,7 @@ export const UPDATE_2D_CAMERA = 'UPDATE_2D_CAMERA';
 
 //ACTIONS viewer3D
 export const SELECT_TOOL_3D_VIEW = 'SELECT_TOOL_3D_VIEW';
+export const SELECT_TOOL_3D_FIRST_PERSON = 'SELECT_TOOL_3D_FIRST_PERSON';
 
 //MODES
 export const MODE_IDLE = 'IDLE';
@@ -26,3 +28,4 @@ export const MODE_2D_ZOOM_IN = 'MODE_2D_ZOOM_IN';
 export const MODE_2D_ZOOM_OUT = 'MODE_2D_ZOOM_OUT';
 export const MODE_2D_PAN = 'MODE_2D_PAN';
 export const MODE_3D_VIEW = 'MODE_3D_VIEW';
+export const MODE_3D_FIRST_PERSON = 'MODE_3D_FIRST_PERSON';

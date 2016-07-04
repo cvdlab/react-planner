@@ -10,7 +10,7 @@ export default function PanelPropertiesEditor({scene}) {
 
 
   let componentRenderer = line =>
-    <Panel name={`Properties: [${line.type}] ${line.id}`}>
+    <Panel key={line.id} name={`Properties: [${line.type}] ${line.id}`}>
       <PropertiesEditor element={line}/>
     </Panel>;
 

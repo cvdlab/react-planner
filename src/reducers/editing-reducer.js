@@ -3,7 +3,8 @@ import {
   MODE_IDLE,
   SELECT_AREA,
   SELECT_HOLE,
-  SELECT_LINE
+  SELECT_LINE,
+  UNSELECT_ALL
 } from '../constants';
 
 export default function (state, action) {
@@ -21,6 +22,10 @@ export default function (state, action) {
 
     case SELECT_LINE:
       return state.set('scene', selectLine(scene, action.layerID, action.lineID));
+
+    case UNSELECT_ALL:
+      return state.set('scene', unselectAll(scene));
+
 
     default:
       return state;
@@ -62,4 +67,8 @@ function selectHole(scene, layerID, holeID) {
     scene.updateIn(['layers', layerID], layer => unselectAllFromLayer(layer));
     scene.setIn(['layers', layerID, 'holes', holeID, 'selected'], true);
   });
+}
+
+function unselectAll(scene) {
+  return scene.updateIn(['layers', 'layer-floor-1'], layer => unselectAllFromLayer(layer));
 }
