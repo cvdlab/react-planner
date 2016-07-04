@@ -3,25 +3,31 @@ import PointerLockControls from './libs/pointer-lock-controls';
 export function initPointerLock(camera, rendererElement) {
 
   let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
-  console.log(havePointerLock);
 
   if (havePointerLock) {
 
     let pointerlockchange = event => {
-      controls.enabled = true;
+      controls.enabled = !controls.enabled;
     };
 
     document.addEventListener('pointerlockchange', pointerlockchange, false);
     document.addEventListener('mozpointerlockchange', pointerlockchange, false);
     document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
 
+    rendererElement.addEventListener('mousedown', event => {
+        document.body.requestPointerLock = document.body.requestPointerLock ||
+          document.body.mozRequestPointerLock ||
+          document.body.webkitRequestPointerLock;
+        document.body.requestPointerLock();
+      }
+    );
+
   } else {
     console.log('Your browser doesn\'t seem to support Pointer Lock API');
   }
 
   let controls = new PointerLockControls(camera);
-  controls.enabled = true;
-  console.log(controls);
+//controls.enabled = true;
   return controls;
 }
 

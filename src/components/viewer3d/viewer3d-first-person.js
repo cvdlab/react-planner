@@ -77,9 +77,6 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
     spotLight1.position.set(1000, 0, -1000);
-    console.log(spotLight1.target);
-    spotLight1.target.position.set(50, 50000, 0);
-    spotLight1.target.rotation.z += Math.PI / 2;
 
     camera.add(spotLight1);
 
