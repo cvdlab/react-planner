@@ -3,7 +3,7 @@ import calculateVolumes from '../../utils/calculateVolumes';
 
 const STYLE_CONTAINER = {
   padding: "0 20px",
-  overflow: "scroll"
+  overflowY: "scroll"
 };
 
 const STYLE_TABLE = {
