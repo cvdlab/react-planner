@@ -10,6 +10,7 @@ import * as viewer2DActions from '../actions/viewer2d-actions';
 import * as editingActions from '../actions/editing-actions';
 import * as viewer3DActions from '../actions/viewer3d-actions';
 import * as volumesActions from '../actions/volumes-actions';
+import SceneComponents from '../scene-components/scene-components';
 import Layout from './layout.jsx';
 
 
@@ -21,7 +22,8 @@ class App extends React.Component {
       viewer2DActions: this.props.viewer2DActions,
       editingActions: this.props.editingActions,
       viewer3DActions: this.props.viewer3DActions,
-      volumesActions: this.props.volumesActions
+      volumesActions: this.props.volumesActions,
+      sceneComponents: SceneComponents
     }
   }
 
@@ -36,7 +38,8 @@ App.childContextTypes = {
   viewer2DActions: React.PropTypes.object,
   editingActions: React.PropTypes.object,
   viewer3DActions: React.PropTypes.object,
-  volumesActions: React.PropTypes.object
+  volumesActions: React.PropTypes.object,
+  sceneComponents: React.PropTypes.object
 };
 
 

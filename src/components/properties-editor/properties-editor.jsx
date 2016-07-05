@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-export default function PropertiesEditor({element}, {editingActions}) {
+export default function PropertiesEditor({element}, {editingActions, sceneComponents}) {
   return (
     <div>
       <ul style={{listStyle: "none", padding: "0px"}}>
@@ -50,5 +50,6 @@ PropertiesEditor.propTypes = {
 };
 
 PropertiesEditor.contextTypes = {
-  editingActions: PropTypes.object.isRequired
+  editingActions: PropTypes.object.isRequired,
+  sceneComponents: PropTypes.object.isRequired
 };
