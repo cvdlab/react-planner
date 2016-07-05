@@ -69,3 +69,13 @@ export const State = Record({
   scene: new Scene(),
   viewer2D: new Map()
 });
+
+export const ElementVolume = Record({
+  id: "",
+  elementID: "",
+  layerID: "",
+  type: "",
+  base: "",
+  volume: "",
+  composition: ""
+});
