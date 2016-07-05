@@ -3,6 +3,7 @@ import {ViewerHelper} from 'react-svg-pan-zoom';
 
 import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
 import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet} from "../models";
+import SceneComponents from '../scene-components/scene-components';
 
 export default function (state, action) {
 
@@ -28,12 +29,15 @@ function loadProject(state, data) {
     .set('areas', new List(vertex.areas));
 
   let readLine = line => new Line(line)
+    .set('type', SceneComponents.lines.hasOwnProperty(line.type) ? line.type : SceneComponents.lines.default.name)
     .set('vertices', new List(line.vertices))
     .set('holes', new List(line.holes));
 
-  let readHole = hole => new Hole(hole);
+  let readHole = hole => new Hole(hole)
+    .set('type', SceneComponents.holes.hasOwnProperty(hole.type) ? line.type : SceneComponents.holes.default.name);
 
   let readArea = area => new Area(area)
+    .set('type', SceneComponents.areas.hasOwnProperty(area.type) ? area.type : SceneComponents.areas.default.name)
     .set('vertices', new List(area.vertices));
 
   let readElementsSet = (elementsSet => {
