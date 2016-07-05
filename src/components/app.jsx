@@ -9,6 +9,7 @@ import * as projectActions from '../actions/project-actions';
 import * as viewer2DActions from '../actions/viewer2d-actions';
 import * as editingActions from '../actions/editing-actions';
 import * as viewer3DActions from '../actions/viewer3d-actions';
+import * as volumesActions from '../actions/volumes-actions';
 import Layout from './layout.jsx';
 
 
@@ -19,7 +20,8 @@ class App extends React.Component {
       projectActions: this.props.projectActions,
       viewer2DActions: this.props.viewer2DActions,
       editingActions: this.props.editingActions,
-      viewer3DActions: this.props.viewer3DActions
+      viewer3DActions: this.props.viewer3DActions,
+      volumesActions: this.props.volumesActions
     }
   }
 
@@ -33,7 +35,8 @@ App.childContextTypes = {
   projectActions: React.PropTypes.object,
   viewer2DActions: React.PropTypes.object,
   editingActions: React.PropTypes.object,
-  viewer3DActions: React.PropTypes.object
+  viewer3DActions: React.PropTypes.object,
+  volumesActions: React.PropTypes.object
 };
 
 
@@ -46,7 +49,8 @@ function mapDispatchToProps(dispatch) {
     projectActions: bindActionCreators(projectActions, dispatch),
     viewer2DActions: bindActionCreators(viewer2DActions, dispatch),
     editingActions: bindActionCreators(editingActions, dispatch),
-    viewer3DActions: bindActionCreators(viewer3DActions, dispatch)
+    viewer3DActions: bindActionCreators(viewer3DActions, dispatch),
+    volumesActions: bindActionCreators(volumesActions, dispatch)
   }
 }
 

@@ -2,7 +2,8 @@ import React from 'react';
 import Viewer2D from './viewer2d/viewer2d.jsx';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
-import {MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../constants';
+import VolumesTable from './volumes-summary/volumes-table.jsx';
+import {MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VOLUMES_SUMMARY} from '../constants';
 
 export default function Viewer({width, height, state}, {viewer2DActions}) {
   let scene = state.get('scene');
@@ -18,6 +19,10 @@ export default function Viewer({width, height, state}, {viewer2DActions}) {
 
     case MODE_3D_FIRST_PERSON:
       viewer = React.createElement(Viewer3DFirstPerson, {scene, mode, width, height});
+      break;
+
+    case MODE_VOLUMES_SUMMARY:
+      viewer = React.createElement(VolumesTable, {scene, mode, width, height});
       break;
 
     default:

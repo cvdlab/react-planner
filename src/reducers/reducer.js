@@ -4,6 +4,7 @@ import viewer2DReducer from './viewer2d-reducer';
 import editingReducer from './editing-reducer';
 import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
+import volumesReducer from './volumes-reducer';
 import {State} from '../models';
 
 export const initialState = new State();
@@ -35,6 +36,9 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_3D_VIEW:
     case constants.SELECT_TOOL_3D_FIRST_PERSON:
       return viewer3DReducer(state, action);
+
+    case constants.SELECT_TOOL_VOLUMES_SUMMARY:
+      return volumesReducer(state, action);
 
     default:
       return state;

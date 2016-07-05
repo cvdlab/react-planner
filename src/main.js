@@ -26,7 +26,8 @@ window.Metior = {
   projectActions: require('./actions/project-actions'),
   editingActions: require('./actions/editing-actions'),
   viewer2DActions: require('./actions/viewer2d-actions'),
-  viewer3DActions: require('./actions/viewer3d-actions')
+  viewer3DActions: require('./actions/viewer3d-actions'),
+  volumesActions: require('./actions/volumes-actions')
 };
 console.groupCollapsed("Metior");
 console.info("Metior is ready");
