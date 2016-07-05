@@ -40,21 +40,31 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
     let startAt = lenght * hole.offset - hole.width / 2;
     let holePath = `M${0} ${ -epsilon}  L${hole.width} ${-epsilon}  L${hole.width} ${epsilon}  L${0} ${epsilon}  z`;
     let holeStyle = hole.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
+    let onHoleClick = event => {
+      editingActions.selectHole(layerID, hole.id);
+      event.stopPropagation();
+    };
+
     return (
       <g key={holeID} transform={`translate(${startAt}, 0)`}>
-        <path d={holePath} style={holeStyle} onClick={event => editingActions.selectHole(layerID, hole.id)}/>
+        <path d={holePath} style={holeStyle} onClick={onHoleClick}/>
         <line x1={hole.width / 2} y1={- 10 - epsilon} x2={hole.width / 2} y2={10 + epsilon} style={holeStyle}/>
       </g>
     )
   });
 
 
+  let onLineClick = event => {
+    editingActions.selectLine(layerID, line.id);
+    event.stopPropagation();
+  };
+
   return (
     <g transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`}>
       <path
         d={`M${0} ${ -epsilon}  L${lenght} ${-epsilon}  L${lenght} ${epsilon}  L${0} ${epsilon}  z`}
         style={line.selected ? STYLE_SELECTED : STYLE_BASE}
-        onClick={event => editingActions.selectLine(layerID, line.id)}/>
+        onClick={onLineClick}/>
       {holesComp}
     </g>
   );

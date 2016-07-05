@@ -4,10 +4,13 @@ import PropertiesEditor from '../properties-editor/properties-editor.jsx';
 
 export default function PanelPropertiesEditor({scene}) {
 
+  if (!scene.layers.has('layer-floor-1')) return null;
+
   let layer = scene.layers.get('layer-floor-1');
 
+
   let componentRenderer = line =>
-    <Panel name={`Properties: [${line.type}] ${line.id}`}>
+    <Panel key={line.id} name={`Properties: [${line.type}] ${line.id}`}>
       <PropertiesEditor element={line}/>
     </Panel>;
 

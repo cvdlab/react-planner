@@ -2,12 +2,19 @@ import {
   SELECT_TOOL_EDIT,
   SELECT_AREA,
   SELECT_HOLE,
-  SELECT_LINE
+  SELECT_LINE,
+  UNSELECT_ALL
 } from '../constants';
 
 export function selectToolEdit() {
   return {
     type: SELECT_TOOL_EDIT
+  }
+}
+
+export function unselectAll() {
+  return {
+    type: UNSELECT_ALL
   }
 }
 
