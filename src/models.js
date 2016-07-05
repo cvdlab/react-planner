@@ -1,6 +1,13 @@
 import {Record, List, Map} from 'immutable';
 import {MODE_IDLE} from './constants';
 
+export const ElementsSet = Record({
+  vertices: new List(),
+  lines: new List(),
+  holes: new List(),
+  areas: new List()
+});
+
 export const Scene = Record({
   pixelPerUnit: 100,
   unit: "m",
@@ -15,7 +22,8 @@ export const Layer = Record({
   vertices: new Map(),
   lines: new Map(),
   holes: new Map(),
-  areas: new Map()
+  areas: new Map(),
+  selected: new ElementsSet()
 });
 
 export const Vertex = Record({

@@ -7,6 +7,8 @@ import {
   UNSELECT_ALL
 } from '../constants';
 
+import {ElementsSet} from '../models';
+
 export default function (state, action) {
   let {scene} = state;
 
@@ -33,39 +35,39 @@ export default function (state, action) {
 }
 
 function unselectAllFromLayer(layer) {
+  let selected = layer.get('selected');
+
   return layer.withMutations(layer => {
-    layer.update('lines', lines => {
-      return lines.map(line => line.set('selected', false));
-    });
-
-    layer.update('areas', areas => {
-      return areas.map(area => area.set('selected', false));
-    });
-
-    layer.update('holes', holes => {
-      return holes.map(hole => hole.set('selected', false));
-    });
+    selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
+    selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
+    selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
+    layer.set('selected', new ElementsSet());
   });
 }
 
 function selectLine(scene, layerID, lineID) {
-  return scene.withMutations(scene => {
-    scene.updateIn(['layers', layerID], layer => unselectAllFromLayer(layer));
-    scene.setIn(['layers', layerID, 'lines', lineID, 'selected'], true);
-  });
+  return scene.updateIn(['layers', layerID], layer => {
+      layer = unselectAllFromLayer(layer);
+      layer = layer.setIn(['lines', lineID, 'selected'], true);
+      return layer.updateIn(['selected', 'lines'], lines => lines.push(lineID));
+    }
+  );
 }
 
 function selectArea(scene, layerID, areaID) {
-  return scene.withMutations(scene => {
-    scene.updateIn(['layers', layerID], layer => unselectAllFromLayer(layer));
-    scene.setIn(['layers', layerID, 'areas', areaID, 'selected'], true);
-  });
+  return scene.updateIn(['layers', layerID], layer => {
+      layer = unselectAllFromLayer(layer);
+      layer = layer.setIn(['areas', areaID, 'selected'], true);
+      return layer.updateIn(['selected', 'areas'], areas => areas.push(areaID));
+    }
+  );
 }
 
 function selectHole(scene, layerID, holeID) {
-  return scene.withMutations(scene => {
-    scene.updateIn(['layers', layerID], layer => unselectAllFromLayer(layer));
-    scene.setIn(['layers', layerID, 'holes', holeID, 'selected'], true);
+  return scene.updateIn(['layers', layerID], layer => {
+    layer = unselectAllFromLayer(layer);
+    layer = layer.setIn(['holes', holeID, 'selected'], true);
+    return layer.updateIn(['selected', 'holes'], holes => holes.push(holeID));
   });
 }
 

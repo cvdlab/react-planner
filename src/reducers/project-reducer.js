@@ -2,7 +2,7 @@ import {List, Map, Iterable, fromJS, Seq} from "immutable";
 import {ViewerHelper} from 'react-svg-pan-zoom';
 
 import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
-import {State, Scene, Layer, Vertex, Line, Hole, Area} from "../models";
+import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet} from "../models";
 
 export default function (state, action) {
 
@@ -36,11 +36,22 @@ function loadProject(state, data) {
   let readArea = area => new Area(area)
     .set('vertices', new List(area.vertices));
 
+  let readElementsSet = (elementsSet => {
+    return new ElementsSet({
+      lines: new List(elementsSet.lines),
+      areas: new List(elementsSet.areas),
+      holes: new List(elementsSet.holes)
+    });
+  });
+
+
   let readLayer = layer => new Layer(layer)
     .set('vertices', new Seq(layer.vertices).map(vertex => readVertex(vertex)).toMap())
     .set('lines', new Seq(layer.lines).map(line => readLine(line)).toMap())
     .set('holes', new Seq(layer.holes).map(hole => readHole(hole)).toMap())
-    .set('areas', new Seq(layer.areas).map(area => readArea(area)).toMap());
+    .set('areas', new Seq(layer.areas).map(area => readArea(area)).toMap())
+    .set('selected', layer.selected ? readElementsSet(layer.selected) : new ElementsSet());
+
 
   let readScene = scene => new Scene(scene)
     .set('layers', new Seq(scene.layers).map(layer => readLayer(layer)).toMap());
