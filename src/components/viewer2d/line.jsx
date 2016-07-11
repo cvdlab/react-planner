@@ -1,10 +1,10 @@
 import React from 'react';
 
-const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#e8e8e8"};
+const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
 const STYLE_SELECTED = {stroke: "#FFC107", strokeWidth: "1px", fill: "orange"};
 
-const STYLE_HOLE_BASE = {stroke: "#737373", strokeWidth: "3px", fill: "#737373"};
-const STYLE_HOLE_SELECTED = {stroke: "#737373", strokeWidth: "3px", fill: "orange"};
+const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
+const STYLE_HOLE_SELECTED = {stroke: "orange", strokeWidth: "3px", fill: "orange"};
 
 const {pow, sqrt, asin, PI} = Math;
 
@@ -33,7 +33,8 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
 
   let lenght = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
   let angle = (-asin((y1 - y2) / lenght)) * 180 / PI;
-  let epsilon = line.thickness / 2;
+  //let epsilon = line.thickness / 2;
+  let epsilon = 3;
 
   let holesComp = line.holes.map(holeID => {
     let hole = holes.get(holeID);
