@@ -37,6 +37,7 @@ export const Vertex = Record({
 export const Line = Record({
   id: "",
   type: "",
+  prototype: "lines",
   vertices: new List(),
   holes: new List(),
   height: 1,
@@ -48,6 +49,7 @@ export const Line = Record({
 export const Hole = Record({
   id: "",
   type: "",
+  prototype: "holes",
   offset: -1,
   line: "",
   width: -1,
@@ -60,6 +62,7 @@ export const Hole = Record({
 export const Area = Record({
   id: "",
   type: "",
+  prototype: "areas",
   vertices: new List(),
   patternColor: "#000000",
   patternDirection: 0,

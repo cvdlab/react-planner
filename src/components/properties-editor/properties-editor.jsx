@@ -1,47 +1,86 @@
-import React, {PropTypes} from 'react';
+import React, {Component, PropTypes} from 'react';
+import {Seq, Map} from 'immutable';
 
-export default function PropertiesEditor({element}, {editingActions, sceneComponents}) {
-  return (
-    <div>
-      <ul style={{listStyle: "none", padding: "0px"}}>
-        <li><strong>id</strong> {element.id}</li>
-        <li><strong>type</strong> {element.type} </li>
-      </ul>
 
-      <ul style={{listStyle: "none", padding: "0px"}}>
-        <li style={{marginBottom: "5px"}}>
-          <label style={{width: "70px", display: "inline-block"}}>Height</label>
-          <input type="text" style={{width: "100px"}} defaultValue={element.height}/>
-        </li>
+const STYLE_UL = {listStyle: "none", padding: "0px"};
+const STYLE_LI = {marginBottom: "5px"};
+const STYLE_LABEL = {width: "70px", display: "inline-block"};
+const STYLE_INPUT = {width: "100px"};
+const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
+const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
+const STYLE_BUTTON_RESET = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
+const STYLE_BUTTON_SAVE = {backgroundColor: "green", border: 0, color: "white", margin: "3px"};
 
-        <li style={{marginBottom: "5px"}}>
-          <label style={{width: "70px", display: "inline-block"}}>Width</label>
-          <input type="text" style={{width: "100px"}} defaultValue={element.width}/>
-        </li>
+export default class PropertiesEditor extends Component {
 
-        <li style={{marginBottom: "5px"}}>
-          <label style={{width: "70px", display: "inline-block"}}>Material</label>
-          <select style={{width: "100px"}}>
-            <option value="1">Non disponibile</option>
-            <option value="2">Cemento</option>
-            <option value="3">Vetro</option>
-            <option value="4">Amianto</option>
-            <option value="4">Cartongesso</option>
-          </select>
-        </li>
-      </ul>
+  constructor(props, context) {
+    super(props, context);
+    this.calculateDefaultState = this.calculateDefaultState.bind(this);
+    this.reset = this.reset.bind(this);
+    this.save = this.save.bind(this);
+    this.updateProperty = this.updateProperty.bind(this);
+    this.state = this.calculateDefaultState();
+  }
 
-      <div style={{textAlign:"right"}}>
-        <button
-          onClick={event => editingActions.unselectAll()}
-          style={{backgroundColor: "red", border: 0, color: "white", margin: "3px"}}>Annulla
-        </button>
-        <button style={{backgroundColor: "green", border: 0, color: "white", margin: "3px"}}>Salva</button>
+  calculateDefaultState() {
+    let {element} = this.props;
+    let {sceneComponents} = this.context;
+
+    let sceneComponent = sceneComponents[element.type];
+
+    return Seq(sceneComponent.properties).map((configs, propertyName) => {
+      return {
+        currentValue: element.properties.has(propertyName) ? element.properties.get(propertyName) : configs.defaultValue,
+        inputElement: configs.type
+      }
+    }).toJS();
+  }
+
+  updateProperty(propertyName, value) {
+    this.setState({
+      [propertyName]: {
+        currentValue: value
+      }
+    });
+  }
+
+  reset() {
+    let state = this.calculateDefaultState();
+    this.setState(state);
+  }
+
+  save() {
+    let {state} = this;
+    let {element} = this.props;
+    let {editingActions} = this.context;
+
+    let properties = Seq(state).map(configs => configs.currentValue).toMap().toJS();
+    editingActions.setProperties(element.prototype, 'layer-floor-1', element.id, properties);
+  }
+
+  render() {
+    let {state, context: {editingActions}} = this;
+
+    return (
+      <div>
+        <ul style={STYLE_UL}>
+          { Seq(state).entrySeq().map(([propertyName, {currentValue, inputElement}]) =>
+            <li style={STYLE_LI} key={propertyName}>
+              <label style={STYLE_LABEL}>{propertyName}</label>
+              <input type="text" style={STYLE_INPUT} value={currentValue}
+                     onChange={event => this.updateProperty(propertyName, event.target.value)}/>
+            </li>
+          )}
+        </ul>
+
+        <div style={STYLE_WRAPPER_BUTTONS}>
+          <button style={STYLE_BUTTON_UNSELECT} onClick={event => editingActions.unselectAll()}>Unselect</button>
+          <button style={STYLE_BUTTON_RESET} onClick={event => this.reset()}>Reset</button>
+          <button style={STYLE_BUTTON_SAVE} onClick={event => this.save()}>Save</button>
+        </div>
       </div>
-
-
-    </div>
-  )
+    )
+  }
 
 }
 

@@ -3,7 +3,8 @@ import {
   SELECT_AREA,
   SELECT_HOLE,
   SELECT_LINE,
-  UNSELECT_ALL
+  UNSELECT_ALL,
+  SET_PROPERTIES
 } from '../constants';
 
 export function selectToolEdit() {
@@ -39,6 +40,16 @@ export function selectArea(layerID, areaID) {
     type: SELECT_AREA,
     layerID,
     areaID
+  }
+}
+
+export function setProperties(prototype, layerID, elementID, properties) {
+  return {
+    type: SET_PROPERTIES,
+    prototype,
+    layerID,
+    elementID,
+    properties
   }
 }
 

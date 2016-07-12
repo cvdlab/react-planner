@@ -4,10 +4,12 @@ import {
   SELECT_AREA,
   SELECT_HOLE,
   SELECT_LINE,
-  UNSELECT_ALL
+  UNSELECT_ALL,
+  SET_PROPERTIES
 } from '../constants';
 
 import {ElementsSet} from '../models';
+import {Map} from 'immutable';
 
 export default function (state, action) {
   let {scene} = state;
@@ -28,6 +30,8 @@ export default function (state, action) {
     case UNSELECT_ALL:
       return state.set('scene', unselectAll(scene));
 
+    case SET_PROPERTIES:
+      return state.set('scene', setProperties(scene, action.prototype, action.layerID, action.elementID, action.properties));
 
     default:
       return state;
@@ -42,6 +46,13 @@ function unselectAllFromLayer(layer) {
     selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
     selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
     layer.set('selected', new ElementsSet());
+  });
+}
+
+function setProperties(scene, prototype, layerID, elementID, properties) {
+  return scene.withMutations(scene => {
+    scene.setIn(['layers', layerID, prototype, elementID, 'properties'], new Map(properties));
+    unselectAll(scene);
   });
 }
 
