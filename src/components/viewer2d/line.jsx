@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 
 const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
 const STYLE_SELECTED = {stroke: "#FFC107", strokeWidth: "1px", fill: "orange"};
@@ -73,12 +73,12 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
 }
 
 Line.propTypes = {
-  line: React.PropTypes.object.isRequired,
-  vertices: React.PropTypes.object.isRequired,
-  holes: React.PropTypes.object.isRequired,
-  layerID: React.PropTypes.string.isRequired
+  line: PropTypes.object.isRequired,
+  vertices: PropTypes.object.isRequired,
+  holes: PropTypes.object.isRequired,
+  layerID: PropTypes.string.isRequired
 };
 
 Line.contextTypes = {
-  editingActions: React.PropTypes.object
+  editingActions: PropTypes.object
 };
