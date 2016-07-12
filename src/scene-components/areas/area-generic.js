@@ -1,5 +1,6 @@
 export const AreaGeneric = {
-  name: "area-generic",
+  name: "areaGeneric",
+  base: "area",
   tag: ['area'],
   group: "Chiusura orizzontale",
   description: "Porta generica",

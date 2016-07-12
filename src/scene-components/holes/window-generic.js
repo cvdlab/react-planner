@@ -1,5 +1,6 @@
 export const WindowGeneric = {
-  name: "window-generic",
+  name: "windowGeneric",
+  base: "hole",
   tag: ['window', 'door', 'opening'],
   group: "Comunicazione orizzontale",
   description: "Finestra generica",

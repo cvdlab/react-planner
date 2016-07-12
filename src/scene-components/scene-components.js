@@ -4,17 +4,17 @@ import {AreaGeneric} from './areas/area-generic';
 import {WallGeneric} from './lines/wall-generic';
 
 export default {
-  holes: {
-    default: WindowGeneric,
-    windowGeneric: WindowGeneric,
-    doorGeneric: DoorGeneric
-  },
-  lines: {
-    default: WallGeneric,
-    wallGeneric: WallGeneric
-  },
-  areas: {
-    default: AreaGeneric,
-    areaGeneric: AreaGeneric
-  }
+  //holes
+  defaultHole: WindowGeneric,
+  windowGeneric: WindowGeneric,
+  doorGeneric: DoorGeneric,
+
+  //lines
+  defaultLine: WallGeneric,
+  wallGeneric: WallGeneric,
+
+  //area
+  defaultArea: AreaGeneric,
+  areaGeneric: AreaGeneric
+
 }

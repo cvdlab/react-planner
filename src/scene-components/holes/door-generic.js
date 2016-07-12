@@ -1,5 +1,6 @@
 export const DoorGeneric = {
-  name: "door-generic",
+  name: "doorGeneric",
+  base: "hole",
   tag: ['window', 'door', 'opening'],
   group: "Comunicazione orizzontale",
   description: "Porta generica",
