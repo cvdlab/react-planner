@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import calculateVolumes from '../../utils/calculateVolumes';
+import calculateVolumes from '../../utils/calculate-volumes';
 
 const STYLE_CONTAINER = {
   padding: "0 20px",
