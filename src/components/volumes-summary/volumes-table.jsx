@@ -46,13 +46,13 @@ export default function VolumesSummary({width, height, scene}) {
         </thead>
         <tbody>
         {
-          calculatedVolumes.map(({id, elementID, layerID, type, base, volume, composition}) =>
+          calculatedVolumes.map(({id, elementID, layerID, type, prototype, volume, composition}) =>
             <tr key={id}>
               <td style={STYLE_CELL}>{id}</td>
               <td style={STYLE_CELL}>{elementID}</td>
               <td style={STYLE_CELL}>{layerID}</td>
               <td style={STYLE_CELL}>{type}</td>
-              <td style={STYLE_CELL}>{base}</td>
+              <td style={STYLE_CELL}>{prototype}</td>
               <td style={STYLE_CELL}>{volume} m³</td>
               <td style={STYLE_CELL}>{composition}</td>
             </tr>

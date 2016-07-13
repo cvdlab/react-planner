@@ -1,6 +1,6 @@
 export const WallGeneric = {
   name: "wallGeneric",
-  base: "line",
+  prototype: "lines",
   tag: ['wall'],
   group: "Comunicazione orizzontale",
   description: "Finestra generica",

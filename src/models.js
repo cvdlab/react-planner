@@ -81,7 +81,7 @@ export const ElementVolume = Record({
   elementID: "",
   layerID: "",
   type: "",
-  base: "",
+  prototype: "",
   volume: "",
   composition: ""
 });

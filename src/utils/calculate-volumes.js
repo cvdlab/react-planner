@@ -14,7 +14,7 @@ export default function calculateVolumes(scene) {
             elementID: id,
             layerID: layer.id,
             type: type,
-            base: "line",
+            prototype: "line",
             volume: height * thickness,
             composition: "cemento"
           }))
@@ -27,7 +27,7 @@ export default function calculateVolumes(scene) {
             elementID: id,
             layerID: layer.id,
             type: type,
-            base: "hole",
+            prototype: "hole",
             volume: width * height * thickness,
             composition: "vetro"
           }))
@@ -40,7 +40,7 @@ export default function calculateVolumes(scene) {
             elementID: id,
             layerID: layer.id,
             type: type,
-            base: "area",
+            prototype: "area",
             volume: width * height,
             composition: "ceramica"
           }))
