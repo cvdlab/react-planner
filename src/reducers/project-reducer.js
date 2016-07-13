@@ -34,7 +34,7 @@ function loadProject(state, data) {
     .set('holes', new List(line.holes));
 
   let readHole = hole => new Hole(hole)
-    .set('type', SceneComponents.hasOwnProperty(hole.type) ? line.type : SceneComponents.defaultHole.name);
+    .set('type', SceneComponents.hasOwnProperty(hole.type) ? hole.type : SceneComponents.defaultHole.name);
 
   let readArea = area => new Area(area)
     .set('type', SceneComponents.hasOwnProperty(area.type) ? area.type : SceneComponents.defaultArea.name)
