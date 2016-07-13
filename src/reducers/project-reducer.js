@@ -31,14 +31,17 @@ function loadProject(state, data) {
   let readLine = line => new Line(line)
     .set('type', SceneComponents.hasOwnProperty(line.type) ? line.type : SceneComponents.defaultLine.name)
     .set('vertices', new List(line.vertices))
-    .set('holes', new List(line.holes));
+    .set('holes', new List(line.holes))
+    .set('properties', new Map(line.properties || {}));
 
   let readHole = hole => new Hole(hole)
-    .set('type', SceneComponents.hasOwnProperty(hole.type) ? hole.type : SceneComponents.defaultHole.name);
+    .set('type', SceneComponents.hasOwnProperty(hole.type) ? hole.type : SceneComponents.defaultHole.name)
+    .set('properties', new Map(hole.properties || {}));
 
   let readArea = area => new Area(area)
     .set('type', SceneComponents.hasOwnProperty(area.type) ? area.type : SceneComponents.defaultArea.name)
-    .set('vertices', new List(area.vertices));
+    .set('vertices', new List(area.vertices))
+    .set('properties', new Map(area.properties || {}))
 
   let readElementsSet = (elementsSet => {
     return new ElementsSet({
