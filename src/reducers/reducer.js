@@ -5,6 +5,7 @@ import editingReducer from './editing-reducer';
 import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
 import volumesReducer from './volumes-reducer';
+import drawingReducer from './drawing-reducer';
 import {State} from '../models';
 
 export const initialState = new State();
@@ -40,6 +41,16 @@ export default function appReducers(state, action) {
 
     case constants.SELECT_TOOL_VOLUMES_SUMMARY:
       return volumesReducer(state, action);
+
+    case constants.SELECT_TOOL_DRAWING_HOLE:
+    case constants.SELECT_TOOL_DRAWING_LINE:
+    case constants.BEGIN_DRAWING_LINE:
+    case constants.UPDATE_DRAWING_LINE:
+    case constants.END_DRAWING_LINE:
+    case constants.BEGIN_DRAWING_HOLE:
+    case constants.UPDATE_DRAWING_HOLE:
+    case constants.END_DRAWING_HOLE:
+      return drawingReducer(state, action);
 
     default:
       return state;

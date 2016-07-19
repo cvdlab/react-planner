@@ -9,12 +9,22 @@ import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import Icon3D from 'react-icons/lib/fa/cube';
 import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
 import IconSummary from 'react-icons/lib/fa/table';
+import IconAddLine from 'react-icons/lib/ti/pen';
+import IconAddHole from 'react-icons/lib/ti/plus-outline';
 
 import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VOLUMES_SUMMARY } from '../../constants';
 import ToolbarButton from './toolbar-button.jsx';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
-export default function Toolbar({state, projectActions, viewer2DActions, editingActions, viewer3DActions, volumesActions}) {
+export default function Toolbar({
+  state,
+  projectActions,
+  viewer2DActions,
+  editingActions,
+  viewer3DActions,
+  volumesActions,
+  drawingActions
+}) {
 
   let mode = state.get('mode');
 
@@ -65,6 +75,16 @@ export default function Toolbar({state, projectActions, viewer2DActions, editing
       <ToolbarButton active={[MODE_2D_PAN].includes(mode)} tooltip="Pan"
                      onClick={event => viewer2DActions.selectToolPan()}>
         <IconPan />
+      </ToolbarButton>
+
+      <ToolbarButton active={[].includes(mode)} tooltip="Add wall"
+                     onClick={event => drawingActions.selectToolDrawingLine('wall-generic')}>
+        <IconAddLine />
+      </ToolbarButton>
+
+      <ToolbarButton active={[].includes(mode)} tooltip="Add hole"
+                     onClick={event => drawingActions.selectToolDrawingHole('door-generic')}>
+        <IconAddHole />
       </ToolbarButton>
     </aside>
   )
