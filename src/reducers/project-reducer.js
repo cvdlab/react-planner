@@ -61,7 +61,8 @@ function loadProject(state, data) {
 
 
   let readScene = scene => new Scene(scene)
-    .set('layers', new Seq(scene.layers).map(layer => readLayer(layer)).toMap());
+    .set('layers', new Seq(scene.layers).map(layer => readLayer(layer)).toMap())
+    .set('selectedLayer', Object.keys(scene.layers)[0]);
 
   let scene = readScene(data);
 
