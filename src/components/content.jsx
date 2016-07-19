@@ -5,7 +5,7 @@ import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import VolumesTable from './volumes-summary/volumes-table.jsx';
 import {MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VOLUMES_SUMMARY} from '../constants';
 
-export default function Viewer({width, height, state}, {viewer2DActions}) {
+export default function Content({width, height, state}) {
   let scene = state.get('scene');
   let mode = state.get('mode');
   let viewer2D = state.get('viewer2D');
@@ -26,19 +26,14 @@ export default function Viewer({width, height, state}, {viewer2DActions}) {
       break;
 
     default:
-      viewer = React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, viewer2DActions});
+      viewer = React.createElement(Viewer2D, {scene, mode, width, height, viewer2D});
   }
 
   return viewer;
 }
 
-Viewer.propTypes = {
+Content.propTypes = {
   state: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
   height: React.PropTypes.number.isRequired
 };
-
-Viewer.contextTypes = {
-  viewer2DActions: React.PropTypes.object.isRequired
-};
-
