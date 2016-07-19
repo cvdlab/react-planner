@@ -21,16 +21,16 @@ export default function (state, action) {
     case BEGIN_DRAWING_LINE:
       return state.merge({
         mode: MODE_DRAWING_LINE,
-        scene: beginDrawingLine(state.scene, action.x, action.y)
+        scene: beginDrawingLine(state.scene, action.layerID, action.x, action.y)
       });
 
     case UPDATE_DRAWING_LINE:
-      return state.set('scene', updateDrawingLine(state.scene, action.x, action.y));
+      return state.set('scene', updateDrawingLine(state.scene, action.layerID, action.x, action.y));
 
     case END_DRAWING_LINE:
       return state.merge({
         mode: MODE_WAITING_DRAWING_LINE,
-        scene: endDrawingLine(state.scene, action.x, action.y)
+        scene: endDrawingLine(state.scene, action.layerID, action.x, action.y)
       });
 
     case SELECT_TOOL_DRAWING_HOLE:
@@ -39,16 +39,16 @@ export default function (state, action) {
     case BEGIN_DRAWING_HOLE:
       return state.merge({
         mode: MODE_DRAWING_HOLE,
-        scene: updateDrawingHole(state.scene, action.x, action.y)
+        scene: updateDrawingHole(state.scene, action.layerID, action.x, action.y)
       });
 
     case UPDATE_DRAWING_HOLE:
-      return state.set('scene', updateDrawingHole(state.scene, action.x, action.y));
+      return state.set('scene', updateDrawingHole(state.scene, action.layerID, action.x, action.y));
 
     case END_DRAWING_HOLE:
       return state.merge({
         mode: MODE_WAITING_DRAWING_HOLE,
-        scene: endDrawingHole(state.scene, action.x, action.y)
+        scene: endDrawingHole(state.scene, action.layerID, action.x, action.y)
       });
 
     default:
@@ -58,50 +58,50 @@ export default function (state, action) {
 
 
 /** lines operations **/
-function beginDrawingLine(scene, x, y) {
+function beginDrawingLine(scene, layerID, x, y) {
   return scene;
 }
 
-function updateDrawingLine(scene, x, y) {
+function updateDrawingLine(scene, layerID, x, y) {
   return scene;
 }
 
-function endDrawingLine(scene, x, y) {
+function endDrawingLine(scene, layerID, x, y) {
   return scene;
 }
 
 /** holes operations **/
-function beginDrawingHole(scene, x, y) {
+function beginDrawingHole(scene, layerID, x, y) {
   return scene;
 }
 
-function updateDrawingHole(scene, x, y) {
+function updateDrawingHole(scene, layerID, x, y) {
   return scene;
 }
 
-function endDrawingHole(scene, x, y) {
+function endDrawingHole(scene, layerID, x, y) {
   return scene;
 }
 
 /** lines features **/
-function addLine(scene, vertex1, vertex2) {
+function addLine(scene, layerID, vertex1, vertex2) {
   return scene;
 }
 
-function removeLine(scene, lineID) {
+function removeLine(scene, layerID, lineID) {
   return scene;
 }
 
-function splitLine(scene, lineID, x, y) {
+function splitLine(scene, layerID, lineID, x, y) {
   return scene;
 }
 
 
 /** vertices features **/
-function addVertex(scene, x, y) {
+function addVertex(scene, layerID, x, y) {
   return scene;
 }
 
-function removeVertex(scene, vertexID) {
+function removeVertex(scene, layerID, vertexID) {
   return scene;
 }

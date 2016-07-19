@@ -33,6 +33,7 @@ function mode2Tool(mode) {
 export default function Viewer2D({scene, width, height, viewer2D, mode}, {editingActions, viewer2DActions, drawingActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
+  let layerID = scene.selectedLayer;
 
   let mapCursorPosition = ({x, y}) => {
     return {x, y: -y + scene.height}
@@ -47,19 +48,19 @@ export default function Viewer2D({scene, width, height, viewer2D, mode}, {editin
         break;
 
       case MODE_WAITING_DRAWING_LINE:
-        drawingActions.beginDrawingLine(x, y);
+        drawingActions.beginDrawingLine(layerID, x, y);
         break;
 
       case MODE_DRAWING_LINE:
-        drawingActions.endDrawingLine(x, y);
+        drawingActions.endDrawingLine(layerID, x, y);
         break;
 
       case MODE_WAITING_DRAWING_HOLE:
-        drawingActions.beginDrawingHole(x, y);
+        drawingActions.beginDrawingHole(layerID, x, y);
         break;
 
       case MODE_DRAWING_HOLE:
-        drawingActions.endDrawingHole(x, y);
+        drawingActions.endDrawingHole(layerID, x, y);
         break;
     }
   };
@@ -69,11 +70,11 @@ export default function Viewer2D({scene, width, height, viewer2D, mode}, {editin
 
     switch (mode) {
       case MODE_DRAWING_LINE:
-        drawingActions.updateDrawingLine(x, y);
+        drawingActions.updateDrawingLine(layerID, x, y);
         break;
 
       case MODE_DRAWING_HOLE:
-        drawingActions.updateDrawingHole(x, y);
+        drawingActions.updateDrawingHole(layerID, x, y);
         break;
     }
   };
