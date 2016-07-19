@@ -83,5 +83,5 @@ function selectHole(scene, layerID, holeID) {
 }
 
 function unselectAll(scene) {
-  return scene.updateIn(['layers', 'layer-floor-1'], layer => unselectAllFromLayer(layer));
+  return scene.update('layers', layer => layer.map(unselectAllFromLayer));
 }
