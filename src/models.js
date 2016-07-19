@@ -8,14 +8,6 @@ export const ElementsSet = Record({
   areas: new List()
 });
 
-export const Scene = Record({
-  pixelPerUnit: 100,
-  unit: "m",
-  layers: new Map(),
-  width: 2000,
-  height: 2000
-});
-
 export const Layer = Record({
   id: "",
   altitude: 0,
@@ -25,6 +17,19 @@ export const Layer = Record({
   areas: new Map(),
   selected: new ElementsSet()
 });
+
+
+export const Scene = Record({
+  pixelPerUnit: 100,
+  unit: "m",
+  layers: new Map({
+    'layer-1': new Layer()
+  }),
+  selectedLayer: 'layer-1',
+  width: 2000,
+  height: 2000
+});
+
 
 export const Vertex = Record({
   id: "",
