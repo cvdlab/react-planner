@@ -79,13 +79,20 @@ export default function Viewer2D({scene, width, height, viewer2D, mode}, {editin
     }
   };
 
+  let ignoreSceneEvents = [
+    MODE_WAITING_DRAWING_LINE,
+    MODE_DRAWING_LINE,
+    MODE_WAITING_DRAWING_HOLE,
+    MODE_DRAWING_HOLE
+  ].includes(mode);
+
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
-        <Scene scene={scene}/>
+        <Scene scene={scene} ignoreEvents={ignoreSceneEvents}/>
       </svg>
     </Viewer>
   );
