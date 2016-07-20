@@ -1,3 +1,7 @@
+import {List} from 'immutable';
+
+import {Layer, Vertex, Line, Hole, Area} from '../models';
+import IDBroker from '../utils/id-broker';
 import {
   SELECT_TOOL_DRAWING_LINE,
   BEGIN_DRAWING_LINE,
@@ -12,6 +16,7 @@ import {
   MODE_DRAWING_HOLE,
   MODE_DRAWING_LINE
 } from '../constants';
+
 
 export default function (state, action) {
   switch (action.type) {
@@ -59,6 +64,10 @@ export default function (state, action) {
 
 /** lines operations **/
 function beginDrawingLine(scene, layerID, x, y) {
+
+  console.log()
+
+
   return scene;
 }
 
@@ -98,10 +107,29 @@ function splitLine(scene, layerID, lineID, x, y) {
 
 
 /** vertices features **/
-function addVertex(scene, layerID, x, y) {
-  return scene;
+function addVertex(layer, x, y, relatedPrototype, relatedID) {
+  let vertex = layer.vertices.find(vertex => vertex.x === x && vertex.y === y);
+  if (vertex) {
+    vertex = vertex.update(relatedPrototype, related => related.push(relatedID));
+  } else {
+    vertex = new Vertex({
+      id: IDBroker.acquireID(),
+      x, y,
+      [relatedPrototype]: new List([relatedID])
+    });
+  }
+  return layer.setIn(['vertices', vertex.id], vertex);
 }
 
-function removeVertex(scene, layerID, vertexID) {
-  return scene;
+function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
+  let vertex = layer.vertices.get(vertexID);
+  vertex = vertex.update(relatedPrototype, related => related.filter(ID => relatedID !== ID));
+
+  if (vertex.areas.size + vertex.lines.size === 0) {
+    return layer.deleteIn(['vertices', vertex.id]);
+  } else {
+    return layer.setIn(['vertices', vertex.id], vertex);
+  }
 }
+
+
