@@ -22,6 +22,8 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
   let vertex0 = vertices.get(line.vertices.get(0));
   let vertex1 = vertices.get(line.vertices.get(1));
 
+  if (vertex0.id === vertex1.id) return null; //avoid 0-length lines
+
   let x1, y1, x2, y2;
   if (vertex0.x <= vertex1.x) {
     ({x: x1, y: y1} = vertex0);

@@ -64,19 +64,28 @@ export default function (state, action) {
 
 /** lines operations **/
 function beginDrawingLine(scene, layerID, x, y) {
-
-  console.log()
-
-
-  return scene;
+  return scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+    let {line} = addLine(layer, 'wall-generic', x, y, x, y);
+    select(layer, 'lines', line.id);
+  }));
 }
 
 function updateDrawingLine(scene, layerID, x, y) {
-  return scene;
+  return scene.updateIn(['layers', layerID], layer => {
+    let lineID = layer.getIn(['selected', 'lines']).first();
+    ({layer} = replaceLineVertex(layer, lineID, 1, x, y));
+    return layer;
+  });
 }
 
 function endDrawingLine(scene, layerID, x, y) {
-  return scene;
+  return scene.updateIn(['layers', layerID], layer => {
+    let lineID = layer.getIn(['selected', 'lines']).first();
+    let line = layer.getIn(['lines', lineID]);
+    ({layer} = replaceLineVertex(layer, lineID, 1, x, y));
+    layer = unselect(layer, 'lines', lineID);
+    return layer;
+  });
 }
 
 /** holes operations **/
@@ -179,9 +188,25 @@ function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   vertex = vertex.update(relatedPrototype, related => related.filter(ID => relatedID !== ID));
 
   if (vertex.areas.size + vertex.lines.size === 0) {
-    layer = layer.deleteIn(['vertices', vertex.id]);
+    // layer = layer.deleteIn(['vertices', vertex.id]);
   } else {
     layer = layer.setIn(['vertices', vertex.id], vertex);
   }
   return {layer, vertex};
+}
+
+function select(layer, prototype, ID) {
+  return layer.withMutations(layer => {
+      layer.setIn([prototype, ID, 'selected'], true);
+      layer.updateIn(['selected', 'lines'], lines => lines.push(ID));
+    }
+  );
+}
+
+function unselect(layer, prototype, ID) {
+  return layer.withMutations(layer => {
+      layer.setIn([prototype, ID, 'selected'], false);
+      layer.updateIn(['selected', prototype], ids => ids.filter(curID => ID !== curID));
+    }
+  );
 }
