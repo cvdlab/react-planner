@@ -185,10 +185,13 @@ function addVertex(layer, x, y, relatedPrototype, relatedID) {
 
 function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   let vertex = layer.vertices.get(vertexID);
-  vertex = vertex.update(relatedPrototype, related => related.filter(ID => relatedID !== ID));
+  vertex = vertex.update(relatedPrototype, related => {
+    let index = related.findIndex(ID => relatedID !== ID);
+    return related.delete(index);
+  });
 
   if (vertex.areas.size + vertex.lines.size === 0) {
-    // layer = layer.deleteIn(['vertices', vertex.id]);
+    layer = layer.deleteIn(['vertices', vertex.id]);
   } else {
     layer = layer.setIn(['vertices', vertex.id], vertex);
   }
