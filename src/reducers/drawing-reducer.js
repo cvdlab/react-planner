@@ -93,19 +93,19 @@ function endDrawingHole(scene, layerID, x, y) {
 }
 
 /** lines features **/
-function addLine(layer, type, x1, y1, x2, y2) {
+function addLine(layer, type, x0, y0, x1, y1) {
   let line;
 
   layer = layer.withMutations(layer => {
     let lineID = IDBroker.acquireID();
 
-    let v1, v2;
+    let v0, v1;
+    ({layer, vertex: v0} = addVertex(layer, x0, y0, 'lines', lineID));
     ({layer, vertex: v1} = addVertex(layer, x1, y1, 'lines', lineID));
-    ({layer, vertex: v2} = addVertex(layer, x2, y2, 'lines', lineID));
 
     line = new Line({
       id: lineID,
-      vertices: new List([v1.id, v2.id]),
+      vertices: new List([v0.id, v1.id]),
       type
     });
 
@@ -131,12 +131,12 @@ function splitLine(layer, lineID, x, y) {
 
   layer = layer.withMutations(layer => {
     let line = layer.getIn(['lines', lineID]);
-    let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(0));
-    let {x: x2, y: y2} = layer.vertices.get(line.vertices.get(1));
+    let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
+    let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
 
     removeLine(layer, lineID);
-    ({line: line0} = addLine(layer, line.type, x1, y1, x, y));
-    ({line: line1} = addLine(layer, line.type, x2, y2, x, y));
+    ({line: line0} = addLine(layer, line.type, x0, y0, x, y));
+    ({line: line1} = addLine(layer, line.type, x1, y1, x, y));
   });
 
   return {layer, lines: new List([line0, line1])};
