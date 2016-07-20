@@ -115,6 +115,21 @@ function addLine(layer, type, x0, y0, x1, y1) {
   return {layer, line};
 }
 
+function replaceLineVertex(layer, lineID, vertexIndex, x, y) {
+  let line = layer.getIn(['lines', lineID]);
+
+  layer = layer.withMutations(layer => {
+    let vertex;
+    let vertexID = line.vertices.get(vertexIndex);
+
+    removeVertex(layer, vertexID, 'lines', line.id);
+    ({layer, vertex} = addVertex(layer, x, y, 'lines', line.id));
+    line = line.setIn(['vertices', vertexIndex], vertex.id);
+    layer.setIn(['lines', lineID], line);
+  });
+  return {layer, line};
+}
+
 function removeLine(layer, lineID) {
   let line = layer.getIn(['lines', lineID]);
 
@@ -170,5 +185,3 @@ function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   }
   return {layer, vertex};
 }
-
-
