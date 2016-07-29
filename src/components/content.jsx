@@ -9,6 +9,7 @@ export default function Content({width, height, state}) {
   let scene = state.get('scene');
   let mode = state.get('mode');
   let viewer2D = state.get('viewer2D');
+  let activeDrawingHelper = state.get('activeDrawingHelper');
 
   let viewer;
 
@@ -26,7 +27,7 @@ export default function Content({width, height, state}) {
       break;
 
     default:
-      viewer = React.createElement(Viewer2D, {scene, mode, width, height, viewer2D});
+      viewer = React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeDrawingHelper});
   }
 
   return viewer;

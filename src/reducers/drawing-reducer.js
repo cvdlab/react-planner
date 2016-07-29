@@ -89,7 +89,7 @@ function beginDrawingLine(state, layerID, x, y) {
   return state.merge({
     mode: MODE_DRAWING_LINE,
     scene, drawingHelpers,
-    nearestDrawingHelper: helper
+    activeDrawingHelper: helper
   });
 }
 
@@ -110,7 +110,7 @@ function updateDrawingLine(state, layerID, x, y) {
 
   return state.merge({
     scene,
-    nearestDrawingHelper: helper
+    activeDrawingHelper: helper
   });
 }
 
@@ -132,7 +132,7 @@ function endDrawingLine(state, layerID, x, y) {
     mode: MODE_WAITING_DRAWING_LINE,
     scene,
     drawingHelpers: new List(),
-    nearestDrawingHelper: null
+    activeDrawingHelper: null
   });
 }
 

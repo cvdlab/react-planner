@@ -80,7 +80,7 @@ export const State = Record({
   scene: new Scene(),
   viewer2D: new Map(),
   drawingHelpers: new List(),
-  nearestDrawingHelper: null
+  activeDrawingHelper: null
 });
 
 export const ElementVolume = Record({

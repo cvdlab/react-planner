@@ -8,7 +8,7 @@ export default function Scene({scene, ignoreEvents}) {
   let style = ignoreEvents ? {pointerEvents: 'none'} : {};
 
   return (
-    <g transform={`translate(0, ${height}) scale(1, -1)`} style={style}>
+    <g style={style}>
       <Grid scene={scene}/>
       {layers.entrySeq().map(([layerID, layer]) => <Layer key={layerID} layer={layer}/>)}
     </g>

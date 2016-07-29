@@ -14,7 +14,7 @@ import {
   MODE_DRAWING_HOLE
 } from '../../constants';
 import Scene from './scene.jsx';
-
+import ActiveDrawingHelper from './active-drawing-helper.jsx';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -30,7 +30,7 @@ function mode2Tool(mode) {
 }
 
 
-export default function Viewer2D({scene, width, height, viewer2D, mode}, {editingActions, viewer2DActions, drawingActions}) {
+export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper}, {editingActions, viewer2DActions, drawingActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
   let layerID = scene.selectedLayer;
@@ -88,11 +88,16 @@ export default function Viewer2D({scene, width, height, viewer2D, mode}, {editin
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
+  activeDrawingHelper = activeDrawingHelper ? <ActiveDrawingHelper helper={activeDrawingHelper}/> : null;
+
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
-        <Scene scene={scene} ignoreEvents={ignoreSceneEvents}/>
+        <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
+          <Scene scene={scene} ignoreEvents={ignoreSceneEvents}/>
+          {activeDrawingHelper}
+        </g>
       </svg>
     </Viewer>
   );
@@ -104,7 +109,8 @@ Viewer2D.propTypes = {
   scene: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  viewer2D: PropTypes.object.isRequired
+  viewer2D: PropTypes.object.isRequired,
+  activeDrawingHelper: PropTypes.object
 };
 
 Viewer2D.contextTypes = {
