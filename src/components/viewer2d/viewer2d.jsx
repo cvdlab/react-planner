@@ -91,7 +91,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   activeDrawingHelper = activeDrawingHelper ?
     <ActiveDrawingHelper helper={activeDrawingHelper} width={scene.width} height={scene.height}/> : null;
 
-  drawingHelpers = true ? drawingHelpers.map(
+  drawingHelpers = false ? drawingHelpers.map(
     helper => <ActiveDrawingHelper helper={helper} width={scene.width} height={scene.height} />
   ) : null;
 

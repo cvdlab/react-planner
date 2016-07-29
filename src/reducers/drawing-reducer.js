@@ -67,7 +67,7 @@ function beginDrawingLine(state, layerID, x, y) {
       });
   });
 
-  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let nearestHelper = nearestDrawingHelper(drawingHelpers, x, y);
   let helper = null;
   if (nearestHelper) {
     ({x, y} = nearestHelper.point);
