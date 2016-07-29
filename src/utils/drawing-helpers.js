@@ -50,14 +50,3 @@ export function addVerticalLineHelper(drawingHelpers, x, radius, priority) {
 
   return [drawingHelpers, {}];
 }
-
-
-//DEBUG
-let drawingHelpers = new List();
-drawingHelpers = addPointHelper(drawingHelpers, 100, 100, 20, 1, 'abc');
-drawingHelpers = addPointHelper(drawingHelpers, 200, 200, 20, 1, 'cde');
-drawingHelpers = addPointHelper(drawingHelpers, 150, 150, 20, 1, 'fgh');
-
-console.log(drawingHelpers.toJS());
-
-console.log(1, nearestSnapPoint(drawingHelpers, 140, 150, 99999));
