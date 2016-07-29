@@ -15,8 +15,9 @@ import {
   MODE_DRAWING_LINE
 } from '../constants';
 
+import * as Geometry from '../utils/geometry';
 import {addLine, replaceLineVertex, removeLine, splitLine, select, unselect} from '../utils/layer-operations';
-import {nearestSnapPoint, addPointHelper} from '../utils/drawing-helpers';
+import {nearestSnapPoint, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
   switch (action.type) {
@@ -55,7 +56,15 @@ function beginDrawingLine(state, layerID, x, y) {
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
     state.getIn(['scene', 'layers', layerID, 'vertices'])
-      .forEach(vertex => addPointHelper(drawingHelpers, vertex.x, vertex.y, 10, 1, new List(vertex.id)));
+      .forEach(({id: vertexID, x, y}) => {
+        addPointHelper(drawingHelpers, x, y, 20, 1, vertexID);
+
+        let a, b, c;
+        ({a, b, c} = Geometry.horizontalLine(y));
+        addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+        ({a, b, c} = Geometry.verticalLine(x));
+        addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+      });
   });
 
   let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
