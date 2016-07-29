@@ -30,7 +30,7 @@ function mode2Tool(mode) {
 }
 
 
-export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper}, {editingActions, viewer2DActions, drawingActions}) {
+export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers}, {editingActions, viewer2DActions, drawingActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
   let layerID = scene.selectedLayer;
@@ -91,6 +91,10 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   activeDrawingHelper = activeDrawingHelper ?
     <ActiveDrawingHelper helper={activeDrawingHelper} width={scene.width} height={scene.height}/> : null;
 
+  drawingHelpers = true ? drawingHelpers.map(
+    helper => <ActiveDrawingHelper helper={helper} width={scene.width} height={scene.height} />
+  ) : null;
+
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick}>
@@ -98,6 +102,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
           <Scene scene={scene} ignoreEvents={ignoreSceneEvents}/>
           {activeDrawingHelper}
+          {drawingHelpers}
         </g>
       </svg>
     </Viewer>
