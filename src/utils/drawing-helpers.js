@@ -1,7 +1,7 @@
 import {List, Record} from 'immutable';
 import * as Geometry from './geometry';
 
-class PointHelper extends Record({x: -1, y: -1, radius: 1, priority: 1, related: new List()}) {
+class PointHelper extends Record({type:"point", x: -1, y: -1, radius: 1, priority: 1, related: new List()}) {
   nearestPoint(x, y) {
     return {
       x: this.x,
@@ -11,7 +11,7 @@ class PointHelper extends Record({x: -1, y: -1, radius: 1, priority: 1, related:
   }
 }
 
-class LineHelper extends Record({a: -1, b: -1, c: -1, radius: 1, priority: 1, related: new List()}) {
+class LineHelper extends Record({type:"line", a: -1, b: -1, c: -1, radius: 1, priority: 1, related: new List()}) {
   nearestPoint(x, y) {
     return {
       ...Geometry.closestPointFromLine(this.a, this.b, this.c, x, y),
@@ -29,11 +29,10 @@ export function nearestDrawingHelper(drawingHelpers, x, y) {
     })
     .filter(({helper: {radius}, point: {distance}}) => distance < radius)
     .min(({helper: helper1, point: point1}, {helper: helper2, point: point2}) => {
-
-      if(point1.priority === point2.priority) {
+      if(helper1.priority === helper2.priority) {
         if (point1.distance < point2.distance) return -1; else return 1;
       }else{
-        if (point1.priority < point2.priority) return -1; else return 1;
+        if (helper1.priority > helper2.priority) return -1; else return 1;
       }
     });
 
