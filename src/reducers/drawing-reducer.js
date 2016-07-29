@@ -53,13 +53,13 @@ export default function (state, action) {
 
 /** lines operations **/
 function beginDrawingLine(state, layerID, x, y) {
+  let a, b, c;
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
     state.getIn(['scene', 'layers', layerID, 'vertices'])
       .forEach(({id: vertexID, x, y}) => {
-        addPointHelper(drawingHelpers, x, y, 20, 1, vertexID);
+        addPointHelper(drawingHelpers, x, y, 10, 5, vertexID);
 
-        let a, b, c;
         ({a, b, c} = Geometry.horizontalLine(y));
         addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
         ({a, b, c} = Geometry.verticalLine(x));
@@ -68,10 +68,14 @@ function beginDrawingLine(state, layerID, x, y) {
   });
 
   let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
-  if (snapPoint) {
-    x = snapPoint.x;
-    y = snapPoint.y;
-  }
+  if (snapPoint) ({x, y} = snapPoint);
+
+  drawingHelpers = drawingHelpers.withMutations(drawingHelpers => {
+    ({a, b, c} = Geometry.horizontalLine(y));
+    addLineHelper(drawingHelpers, a, b, c, 10, 3, null);
+    ({a, b, c} = Geometry.verticalLine(x));
+    addLineHelper(drawingHelpers, a, b, c, 10, 3, null);
+  });
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let {line} = addLine(layer, 'wall-generic', x, y, x, y);
