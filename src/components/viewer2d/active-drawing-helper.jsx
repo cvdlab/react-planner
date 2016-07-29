@@ -3,7 +3,7 @@ import * as Geometry from '../../utils/geometry';
 
 const STYLE = {
   stroke: '#D32F2F',
-  strokeWidth: "2px"
+  strokeWidth: "1px"
 };
 
 export default function ActiveDrawingHelper({helper, width, height}) {
