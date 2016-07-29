@@ -1,3 +1,5 @@
+import {List} from 'immutable';
+
 import {
   SELECT_TOOL_DRAWING_LINE,
   BEGIN_DRAWING_LINE,
@@ -14,6 +16,7 @@ import {
 } from '../constants';
 
 import {addLine, replaceLineVertex, removeLine, splitLine, select, unselect} from '../utils/layer-operations';
+import {nearestSnapPoint, addPointHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
   switch (action.type) {
@@ -49,15 +52,34 @@ export default function (state, action) {
 
 /** lines operations **/
 function beginDrawingLine(state, layerID, x, y) {
+
+  let drawingHelpers = (new List()).withMutations(drawingHelpers => {
+    state.getIn(['scene', 'layers', layerID, 'vertices'])
+      .forEach(vertex => addPointHelper(drawingHelpers, vertex.x, vertex.y, 10, 1, new List(vertex.id)));
+  });
+
+  let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
+  if (snapPoint) {
+    x = snapPoint.x;
+    y = snapPoint.y;
+  }
+
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let {line} = addLine(layer, 'wall-generic', x, y, x, y);
     select(layer, 'lines', line.id);
   }));
 
-  return state.merge({mode: MODE_DRAWING_LINE, scene});
+  return state.merge({mode: MODE_DRAWING_LINE, scene, drawingHelpers});
 }
 
 function updateDrawingLine(state, layerID, x, y) {
+
+  let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
+  if (snapPoint) {
+    x = snapPoint.x;
+    y = snapPoint.y;
+  }
+
   let scene = state.scene.updateIn(['layers', layerID], layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     ({layer} = replaceLineVertex(layer, lineID, 1, x, y));
@@ -68,6 +90,12 @@ function updateDrawingLine(state, layerID, x, y) {
 }
 
 function endDrawingLine(state, layerID, x, y) {
+  let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
+  if (snapPoint) {
+    x = snapPoint.x;
+    y = snapPoint.y;
+  }
+
   let scene = state.scene.updateIn(['layers', layerID], layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     let line = layer.getIn(['lines', lineID]);
@@ -76,7 +104,7 @@ function endDrawingLine(state, layerID, x, y) {
     return layer;
   });
 
-  return state.merge({mode: MODE_WAITING_DRAWING_LINE, scene});
+  return state.merge({mode: MODE_WAITING_DRAWING_LINE, scene, drawingHelpers: new List()});
 }
 
 /** holes operations **/

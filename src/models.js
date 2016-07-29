@@ -78,7 +78,8 @@ export const Area = Record({
 export const State = Record({
   mode: MODE_IDLE,
   scene: new Scene(),
-  viewer2D: new Map()
+  viewer2D: new Map(),
+  drawingHelpers: new List()
 });
 
 export const ElementVolume = Record({

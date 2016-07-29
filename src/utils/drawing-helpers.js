@@ -11,19 +11,19 @@ class PointHelper extends Record({x: -1, y: -1, radius: 1, priority: 1, related:
   }
 }
 
-export function nearestSnapPoint(drawingHelpers, x, y, minDistance) {
+export function nearestSnapPoint(drawingHelpers, x, y) {
 
-  let mapper = pointElement => pointElement.nearestSnapPoint(x, y);
-  let comparator = ({distance: distance1}, {distance: distance2}) => distance1 - distance2;
+  let nearestSnapPoint = drawingHelpers
+    .valueSeq()
+    .map(helper => {
+      return {helper, snapPoint: helper.nearestSnapPoint(x, y)}
+    })
+    .filter(({helper: {radius}, snapPoint: {distance}}) => distance < radius)
+    .min(({helper: helper1, snapPoint: snapPoint1}, {helper: helper2, snapPoint: snapPoint2}) => {
+      if(snapPoint1.distance < snapPoint2.distance) return -1; else return 1;
+    });
 
-  if (drawingHelpers.isEmpty()) return undefined;
-
-  let nearestSnapPoint = drawingHelpers.minBy(mapper, comparator);
-
-  let result = nearestSnapPoint.nearestSnapPoint(x, y);
-  if (result.distance > minDistance) return undefined;
-
-  return result;
+  if(nearestSnapPoint) return nearestSnapPoint.snapPoint; else return undefined;
 }
 
 export function addPointHelper(drawingHelpers, x, y, radius, priority, related) {
