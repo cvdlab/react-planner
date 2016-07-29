@@ -3,7 +3,7 @@ export function distanceFromTwoPoints(x0, y0, x1, y1) {
 }
 
 export function horizontalLine(y){
-  return {a: 1, b: 0, c: -y}
+  return {a: 0, b: 1, c: -y}
 }
 
 export function verticalLine(x){
