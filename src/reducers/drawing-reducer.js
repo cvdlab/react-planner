@@ -58,7 +58,7 @@ function beginDrawingLine(state, layerID, x, y) {
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
     state.getIn(['scene', 'layers', layerID, 'vertices'])
       .forEach(({id: vertexID, x, y}) => {
-        addPointHelper(drawingHelpers, x, y, 10, 5, vertexID);
+        addPointHelper(drawingHelpers, x, y, 10, 10, vertexID);
 
         ({a, b, c} = Geometry.horizontalLine(y));
         addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
