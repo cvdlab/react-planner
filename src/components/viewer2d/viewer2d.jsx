@@ -88,7 +88,8 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
-  activeDrawingHelper = activeDrawingHelper ? <ActiveDrawingHelper helper={activeDrawingHelper}/> : null;
+  activeDrawingHelper = activeDrawingHelper ?
+    <ActiveDrawingHelper helper={activeDrawingHelper} width={scene.width} height={scene.height}/> : null;
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height}
