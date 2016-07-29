@@ -17,7 +17,7 @@ import {
 
 import * as Geometry from '../utils/geometry';
 import {addLine, replaceLineVertex, removeLine, splitLine, select, unselect} from '../utils/layer-operations';
-import {nearestSnapPoint, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
+import {nearestDrawingHelper, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
   switch (action.type) {
@@ -67,8 +67,12 @@ function beginDrawingLine(state, layerID, x, y) {
       });
   });
 
-  let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
-  if (snapPoint) ({x, y} = snapPoint);
+  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let helper = null;
+  if (nearestHelper) {
+    ({x, y} = nearestHelper.point);
+    helper = nearestHelper.helper;
+  }
 
   drawingHelpers = drawingHelpers.withMutations(drawingHelpers => {
     ({a, b, c} = Geometry.horizontalLine(y));
@@ -82,15 +86,20 @@ function beginDrawingLine(state, layerID, x, y) {
     select(layer, 'lines', line.id);
   }));
 
-  return state.merge({mode: MODE_DRAWING_LINE, scene, drawingHelpers});
+  return state.merge({
+    mode: MODE_DRAWING_LINE,
+    scene, drawingHelpers,
+    nearestDrawingHelper: helper
+  });
 }
 
 function updateDrawingLine(state, layerID, x, y) {
 
-  let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
-  if (snapPoint) {
-    x = snapPoint.x;
-    y = snapPoint.y;
+  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let helper = null;
+  if (nearestHelper) {
+    ({x, y} = nearestHelper.point);
+    helper = nearestHelper.helper;
   }
 
   let scene = state.scene.updateIn(['layers', layerID], layer => {
@@ -99,14 +108,16 @@ function updateDrawingLine(state, layerID, x, y) {
     return layer;
   });
 
-  return state.merge({scene});
+  return state.merge({
+    scene,
+    nearestDrawingHelper: helper
+  });
 }
 
 function endDrawingLine(state, layerID, x, y) {
-  let snapPoint = nearestSnapPoint(state.drawingHelpers, x, y);
-  if (snapPoint) {
-    x = snapPoint.x;
-    y = snapPoint.y;
+  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  if (nearestHelper) {
+    ({x, y} = nearestHelper.point);
   }
 
   let scene = state.scene.updateIn(['layers', layerID], layer => {
@@ -117,7 +128,12 @@ function endDrawingLine(state, layerID, x, y) {
     return layer;
   });
 
-  return state.merge({mode: MODE_WAITING_DRAWING_LINE, scene, drawingHelpers: new List()});
+  return state.merge({
+    mode: MODE_WAITING_DRAWING_LINE,
+    scene,
+    drawingHelpers: new List(),
+    nearestDrawingHelper: null
+  });
 }
 
 /** holes operations **/
