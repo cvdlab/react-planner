@@ -65,7 +65,7 @@ export default function Toolbar({
         <Icon3DFirstPerson />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_VOLUMES_SUMMARY].includes(mode)} tooltip="3D First Person"
+      <ToolbarButton active={[MODE_VOLUMES_SUMMARY].includes(mode)} tooltip="Volumes summary"
                      onClick={event => volumesActions.selectToolVolumesSummary()}>
         <IconSummary />
       </ToolbarButton>
