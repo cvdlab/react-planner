@@ -1,5 +1,5 @@
 import {List, Seq} from 'immutable';
-import {Layer, Vertex, Line, Hole, Area} from '../models';
+import {Layer, Vertex, Line, Hole, Area, ElementsSet} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 
@@ -166,4 +166,15 @@ export function unselect(layer, prototype, ID) {
       layer.updateIn(['selected', prototype], ids => ids.filter(curID => ID !== curID));
     }
   );
+}
+
+export function unselectAll(layer) {
+  let selected = layer.get('selected');
+
+  return layer.withMutations(layer => {
+    selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
+    selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
+    selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
+    layer.set('selected', new ElementsSet());
+  });
 }

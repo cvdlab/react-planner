@@ -16,7 +16,7 @@ import {
 } from '../constants';
 
 import * as Geometry from '../utils/geometry';
-import {addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections} from '../utils/layer-operations';
+import {addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections, unselectAll} from '../utils/layer-operations';
 import {nearestDrawingHelper, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
@@ -82,6 +82,7 @@ function beginDrawingLine(state, layerID, x, y) {
   });
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+    unselectAll(layer);
     let {line} = addLine(layer, 'wall-generic', x, y, x, y);
     select(layer, 'lines', line.id);
   }));
