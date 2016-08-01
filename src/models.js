@@ -23,7 +23,7 @@ export const Scene = Record({
   pixelPerUnit: 100,
   unit: "m",
   layers: new Map({
-    'layer-1': new Layer()
+    'layer-1': new Layer({id:'layer-1'})
   }),
   selectedLayer: 'layer-1',
   width: 2000,
