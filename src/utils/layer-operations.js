@@ -1,4 +1,4 @@
-import {List} from 'immutable';
+import {List, Seq} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area} from '../models';
 import IDBroker from './id-broker';
 
@@ -67,6 +67,28 @@ export function splitLine(layer, lineID, x, y) {
   return {layer, lines: new List([line0, line1])};
 }
 
+export function addLinesFromPoints(layer, type, points) {
+  points = new List(points)
+    .sort(({x:x1, y:y1}, {x:x2, y:y2}) => {
+      return x1 === x2 ? y1 - y2 : x1 - x2;
+    });
+
+  let pointsPair = points.zip(points.skip(1))
+    .filterNot(([{x:x1, y:y1}, {x:x2, y:y2}]) => {
+      return x1 === x2 && y1 === y2;
+    });
+
+  let lines = (new List()).withMutations(lines => {
+    layer = layer.withMutations(layer => {
+      pointsPair.forEach(([{x:x1, y:y1}, {x:x2, y:y2}]) => {
+        let {line} = addLine(layer, type, x1, y1, x2, y2);
+        lines.push(line);
+      });
+    });
+  });
+
+  return {layer, lines};
+}
 
 /** vertices features **/
 export function addVertex(layer, x, y, relatedPrototype, relatedID) {
