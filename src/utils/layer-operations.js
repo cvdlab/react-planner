@@ -1,6 +1,7 @@
 import {List, Seq} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area} from '../models';
 import IDBroker from './id-broker';
+import * as Geometry from './geometry';
 
 /** lines features **/
 export function addLine(layer, type, x0, y0, x1, y1) {
@@ -88,6 +89,36 @@ export function addLinesFromPoints(layer, type, points) {
   });
 
   return {layer, lines};
+}
+
+export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1) {
+
+  let points = [{x: x0, y: y0}, {x: x1, y: y1}];
+
+  layer = layer.withMutations(layer => {
+    let {lines, vertices} = layer;
+    lines.forEach(line => {
+      let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
+
+      let intersection = Geometry.intersectionFromTwoLineSegment(
+        {x: x0, y: y0}, {x: x1, y: y1},
+        v0, v1
+      );
+
+      if (intersection.type === "colinear") {
+        removeLine(layer, line.id);
+        points.push(v0, v1);
+      }
+
+      if (intersection.type === "intersecting") {
+        splitLine(layer, line.id, intersection.point.x, intersection.point.y);
+        points.push(intersection.point);
+      }
+    });
+    addLinesFromPoints(layer, type, points);
+  });
+
+  return {layer};
 }
 
 /** vertices features **/

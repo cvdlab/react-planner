@@ -16,7 +16,7 @@ import {
 } from '../constants';
 
 import * as Geometry from '../utils/geometry';
-import {addLine, replaceLineVertex, removeLine, splitLine, select, unselect} from '../utils/layer-operations';
+import {addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections} from '../utils/layer-operations';
 import {nearestDrawingHelper, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
@@ -120,13 +120,15 @@ function endDrawingLine(state, layerID, x, y) {
     ({x, y} = nearestHelper.point);
   }
 
-  let scene = state.scene.updateIn(['layers', layerID], layer => {
+  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     let line = layer.getIn(['lines', lineID]);
-    ({layer} = replaceLineVertex(layer, lineID, 1, x, y));
-    layer = unselect(layer, 'lines', lineID);
-    return layer;
-  });
+    let v0 = layer.vertices.get(line.vertices.get(0));
+
+    unselect(layer, 'lines', lineID);
+    removeLine(layer, lineID);
+    addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y);
+  }));
 
   return state.merge({
     mode: MODE_WAITING_DRAWING_LINE,

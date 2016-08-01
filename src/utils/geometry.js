@@ -48,3 +48,31 @@ export function intersectionFromTwoLines(a, b, c, j, k, l) {
   let x = (c * k - b * l) / det;
   return {x, y};
 }
+
+export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {x: x3, y: y3}, {x: x4, y:y4}) {
+  //https://github.com/psalaets/line-intersect/blob/master/lib/check-intersection.js
+
+  let denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
+  let numA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
+  let numB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
+
+  if (denom == 0) {
+    if (numA == 0 && numB == 0) {
+      return {type: "colinear"};
+    }
+    return {type: "parallel"};
+  }
+
+  var uA = numA / denom;
+  var uB = numB / denom;
+
+  if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+    let point = {
+      x: x1 + (uA * (x2 - x1)),
+      y: y1 + (uA * (y2 - y1))
+    };
+    return {type: "intersecting", point};
+  }
+
+  return {type: "none"};
+}
