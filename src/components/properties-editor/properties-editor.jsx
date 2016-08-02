@@ -51,11 +51,11 @@ export default class PropertiesEditor extends Component {
 
   save() {
     let {state} = this;
-    let {element} = this.props;
+    let {element, layer} = this.props;
     let {editingActions} = this.context;
 
     let properties = Seq(state).map(configs => configs.currentValue).toMap().toJS();
-    editingActions.setProperties(element.prototype, 'layer-floor-1', element.id, properties);
+    editingActions.setProperties(element.prototype, layer.id, element.id, properties);
   }
 
   render() {
@@ -85,7 +85,8 @@ export default class PropertiesEditor extends Component {
 }
 
 PropertiesEditor.propTypes = {
-  element: PropTypes.object.isRequired
+  element: PropTypes.object.isRequired,
+  layer: PropTypes.object.isRequired
 };
 
 PropertiesEditor.contextTypes = {

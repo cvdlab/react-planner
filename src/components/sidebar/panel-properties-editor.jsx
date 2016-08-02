@@ -1,26 +1,25 @@
 import React, {PropTypes} from 'react';
 import Panel from './panel.jsx';
 import PropertiesEditor from '../properties-editor/properties-editor.jsx';
+import {Seq} from 'immutable';
 
 export default function PanelPropertiesEditor({scene}) {
 
-  if (!scene.layers.has('layer-floor-1')) return null;
-
-  let layer = scene.layers.get('layer-floor-1');
-
-
-  let componentRenderer = line =>
-    <Panel key={line.id} name={`Properties: [${line.type}] ${line.id}`}>
-      <PropertiesEditor element={line}/>
+  let componentRenderer = (element, layer) =>
+    <Panel key={element.id} name={`Properties: [${element.type}] ${element.id}`}>
+      <PropertiesEditor element={element} layer={layer}/>
     </Panel>;
 
-  return (
-    <div>
-      {layer.lines.filter(line => line.selected).map(componentRenderer).valueSeq()}
-      {layer.holes.filter(line => line.selected).map(componentRenderer).valueSeq()}
-      {layer.areas.filter(line => line.selected).map(componentRenderer).valueSeq()}
-    </div>
-  )
+  let layerRenderer = layer => Seq()
+    .concat(layer.lines)
+    .concat(layer.holes)
+    .concat(layer.areas)
+    .filter(element => element.selected)
+    .map(element => componentRenderer(element, layer))
+    .valueSeq();
+
+  return <div>{scene.layers.valueSeq().map(layerRenderer)}</div>
+
 }
 
 PanelPropertiesEditor.propTypes = {
