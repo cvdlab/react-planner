@@ -19,7 +19,12 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   let rectShape = createShape(wallCoord);
 
   holes.forEach(hole => {
-    let holeCoords = createHoleShape(vertex0, vertex1, hole.width, hole.height, hole.offset, hole.altitude + 0.001);
+    let holeCoords = createHoleShape(vertex0,
+      vertex1,
+      hole.properties.get('width'),
+      hole.properties.get('height'),
+      hole.offset,
+      hole.properties.get('altitude') + 0.001);
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
   });

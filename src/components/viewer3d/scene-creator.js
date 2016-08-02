@@ -44,7 +44,7 @@ export function parseData(sceneData, editingActions) {
         vertices.push(layer.vertices.get(vertexID));
       });
 
-      let area3D = createArea(vertices, parseInt(area.patternColor.substring(1), 16));
+      let area3D = createArea(vertices, parseInt(area.properties.get('patternColor').substring(1), 16));
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
 
@@ -141,8 +141,9 @@ function createWall(layer, line, interactFunction) {
 
   let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
     layer.vertices.get(line.vertices.get(1)),
-    line.height,
-    line.thickness, holes,
+    line.properties.get('height'),
+    line.properties.get('thickness'),
+    holes,
     line.id,
     line.selected);
 
