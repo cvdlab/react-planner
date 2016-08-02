@@ -24,7 +24,7 @@ export default function Area({layerID, area, vertices}, {editingActions}) {
 
   return (
     <g>
-      <defs xmlns="http://www.w3.org/2000/svg">
+      <defs>
         <pattern id={patternID} width="10" height="10"
                  patternUnits="userSpaceOnUse" patternTransform={`rotate(${area.patternDirection})`}>
           <rect x1="0" y1="0" width="4" height="10" fill={area.patternColor} stroke="0"
