@@ -69,7 +69,7 @@ export const Area = Record({
   type: "",
   prototype: "areas",
   vertices: new List(),
-  patternColor: "#000000",
+  patternColor: "#f4f4f4",
   patternDirection: 0,
   selected: false,
   properties: new Map()
