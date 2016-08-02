@@ -9,32 +9,18 @@ export default function Grid({scene}) {
 
   let patternID = 'grid-pattern';
 
-  let verticalsLines = Range(0, width + 1, pixelPerUnit / 2);
-  let horizontalsLines = Range(0, height + 1, pixelPerUnit / 2);
+  let verticalLines = Range(0, width + 1, pixelPerUnit / 5);
+  let horizontalLines = Range(0, height + 1, pixelPerUnit / 5);
+
+  let color = coord => coord % pixelPerUnit === 0 ? '#b9b9b9' : '#efefef';
+
+  let vLine = x => <line key={x} x1={x} y1="0" x2={x} y2={height} strokeWidth="1" stroke={color(x)}/>;
+  let hLine = y => <line key={y} x1="0" y1={y} x2={width} y2={y} strokeWidth="1" stroke={color(y)}/>;
 
   return (
     <g>
-      <g>{
-        verticalsLines.map(i => <line
-          key={i}
-          x1={i}
-          y1="0"
-          x2={i}
-          y2={height}
-          strokeWidth={i % pixelPerUnit ? 3 : 1}
-          stroke="#efefef"
-        />) }</g>
-
-      <g>{
-        horizontalsLines.map(i => <line
-          key={i}
-          x1="0"
-          y1={i}
-          x2={width}
-          y2={i}
-          strokeWidth={i % pixelPerUnit ? 3 : 1}
-          stroke="#efefef"
-        />) }</g>
+      {verticalLines.map(vLine)}
+      {horizontalLines.map(hLine)}
     </g>
   );
 
