@@ -2,6 +2,7 @@ import {List, Seq} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area, ElementsSet} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
+import graphCycles from './graph-cycles';
 
 /** lines features **/
 export function addLine(layer, type, x0, y0, x1, y1) {
@@ -178,3 +179,79 @@ export function unselectAll(layer) {
     layer.set('selected', new ElementsSet());
   });
 }
+
+/** areas features **/
+export function addArea(layer, type, verticesCoords) {
+  let area;
+
+  layer = layer.withMutations(layer => {
+    let areaID = IDBroker.acquireID();
+
+    let vertices = [];
+    verticesCoords.forEach(({x, y}) => {
+      let {vertex} = addVertex(layer, x, y, 'areas', areaID);
+      vertices.push(vertex.id);
+    });
+
+    area = new Area({
+      id: areaID,
+      type,
+      prototype: "areas",
+      vertices: new List(vertices)
+    });
+
+    layer.setIn(['areas', areaID], area);
+  });
+
+  return {layer, area};
+}
+
+export function removeArea(layer, areaID) {
+  let area = layer.getIn(['areas', areaID]);
+
+  layer = layer.withMutations(layer => {
+    layer.deleteIn(['areas', area.id]);
+    area.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'areas', area.id));
+  });
+
+  return {layer, area};
+}
+
+export function detectAndUpdateAreas(layer) {
+
+  //generate LAR rappresentation
+  let verticesArray = [];
+  let id2index = {}, index2coord = {};
+  layer.vertices.forEach(vertex => {
+    let count = verticesArray.push([vertex.x, vertex.y]);
+    let index = count - 1;
+    id2index[vertex.id] = index;
+    index2coord[index] = {x: vertex.x, y: vertex.y};
+  });
+
+  let linesArray = [];
+  layer.lines.forEach(line => {
+    let vertices = line.vertices.map(vertexID => id2index[vertexID]).toArray();
+    linesArray.push(vertices);
+  });
+
+
+  layer = layer.withMutations(layer => {
+
+    //remove old areas
+    layer.areas.forEach(area => {
+      removeArea(layer, area.id);
+    });
+
+    //add new areas
+    let cycles = graphCycles(verticesArray, linesArray);
+    cycles.v_cycles.forEach(cycle => {
+      cycle.shift();
+      let verticesCoords = cycle.map(index => index2coord[index]);
+      addArea(layer, 'areaGeneric', verticesCoords);
+    });
+  });
+
+  return {layer};
+}
+

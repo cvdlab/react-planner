@@ -16,7 +16,7 @@ import {
 } from '../constants';
 
 import * as Geometry from '../utils/geometry';
-import {addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections, unselectAll} from '../utils/layer-operations';
+import {addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections, unselectAll, detectAndUpdateAreas} from '../utils/layer-operations';
 import {nearestDrawingHelper, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
@@ -129,6 +129,7 @@ function endDrawingLine(state, layerID, x, y) {
     unselect(layer, 'lines', lineID);
     removeLine(layer, lineID);
     addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y);
+    detectAndUpdateAreas(layer);
   }));
 
   return state.merge({
