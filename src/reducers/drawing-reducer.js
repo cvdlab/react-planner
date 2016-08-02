@@ -83,7 +83,7 @@ function beginDrawingLine(state, layerID, x, y) {
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     unselectAll(layer);
-    let {line} = addLine(layer, 'wall-generic', x, y, x, y);
+    let {line} = addLine(layer, 'wallGeneric', x, y, x, y);
     select(layer, 'lines', line.id);
   }));
 
