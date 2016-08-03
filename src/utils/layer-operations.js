@@ -111,7 +111,9 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1) {
         points.push(v0, v1);
       }
 
-      if (intersection.type === "intersecting") {
+      if (intersection.type === "intersecting"
+        && !(x0 === intersection.point.x && y0 === intersection.point.y)
+        && !(x1 === intersection.point.x && y1 === intersection.point.y)) {
         splitLine(layer, line.id, intersection.point.x, intersection.point.y);
         points.push(intersection.point);
       }
