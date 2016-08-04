@@ -139,13 +139,18 @@ function createWall(layer, line, interactFunction) {
     holes.push(layer.holes.get(holeID));
   });
 
+  //createShapeWall(vertex0, vertex1, height, thickness, holes, bevelRadius, isSelected, wall1Texture, wall2Texture)
+
   let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
     layer.vertices.get(line.vertices.get(1)),
     line.properties.get('height'),
     line.properties.get('thickness'),
     holes,
-    line.id,
-    line.selected);
+    line.properties.get('thickness'),
+    // line.id,
+    line.selected,
+    'bricks',
+    'paintedWall');
 
   wall.children[0].interact = interactFunction;
 
