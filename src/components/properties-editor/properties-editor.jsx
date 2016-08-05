@@ -2,6 +2,7 @@ import React, {Component, PropTypes} from 'react';
 import {Seq, Map} from 'immutable';
 import PropertyString from './property-string.jsx';
 import PropertyEnum from './property-enum.jsx';
+import PropertyColor from './property-color.jsx';
 
 const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
 const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
@@ -67,6 +68,11 @@ export default class PropertiesEditor extends Component {
         case 'enum':
           return <PropertyEnum
             key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />;
+
+        case 'color':
+          return <PropertyColor
+            key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />;
+
 
         case 'string':
         default:
