@@ -2,6 +2,7 @@ import Three from 'three';
 import createShapeWall from './line-creator';
 import createArea from './area-creator';
 import createGrid from './grid-creator';
+import {createSingleWindow} from './window-creator';
 
 export function parseData(sceneData, editingActions) {
 
@@ -52,32 +53,84 @@ export function parseData(sceneData, editingActions) {
 
 
     });
-  });
+
+    // Import windows and doors
+    layer.holes.forEach(hole => {
+      if (hole.properties.get('altitude') !== 0) {
+
+        let windowLine = layer.lines.get(hole.line);
+
+        let vertex0 = layer.vertices.get(windowLine.vertices.get(0));
+        let vertex1 = layer.vertices.get(windowLine.vertices.get(1));
+        let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
+          + Math.pow((vertex1.y - vertex0.y), 2));
+
+        let alpha = Math.asin((vertex1.y - vertex0.y) / length);
+        let windowCenterPosition = {
+          x: length * hole.offset * Math.cos(alpha) + vertex0.x,
+          y: hole.properties.get('altitude') + hole.properties.get('height')/2,
+          z: -length * hole.offset * Math.sin(alpha)
+        };
+        console.log(
+          "vertex0 = ", {
+            x: vertex0.x,
+            y: vertex0.y
+          }, " vertex1 = ", {
+            x: vertex1.x,
+            y: vertex1.y
+          },
+          " length = ", length,
+          " alpha = ", alpha,
+          " center = ", windowCenterPosition,
+          " line = ", hole.line);
+
+        let window3D = createSingleWindow(
+          100,
+          100,
+          20,
+          windowCenterPosition.x,
+          windowCenterPosition.y,
+          windowCenterPosition.z, false, 100);
+
+        window3D.position.z -= 3*windowLine.properties.get('thickness')/2;
+        window3D.position.x -= windowLine.properties.get('thickness')/2;
+        //window3D.rotation.y += alpha;
+
+        plan.add(window3D);
+      } else {
+        // IMPORT DOOR
+      }
+    });
+
+  })
+  ;
+
+  plan.add(createSingleWindow(100, 100, 20, 0, 0, 0, false, 100));
 
   plan.scale.set(-1, 1, 1);
 
-  // Compute bounding box for the plan
+// Compute bounding box for the plan
   let boundingBox = new Three.Box3().setFromObject(plan);
 
-  // Add a grid to the plan
+// Add a grid to the plan
 
   let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
   grid.rotation.z += Math.PI;
 
-  // Set center of plan in the origin
+// Set center of plan in the origin
 
   let center = [
     (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
     (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
     (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-  plan.position.x -= center[0];
-  plan.position.y -= center[1];
-  plan.position.z -= center[2];
-
-  grid.position.x -= center[0];
-  grid.position.y -= center[1];
-  grid.position.z -= center[2];
+  // plan.position.x -= center[0];
+  // plan.position.y -= center[1];
+  // plan.position.z -= center[2];
+  //
+  // grid.position.x -= center[0];
+  // grid.position.y -= center[1];
+  // grid.position.z -= center[2];
 
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
