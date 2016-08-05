@@ -44,7 +44,9 @@ export function parseData(sceneData, editingActions) {
         vertices.push(layer.vertices.get(vertexID));
       });
 
-      let area3D = createArea(vertices, parseInt(area.patternColor.substring(1), 16));
+      let area3D = createArea(vertices,
+        parseInt(area.properties.get('patternColor').substring(1), 16),
+        area.properties.get('texture'));
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
 
@@ -139,14 +141,23 @@ function createWall(layer, line, interactFunction) {
     holes.push(layer.holes.get(holeID));
   });
 
+  //createShapeWall(vertex0, vertex1, height, thickness, holes, bevelRadius, isSelected, wall1Texture, wall2Texture)
+
   let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
     layer.vertices.get(line.vertices.get(1)),
-    line.height,
-    line.thickness, holes,
-    line.id,
-    line.selected);
+    line.properties.get('height'),
+    line.properties.get('thickness'),
+    holes,
+    line.properties.get('thickness'),
+    // line.id,
+    line.selected,
+    line.properties.get('textureA'),
+    line.properties.get('textureB')
+  );
 
-  wall.children[0].interact = interactFunction;
+  wall.children.forEach(child => {
+    child.interact = interactFunction;
+  });
 
   return wall;
 }

@@ -178,8 +178,12 @@
           "holes": [
             "hab"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "painted"
+          }
         },
         "bc": {
           "id": "bc",
@@ -191,8 +195,12 @@
           "holes": [
             "hbc"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "painted"
+          }
         },
         "cd": {
           "id": "cd",
@@ -204,8 +212,12 @@
           "holes": [
             "hcd"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "painted"
+          }
         },
         "de": {
           "id": "de",
@@ -217,8 +229,12 @@
           "holes": [
             "hde"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "painted"
+          }
         },
         "ef": {
           "id": "ef",
@@ -230,8 +246,12 @@
           "holes": [
             "hef"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "bricks"
+          }
         },
         "fg": {
           "id": "fg",
@@ -241,8 +261,12 @@
             "g"
           ],
           "holes": [],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "bricks"
+          }
         },
         "gh": {
           "id": "gh",
@@ -254,8 +278,12 @@
           "holes": [
             "hgh"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "bricks"
+          }
         },
         "hi": {
           "id": "hi",
@@ -267,8 +295,12 @@
           "holes": [
             "hhi"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "bricks"
+          }
         },
         "ij": {
           "id": "ij",
@@ -280,8 +312,12 @@
           "holes": [
             "hij"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         },
         "jk": {
           "id": "jk",
@@ -291,8 +327,12 @@
             "k"
           ],
           "holes": [],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         },
         "kl": {
           "id": "kl",
@@ -304,8 +344,12 @@
           "holes": [
             "hkl"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         },
         "gj": {
           "id": "gj",
@@ -317,8 +361,12 @@
           "holes": [
             "hgj"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         },
         "fl": {
           "id": "fl",
@@ -330,8 +378,12 @@
           "holes": [
             "hfl"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         },
         "ai": {
           "id": "ai",
@@ -343,8 +395,12 @@
           "holes": [
             "hai"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "bricks"
+          }
         },
         "kb": {
           "id": "kb",
@@ -356,8 +412,12 @@
           "holes": [
             "hkb"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         },
         "ld": {
           "id": "ld",
@@ -369,8 +429,12 @@
           "holes": [
             "hld"
           ],
-          "height": 300,
-          "thickness": 20
+          "properties": {
+            "height": 300,
+            "thickness": 20,
+            "textureA": "painted",
+            "textureB": "painted"
+          }
         }
       },
       "holes": {
@@ -379,126 +443,154 @@
           "type": "door",
           "offset": 0.5,
           "line": "ld",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         },
         "hab": {
           "id": "hab",
           "type": "window",
           "offset": 0.5,
           "line": "ab",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hbc": {
           "id": "hbc",
           "type": "door",
           "offset": 0.5,
           "line": "bc",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         },
         "hcd": {
           "id": "hcd",
           "type": "window",
           "offset": 0.5,
           "line": "cd",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hde": {
           "id": "hde",
           "type": "window",
           "offset": 0.5,
           "line": "de",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hef": {
           "id": "hef",
           "type": "window",
           "offset": 0.5,
           "line": "ef",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hgh": {
           "id": "hgh",
           "type": "window",
           "offset": 0.5,
           "line": "gh",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hhi": {
           "id": "hhi",
           "type": "window",
           "offset": 0.5,
           "line": "hi",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hij": {
           "id": "hij",
           "type": "door",
           "offset": 0.5,
           "line": "ij",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         },
         "hkl": {
           "id": "hkl",
           "type": "door",
           "offset": 0.5,
           "line": "kl",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         },
         "hgj": {
           "id": "hgj",
           "type": "door",
           "offset": 0.5,
           "line": "gj",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         },
         "hfl": {
           "id": "hfl",
           "type": "door",
           "offset": 0.5,
           "line": "fl",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         },
         "hai": {
           "id": "hai",
           "type": "window",
           "offset": 0.5,
           "line": "ai",
-          "width": 100,
-          "height": 100,
-          "altitude": 100
+          "properties": {
+            "width": 100,
+            "height": 100,
+            "altitude": 100
+          }
         },
         "hkb": {
           "id": "hkb",
           "type": "door",
           "offset": 0.5,
           "line": "kb",
-          "width": 75,
-          "height": 190,
-          "altitude": 0
+          "properties": {
+            "width": 75,
+            "height": 190,
+            "altitude": 0
+          }
         }
       },
       "areas": {
@@ -511,8 +603,11 @@
             "k",
             "i"
           ],
-          "patternColor": "#c77ed0",
-          "patternDirection": "0"
+          "properties": {
+            "patternColor": "#c77ed0",
+            "patternDirection": "0",
+            "texture": "parquet"
+          }
         },
         "bcdk": {
           "id": "bcdk",
@@ -523,8 +618,11 @@
             "d",
             "k"
           ],
-          "patternColor": "#0fc2e8",
-          "patternDirection": "70"
+          "properties": {
+            "patternColor": "#0fc2e8",
+            "patternDirection": "70",
+            "texture": "parquet"
+          }
         },
         "ldef": {
           "id": "ldef",
@@ -535,8 +633,11 @@
             "e",
             "f"
           ],
-          "patternColor": "#16ae67 ",
-          "patternDirection": "140"
+          "properties": {
+            "patternColor": "#16ae67 ",
+            "patternDirection": "140",
+            "texture": "parquet"
+          }
         },
         "jlfg": {
           "id": "jlfg",
@@ -547,8 +648,11 @@
             "f",
             "g"
           ],
-          "patternColor": "#358ea1",
-          "patternDirection": "210"
+          "properties": {
+            "patternColor": "#358ea1",
+            "patternDirection": "210",
+            "texture": "parquet"
+          }
         },
         "hijg": {
           "id": "hijg",
@@ -559,8 +663,11 @@
             "j",
             "g"
           ],
-          "patternColor": "#c0ad64 ",
-          "patternDirection": "280"
+          "properties": {
+            "patternColor": "#c0ad64 ",
+            "patternDirection": "280",
+            "texture": "parquet"
+          }
         }
       }
     }

@@ -40,8 +40,9 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
 
   let holesComp = line.holes.map(holeID => {
     let hole = holes.get(holeID);
-    let startAt = lenght * hole.offset - hole.width / 2;
-    let holePath = `M${0} ${ -epsilon}  L${hole.width} ${-epsilon}  L${hole.width} ${epsilon}  L${0} ${epsilon}  z`;
+    let holeWidth = hole.properties.get('width');
+    let startAt = lenght * hole.offset - holeWidth / 2;
+    let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
     let holeStyle = hole.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
     let onHoleClick = event => {
       editingActions.selectHole(layerID, hole.id);
@@ -51,7 +52,7 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
     return (
       <g key={holeID} transform={`translate(${startAt}, 0)`}>
         <path d={holePath} style={holeStyle} onClick={onHoleClick}/>
-        <line x1={hole.width / 2} y1={- 10 - epsilon} x2={hole.width / 2} y2={10 + epsilon} style={holeStyle}/>
+        <line x1={holeWidth / 2} y1={- 10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
       </g>
     )
   });

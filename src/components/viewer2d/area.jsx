@@ -26,9 +26,9 @@ export default function Area({layerID, area, vertices}, {editingActions}) {
     <g>
       <defs>
         <pattern id={patternID} width="10" height="10"
-                 patternUnits="userSpaceOnUse" patternTransform={`rotate(${area.patternDirection})`}>
+                 patternUnits="userSpaceOnUse" patternTransform={`rotate(${area.properties.get('patternDirection')})`}>
           <rect x="0" y="0" width="10" height="10" fill="#fff" />
-          <rect x1="0" y1="0" width="4" height="10" fill={area.patternColor} stroke="0"
+          <rect x1="0" y1="0" width="4" height="10" fill={area.properties.get('patternColor')} stroke="0"
                 style={area.selected ? STYLE_SELECTED : STYLE_BASE}/>
         </pattern>
       </defs>
