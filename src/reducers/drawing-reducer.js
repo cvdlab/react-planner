@@ -14,8 +14,19 @@ import {
 } from '../constants';
 
 import * as Geometry from '../utils/geometry';
-import {addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections, unselectAll, detectAndUpdateAreas} from '../utils/layer-operations';
-import {nearestDrawingHelper, addPointHelper, addLineHelper} from '../utils/drawing-helpers';
+import {
+  addLine,
+  replaceLineVertex,
+  removeLine,
+  select,
+  unselect,
+  addLineAvoidingIntersections,
+  unselectAll,
+  detectAndUpdateAreas,
+  addHole,
+  removeHole
+} from '../utils/layer-operations';
+import {nearestDrawingHelper, addPointHelper, addLineHelper, addLineSegmentHelper} from '../utils/drawing-helpers';
 
 export default function (state, action) {
   switch (action.type) {
@@ -32,7 +43,7 @@ export default function (state, action) {
       return endDrawingLine(state, action.layerID, action.x, action.y);
 
     case SELECT_TOOL_DRAWING_HOLE:
-      return state.set('mode', MODE_DRAWING_HOLE);
+      return selectToolDrawingHole(state);
 
     case UPDATE_DRAWING_HOLE:
       return updateDrawingHole(state, action.layerID, action.x, action.y);
@@ -135,11 +146,64 @@ function endDrawingLine(state, layerID, x, y) {
   });
 }
 
+function selectToolDrawingHole(state) {
+  //TODO check current layer
+
+  let drawingHelpers = (new List()).withMutations(drawingHelpers => {
+    state.getIn(['scene', 'layers'])
+      .forEach(({lines, vertices}) => {
+        lines.forEach(line => {
+          let {x: x1, y: y1} = vertices.get(line.vertices.get(0));
+          let {x: x2, y:y2} = vertices.get(line.vertices.get(1));
+
+          addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, line.id);
+        })
+      });
+  });
+
+  return state.merge({
+    mode: MODE_DRAWING_HOLE,
+    drawingHelpers
+  });
+}
+
 /** holes operations **/
 function updateDrawingHole(state, layerID, x, y) {
-  return state;
+
+  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let helper = null;
+  if (nearestHelper) {
+    ({x, y} = nearestHelper.point);
+    helper = nearestHelper.helper;
+  }
+
+  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+    let selectedHole = layer.getIn(['selected', 'holes']).first();
+    if (selectedHole) {
+      unselect(layer, 'holes', selectedHole);
+      removeHole(layer, selectedHole);
+    }
+
+    if (helper) {
+      let lineID = helper.related.get(0);
+      let line = layer.getIn(['lines', lineID]);
+      let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(0));
+      let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));
+
+      let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+      let {hole} = addHole(layer, 'genericWindow', lineID, offset);
+      select(layer, 'holes', hole.id);
+    }
+  }));
+
+  return state.merge({
+    activeDrawingHelper: helper,
+    scene
+  });
 }
 
 function endDrawingHole(state, layerID, x, y) {
-  return state.merge({mode: MODE_DRAWING_HOLE});
+  state =  updateDrawingHole(state, layerID, x, y);
+  return state.updateIn(['scene', 'layers', layerID], layer => unselectAll(layer));
+
 }

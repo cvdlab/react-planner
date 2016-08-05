@@ -32,6 +32,9 @@ export default function ActiveDrawingHelper({helper, width, height}) {
         return <line x1={pointV0.x} y1={pointV0.y} x2={pointV1.x} y2={pointV1.y} style={STYLE}/>;
       return null;
 
+    case'line-segment':
+      return <line x1={helper.x1} y1={helper.y1} x2={helper.x2} y2={helper.y2} style={STYLE}/>;
+
     default:
       return null;
   }

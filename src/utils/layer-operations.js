@@ -158,7 +158,7 @@ export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
 export function select(layer, prototype, ID) {
   return layer.withMutations(layer => {
       layer.setIn([prototype, ID, 'selected'], true);
-      layer.updateIn(['selected', 'lines'], lines => lines.push(ID));
+      layer.updateIn(['selected', prototype], elements => elements.push(ID));
     }
   );
 }
@@ -257,3 +257,36 @@ export function detectAndUpdateAreas(layer) {
   return {layer};
 }
 
+/** holes features **/
+export function addHole(layer, type, lineID, offset) {
+  let hole;
+
+  layer = layer.withMutations(layer => {
+    let holeID = IDBroker.acquireID();
+
+    hole = new Hole({
+      id: holeID,
+      type,
+      offset,
+      line: lineID
+    });
+
+    layer.setIn(['holes', holeID], hole);
+    layer.updateIn(['lines', lineID, 'holes'], holes => holes.push(holeID));
+  });
+
+  return {layer, hole};
+}
+
+export function removeHole(layer, holeID) {
+  let hole = layer.getIn(['holes', holeID]);
+  layer = layer.withMutations(layer => {
+    layer.deleteIn(['holes', hole.id]);
+    layer.updateIn(['lines', hole.line, 'holes'], holes => {
+      let index = holes.findIndex(ID => holeID === ID);
+      return holes.remove(index);
+    });
+  });
+
+  return {layer, hole};
+}

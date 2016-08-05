@@ -1,7 +1,12 @@
 import {List, Record} from 'immutable';
 import * as Geometry from './geometry';
 
-class PointHelper extends Record({type: "point", x: -1, y: -1, radius: 1, priority: 1, related: new List()}) {
+class PointHelper extends Record({
+  type: "point",
+  x: -1, y: -1,
+  radius: 1, priority: 1,
+  related: new List()
+}) {
   nearestPoint(x, y) {
     return {
       x: this.x,
@@ -11,11 +16,30 @@ class PointHelper extends Record({type: "point", x: -1, y: -1, radius: 1, priori
   }
 }
 
-class LineHelper extends Record({type: "line", a: -1, b: -1, c: -1, radius: 1, priority: 1, related: new List()}) {
+class LineHelper extends Record({
+  type: "line",
+  a: -1, b: -1, c: -1,
+  radius: 1, priority: 1,
+  related: new List()
+}) {
   nearestPoint(x, y) {
     return {
       ...Geometry.closestPointFromLine(this.a, this.b, this.c, x, y),
       distance: Geometry.distancePointFromLine(this.a, this.b, this.c, x, y)
+    };
+  }
+}
+
+class LineSegmentHelper extends Record({
+  type: "line-segment",
+  x1: -1, y1: -1, x2: -1, y2: -1,
+  radius: 1, priority: 1,
+  related: new List()
+}) {
+  nearestPoint(x, y) {
+    return {
+      ...Geometry.closestPointFromLineSegment(this.x1, this.y1, this.x2, this.y2, x, y),
+      distance: Geometry.distancePointFromLineSegment(this.x1, this.y1, this.x2, this.y2, x, y)
     };
   }
 }
@@ -60,7 +84,8 @@ export function addLineHelper(drawingHelpers, a, b, c, radius, priority, related
   })
 }
 
-export function addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, radius, priority) {
+export function addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, radius, priority, related) {
+  related = new List([related]);
 
-  return [drawingHelpers, {}];
+  return drawingHelpers.push(new LineSegmentHelper({x1, y1, x2, y2, radius, priority, related}));
 }

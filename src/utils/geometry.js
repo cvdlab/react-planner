@@ -76,3 +76,60 @@ export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {
 
   return {type: "none"};
 }
+
+export function distancePointFromLineSegment(x1, y1, x2, y2, xp, yp) {
+  //http://stackoverflow.com/a/6853926/1398836
+
+  let A = xp - x1;
+  let B = yp - y1;
+  let C = x2 - x1;
+  let D = y2 - y1;
+
+  let dot = A * C + B * D;
+  let len_sq = C * C + D * D;
+  let param = -1;
+  if (len_sq != 0) //in case of 0 length line
+    param = dot / len_sq;
+
+  let xx, yy;
+
+  if (param < 0) {
+    xx = x1;
+    yy = y1;
+  }
+  else if (param > 1) {
+    xx = x2;
+    yy = y2;
+  }
+  else {
+    xx = x1 + param * C;
+    yy = y1 + param * D;
+  }
+
+  let dx = xp - xx;
+  let dy = yp - yy;
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+export function closestPointFromLineSegment(x1, y1, x2, y2, xp, yp) {
+  if (x1 === x2) return {x: x1, y: yp};
+  if (y1 === y2) return {x: xp, y: y1};
+
+  let m = (y2 - y1) / (x2 - x1);
+  let q = y1 - m * x1;
+
+  let mi = -1 / m;
+  let qi = yp - mi * xp;
+
+  let x = (qi - q) / (m - mi);
+  let y = (m * x + q);
+
+  return {x, y};
+}
+
+export function pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp) {
+  let length = distanceFromTwoPoints(x1, y1, x2, y2);
+  let distance = distanceFromTwoPoints(x1, y1, xp, yp);
+
+  return distance / length;
+}
