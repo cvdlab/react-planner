@@ -152,7 +152,9 @@ function createWall(layer, line, interactFunction) {
     'bricks',
     'paintedWall');
 
-  wall.children[0].interact = interactFunction;
+  wall.children.forEach(child => {
+    child.interact = interactFunction;
+  });
 
   return wall;
 }
