@@ -176,7 +176,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     topHoleClosure.rotation.x += Math.PI / 2;
     topHoleClosure.position.z -= thickness / 2;
     topHoleClosure.position.y += hole.properties.get('height') + hole.properties.get('altitude');
-    topHoleClosure.position.x += startAt + bevelRadius / 2;
+    topHoleClosure.position.x += startAt;
 
     topHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
@@ -208,7 +208,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       bottomHoleClosure.rotation.x += Math.PI / 2;
       bottomHoleClosure.position.z -= thickness / 2;
       bottomHoleClosure.position.y += hole.properties.get('altitude');
-      bottomHoleClosure.position.x += startAt + bevelRadius / 2;
+      bottomHoleClosure.position.x += startAt;
 
       bottomHoleClosure.position.x -= thickness / 2; //TODO: REMOVE WORKAROUND BEVELING
 
