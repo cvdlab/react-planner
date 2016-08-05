@@ -47,7 +47,6 @@ export default function appReducers(state, action) {
     case constants.BEGIN_DRAWING_LINE:
     case constants.UPDATE_DRAWING_LINE:
     case constants.END_DRAWING_LINE:
-    case constants.BEGIN_DRAWING_HOLE:
     case constants.UPDATE_DRAWING_HOLE:
     case constants.END_DRAWING_HOLE:
       return drawingReducer(state, action);

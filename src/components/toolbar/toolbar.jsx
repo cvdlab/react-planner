@@ -22,7 +22,6 @@ import {
   MODE_VOLUMES_SUMMARY,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
-  MODE_WAITING_DRAWING_HOLE,
   MODE_DRAWING_HOLE
 } from '../../constants';
 
@@ -95,7 +94,7 @@ export default function Toolbar({
         <IconAddLine />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_WAITING_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add hole"
+      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add hole"
                      onClick={event => drawingActions.selectToolDrawingHole('door-generic')}>
         <IconAddHole />
       </ToolbarButton>

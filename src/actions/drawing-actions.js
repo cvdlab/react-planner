@@ -4,7 +4,6 @@ import {
   UPDATE_DRAWING_LINE,
   END_DRAWING_LINE,
   SELECT_TOOL_DRAWING_HOLE,
-  BEGIN_DRAWING_HOLE,
   UPDATE_DRAWING_HOLE,
   END_DRAWING_HOLE
 } from '../constants';
@@ -43,13 +42,6 @@ export function selectToolDrawingHole(sceneComponentType) {
   return {
     type: SELECT_TOOL_DRAWING_HOLE,
     sceneComponentType
-  }
-}
-
-export function beginDrawingHole(layerID, x, y) {
-  return {
-    type: BEGIN_DRAWING_HOLE,
-    layerID, x, y
   }
 }
 

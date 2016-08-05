@@ -6,11 +6,9 @@ import {
   UPDATE_DRAWING_LINE,
   END_DRAWING_LINE,
   SELECT_TOOL_DRAWING_HOLE,
-  BEGIN_DRAWING_HOLE,
   UPDATE_DRAWING_HOLE,
   END_DRAWING_HOLE,
   MODE_WAITING_DRAWING_LINE,
-  MODE_WAITING_DRAWING_HOLE,
   MODE_DRAWING_HOLE,
   MODE_DRAWING_LINE
 } from '../constants';
@@ -34,10 +32,7 @@ export default function (state, action) {
       return endDrawingLine(state, action.layerID, action.x, action.y);
 
     case SELECT_TOOL_DRAWING_HOLE:
-      return state.set('mode', MODE_WAITING_DRAWING_HOLE);
-
-    case BEGIN_DRAWING_HOLE:
-      return updateDrawingHole(state, action.layerID, action.x, action.y);
+      return state.set('mode', MODE_DRAWING_HOLE);
 
     case UPDATE_DRAWING_HOLE:
       return updateDrawingHole(state, action.layerID, action.x, action.y);
@@ -141,14 +136,10 @@ function endDrawingLine(state, layerID, x, y) {
 }
 
 /** holes operations **/
-function beginDrawingHole(state, layerID, x, y) {
-  return state.merge({mode: MODE_DRAWING_HOLE});
-}
-
 function updateDrawingHole(state, layerID, x, y) {
   return state;
 }
 
 function endDrawingHole(state, layerID, x, y) {
-  return state.merge({mode: MODE_WAITING_DRAWING_HOLE});
+  return state.merge({mode: MODE_DRAWING_HOLE});
 }

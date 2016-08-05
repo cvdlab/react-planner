@@ -10,7 +10,6 @@ import {
   MODE_2D_ZOOM_OUT,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
-  MODE_WAITING_DRAWING_HOLE,
   MODE_DRAWING_HOLE
 } from '../../constants';
 import Scene from './scene.jsx';
@@ -55,10 +54,6 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
         drawingActions.endDrawingLine(layerID, x, y);
         break;
 
-      case MODE_WAITING_DRAWING_HOLE:
-        drawingActions.beginDrawingHole(layerID, x, y);
-        break;
-
       case MODE_DRAWING_HOLE:
         drawingActions.endDrawingHole(layerID, x, y);
         break;
@@ -82,7 +77,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   let ignoreSceneEvents = [
     MODE_WAITING_DRAWING_LINE,
     MODE_DRAWING_LINE,
-    MODE_WAITING_DRAWING_HOLE,
+    MODE_DRAWING_HOLE,
     MODE_DRAWING_HOLE
   ].includes(mode);
 
