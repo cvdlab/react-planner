@@ -1,7 +1,7 @@
 import React, {Component, PropTypes} from 'react';
 import {Seq, Map} from 'immutable';
 import PropertyString from './property-string.jsx';
-
+import PropertyEnum from './property-enum.jsx';
 
 const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
 const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
@@ -37,6 +37,7 @@ export default class PropertiesEditor extends Component {
   updateProperty(propertyName, value) {
     this.setState({
       [propertyName]: {
+        ...this.state[propertyName],
         currentValue: value
       }
     });
@@ -63,6 +64,10 @@ export default class PropertiesEditor extends Component {
       let onChange = event => this.updateProperty(propertyName, event.target.value);
 
       switch(inputElement){
+        case 'enum':
+          return <PropertyEnum
+            key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />;
+
         case 'string':
         default:
           return <PropertyString

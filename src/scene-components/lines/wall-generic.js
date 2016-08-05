@@ -15,12 +15,22 @@ export const WallGeneric = {
       defaultValue: 20
     },
     textureA: {
-      type:"string",
-      defaultValue: 'none'
+      type: "enum",
+      defaultValue: 'none',
+      values: {
+        'none': "Nessuna",
+        'bricks': "Mattoni",
+        'painted': "Pittura"
+      }
     },
     textureB: {
-      type:"string",
-      defaultValue: 'none'
+      type: "enum",
+      defaultValue: 'none',
+      values: {
+        'none': "Nessuna",
+        'bricks': "Mattoni",
+        'painted': "Pittura"
+      }
     }
   },
 
