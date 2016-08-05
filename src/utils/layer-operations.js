@@ -3,6 +3,33 @@ import {Layer, Vertex, Line, Hole, Area, ElementsSet} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
+import sceneComponents from '../scene-components/scene-components';
+
+/** factory **/
+export function sceneComponentsFactory(type, options) {
+  let component = sceneComponents[type];
+  if (!component) throw new Error('scene component not found');
+
+  let properties = new Seq(component.properties)
+    .map(value => value.defaultValue)
+    .toMap();
+
+  options = {...options, properties};
+
+  switch (component.prototype) {
+    case 'lines':
+      return new Line(options);
+
+    case 'holes':
+      return new Hole(options);
+
+    case 'areas':
+      return new Area(options);
+
+    default:
+      throw new Error('prototype not valid');
+  }
+}
 
 /** lines features **/
 export function addLine(layer, type, x0, y0, x1, y1) {
@@ -15,7 +42,7 @@ export function addLine(layer, type, x0, y0, x1, y1) {
     ({layer, vertex: v0} = addVertex(layer, x0, y0, 'lines', lineID));
     ({layer, vertex: v1} = addVertex(layer, x1, y1, 'lines', lineID));
 
-    line = new Line({
+    line = sceneComponentsFactory(type, {
       id: lineID,
       vertices: new List([v0.id, v1.id]),
       type
@@ -195,7 +222,7 @@ export function addArea(layer, type, verticesCoords) {
       vertices.push(vertex.id);
     });
 
-    area = new Area({
+    area = sceneComponentsFactory(type, {
       id: areaID,
       type,
       prototype: "areas",
@@ -264,7 +291,7 @@ export function addHole(layer, type, lineID, offset) {
   layer = layer.withMutations(layer => {
     let holeID = IDBroker.acquireID();
 
-    hole = new Hole({
+    hole = sceneComponentsFactory(type, {
       id: holeID,
       type,
       offset,
