@@ -120,11 +120,11 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   leftClosure.rotation.y -= Math.PI / 2;
   leftClosure.position.z -= bevelRadius / 2;
 
-  leftClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
+  leftClosure.position.x -= bevelRadius / 2 - 0.05; //TODO: REMOVE WORKAROUND BEVELING
 
   rightClosure.rotation.y -= Math.PI / 2;
   rightClosure.position.z -= thickness / 2;
-  rightClosure.position.x += distance;
+  rightClosure.position.x += distance - 0.05;
 
   rightClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
