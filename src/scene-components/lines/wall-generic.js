@@ -13,6 +13,14 @@ export const WallGeneric = {
     thickness: {
       type: "number",
       defaultValue: 3
+    },
+    textureA: {
+      type:"string",
+      defaultValue: 'none'
+    },
+    textureB: {
+      type:"string",
+      defaultValue: 'none'
     }
   },
 

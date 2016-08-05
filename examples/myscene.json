@@ -180,7 +180,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "paintedWall"
           }
         },
         "bc": {
@@ -195,7 +197,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "paintedWall"
           }
         },
         "cd": {
@@ -210,7 +214,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "paintedWall"
           }
         },
         "de": {
@@ -225,7 +231,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "bricks",
+            "textureB": "paintedWall"
           }
         },
         "ef": {
@@ -240,7 +248,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "bricks"
           }
         },
         "fg": {
@@ -253,7 +263,9 @@
           "holes": [],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "bricks"
           }
         },
         "gh": {
@@ -268,7 +280,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "bricks"
           }
         },
         "hi": {
@@ -283,7 +297,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "bricks"
           }
         },
         "ij": {
@@ -298,7 +314,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         },
         "jk": {
@@ -311,7 +329,9 @@
           "holes": [],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         },
         "kl": {
@@ -326,7 +346,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         },
         "gj": {
@@ -341,7 +363,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         },
         "fl": {
@@ -356,7 +380,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         },
         "ai": {
@@ -371,7 +397,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "bricks"
           }
         },
         "kb": {
@@ -386,7 +414,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         },
         "ld": {
@@ -401,7 +431,9 @@
           ],
           "properties": {
             "height": 300,
-            "thickness": 20
+            "thickness": 20,
+            "textureA": "paintedWall",
+            "textureB": "paintedWall"
           }
         }
       },
@@ -411,7 +443,7 @@
           "type": "door",
           "offset": 0.5,
           "line": "ld",
-          "properties":{
+          "properties": {
             "width": 75,
             "height": 190,
             "altitude": 0

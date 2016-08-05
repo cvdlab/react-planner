@@ -149,8 +149,9 @@ function createWall(layer, line, interactFunction) {
     line.properties.get('thickness'),
     // line.id,
     line.selected,
-    'paintedWall',
-    'bricks');
+    line.properties.get('textureA'),
+    line.properties.get('textureB')
+  );
 
   wall.children.forEach(child => {
     child.interact = interactFunction;

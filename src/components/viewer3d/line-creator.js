@@ -1,6 +1,7 @@
 import Three from 'three';
 
-export default function createShapeWall(vertex0, vertex1, height, thickness, holes, bevelRadius, isSelected, wall1Texture, wall2Texture) {
+export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
+                                        bevelRadius, isSelected, textureA, textureB) {
 
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
@@ -54,11 +55,11 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
 
   if (alpha < 0) {
-    applyTexture(wallMaterial1, wall1Texture);
-    applyTexture(wallMaterial2, wall2Texture);
+    applyTexture(wallMaterial1, textureA);
+    applyTexture(wallMaterial2, textureB);
   } else {
-    applyTexture(wallMaterial1, wall2Texture);
-    applyTexture(wallMaterial2, wall1Texture);
+    applyTexture(wallMaterial1, textureB);
+    applyTexture(wallMaterial2, textureA);
   }
 
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
