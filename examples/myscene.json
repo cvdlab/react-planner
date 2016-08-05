@@ -605,7 +605,8 @@
           ],
           "properties": {
             "patternColor": "#c77ed0",
-            "patternDirection": "0"
+            "patternDirection": "0",
+            "texture": "parquet"
           }
         },
         "bcdk": {
@@ -619,7 +620,8 @@
           ],
           "properties": {
             "patternColor": "#0fc2e8",
-            "patternDirection": "70"
+            "patternDirection": "70",
+            "texture": "parquet"
           }
         },
         "ldef": {
@@ -633,7 +635,8 @@
           ],
           "properties": {
             "patternColor": "#16ae67 ",
-            "patternDirection": "140"
+            "patternDirection": "140",
+            "texture": "parquet"
           }
         },
         "jlfg": {
@@ -647,7 +650,8 @@
           ],
           "properties": {
             "patternColor": "#358ea1",
-            "patternDirection": "210"
+            "patternDirection": "210",
+            "texture": "parquet"
           }
         },
         "hijg": {
@@ -661,7 +665,8 @@
           ],
           "properties": {
             "patternColor": "#c0ad64 ",
-            "patternDirection": "280"
+            "patternDirection": "280",
+            "texture": "parquet"
           }
         }
       }

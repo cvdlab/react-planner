@@ -15,6 +15,10 @@ export const AreaGeneric = {
       defaultValue: 0,
       min: 0,
       max: 359
+    },
+    texture: {
+      type: "string",
+      defaultValue: 'none'
     }
   },
 

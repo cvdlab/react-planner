@@ -44,7 +44,9 @@ export function parseData(sceneData, editingActions) {
         vertices.push(layer.vertices.get(vertexID));
       });
 
-      let area3D = createArea(vertices, parseInt(area.properties.get('patternColor').substring(1), 16));
+      let area3D = createArea(vertices,
+        parseInt(area.properties.get('patternColor').substring(1), 16),
+        area.properties.get('texture'));
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
 
