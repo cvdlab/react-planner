@@ -8,8 +8,13 @@ export default function createArea(vertices, color, textureName) {
     shape.lineTo(vertices[i].x, vertices[i].y);
   }
 
+  if (textureName && textureName !== 'none') {
+    color = 0xffffff;
+  }
+
   let areaMaterial = new Three.MeshPhongMaterial({
     side: Three.DoubleSide,
+    color: color
   });
 
   switch (textureName) {
@@ -19,11 +24,9 @@ export default function createArea(vertices, color, textureName) {
       areaMaterial.map.wrapS = Three.RepeatWrapping;
       areaMaterial.map.wrapT = Three.RepeatWrapping;
       areaMaterial.map.repeat.set(.01, .01);
-
       break;
     case 'none':
     default:
-          areaMaterial.color = color;
   }
 
   let area = new Three.Mesh(new Three.ShapeGeometry(shape), areaMaterial);
