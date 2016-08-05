@@ -57,7 +57,7 @@ export const Hole = Record({
   prototype: "holes",
   offset: -1,
   line: "",
-  width: -1,
+  width: 20,
   height: -1,
   altitude: 0,
   selected: false,
