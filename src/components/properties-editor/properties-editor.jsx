@@ -1,11 +1,8 @@
 import React, {Component, PropTypes} from 'react';
 import {Seq, Map} from 'immutable';
+import PropertyString from './property-string.jsx';
 
 
-const STYLE_UL = {listStyle: "none", padding: "0px"};
-const STYLE_LI = {marginBottom: "5px"};
-const STYLE_LABEL = {width: "70px", display: "inline-block"};
-const STYLE_INPUT = {width: "100px"};
 const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
 const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
 const STYLE_BUTTON_RESET = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
@@ -31,7 +28,8 @@ export default class PropertiesEditor extends Component {
     return Seq(sceneComponent.properties).map((configs, propertyName) => {
       return {
         currentValue: element.properties.has(propertyName) ? element.properties.get(propertyName) : configs.defaultValue,
-        inputElement: configs.type
+        inputElement: configs.type,
+        configs
       }
     }).toJS();
   }
@@ -61,17 +59,23 @@ export default class PropertiesEditor extends Component {
   render() {
     let {state, context: {editingActions}} = this;
 
+    let renderInputElement = (inputElement, propertyName, value, configs)=> {
+      let onChange = event => this.updateProperty(propertyName, event.target.value);
+
+      switch(inputElement){
+        case 'string':
+        default:
+          return <PropertyString
+            key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />
+
+      }
+    };
+
+
     return (
       <div>
-        <ul style={STYLE_UL}>
-          { Seq(state).entrySeq().map(([propertyName, {currentValue, inputElement}]) =>
-            <li style={STYLE_LI} key={propertyName}>
-              <label style={STYLE_LABEL}>{propertyName}</label>
-              <input type="text" style={STYLE_INPUT} value={currentValue}
-                     onChange={event => this.updateProperty(propertyName, event.target.value)}/>
-            </li>
-          )}
-        </ul>
+          { Seq(state).entrySeq().map(([propertyName, {currentValue, inputElement, configs}]) =>
+              renderInputElement(inputElement, propertyName, currentValue, configs)) }
 
         <div style={STYLE_WRAPPER_BUTTONS}>
           <button style={STYLE_BUTTON_UNSELECT} onClick={event => editingActions.unselectAll()}>Unselect</button>
