@@ -182,7 +182,7 @@
             "height": 300,
             "thickness": 20,
             "textureA": "bricks",
-            "textureB": "paintedWall"
+            "textureB": "painted"
           }
         },
         "bc": {
@@ -199,7 +199,7 @@
             "height": 300,
             "thickness": 20,
             "textureA": "bricks",
-            "textureB": "paintedWall"
+            "textureB": "painted"
           }
         },
         "cd": {
@@ -216,7 +216,7 @@
             "height": 300,
             "thickness": 20,
             "textureA": "bricks",
-            "textureB": "paintedWall"
+            "textureB": "painted"
           }
         },
         "de": {
@@ -233,7 +233,7 @@
             "height": 300,
             "thickness": 20,
             "textureA": "bricks",
-            "textureB": "paintedWall"
+            "textureB": "painted"
           }
         },
         "ef": {
@@ -249,7 +249,7 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
+            "textureA": "painted",
             "textureB": "bricks"
           }
         },
@@ -264,7 +264,7 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
+            "textureA": "painted",
             "textureB": "bricks"
           }
         },
@@ -281,7 +281,7 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
+            "textureA": "painted",
             "textureB": "bricks"
           }
         },
@@ -298,7 +298,7 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
+            "textureA": "painted",
             "textureB": "bricks"
           }
         },
@@ -315,8 +315,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         },
         "jk": {
@@ -330,8 +330,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         },
         "kl": {
@@ -347,8 +347,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         },
         "gj": {
@@ -364,8 +364,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         },
         "fl": {
@@ -381,8 +381,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         },
         "ai": {
@@ -398,7 +398,7 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
+            "textureA": "painted",
             "textureB": "bricks"
           }
         },
@@ -415,8 +415,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         },
         "ld": {
@@ -432,8 +432,8 @@
           "properties": {
             "height": 300,
             "thickness": 20,
-            "textureA": "paintedWall",
-            "textureB": "paintedWall"
+            "textureA": "painted",
+            "textureB": "painted"
           }
         }
       },

@@ -288,28 +288,31 @@ function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitu
 }
 
 function applyTexture(material, textureName) {
+
+  let loader = new Three.TextureLoader();
+
   switch (textureName) {
     case 'bricks':
-      material.map = Three.ImageUtils.loadTexture('./libs/textures/bricks.jpg');
+      material.map = loader.load('./textures/bricks.jpg');
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
       material.map.repeat.set(.01, .01);
 
-      material.normalMap = Three.ImageUtils.loadTexture("./libs/textures/bricksNormal.jpg");
+      material.normalMap = loader.load("./textures/bricks-normal.jpg");
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
       material.normalMap.repeat.set(.01, .01);
       break;
-    case 'paintedWall':
-      material.map = Three.ImageUtils.loadTexture('./libs/textures/TextureCasa.jpg');
+    case 'painted':
+      material.map = loader.load('./textures/painted.jpg');
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
       material.map.repeat.set(.01, .01);
 
-      material.normalMap = Three.ImageUtils.loadTexture("./libs/textures/TextureCasaNormal.png");
+      material.normalMap = loader.load("./textures/painted-normal.png");
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;

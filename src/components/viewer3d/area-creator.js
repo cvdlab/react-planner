@@ -17,9 +17,11 @@ export default function createArea(vertices, color, textureName) {
     color: color
   });
 
+  let loader = new Three.TextureLoader();
+
   switch (textureName) {
     case 'parquet':
-      areaMaterial.map = Three.ImageUtils.loadTexture('./libs/textures/parquet.jpg');
+      areaMaterial.map = loader.load('./textures/parquet.jpg');
       areaMaterial.needsUpdate = true;
       areaMaterial.map.wrapS = Three.RepeatWrapping;
       areaMaterial.map.wrapT = Three.RepeatWrapping;
