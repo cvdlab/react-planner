@@ -191,15 +191,12 @@ function updateDrawingHole(state, layerID, x, y) {
       let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));
 
       let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
-      let {hole} = addHole(layer, 'genericWindow', lineID, offset);
+      let {hole} = addHole(layer, 'windowGeneric', lineID, offset);
       select(layer, 'holes', hole.id);
     }
   }));
 
-  return state.merge({
-    activeDrawingHelper: helper,
-    scene
-  });
+  return state.set('scene', scene);
 }
 
 function endDrawingHole(state, layerID, x, y) {
