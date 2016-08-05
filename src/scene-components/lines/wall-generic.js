@@ -8,11 +8,11 @@ export const WallGeneric = {
   properties: {
     height: {
       type: "number",
-      defaultValue: 10
+      defaultValue: 300
     },
     thickness: {
       type: "number",
-      defaultValue: 3
+      defaultValue: 20
     },
     textureA: {
       type:"string",

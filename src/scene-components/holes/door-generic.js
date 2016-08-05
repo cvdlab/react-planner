@@ -8,17 +8,17 @@ export const DoorGeneric = {
   properties: {
     width: {
       type: "number",
-      defaultValue: 10,
+      defaultValue: 80,
       min: 0
     },
     height: {
       type: "number",
-      defaultValue: 10,
+      defaultValue: 215,
       min: 0
     },
     altitude: {
       type: "number",
-      defaultValue: 10,
+      defaultValue: 0,
       min: 0
     }
   },

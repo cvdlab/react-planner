@@ -8,7 +8,7 @@ export const AreaGeneric = {
   properties: {
     patternColor: {
       type: "color",
-      defaultValue: "#c0ad64"
+      defaultValue: "#cccccc"
     },
     patternDirection: {
       type: "number",

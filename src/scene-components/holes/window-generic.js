@@ -8,17 +8,17 @@ export const WindowGeneric = {
   properties: {
     width: {
       type: "number",
-      defaultValue: 10,
+      defaultValue: 90,
       min: 0
     },
     height: {
       type: "number",
-      defaultValue: 10,
+      defaultValue: 100,
       min: 0
     },
     altitude: {
       type: "number",
-      defaultValue: 10,
+      defaultValue: 90,
       min: 0
     }
   },
