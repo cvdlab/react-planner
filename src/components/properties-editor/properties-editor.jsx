@@ -3,6 +3,7 @@ import {Seq, Map} from 'immutable';
 import PropertyString from './property-string.jsx';
 import PropertyEnum from './property-enum.jsx';
 import PropertyColor from './property-color.jsx';
+import PropertyNumber from './property-number.jsx';
 
 const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
 const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
@@ -73,6 +74,9 @@ export default class PropertiesEditor extends Component {
           return <PropertyColor
             key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />;
 
+        case 'number':
+          return <PropertyNumber
+            key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />;
 
         case 'string':
         default:
