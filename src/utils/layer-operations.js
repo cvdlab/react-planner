@@ -128,21 +128,27 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1) {
     lines.forEach(line => {
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
-      let intersection = Geometry.intersectionFromTwoLineSegment(
-        {x: x0, y: y0}, {x: x1, y: y1},
-        v0, v1
-      );
+      if (!(
+        (v0.x === x0 && v0.y === y0)
+        || (v0.x === x1 && v0.y === y1)
+        || (v1.x === x0 && v1.y === y0)
+        || (v1.x === x1 && v1.y === y1))) {
 
-      if (intersection.type === "colinear") {
-        removeLine(layer, line.id);
-        points.push(v0, v1);
-      }
 
-      if (intersection.type === "intersecting"
-        && !(x0 === intersection.point.x && y0 === intersection.point.y)
-        && !(x1 === intersection.point.x && y1 === intersection.point.y)) {
-        splitLine(layer, line.id, intersection.point.x, intersection.point.y);
-        points.push(intersection.point);
+        let intersection = Geometry.intersectionFromTwoLineSegment(
+          {x: x0, y: y0}, {x: x1, y: y1},
+          v0, v1
+        );
+
+        if (intersection.type === "colinear") {
+          removeLine(layer, line.id);
+          points.push(v0, v1);
+        }
+
+        if (intersection.type === "intersecting") {
+          splitLine(layer, line.id, intersection.point.x, intersection.point.y);
+          points.push(intersection.point);
+        }
       }
     });
     addLinesFromPoints(layer, type, points);
