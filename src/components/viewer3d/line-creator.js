@@ -53,8 +53,13 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   });
 
 
-  applyTexture(wallMaterial1, wall1Texture);
-  applyTexture(wallMaterial2, wall2Texture);
+  if (alpha < 0) {
+    applyTexture(wallMaterial1, wall1Texture);
+    applyTexture(wallMaterial2, wall2Texture);
+  } else {
+    applyTexture(wallMaterial1, wall2Texture);
+    applyTexture(wallMaterial2, wall1Texture);
+  }
 
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
   let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
@@ -281,7 +286,7 @@ function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitu
   return wallCoordinates;
 }
 
-function applyTexture (material, textureName) {
+function applyTexture(material, textureName) {
   switch (textureName) {
     case 'bricks':
       material.map = Three.ImageUtils.loadTexture('./libs/textures/bricks.jpg');
@@ -301,7 +306,7 @@ function applyTexture (material, textureName) {
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(.01,.01);
+      material.map.repeat.set(.01, .01);
 
       material.normalMap = Three.ImageUtils.loadTexture("./libs/textures/TextureCasaNormal.png");
       material.normalScale = new Three.Vector2(0.4, 0.4);
