@@ -1,4 +1,5 @@
 import Three from 'three';
+import {createSingleWindow} from './window-creator';
 
 export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
                                         bevelRadius, isSelected, textureA, textureB) {
@@ -33,6 +34,18 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       bevelRadius);
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
+
+    // Create Windows
+    if (hole.properties.get('altitude') !== 0) {
+      let window3D = createSingleWindow(
+        hole.properties.get('width') -0.1,
+        hole.properties.get('height') - 0.1,
+        thickness,
+        distance * hole.offset - bevelRadius,
+        hole.properties.get('altitude') + hole.properties.get('height') / 2,
+        0, false, 100);
+      pivot.add(window3D);
+    }
   });
 
 
