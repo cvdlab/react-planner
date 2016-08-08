@@ -36,13 +36,22 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
 
+
+    let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
+      + Math.pow((vertex1.y - vertex0.y), 2));
+
+    let windowXPosition = distance * hole.offset - bevelRadius;
+    if (hole.offset > 0.5) {
+      windowXPosition = distance * hole.offset + bevelRadius - (hole.properties.get('width') - 0.1) / 2
+    }
+
     // Create Windows
     if (hole.properties.get('altitude') !== 0) {
       let window3D = createSingleWindow(
-        hole.properties.get('width') - 0.1,
-        hole.properties.get('height') - 0.1,
+        hole.properties.get('width'),
+        hole.properties.get('height'),
         thickness,
-        distance * hole.offset - bevelRadius,
+        windowXPosition,
         hole.properties.get('altitude') + hole.properties.get('height') / 2,
         0, false, 100);
       pivot.add(window3D);
