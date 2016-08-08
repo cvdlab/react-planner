@@ -2,6 +2,7 @@ import Three from 'three';
 import createShapeWall from './line-creator';
 import createArea from './area-creator';
 import createGrid from './grid-creator';
+import {createSingleWindow} from './window-creator';
 
 export function parseData(sceneData, editingActions) {
 
@@ -52,19 +53,22 @@ export function parseData(sceneData, editingActions) {
 
 
     });
+
+
   });
+
 
   plan.scale.set(-1, 1, 1);
 
-  // Compute bounding box for the plan
+// Compute bounding box for the plan
   let boundingBox = new Three.Box3().setFromObject(plan);
 
-  // Add a grid to the plan
+// Add a grid to the plan
 
   let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
   grid.rotation.z += Math.PI;
 
-  // Set center of plan in the origin
+// Set center of plan in the origin
 
   let center = [
     (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
