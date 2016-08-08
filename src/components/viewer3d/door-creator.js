@@ -3,13 +3,12 @@ import Three from 'three';
 export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
 
   let frame1_width = 0.1 * pixelPerUnit;
-  let frame2_thickness = 0.1 * pixelPerUnit;
   let frame2_height = 0.1 * pixelPerUnit;
 
   /* Definisco il telaio della porta con la relativa texture */
 
   var frame1Geom = new Three.BoxGeometry(frame1_width, height, thickness);
-  var frame2Geom = new Three.BoxGeometry(width - 2 * frame1_width, frame2_height, frame2_thickness);
+  var frame2Geom = new Three.BoxGeometry(width - 2 * frame1_width, frame2_height, thickness);
 
   var textureFrameImage = '/textures/door/frame-door.jpg';
 
@@ -76,7 +75,7 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
   object.position.z = z;
 
   frame1.position.x -= width / 2 - frame1_width / 2;
-  frame2.position.z += thickness / 2 - frame2_thickness / 2;
+  //frame2.position.z += thickness / 2;
   frame2.position.y += height/2 - frame2_height/2;
   frame3.position.x += width / 2 - frame1_width / 2;
 
