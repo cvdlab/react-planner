@@ -34,17 +34,20 @@ export default class Scene3DViewer extends React.Component {
     let viewSize = 900;
     let aspectRatio = width / height;
     let camera = new Three.OrthographicCamera(
-      -aspectRatio * viewSize / 2, aspectRatio * viewSize / 2,
-      -viewSize / 2, viewSize / 2,
-      -100000, 100000);
+      -aspectRatio * viewSize / 2,
+      aspectRatio * viewSize / 2,
+      viewSize / 2,
+      -viewSize / 2,
+      0,
+      100000);
     scene.add(camera);
 
     // Set position for the camera
     let cameraPositionX = (planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
     let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 4;
     let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
-    camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
-    camera.up = new Three.Vector3(0, -1, 0);
+    camera.position.set(-cameraPositionX, cameraPositionY, cameraPositionZ);
+    camera.up = new Three.Vector3(0, 1, 0);
 
     // HELPER AXIS
     let axisHelper = new Three.AxisHelper(100);
