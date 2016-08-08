@@ -36,22 +36,13 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
 
-
-    let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
-      + Math.pow((vertex1.y - vertex0.y), 2));
-
-    let windowXPosition = distance * hole.offset - bevelRadius;
-    if (hole.offset > 0.5) {
-      windowXPosition = distance * hole.offset + bevelRadius - (hole.properties.get('width') - 0.1) / 2
-    }
-
     // Create Windows
     if (hole.properties.get('altitude') !== 0) {
       let window3D = createSingleWindow(
         hole.properties.get('width'),
         hole.properties.get('height'),
         thickness,
-        windowXPosition,
+        (distance - bevelRadius) * hole.offset,
         hole.properties.get('altitude') + hole.properties.get('height') / 2,
         0, false, 100);
       pivot.add(window3D);
@@ -60,7 +51,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
         hole.properties.get('width') - 0.1,
         hole.properties.get('height') - 0.1,
         thickness,
-        distance * hole.offset - bevelRadius,
+        (distance - bevelRadius) * hole.offset,
         hole.properties.get('altitude') + hole.properties.get('height') / 2,
         0,
         100);
@@ -99,7 +90,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
   let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
-
+  
   wall1.position.z -= thickness / 2 + 0.001;
   wall2.position.z += thickness / 2 + 0.001;
 
@@ -306,12 +297,12 @@ function createShape(wallCoord) {
   return rectShape;
 }
 
-function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitude) {
+function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitude, bevelRadius) {
 
   let length = Math.sqrt(Math.pow((lineVertex1.x - lineVertex0.x), 2)
     + Math.pow((lineVertex1.y - lineVertex0.y), 2));
 
-  let startAt = length * offset - width / 2;
+  let startAt = length * offset - width / 2 + bevelRadius / 2;
   let wallCoordinates = [
     [startAt, altitude],
     [width + startAt, altitude],
