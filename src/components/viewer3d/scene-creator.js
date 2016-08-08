@@ -57,10 +57,7 @@ export function parseData(sceneData, editingActions) {
 
   });
 
-
-  plan.scale.set(-1, 1, 1);
-
-// Compute bounding box for the plan
+  // Compute bounding box for the plan
   let boundingBox = new Three.Box3().setFromObject(plan);
 
 // Add a grid to the plan

@@ -27,6 +27,9 @@ export default class Scene3DViewer extends React.Component {
     // LOAD DATA
     let planData = parseData(data, editingActions);
 
+    planData.plan.scale.set(-1, 1, 1);
+    planData.plan.position.x += (planData.boundingBox.max.x - planData.boundingBox.min.x);
+    planData.grid.position.x += (planData.boundingBox.max.x - planData.boundingBox.min.x);
     scene.add(planData.plan);
     scene.add(planData.grid);
 

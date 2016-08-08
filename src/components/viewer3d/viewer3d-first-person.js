@@ -46,10 +46,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     // LOAD DATA
     let planData = parseData(data, editingActions);
-    //planData.grid.rotation.z += Math.PI;
 
     scene.add(planData.plan);
-    //scene.add(planData.grid);
 
     // CAMERA
     let viewSize = 900;
