@@ -1,5 +1,6 @@
 import Three from 'three';
 import {createSingleWindow} from './window-creator';
+import {createDoor} from './door-creator';
 
 export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
                                         bevelRadius, isSelected, textureA, textureB) {
@@ -38,18 +39,30 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     // Create Windows
     if (hole.properties.get('altitude') !== 0) {
       let window3D = createSingleWindow(
-        hole.properties.get('width') -0.1,
+        hole.properties.get('width') - 0.1,
         hole.properties.get('height') - 0.1,
         thickness,
         distance * hole.offset - bevelRadius,
         hole.properties.get('altitude') + hole.properties.get('height') / 2,
         0, false, 100);
       pivot.add(window3D);
+    } else {
+      let door3D = createDoor(
+        hole.properties.get('width') - 0.1,
+        hole.properties.get('height') - 0.1,
+        thickness,
+        distance * hole.offset - bevelRadius,
+        hole.properties.get('altitude') + hole.properties.get('height') / 2,
+        0,
+        100);
+      pivot.add(door3D)
     }
   });
 
 
   let lineGeometry = new Three.ShapeGeometry(rectShape);
+  lineGeometry.computeVertexNormals();
+
 
   let wallColor = new Three.Color(1, 1, 1);
   if (isSelected) {
