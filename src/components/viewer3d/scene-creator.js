@@ -63,7 +63,6 @@ export function parseData(sceneData, editingActions) {
 // Add a grid to the plan
 
   let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
-  grid.rotation.z += Math.PI;
 
 // Set center of plan in the origin
 
