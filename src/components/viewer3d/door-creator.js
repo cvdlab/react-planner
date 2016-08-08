@@ -7,8 +7,8 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
 
   /* Definisco il telaio della porta con la relativa texture */
 
-  var frame1Geom = new Three.BoxGeometry(frame1_width, height, thickness);
-  var frame2Geom = new Three.BoxGeometry(width - 2 * frame1_width, frame2_height, thickness);
+  var frame1Geom = new Three.BoxGeometry(frame1_width, height, thickness + 0.05 * pixelPerUnit);
+  var frame2Geom = new Three.BoxGeometry(width - 2 * frame1_width, frame2_height, thickness + 0.05 * pixelPerUnit);
 
   var textureFrameImage = '/textures/door/frame-door.jpg';
 
@@ -31,21 +31,17 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
   /* Creation of the central part of the door */
   let imageFile = './textures/door/main-door.JPG';
   let imageFile2 = './textures/door/main-door2.JPG';
-  let normal1 = textureLoader.load("./textures/door/main-door-normal.png");
-  let normal2 = textureLoader.load("./textures/door/main-door2-normal.png");
 
   doorGeometry.computeVertexNormals();
 
   let textureDoor = textureLoader.load(imageFile);
   let doorMaterial1 = new Three.MeshPhongMaterial();
   doorMaterial1.map = textureDoor;
-  doorMaterial1.normalMap = normal1;
   doorMaterial1.normalScale.set(3, 3);
 
   let textureDoor2 = textureLoader.load(imageFile2);
   let doorMaterial2 = new Three.MeshPhongMaterial();
   doorMaterial2.map = textureDoor2;
-  doorMaterial2.normalMap = normal2;
   doorMaterial2.normalScale.set(3, 3);
 
   /* Use a face material for the door (so we can define a back texture) */
@@ -75,7 +71,6 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
   object.position.z = z;
 
   frame1.position.x -= width / 2 - frame1_width / 2;
-  //frame2.position.z += thickness / 2;
   frame2.position.y += height/2 - frame2_height/2;
   frame3.position.x += width / 2 - frame1_width / 2;
 
