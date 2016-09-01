@@ -1,19 +1,5 @@
 import React, {PropTypes} from 'react';
-
-const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
-const STYLE_SELECTED = {stroke: "#FFC107", strokeWidth: "1px", fill: "orange"};
-
-
-const {pow, sqrt, asin, PI} = Math;
-
-function twoPointsDistance(x1, y1, x2, y2) {
-  return sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
-}
-
-function angleBetweenTwoPoints(distance, y1, y2) {
-  return asin((y1 - y2) / distance);
-}
-
+import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
 
 export default function Line({line, layer}, {editingActions, sceneComponents}) {
 
@@ -31,19 +17,17 @@ export default function Line({line, layer}, {editingActions, sceneComponents}) {
     ({x: x2, y: y2} = vertex0);
   }
 
-  let lenght = sqrt(pow((x2 - x1), 2) + pow((y2 - y1), 2));
-  let angle = (-asin((y1 - y2) / lenght)) * 180 / PI;
-  //let epsilon = line.thickness / 2;
-  let epsilon = 3;
+  let length = distanceFromTwoPoints(x1, y1, x2, y2);
+  let angle = angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
 
-  let holesComp = line.holes.map(holeID => {
+  let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let onHoleClick = event => {
       editingActions.selectHole(layer.id, hole.id);
       event.stopPropagation();
     };
 
-    let startAt = lenght * hole.offset - hole.properties.get('width') / 2;
+    let startAt = length * hole.offset - hole.properties.get('width') / 2;
     let renderedHole = sceneComponents[hole.type].render2D(hole, layer);
 
     return (<g key={holeID} transform={`translate(${startAt}, 0)`} onClick={onHoleClick}> {renderedHole} </g>);
@@ -55,13 +39,12 @@ export default function Line({line, layer}, {editingActions, sceneComponents}) {
     event.stopPropagation();
   };
 
+  let renderedLine = sceneComponents[line.type].render2D(line, layer);
+
   return (
-    <g transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`}>
-      <path
-        d={`M${0} ${ -epsilon}  L${lenght} ${-epsilon}  L${lenght} ${epsilon}  L${0} ${epsilon}  z`}
-        style={line.selected ? STYLE_SELECTED : STYLE_BASE}
-        onClick={onLineClick}/>
-      {holesComp}
+    <g transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`} onClick={onLineClick}>
+      {renderedLine}
+      {renderedHoles}
     </g>
   );
 

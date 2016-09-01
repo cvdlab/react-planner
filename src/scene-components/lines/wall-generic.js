@@ -1,3 +1,5 @@
+import render2D from './wall-generic.2d.jsx';
+
 export const WallGeneric = {
   name: "wallGeneric",
   prototype: "lines",
@@ -34,8 +36,7 @@ export const WallGeneric = {
     }
   },
 
-  render2D: function (options) {
-  },
+  render2D,
 
   render3D: function (options) {
   },
