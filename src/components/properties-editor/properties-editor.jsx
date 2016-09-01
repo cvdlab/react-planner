@@ -64,6 +64,8 @@ export default class PropertiesEditor extends Component {
 
     let renderInputElement = (inputElement, propertyName, value, configs)=> {
       let onChange = event => this.updateProperty(propertyName, event.target.value);
+      let onChangeNumeric = event => this.updateProperty(propertyName, parseFloat(event.target.value));
+
 
       switch(inputElement){
         case 'enum':
@@ -76,7 +78,7 @@ export default class PropertiesEditor extends Component {
 
         case 'number':
           return <PropertyNumber
-            key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChange} />;
+            key={propertyName} propertyName={propertyName} value={value} configs={configs} onChange={onChangeNumeric} />;
 
         case 'string':
         default:
