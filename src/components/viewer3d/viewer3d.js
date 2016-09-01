@@ -27,6 +27,13 @@ export default class Scene3DViewer extends React.Component {
     // LOAD DATA
     let planData = parseData(data, editingActions);
 
+    // console.log("PROOOOVA AGGIUNTA: ", planData.sceneGraph.layers['layer-floor-1'].lines);
+    // let lines = planData.sceneGraph.layers['layer-floor-1'].lines
+    //
+    // for(let lineID in lines){
+    //   scene.add(lines[lineID]);
+    // }
+
     scene.add(planData.plan);
     scene.add(planData.grid);
 
@@ -135,12 +142,11 @@ export default class Scene3DViewer extends React.Component {
 
       let changedValues = diff(this.props.scene, nextProps.scene);
 
-      this.scene.remove(this.planData.plan);
-      this.planData = parseData(nextProps.scene, this.context.editingActions);
-      this.scene.add(this.planData.plan);
+      // this.scene.remove(this.planData.plan);
+      // this.planData = parseData(nextProps.scene, this.context.editingActions);
+      // this.scene.add(this.planData.plan);
 
-      //updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS(), this.context.editingActions);
-
+      updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS(), this.context.editingActions, this.planData.plan);
 
       // OBJECT PICKING
       let toIntersect = [this.planData.plan];
