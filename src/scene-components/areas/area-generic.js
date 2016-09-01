@@ -1,9 +1,14 @@
+import render2D from './area-generic.2d.jsx';
+
 export const AreaGeneric = {
   name: "areaGeneric",
   prototype: "areas",
-  tag: ['area'],
-  group: "Chiusura orizzontale",
-  description: "Porta generica",
+
+  info: {
+    tag: ['area'],
+    group: "Chiusura orizzontale",
+    description: "Stanza generica",
+  },
 
   properties: {
     patternColor: {
@@ -22,13 +27,12 @@ export const AreaGeneric = {
     }
   },
 
-  render2D: function (options) {
+  render2D,
+
+  render3D: function (element, layer) {
   },
 
-  render3D: function (options) {
-  },
-
-  calculateVolume: function (options) {
+  calculateVolume: function (element, layer) {
   }
 
 };

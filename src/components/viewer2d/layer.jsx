@@ -8,7 +8,8 @@ export default function Layer({layer}) {
 
   return (
     <g>
-      {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} layerID={layerID} area={area} vertices={vertices}/>)}
+      {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} layer={layer} area={area}/>)}
+
       {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} layerID={layerID} line={line} vertices={vertices}
                                                       holes={holes}/>)}
     </g>
