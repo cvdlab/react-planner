@@ -39,7 +39,7 @@ export default function Line({line, layer}, {editingActions, sceneComponents}) {
   let holesComp = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let onHoleClick = event => {
-      editingActions.selectHole(layerID, hole.id);
+      editingActions.selectHole(layer.id, hole.id);
       event.stopPropagation();
     };
 
