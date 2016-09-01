@@ -1,3 +1,5 @@
+import render2D from './door-generic.2d.jsx';
+
 export const DoorGeneric = {
   name: "doorGeneric",
   prototype: "holes",
@@ -23,10 +25,9 @@ export const DoorGeneric = {
     }
   },
 
-  render2D: function (options) {
-  },
+  render2D,
 
-  render3D: function (options) {
+  render3D: function (element, layer) {
   },
 
   calculateVolume: function (options) {

@@ -3,8 +3,6 @@ import React, {PropTypes} from 'react';
 const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
 const STYLE_SELECTED = {stroke: "#FFC107", strokeWidth: "1px", fill: "orange"};
 
-const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
-const STYLE_HOLE_SELECTED = {stroke: "orange", strokeWidth: "3px", fill: "orange"};
 
 const {pow, sqrt, asin, PI} = Math;
 
@@ -17,10 +15,10 @@ function angleBetweenTwoPoints(distance, y1, y2) {
 }
 
 
-export default function Line({line, vertices, holes, layerID}, {editingActions}) {
+export default function Line({line, layer}, {editingActions, sceneComponents}) {
 
-  let vertex0 = vertices.get(line.vertices.get(0));
-  let vertex1 = vertices.get(line.vertices.get(1));
+  let vertex0 = layer.vertices.get(line.vertices.get(0));
+  let vertex1 = layer.vertices.get(line.vertices.get(1));
 
   if (vertex0.id === vertex1.id) return null; //avoid 0-length lines
 
@@ -39,27 +37,21 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
   let epsilon = 3;
 
   let holesComp = line.holes.map(holeID => {
-    let hole = holes.get(holeID);
-    let holeWidth = hole.properties.get('width');
-    let startAt = lenght * hole.offset - holeWidth / 2;
-    let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
-    let holeStyle = hole.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
+    let hole = layer.holes.get(holeID);
     let onHoleClick = event => {
       editingActions.selectHole(layerID, hole.id);
       event.stopPropagation();
     };
 
-    return (
-      <g key={holeID} transform={`translate(${startAt}, 0)`}>
-        <path d={holePath} style={holeStyle} onClick={onHoleClick}/>
-        <line x1={holeWidth / 2} y1={- 10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
-      </g>
-    )
+    let startAt = lenght * hole.offset - hole.properties.get('width') / 2;
+    let renderedHole = sceneComponents[hole.type].render2D(hole, layer);
+
+    return (<g key={holeID} transform={`translate(${startAt}, 0)`} onClick={onHoleClick}> {renderedHole} </g>);
   });
 
 
   let onLineClick = event => {
-    editingActions.selectLine(layerID, line.id);
+    editingActions.selectLine(layer.id, line.id);
     event.stopPropagation();
   };
 
@@ -77,11 +69,10 @@ export default function Line({line, vertices, holes, layerID}, {editingActions})
 
 Line.propTypes = {
   line: PropTypes.object.isRequired,
-  vertices: PropTypes.object.isRequired,
-  holes: PropTypes.object.isRequired,
-  layerID: PropTypes.string.isRequired
+  layer: PropTypes.object.isRequired
 };
 
 Line.contextTypes = {
-  editingActions: PropTypes.object
+  editingActions: PropTypes.object,
+  sceneComponents: React.PropTypes.object
 };
