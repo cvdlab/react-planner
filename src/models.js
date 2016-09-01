@@ -73,7 +73,8 @@ export const State = Record({
   scene: new Scene(),
   viewer2D: new Map(),
   drawingHelpers: new List(),
-  activeDrawingHelper: null
+  activeDrawingHelper: null,
+  drawingConfig: Map()
 });
 
 export const ElementVolume = Record({
