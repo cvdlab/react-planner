@@ -12,7 +12,7 @@ export default function (state, action) {
       return state.set('scene', selectLayer(state.scene, action.layerID));
 
     case SET_LAYER_PROPERTIES:
-      return state.set('scene', setLayerProperties(state.scene, action.layerID, action.name, action.altitude));
+      return state.set('scene', setLayerProperties(state.scene, action.layerID, action.properties));
 
     default:
       return state;
@@ -29,6 +29,6 @@ function selectLayer(scene, layerID) {
   return scene.set('selectedLayer', layerID);
 }
 
-function setLayerProperties(scene, layerID, name, altitude) {
-  return scene.mergeIn(['layers', layerID], {name, altitude});
+function setLayerProperties(scene, layerID, properties) {
+  return scene.mergeIn(['layers', layerID], properties);
 }

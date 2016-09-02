@@ -14,9 +14,10 @@ export function addLayer(name, altitude) {
   }
 }
 
-export function setLayerProperties(layerID, name, altitude) {
+export function setLayerProperties(layerID, properties) {
   return {
     type: SET_LAYER_PROPERTIES,
-    layerID, name, altitude
+    layerID,
+    properties
   }
 }
