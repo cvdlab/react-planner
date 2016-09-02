@@ -664,7 +664,7 @@
             "g"
           ],
           "properties": {
-            "patternColor": "#c0ad64 ",
+            "patternColor": "#c0ad64",
             "patternDirection": "280",
             "texture": "parquet"
           }
