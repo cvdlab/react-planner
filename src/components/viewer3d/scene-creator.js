@@ -147,7 +147,7 @@ function createWall(layer, line, editingActions) {
     holes.push({holeData: hole, holeInteractFunction});
   });
 
-  let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
+  return createShapeWall(layer.vertices.get(line.vertices.get(0)),
     layer.vertices.get(line.vertices.get(1)),
     line.properties.get('height'),
     line.properties.get('thickness'),
@@ -159,12 +159,6 @@ function createWall(layer, line, editingActions) {
     line.properties.get('textureB'),
     lineInteractFunction
   );
-
-  // wall.children.forEach(child => {
-  //   child.interact =
-  // });
-
-  return wall;
 }
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData) {

@@ -54,7 +54,9 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
         thickness,
         (distance - bevelRadius) * holeData.offset,
         holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-        0, false, 100);
+        0,
+        100,
+        holeData.selected);
 
       applyInteract(window3D, holeInteractFunction);
 
@@ -67,7 +69,8 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
         (distance - bevelRadius) * holeData.offset,
         holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
         0,
-        100);
+        100,
+        holeData.selected);
 
       applyInteract(door3D, holeInteractFunction);
 

@@ -1,6 +1,11 @@
 import Three from 'three';
 
-export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
+export function createDoor(width, height, thickness, x, y, z, pixelPerUnit, isSelected) {
+
+  let doorColor = new Three.Color(1, 1, 1);
+  if (isSelected) {
+    doorColor = new Three.Color(1, 0.76, 0);
+  }
 
   let frame1_width = 0.1 * pixelPerUnit;
   let frame2_height = 0.1 * pixelPerUnit;
@@ -18,6 +23,7 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
   let texture = textureLoader.load(textureFrameImage);
   let frameMaterial = new Three.MeshPhongMaterial();
   frameMaterial.map = texture;
+  frameMaterial.color = doorColor;
 
 
   let frame1 = new Three.Mesh(frame1Geom, frameMaterial);
@@ -38,11 +44,13 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit) {
   let doorMaterial1 = new Three.MeshPhongMaterial();
   doorMaterial1.map = textureDoor;
   doorMaterial1.normalScale.set(3, 3);
+  doorMaterial1.color = doorColor;
 
   let textureDoor2 = textureLoader.load(imageFile2);
   let doorMaterial2 = new Three.MeshPhongMaterial();
   doorMaterial2.map = textureDoor2;
   doorMaterial2.normalScale.set(3, 3);
+  doorMaterial2.color = doorColor;
 
   /* Use a face material for the door (so we can define a back texture) */
 
