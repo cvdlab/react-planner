@@ -27,11 +27,7 @@ export function parseData(sceneData, editingActions) {
     // Import lines
     layer.lines.forEach(line => {
 
-      let interactFunction = () => {
-        return editingActions.selectLine(layer.id, line.id)
-      };
-
-      let wall = createWall(layer, line, interactFunction);
+      let wall = createWall(layer, line, editingActions);
 
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
@@ -90,14 +86,13 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
 
-    console.log(modifiedPath);
-    console.log("SceneData?", sceneData[modifiedPath[1]]);
-
     let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
 
-    console.log("layer?", layer.toJS());
-
     if (modifiedPath.length > 2) {
+
+      let oldLineObject;
+      let newLineData;
+      let newLineObject;
 
       switch (modifiedPath[3]) {
         case "layer":
@@ -106,52 +101,22 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
         case "vertices":
           console.log("It is a vertex");
           break;
+        case "holes":
+          let newHoleData = layer.holes.get(modifiedPath[4]);
+          console.log(newHoleData.toJS());
+          let lineID = newHoleData.line;
+
+          oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
+          newLineData = layer.lines.get(lineID);
+          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData);
+          planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
+
+          break;
         case "lines":
-          console.log("Ok it's a line");
           // Now I can replace the wall
-          let oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
-          let newLine = layer.lines.get(modifiedPath[4]);
-
-          let interactFunction = () => {
-            return editingActions.selectLine(layer.id, newLine.id)
-          };
-          console.log("ChangedObject: ", oldLineObject);
-          console.log("lineID? ", newLine.id);
-          let newLineObject = createWall(layer, newLine, interactFunction);
-
-          // Now I need to translate object to the original coordinates
-          let oldBoundingBox = planData.boundingBox;
-
-          let oldCenter = [
-            (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
-            (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
-            (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
-
-          planData.plan.position.x += oldCenter[0];
-          planData.plan.position.y += oldCenter[1];
-          planData.plan.position.z += oldCenter[2];
-
-          planData.grid.position.x += oldCenter[0];
-          planData.grid.position.y += oldCenter[1];
-          planData.grid.position.z += oldCenter[2];
-
-          planData.plan.remove(oldLineObject);
-          planData.plan.add(newLineObject);
-
-          let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-          let newCenter = [
-            (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-            (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-            (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
-
-          planData.plan.position.x -= newCenter[0];
-          planData.plan.position.y -= newCenter[1];
-          planData.plan.position.z -= newCenter[2];
-
-          planData.grid.position.x -= newCenter[0];
-          planData.grid.position.y -= newCenter[1];
-          planData.grid.position.z -= newCenter[2];
-
+          oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
+          newLineData = layer.lines.get(modifiedPath[4]);
+          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData);
           planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
       }
     }
@@ -159,14 +124,28 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
   return planData;
 }
 
-function createWall(layer, line, interactFunction) {
+function createWall(layer, line, editingActions) {
   let holes = [];
 
-  line.holes.forEach(holeID => {
-    holes.push(layer.holes.get(holeID));
-  });
+  let lineInteractFunction = () => {
+    return editingActions.selectLine(layer.id, line.id)
+  };
 
-  //createShapeWall(vertex0, vertex1, height, thickness, holes, bevelRadius, isSelected, wall1Texture, wall2Texture)
+  line.holes.forEach(holeID => {
+
+    let hole = layer.holes.get(holeID);
+
+    let holeInteractFunction = () => {
+      console.log("Clicked!");
+      return editingActions.selectHole(layer.id, hole.id)
+    };
+
+    if (hole.type === 'windowGeneric') {
+
+    }
+
+    holes.push({holeData: hole, holeInteractFunction});
+  });
 
   let wall = createShapeWall(layer.vertices.get(line.vertices.get(0)),
     layer.vertices.get(line.vertices.get(1)),
@@ -177,12 +156,54 @@ function createWall(layer, line, interactFunction) {
     // line.id,
     line.selected,
     line.properties.get('textureA'),
-    line.properties.get('textureB')
+    line.properties.get('textureB'),
+    lineInteractFunction
   );
 
-  wall.children.forEach(child => {
-    child.interact = interactFunction;
-  });
+  // wall.children.forEach(child => {
+  //   child.interact =
+  // });
 
   return wall;
+}
+
+function replaceLine(layer, oldLineObject, newLineData, editingActions, planData) {
+
+  let newLineObject = createWall(layer, newLineData, editingActions);
+
+  // Now I need to translate object to the original coordinates
+  let oldBoundingBox = planData.boundingBox;
+
+  let oldCenter = [
+    (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
+    (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
+    (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
+
+  planData.plan.position.x += oldCenter[0];
+  planData.plan.position.y += oldCenter[1];
+  planData.plan.position.z += oldCenter[2];
+
+  planData.grid.position.x += oldCenter[0];
+  planData.grid.position.y += oldCenter[1];
+  planData.grid.position.z += oldCenter[2];
+
+  planData.plan.remove(oldLineObject);
+  planData.plan.add(newLineObject);
+
+  let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
+  let newCenter = [
+    (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
+    (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
+    (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+
+  planData.plan.position.x -= newCenter[0];
+  planData.plan.position.y -= newCenter[1];
+  planData.plan.position.z -= newCenter[2];
+
+  planData.grid.position.x -= newCenter[0];
+  planData.grid.position.y -= newCenter[1];
+  planData.grid.position.z -= newCenter[2];
+
+  return newLineObject;
+
 }
