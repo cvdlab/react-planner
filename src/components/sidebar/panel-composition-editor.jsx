@@ -5,7 +5,7 @@ import CompositionForm from '../composition-editor/composition-form.jsx';
 import CompositionDetails from '../composition-editor/composition-details.jsx';
 import CompositionAddButton from '../composition-editor/composition-add-button.jsx';
 
-const STYLE_WRAPPER_BUTTONS = {marginTop:"5px", textAlign: "right"};
+const STYLE_WRAPPER_BUTTONS = {marginTop: "5px", textAlign: "right"};
 const STYLE_BUTTON_RESET = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
 const STYLE_BUTTON_SAVE = {backgroundColor: "green", border: 0, color: "white", margin: "3px"};
 
@@ -16,15 +16,18 @@ export default function PanelCompositionEditor({scene, mode}) {
   return (
     <Panel name="Composition">
 
-      <CompositionDetails/>
-      <CompositionDetails/>
+      <div style={{padding: "5px 15px 5px 15px"}}>
 
-      <CompositionForm/>
-      <CompositionAddButton/>
+        <CompositionDetails/>
+        <CompositionDetails/>
 
-      <div style={STYLE_WRAPPER_BUTTONS}>
-        <button style={STYLE_BUTTON_RESET}>Reset</button>
-        <button style={STYLE_BUTTON_SAVE}>Save</button>
+        <CompositionForm/>
+        <CompositionAddButton/>
+
+        <div style={STYLE_WRAPPER_BUTTONS}>
+          <button style={STYLE_BUTTON_RESET}>Reset</button>
+          <button style={STYLE_BUTTON_SAVE}>Save</button>
+        </div>
       </div>
     </Panel>)
 

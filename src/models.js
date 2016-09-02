@@ -11,11 +11,13 @@ export const ElementsSet = Record({
 export const Layer = Record({
   id: "",
   altitude: 0,
+  name: "",
   vertices: new Map(),
   lines: new Map(),
   holes: new Map(),
   areas: new Map(),
-  selected: new ElementsSet()
+  selected: new ElementsSet(),
+  visible: true
 });
 
 

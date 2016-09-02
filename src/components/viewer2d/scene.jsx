@@ -6,11 +6,19 @@ export default function Scene({scene, ignoreEvents}) {
 
   let {height, layers} = scene;
   let style = ignoreEvents ? {pointerEvents: 'none'} : {};
+  let selectedLayer = scene.layers.get(scene.selectedLayer);
 
   return (
     <g style={style}>
       <Grid scene={scene}/>
-      {layers.entrySeq().map(([layerID, layer]) => <Layer key={layerID} layer={layer}/>)}
+
+      <g style={{opacity: 0.3, pointerEvents: "none"}}>
+        {layers.entrySeq()
+          .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
+          .map(([layerID, layer]) => <Layer key={layerID} layer={layer}/>)}
+      </g>
+
+      <Layer key={selectedLayer.id} layer={selectedLayer}/>
     </g>
   );
 }

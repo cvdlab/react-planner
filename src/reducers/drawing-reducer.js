@@ -155,18 +155,16 @@ function endDrawingLine(state, layerID, x, y) {
 }
 
 function selectToolDrawingHole(state, sceneComponentType) {
-  //TODO check current layer
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
-    state.getIn(['scene', 'layers'])
-      .forEach(({lines, vertices}) => {
-        lines.forEach(line => {
-          let {x: x1, y: y1} = vertices.get(line.vertices.get(0));
-          let {x: x2, y:y2} = vertices.get(line.vertices.get(1));
+    let {lines, vertices} = state.getIn(['scene', 'layers', state.scene.selectedLayer]);
 
-          addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, line.id);
-        })
-      });
+    lines.forEach(line => {
+      let {x: x1, y: y1} = vertices.get(line.vertices.get(0));
+      let {x: x2, y:y2} = vertices.get(line.vertices.get(1));
+
+      addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, line.id);
+    })
   });
 
   return state.merge({

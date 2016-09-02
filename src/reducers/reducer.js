@@ -6,6 +6,7 @@ import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
 import volumesReducer from './volumes-reducer';
 import drawingReducer from './drawing-reducer';
+import sceneReducer from './scene-reducer';
 import {State} from '../models';
 
 export const initialState = new State();
@@ -50,6 +51,11 @@ export default function appReducers(state, action) {
     case constants.UPDATE_DRAWING_HOLE:
     case constants.END_DRAWING_HOLE:
       return drawingReducer(state, action);
+
+    case constants.ADD_LAYER:
+    case constants.SET_LAYER_PROPERTIES:
+    case constants.SELECT_LAYER:
+      return sceneReducer(state, action);
 
     default:
       return state;

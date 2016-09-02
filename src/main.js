@@ -28,7 +28,8 @@ window.Metior = {
   viewer2DActions: require('./actions/viewer2d-actions'),
   viewer3DActions: require('./actions/viewer3d-actions'),
   volumesActions: require('./actions/volumes-actions'),
-  drawingActions: require('./actions/drawing-actions')
+  drawingActions: require('./actions/drawing-actions'),
+  sceneActions: require('./actions/scene-actions')
 };
 console.groupCollapsed("Metior");
 console.info("Metior is ready");
