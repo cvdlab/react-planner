@@ -1,4 +1,4 @@
-import {ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES} from '../constants';
+import {ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES, MODE_IDLE} from '../constants';
 import {Layer} from '../models';
 import IDBroker from '../utils/id-broker';
 
@@ -9,7 +9,10 @@ export default function (state, action) {
       return state.set('scene', addLayer(state.scene, action.name, action.altitude));
 
     case SELECT_LAYER:
-      return state.set('scene', selectLayer(state.scene, action.layerID));
+      return state.merge({
+        'scene': selectLayer(state.scene, action.layerID),
+        'mode': MODE_IDLE
+      });
 
     case SET_LAYER_PROPERTIES:
       return state.set('scene', setLayerProperties(state.scene, action.layerID, action.properties));
