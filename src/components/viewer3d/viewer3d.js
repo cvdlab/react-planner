@@ -146,7 +146,7 @@ export default class Scene3DViewer extends React.Component {
       // this.planData = parseData(nextProps.scene, this.context.editingActions);
       // this.scene.add(this.planData.plan);
 
-      updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS(), this.context.editingActions, this.planData.plan);
+      updateScene(this.planData, nextProps.scene, scene, changedValues.toJS(), this.context.editingActions);
 
       // OBJECT PICKING
       let toIntersect = [this.planData.plan];

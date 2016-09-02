@@ -82,7 +82,7 @@ export function parseData(sceneData, editingActions) {
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
-export function updateScene(sceneGraph, sceneData, scene, diffArray, editingActions, plan) {
+export function updateScene(planData, sceneData, scene, diffArray, editingActions) {
 
   console.log("Entered in update Scene");
 
@@ -108,8 +108,8 @@ export function updateScene(sceneGraph, sceneData, scene, diffArray, editingActi
           break;
         case "lines":
           console.log("Ok it's a line");
-          // Now I can replace the changed wall
-          let oldLineObject = sceneGraph.layers[layer.id].lines[modifiedPath[4]];
+          // Now I can replace the wall
+          let oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
           let newLine = layer.lines.get(modifiedPath[4]);
 
           let interactFunction = () => {
@@ -118,13 +118,47 @@ export function updateScene(sceneGraph, sceneData, scene, diffArray, editingActi
           console.log("ChangedObject: ", oldLineObject);
           console.log("lineID? ", newLine.id);
           let newLineObject = createWall(layer, newLine, interactFunction);
-          plan.remove(oldLineObject); // I HAVE TO REMOVE DOORS AND WINDOWS
-          plan.add(newLineObject);
+          console.log(oldLineObject);
+
+          // Now I need to translate object to the original coordinates
+          let oldBoundingBox = planData.boundingBox;
+
+
+          let oldCenter = [
+            (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
+            (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
+            (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
+
+          planData.plan.position.x += oldCenter[0];
+          planData.plan.position.y += oldCenter[1];
+          planData.plan.position.z += oldCenter[2];
+
+          planData.grid.position.x += oldCenter[0];
+          planData.grid.position.y += oldCenter[1];
+          planData.grid.position.z += oldCenter[2];
+
+          planData.plan.remove(oldLineObject);
+          planData.plan.add(newLineObject);
+
+          let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
+          let newCenter = [
+            (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
+            (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
+            (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+
+          planData.plan.position.x -= newCenter[0];
+          planData.plan.position.y -= newCenter[1];
+          planData.plan.position.z -= newCenter[2];
+
+          planData.grid.position.x -= newCenter[0];
+          planData.grid.position.y -= newCenter[1];
+          planData.grid.position.z -= newCenter[2];
+
           oldLineObject = newLineObject;
       }
     }
   });
-  return sceneGraph;
+  return planData;
 }
 
 function createWall(layer, line, interactFunction) {
