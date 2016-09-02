@@ -3,7 +3,7 @@ import {createSingleWindow} from './window-creator';
 import {createDoor} from './door-creator';
 
 export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
-                                        bevelRadius, isSelected, textureA, textureB) {
+                                        bevelRadius, isSelected, textureA, textureB, interactFunction) {
 
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
@@ -25,36 +25,55 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
   let rectShape = createShape(wallCoord);
 
-  holes.forEach(hole => {
+  holes.forEach(({holeData, holeInteractFunction}) => {
     let holeCoords = createHoleShape(vertex0,
       vertex1,
-      hole.properties.get('width'),
-      hole.properties.get('height'),
-      hole.offset,
-      hole.properties.get('altitude') + 0.00001,
+      holeData.properties.get('width'),
+      holeData.properties.get('height'),
+      holeData.offset,
+      holeData.properties.get('altitude') + 0.00001,
       bevelRadius);
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
 
+    // Apply interact function to children of an Object3D
+    let applyInteract = (object, interactFunction) => {
+      object.traverse(function (child) {
+        if (child instanceof Three.Mesh) {
+          child.interact = interactFunction;
+        }
+      });
+    };
+
+
     // Create Windows
-    if (hole.type === 'windowGeneric') {
+    if (holeData.type === 'windowGeneric') {
       let window3D = createSingleWindow(
-        hole.properties.get('width'),
-        hole.properties.get('height'),
+        holeData.properties.get('width'),
+        holeData.properties.get('height'),
         thickness,
-        (distance - bevelRadius) * hole.offset,
-        hole.properties.get('altitude') + hole.properties.get('height') / 2,
-        0, false, 100);
+        (distance - bevelRadius) * holeData.offset,
+        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
+        0,
+        100,
+        holeData.selected);
+
+      applyInteract(window3D, holeInteractFunction);
+
       pivot.add(window3D);
     } else {
       let door3D = createDoor(
-        hole.properties.get('width') - 0.1,
-        hole.properties.get('height') - 0.1,
+        holeData.properties.get('width') - 0.1,
+        holeData.properties.get('height') - 0.1,
         thickness,
-        (distance - bevelRadius) * hole.offset,
-        hole.properties.get('altitude') + hole.properties.get('height') / 2,
+        (distance - bevelRadius) * holeData.offset,
+        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
         0,
-        100);
+        100,
+        holeData.selected);
+
+      applyInteract(door3D, holeInteractFunction);
+
       pivot.add(door3D)
     }
   });
@@ -166,12 +185,12 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   pivot.add(rightClosure);
 
   // Build closures for holes
-  holes.forEach(hole => {
+  holes.forEach(({holeData}) => {
 
     let holeClosures = buildShapeClosures(
       {x: 0, y: 0},
-      {x: hole.properties.get('width'), y: 0},
-      hole.properties.get('height'),
+      {x: holeData.properties.get('width'), y: 0},
+      holeData.properties.get('height'),
       thickness
     );
 
@@ -203,26 +222,26 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
       + Math.pow((vertex1.y - vertex0.y), 2));
 
-    let startAt = length * hole.offset - hole.properties.get('width') / 2;
+    let startAt = length * holeData.offset - holeData.properties.get('width') / 2;
 
     topHoleClosure.rotation.x += Math.PI / 2;
     topHoleClosure.position.z -= thickness / 2;
-    topHoleClosure.position.y += hole.properties.get('height') + hole.properties.get('altitude');
+    topHoleClosure.position.y += holeData.properties.get('height') + holeData.properties.get('altitude');
     topHoleClosure.position.x += startAt;
 
     topHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
     leftHoleClosure.rotation.y -= Math.PI / 2;
     leftHoleClosure.position.z -= thickness / 2;
-    leftHoleClosure.position.y += hole.properties.get('altitude');
+    leftHoleClosure.position.y += holeData.properties.get('altitude');
     leftHoleClosure.position.x += startAt;
 
     leftHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
     rightHoleClosure.rotation.y -= Math.PI / 2;
     rightHoleClosure.position.z -= thickness / 2;
-    rightHoleClosure.position.y += hole.properties.get('altitude');
-    rightHoleClosure.position.x += startAt + hole.properties.get('width');
+    rightHoleClosure.position.y += holeData.properties.get('altitude');
+    rightHoleClosure.position.x += startAt + holeData.properties.get('width');
 
     rightHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
@@ -230,7 +249,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     pivot.add(leftHoleClosure);
     pivot.add(rightHoleClosure);
 
-    if (hole.properties.get('altitude') !== 0) {
+    if (holeData.properties.get('altitude') !== 0) {
 
       let bottomHoleClosure = new Three.Mesh(topHoleClosureGeometry, new Three.MeshLambertMaterial({
         side: Three.DoubleSide,
@@ -239,7 +258,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
       bottomHoleClosure.rotation.x += Math.PI / 2;
       bottomHoleClosure.position.z -= thickness / 2;
-      bottomHoleClosure.position.y += hole.properties.get('altitude');
+      bottomHoleClosure.position.y += holeData.properties.get('altitude');
       bottomHoleClosure.position.x += startAt;
 
       bottomHoleClosure.position.x -= thickness / 2; //TODO: REMOVE WORKAROUND BEVELING
@@ -250,6 +269,12 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
   });
 
+  // Add interaction with walls
+  wall1.interact = interactFunction;
+  wall2.interact = interactFunction;
+  topClosure.interact = interactFunction;
+  leftClosure.interact = interactFunction;
+  rightClosure.interact = interactFunction;
 
   return pivot;
 }

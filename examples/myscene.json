@@ -440,7 +440,7 @@
       "holes": {
         "hld": {
           "id": "hld",
-          "type": "doorGenericGeneric",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "ld",
           "properties": {
@@ -634,7 +634,7 @@
             "f"
           ],
           "properties": {
-            "patternColor": "#16ae67 ",
+            "patternColor": "#16ae67",
             "patternDirection": "140",
             "texture": "parquet"
           }
@@ -664,7 +664,7 @@
             "g"
           ],
           "properties": {
-            "patternColor": "#c0ad64 ",
+            "patternColor": "#c0ad64",
             "patternDirection": "280",
             "texture": "parquet"
           }

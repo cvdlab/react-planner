@@ -1,6 +1,6 @@
 import Three from 'three';
 
-export default function createArea(vertices, color, textureName) {
+export default function createArea(vertices, color, textureName, isSelected) {
 
   let shape = new Three.Shape();
   shape.moveTo(vertices[0].x, vertices[0].y);
@@ -8,7 +8,9 @@ export default function createArea(vertices, color, textureName) {
     shape.lineTo(vertices[i].x, vertices[i].y);
   }
 
-  if (textureName && textureName !== 'none') {
+  if (isSelected) {
+    color = new Three.Color(1, 0.76, 0);
+  } else if (textureName && textureName !== 'none') {
     color = 0xffffff;
   }
 
