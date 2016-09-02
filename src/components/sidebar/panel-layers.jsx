@@ -42,6 +42,13 @@ const STYLE_ADD_LABEL = {
 
 export default function PanelLayers({scene, mode}, {sceneActions}) {
 
+  let addClick = event => {
+    let name = window.prompt("layer name");
+    let altitude = window.prompt("layer altitude");
+    sceneActions.addLayer(name, altitude);
+    event.stopPropagation();
+  }
+
   return (
     <Panel name="Layers">
       {scene.layers.entrySeq().map(([layerID, layer]) => {
@@ -64,7 +71,7 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
         )
       })}
 
-      <div style={STYLE_ADD_WRAPPER} key="add">
+      <div style={STYLE_ADD_WRAPPER} key="add" onClick={addClick}>
         <IconAdd />
         <span style={STYLE_ADD_LABEL}>New Layer</span>
       </div>
