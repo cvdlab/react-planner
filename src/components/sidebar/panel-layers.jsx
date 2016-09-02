@@ -40,15 +40,26 @@ const STYLE_ADD_LABEL = {
   marginLeft: "5px"
 };
 
-export default function PanelLayers({scene, mode}) {
+export default function PanelLayers({scene, mode}, {sceneActions}) {
 
   return (
     <Panel name="Layers">
       {scene.layers.entrySeq().map(([layerID, layer]) => {
+
+        let style = layerID === scene.selectedLayer ? STYLE_LAYER_ACTIVE : STYLE_LAYER_WRAPPER;
+        let icon = layer.visible ? <IconVisible /> : <IconHide style={{color:"#a5a1a1"}} />;
+
+        let selectClick = event => sceneActions.selectLayer(layerID);
+
+        let swapVisibility = event => {
+          sceneActions.setLayerProperties(layerID, {visible: !layer.visible});
+          event.stopPropagation();
+        };
+
         return (
-          <div style={STYLE_LAYER_ACTIVE} key={layer.id}>
-            <div style={STYLE_ICON}>{layer.visible ? <IconVisible /> : <IconHide />}</div>
-            <div style={STYLE_NAME}>{layer.id} (h:{layer.altitude})</div>
+          <div style={style} key={layerID} onClick={selectClick}>
+            <div style={STYLE_ICON} onClick={swapVisibility}>{icon}</div>
+            <div style={STYLE_NAME}>[{layer.id}] {layer.name}</div>
           </div>
         )
       })}
@@ -67,4 +78,6 @@ PanelLayers.propTypes = {
   mode: PropTypes.string.isRequired
 };
 
-PanelLayers.contextTypes = {};
+PanelLayers.contextTypes = {
+  sceneActions: PropTypes.object.isRequired
+};

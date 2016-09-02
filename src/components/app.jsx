@@ -11,6 +11,7 @@ import * as editingActions from '../actions/editing-actions';
 import * as viewer3DActions from '../actions/viewer3d-actions';
 import * as volumesActions from '../actions/volumes-actions';
 import * as drawingActions from '../actions/drawing-actions';
+import * as sceneActions from '../actions/scene-actions';
 import SceneComponents from '../scene-components/scene-components';
 import Layout from './layout.jsx';
 
@@ -60,7 +61,7 @@ function mapDispatchToProps(dispatch) {
     viewer3DActions: bindActionCreators(viewer3DActions, dispatch),
     volumesActions: bindActionCreators(volumesActions, dispatch),
     drawingActions: bindActionCreators(drawingActions, dispatch),
-    sceneActions: bindActionCreators(drawingActions, dispatch)
+    sceneActions: bindActionCreators(sceneActions, dispatch)
   }
 }
 
