@@ -440,7 +440,7 @@
       "holes": {
         "hld": {
           "id": "hld",
-          "type": "doorGenericGeneric",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "ld",
           "properties": {
