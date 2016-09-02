@@ -91,11 +91,11 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
   let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
 
-  wall1.position.z -= thickness / 2 + 0.001;
-  wall2.position.z += thickness / 2 + 0.001;
+  wall1.position.z -= thickness / 2;
+  wall2.position.z += thickness / 2;
 
-  wall1.position.x -= bevelRadius / 2 + 0.001; //TODO: REMOVE WORKAROUND BEVELING
-  wall2.position.x -= bevelRadius / 2 + 0.001; //TODO: REMOVE WORKAROUND BEVELING
+  wall1.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
+  wall2.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
   pivot.rotation.y = alpha;
   pivot.position.x += vertex0.x;
@@ -152,11 +152,11 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   leftClosure.rotation.y -= Math.PI / 2;
   leftClosure.position.z -= bevelRadius / 2;
 
-  leftClosure.position.x -= bevelRadius / 2 - 0.05; //TODO: REMOVE WORKAROUND BEVELING
+  leftClosure.position.x -= bevelRadius / 2 - 1; //TODO: REMOVE WORKAROUND BEVELING
 
   rightClosure.rotation.y -= Math.PI / 2;
   rightClosure.position.z -= thickness / 2;
-  rightClosure.position.x += distance - 0.05;
+  rightClosure.position.x += distance - 1;
 
   rightClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 

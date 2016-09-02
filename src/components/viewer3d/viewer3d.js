@@ -27,31 +27,17 @@ export default class Scene3DViewer extends React.Component {
     // LOAD DATA
     let planData = parseData(data, editingActions);
 
-    // console.log("PROOOOVA AGGIUNTA: ", planData.sceneGraph.layers['layer-floor-1'].lines);
-    // let lines = planData.sceneGraph.layers['layer-floor-1'].lines
-    //
-    // for(let lineID in lines){
-    //   scene.add(lines[lineID]);
-    // }
-
     scene.add(planData.plan);
     scene.add(planData.grid);
 
-    // CAMERA
-    let viewSize = 900;
     let aspectRatio = width / height;
-    let camera = new Three.OrthographicCamera(
-      -aspectRatio * viewSize / 2,
-      aspectRatio * viewSize / 2,
-      viewSize / 2,
-      -viewSize / 2,
-      0,
-      100000);
+    let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
+
     scene.add(camera);
 
     // Set position for the camera
     let cameraPositionX = (planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
-    let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 4;
+    let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 10;
     let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
     camera.position.set(-cameraPositionX, cameraPositionY, cameraPositionZ);
     camera.up = new Three.Vector3(0, 1, 0);
@@ -83,13 +69,13 @@ export default class Scene3DViewer extends React.Component {
     renderer.domElement.addEventListener('mouseup', (event) => {
       event.preventDefault();
 
-      mouse.x = (event.offsetX / width) * 2 - 1;
-      mouse.y = -(event.offsetY / height) * 2 + 1;
-
+      mouse.x = (event.offsetX / this.width) * 2 - 1;
+      mouse.y = -(event.offsetY / this.height) * 2 + 1;
 
       if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
         raycaster.setFromCamera(mouse, camera);
         let intersects = raycaster.intersectObjects(toIntersect, true);
+
         if (intersects.length > 0) {
           intersects[0].object.interact && intersects[0].object.interact();
         }
@@ -120,6 +106,8 @@ export default class Scene3DViewer extends React.Component {
     this.camera = camera;
     this.scene = scene;
     this.planData = planData;
+    this.width = width;
+    this.height = height;
   }
 
   componentWillUnmount() {
@@ -130,11 +118,11 @@ export default class Scene3DViewer extends React.Component {
     let {width, height} = nextProps;
     let {camera, renderer, scene} = this;
 
-    let viewSize = 900;
-    let aspectRatio = width / height;
+    this.width = width;
+    this.height = height;
 
-    camera.left = -aspectRatio * viewSize / 2;
-    camera.right = aspectRatio * viewSize / 2;
+    let aspectRatio = width / height;
+    camera.aspect = aspectRatio;
 
     camera.updateProjectionMatrix();
 
@@ -142,16 +130,7 @@ export default class Scene3DViewer extends React.Component {
 
       let changedValues = diff(this.props.scene, nextProps.scene);
 
-      // this.scene.remove(this.planData.plan);
-      // this.planData = parseData(nextProps.scene, this.context.editingActions);
-      // this.scene.add(this.planData.plan);
-
       updateScene(this.planData, nextProps.scene, scene, changedValues.toJS(), this.context.editingActions);
-
-      // OBJECT PICKING
-      let toIntersect = [this.planData.plan];
-      let mouse = new Three.Vector2();
-      let raycaster = new Three.Raycaster();
     }
 
     renderer.setSize(width, height);
