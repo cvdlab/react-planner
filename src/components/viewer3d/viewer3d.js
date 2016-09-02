@@ -88,6 +88,61 @@ export default class Scene3DViewer extends React.Component {
     // create orbit controls
     let orbitController = new OrbitControls(camera, renderer.domElement);
 
+
+    /************************************/
+    /********* SCENE EXPORTER ***********/
+    /************************************/
+
+    let exportScene = () => {
+
+      let eventFire = function eventFire(el, etype) {
+        if (el.fireEvent) {
+          el.fireEvent('on' + etype);
+        } else {
+          var evObj = document.createEvent('Events');
+          evObj.initEvent(etype, true, false);
+          el.dispatchEvent(evObj);
+        }
+      };
+
+      let convertToBufferGeometry = (geometry) => {
+        console.log("geometry = ", geometry);
+        let bufferGeometry = new Three.BufferGeometry().fromGeometry(geometry);
+        return bufferGeometry;
+      };
+
+      scene.remove(planData.grid);
+
+      scene.traverse((child, child2) => {
+        console.log(child);
+        if (child instanceof Three.Mesh)
+          child.geometry = convertToBufferGeometry(child.geometry);
+      });
+
+      let output = scene.toJSON();
+
+      output = JSON.stringify(output, null, '\t');
+      output = output.replace(/[\n\t]+([\d\.e\-\[\]]+)/g, '$1');
+
+      let name = prompt('insert file name');
+      name = name.trim() || 'scene';
+      let blob = new Blob([output], {type: 'text/plain'});
+
+      let fileOutputLink = document.createElement('a');
+      let url = window.URL.createObjectURL(blob);
+      fileOutputLink.setAttribute('download', name);
+      fileOutputLink.href = url;
+      eventFire(fileOutputLink, 'click');
+
+      scene.add(planData.grid)
+
+    };
+
+    window.exportScene = exportScene;
+
+
+    /************************************/
+
     render();
     function render() {
       orbitController.update();
@@ -130,7 +185,7 @@ export default class Scene3DViewer extends React.Component {
 
       let changedValues = diff(this.props.scene, nextProps.scene);
 
-      updateScene(this.planData, nextProps.scene, scene, changedValues.toJS(), this.context.editingActions);
+      updateScene(this.planData, nextProps.scene, changedValues.toJS(), this.context.editingActions);
     }
 
     renderer.setSize(width, height);

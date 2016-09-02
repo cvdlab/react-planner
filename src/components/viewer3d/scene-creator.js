@@ -82,7 +82,7 @@ export function parseData(sceneData, editingActions) {
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
-export function updateScene(planData, sceneData, scene, diffArray, editingActions) {
+export function updateScene(planData, sceneData, diffArray, editingActions) {
 
   diffArray.forEach(diff => {
     /* First of all I need to find the object I need to update */
