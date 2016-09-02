@@ -40,27 +40,20 @@ const STYLE_ADD_LABEL = {
   marginLeft: "5px"
 };
 
-export default function PanelLayers(props) {
+export default function PanelLayers({scene, mode}) {
 
   return (
     <Panel name="Layers">
+      {scene.layers.entrySeq().map(([layerID, layer]) => {
+        return (
+          <div style={STYLE_LAYER_ACTIVE} key={layer.id}>
+            <div style={STYLE_ICON}>{layer.visible ? <IconVisible /> : <IconHide />}</div>
+            <div style={STYLE_NAME}>{layer.id} (h:{layer.altitude})</div>
+          </div>
+        )
+      })}
 
-      <div style={STYLE_LAYER_ACTIVE}>
-        <div style={STYLE_ICON}><IconVisible /></div>
-        <div style={STYLE_NAME}>Nome layer</div>
-      </div>
-
-      <div style={STYLE_LAYER_WRAPPER}>
-        <div style={STYLE_ICON}><IconVisible /></div>
-        <div style={STYLE_NAME}>Nome layer</div>
-      </div>
-
-      <div style={STYLE_LAYER_WRAPPER}>
-        <div style={STYLE_ICON}><IconHide /></div>
-        <div style={STYLE_NAME}>Nome layer</div>
-      </div>
-
-      <div style={STYLE_ADD_WRAPPER}>
+      <div style={STYLE_ADD_WRAPPER} key="add">
         <IconAdd />
         <span style={STYLE_ADD_LABEL}>New Layer</span>
       </div>

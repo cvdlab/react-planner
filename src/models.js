@@ -15,7 +15,8 @@ export const Layer = Record({
   lines: new Map(),
   holes: new Map(),
   areas: new Map(),
-  selected: new ElementsSet()
+  selected: new ElementsSet(),
+  visible: true
 });
 
 
