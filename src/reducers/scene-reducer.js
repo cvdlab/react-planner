@@ -1,6 +1,7 @@
 import {ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES, MODE_IDLE} from '../constants';
 import {Layer} from '../models';
 import IDBroker from '../utils/id-broker';
+import {unselectAll} from '../utils/layer-operations';
 
 export default function (state, action) {
 
@@ -29,7 +30,10 @@ function addLayer(scene, name, altitude) {
 }
 
 function selectLayer(scene, layerID) {
-  return scene.set('selectedLayer', layerID);
+  return scene.merge({
+    'selectedLayer': layerID,
+    'layers': scene.layers.map(layer => unselectAll(layer))
+  });
 }
 
 function setLayerProperties(scene, layerID, properties) {
