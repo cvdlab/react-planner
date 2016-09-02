@@ -78,6 +78,8 @@ export default class Scene3DViewer extends React.Component {
 
         if (intersects.length > 0) {
           intersects[0].object.interact && intersects[0].object.interact();
+        } else {
+          editingActions.unselectAll();
         }
       }
     }, false);
