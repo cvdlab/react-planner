@@ -10,7 +10,8 @@ const STYLE_LAYER_WRAPPER = {
   alignItems: "center",
   background: "#3A3A3E",
   borderBottom: "1px solid #000",
-  height: "40px"
+  height: "30px",
+  padding: "5px 15px 5px 15px"
 };
 
 const STYLE_LAYER_ACTIVE = {
@@ -31,7 +32,7 @@ const STYLE_NAME = {
 
 const STYLE_ADD_WRAPPER = {
   fontSize: "15px",
-  textAlign: "right"
+  marginLeft: "15px"
 };
 
 const STYLE_ADD_LABEL = {

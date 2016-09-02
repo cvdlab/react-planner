@@ -10,7 +10,9 @@ export default function PanelPropertiesEditor({scene, mode}) {
 
   let componentRenderer = (element, layer) =>
     <Panel key={element.id} name={`Properties: [${element.type}] ${element.id}`}>
-      <PropertiesEditor element={element} layer={layer}/>
+      <div style={{padding: "5px 15px 5px 15px"}}>
+        <PropertiesEditor element={element} layer={layer}/>
+      </div>
     </Panel>;
 
   let layerRenderer = layer => Seq()

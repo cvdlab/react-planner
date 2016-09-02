@@ -9,8 +9,10 @@ const STYLE = {
 export default function PanelMousePosition(props) {
   return (
     <Panel name="Mouse Position">
-      <div style={STYLE}>x: 0</div>
-      <div style={STYLE}>y: 0</div>
+      <div style={{padding: "5px 15px 5px 15px"}}>
+        <div style={STYLE}>x: 0</div>
+        <div style={STYLE}>y: 0</div>
+      </div>
     </Panel>
   )
 }
