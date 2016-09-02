@@ -54,7 +54,7 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
       {scene.layers.entrySeq().map(([layerID, layer]) => {
 
         let style = layerID === scene.selectedLayer ? STYLE_LAYER_ACTIVE : STYLE_LAYER_WRAPPER;
-        let icon = layer.visible ? <IconVisible /> : <IconHide style={{color:"#a5a1a1"}} />;
+        let icon = layer.visible || layerID === scene.selectedLayer ? <IconVisible /> : <IconHide style={{color:"#a5a1a1"}} />;
 
         let selectClick = event => sceneActions.selectLayer(layerID);
 
