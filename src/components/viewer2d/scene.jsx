@@ -12,7 +12,7 @@ export default function Scene({scene, ignoreEvents}) {
     <g style={style}>
       <Grid scene={scene}/>
 
-      <g style={{opacity: 0.3}}>
+      <g style={{opacity: 0.3, pointerEvents: "none"}}>
         {layers.entrySeq()
           .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
           .map(([layerID, layer]) => <Layer key={layerID} layer={layer}/>)}
