@@ -29,10 +29,8 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit, isSe
   let frame1 = new Three.Mesh(frame1Geom, frameMaterial);
   let frame2 = new Three.Mesh(frame2Geom, frameMaterial);
   let frame3 = new Three.Mesh(frame1Geom, frameMaterial);
-
-
-  let doorGeometry = new Three.BoxGeometry(width - frame1_width * 2, height - frame2_height, thickness);
-
+  
+  let doorGeometry = new Three.BoxGeometry(width - frame1_width * 2, height, thickness);
 
   /* Creation of the central part of the door */
   let imageFile = './textures/door/main-door.JPG';
