@@ -440,7 +440,7 @@
       "holes": {
         "hld": {
           "id": "hld",
-          "type": "door",
+          "type": "doorGenericGeneric",
           "offset": 0.5,
           "line": "ld",
           "properties": {
@@ -451,7 +451,7 @@
         },
         "hab": {
           "id": "hab",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "ab",
           "properties": {
@@ -462,7 +462,7 @@
         },
         "hbc": {
           "id": "hbc",
-          "type": "door",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "bc",
           "properties": {
@@ -473,7 +473,7 @@
         },
         "hcd": {
           "id": "hcd",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "cd",
           "properties": {
@@ -484,7 +484,7 @@
         },
         "hde": {
           "id": "hde",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "de",
           "properties": {
@@ -495,7 +495,7 @@
         },
         "hef": {
           "id": "hef",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "ef",
           "properties": {
@@ -506,7 +506,7 @@
         },
         "hgh": {
           "id": "hgh",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "gh",
           "properties": {
@@ -517,7 +517,7 @@
         },
         "hhi": {
           "id": "hhi",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "hi",
           "properties": {
@@ -528,7 +528,7 @@
         },
         "hij": {
           "id": "hij",
-          "type": "door",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "ij",
           "properties": {
@@ -539,7 +539,7 @@
         },
         "hkl": {
           "id": "hkl",
-          "type": "door",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "kl",
           "properties": {
@@ -550,7 +550,7 @@
         },
         "hgj": {
           "id": "hgj",
-          "type": "door",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "gj",
           "properties": {
@@ -561,7 +561,7 @@
         },
         "hfl": {
           "id": "hfl",
-          "type": "door",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "fl",
           "properties": {
@@ -572,7 +572,7 @@
         },
         "hai": {
           "id": "hai",
-          "type": "window",
+          "type": "windowGeneric",
           "offset": 0.5,
           "line": "ai",
           "properties": {
@@ -583,7 +583,7 @@
         },
         "hkb": {
           "id": "hkb",
-          "type": "door",
+          "type": "doorGeneric",
           "offset": 0.5,
           "line": "kb",
           "properties": {
