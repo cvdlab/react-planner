@@ -43,11 +43,15 @@ export function parseData(sceneData, editingActions) {
 
       let area3D = createArea(vertices,
         parseInt(area.properties.get('patternColor').substring(1), 16),
-        area.properties.get('texture'));
+        area.properties.get('texture'),
+        area.selected);
+
+      area3D.interact = () => {
+        editingActions.selectArea(layer.id, area.id);
+      };
+
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
-
-
     });
 
 
@@ -80,8 +84,6 @@ export function parseData(sceneData, editingActions) {
 
 export function updateScene(planData, sceneData, scene, diffArray, editingActions) {
 
-  console.log("Entered in update Scene");
-
   diffArray.forEach(diff => {
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
@@ -94,16 +96,17 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
       let newLineData;
       let newLineObject;
 
+      let oldAreaObject;
+      let newAreaData;
+      let newAreaObject;
+
       switch (modifiedPath[3]) {
         case "layer":
-          console.log("It is a layer");
           break;
         case "vertices":
-          console.log("It is a vertex");
           break;
         case "holes":
           let newHoleData = layer.holes.get(modifiedPath[4]);
-          console.log(newHoleData.toJS());
           let lineID = newHoleData.line;
 
           oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
@@ -118,6 +121,13 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
           newLineData = layer.lines.get(modifiedPath[4]);
           newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData);
           planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
+          break;
+        case "areas":
+          oldAreaObject = planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]];
+          newAreaData = layer.areas.get(modifiedPath[4]);
+          newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData);
+          planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]] = newAreaObject;
+          break;
       }
     }
   });
@@ -136,13 +146,8 @@ function createWall(layer, line, editingActions) {
     let hole = layer.holes.get(holeID);
 
     let holeInteractFunction = () => {
-      console.log("Clicked!");
       return editingActions.selectHole(layer.id, hole.id)
     };
-
-    if (hole.type === 'windowGeneric') {
-
-    }
 
     holes.push({holeData: hole, holeInteractFunction});
   });
@@ -199,5 +204,59 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
   planData.grid.position.z -= newCenter[2];
 
   return newLineObject;
+
+}
+
+function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData) {
+
+  let vertices = [];
+
+  newAreaData.vertices.forEach(vertexID => {
+    vertices.push(layer.vertices.get(vertexID));
+  });
+
+  let newAreaObject = createArea(vertices,
+    parseInt(newAreaData.properties.get('patternColor').substring(1), 16),
+    newAreaData.properties.get('texture'),
+    newAreaData.selected);
+
+  newAreaObject.interact = () => {
+    editingActions.selectArea(layer.id, newAreaData.id);
+  };
+
+  // Now I need to translate object to the original coordinates
+  let oldBoundingBox = planData.boundingBox;
+
+  let oldCenter = [
+    (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
+    (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
+    (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
+
+  planData.plan.position.x += oldCenter[0];
+  planData.plan.position.y += oldCenter[1];
+  planData.plan.position.z += oldCenter[2];
+
+  planData.grid.position.x += oldCenter[0];
+  planData.grid.position.y += oldCenter[1];
+  planData.grid.position.z += oldCenter[2];
+
+  planData.plan.remove(oldAreaObject);
+  planData.plan.add(newAreaObject);
+
+  let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
+  let newCenter = [
+    (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
+    (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
+    (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+
+  planData.plan.position.x -= newCenter[0];
+  planData.plan.position.y -= newCenter[1];
+  planData.plan.position.z -= newCenter[2];
+
+  planData.grid.position.x -= newCenter[0];
+  planData.grid.position.y -= newCenter[1];
+  planData.grid.position.z -= newCenter[2];
+
+  return newAreaObject;
 
 }
