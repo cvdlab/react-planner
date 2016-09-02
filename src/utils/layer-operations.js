@@ -8,7 +8,7 @@ import sceneComponents from '../scene-components/scene-components';
 /** factory **/
 export function sceneComponentsFactory(type, options) {
   let component = sceneComponents[type];
-  if (!component) throw new Error('scene component not found');
+  if (!component) throw new Error(`scene component ${type} not found`);
 
   let properties = new Seq(component.properties)
     .map(value => value.defaultValue)

@@ -1,4 +1,4 @@
-import {List} from 'immutable';
+import {List, Map} from 'immutable';
 
 import {
   SELECT_TOOL_DRAWING_LINE,
@@ -31,7 +31,7 @@ import {nearestDrawingHelper, addPointHelper, addLineHelper, addLineSegmentHelpe
 export default function (state, action) {
   switch (action.type) {
     case SELECT_TOOL_DRAWING_LINE:
-      return state.set('mode', MODE_WAITING_DRAWING_LINE);
+      return selectToolDrawingLine(state, action.sceneComponentType);
 
     case BEGIN_DRAWING_LINE:
       return beginDrawingLine(state, action.layerID, action.x, action.y);
@@ -43,7 +43,7 @@ export default function (state, action) {
       return endDrawingLine(state, action.layerID, action.x, action.y);
 
     case SELECT_TOOL_DRAWING_HOLE:
-      return selectToolDrawingHole(state);
+      return selectToolDrawingHole(state, action.sceneComponentType);
 
     case UPDATE_DRAWING_HOLE:
       return updateDrawingHole(state, action.layerID, action.x, action.y);
@@ -56,6 +56,14 @@ export default function (state, action) {
   }
 }
 
+function selectToolDrawingLine(state, sceneComponentType) {
+  return state.merge({
+    mode: MODE_WAITING_DRAWING_LINE,
+    drawingConfig: Map({
+      type: sceneComponentType
+    })
+  });
+}
 
 /** lines operations **/
 function beginDrawingLine(state, layerID, x, y) {
@@ -89,7 +97,7 @@ function beginDrawingLine(state, layerID, x, y) {
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     unselectAll(layer);
-    let {line} = addLine(layer, 'wallGeneric', x, y, x, y);
+    let {line} = addLine(layer, state.drawingConfig.get('type'), x, y, x, y);
     select(layer, 'lines', line.id);
   }));
 
@@ -146,7 +154,7 @@ function endDrawingLine(state, layerID, x, y) {
   });
 }
 
-function selectToolDrawingHole(state) {
+function selectToolDrawingHole(state, sceneComponentType) {
   //TODO check current layer
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
@@ -163,7 +171,10 @@ function selectToolDrawingHole(state) {
 
   return state.merge({
     mode: MODE_DRAWING_HOLE,
-    drawingHelpers
+    drawingHelpers,
+    drawingConfig: Map({
+      type: sceneComponentType
+    })
   });
 }
 
@@ -191,7 +202,7 @@ function updateDrawingHole(state, layerID, x, y) {
       let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));
 
       let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
-      let {hole} = addHole(layer, 'windowGeneric', lineID, offset);
+      let {hole} = addHole(layer, state.drawingConfig.get('type'), lineID, offset);
       select(layer, 'holes', hole.id);
     }
   }));
@@ -200,7 +211,7 @@ function updateDrawingHole(state, layerID, x, y) {
 }
 
 function endDrawingHole(state, layerID, x, y) {
-  state =  updateDrawingHole(state, layerID, x, y);
+  state = updateDrawingHole(state, layerID, x, y);
   return state.updateIn(['scene', 'layers', layerID], layer => unselectAll(layer));
 
 }

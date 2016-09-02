@@ -90,12 +90,17 @@ export default function Toolbar({
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE].includes(mode)} tooltip="Add wall"
-                     onClick={event => drawingActions.selectToolDrawingLine('wall-generic')}>
+                     onClick={event => drawingActions.selectToolDrawingLine('wallGeneric')}>
         <IconAddLine />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add hole"
-                     onClick={event => drawingActions.selectToolDrawingHole('door-generic')}>
+      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add door"
+                     onClick={event => drawingActions.selectToolDrawingHole('doorGeneric')}>
+        <IconAddHole />
+      </ToolbarButton>
+
+      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add window"
+                     onClick={event => drawingActions.selectToolDrawingHole('windowGeneric')}>
         <IconAddHole />
       </ToolbarButton>
     </aside>

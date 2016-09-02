@@ -45,8 +45,6 @@ export const Line = Record({
   prototype: "lines",
   vertices: new List(),
   holes: new List(),
-  height: 1,
-  thickness: 1,
   selected: false,
   properties: new Map()
 });
@@ -57,9 +55,6 @@ export const Hole = Record({
   prototype: "holes",
   offset: -1,
   line: "",
-  width: 20,
-  height: -1,
-  altitude: 0,
   selected: false,
   properties: new Map(),
 });
@@ -69,8 +64,6 @@ export const Area = Record({
   type: "",
   prototype: "areas",
   vertices: new List(),
-  patternColor: "#f4f4f4",
-  patternDirection: 0,
   selected: false,
   properties: new Map()
 });
@@ -80,7 +73,8 @@ export const State = Record({
   scene: new Scene(),
   viewer2D: new Map(),
   drawingHelpers: new List(),
-  activeDrawingHelper: null
+  activeDrawingHelper: null,
+  drawingConfig: Map()
 });
 
 export const ElementVolume = Record({

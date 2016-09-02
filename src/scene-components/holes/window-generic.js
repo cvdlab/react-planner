@@ -1,3 +1,5 @@
+import render2D from './window-generic.2d.jsx';
+
 export const WindowGeneric = {
   name: "windowGeneric",
   prototype: "holes",
@@ -23,8 +25,7 @@ export const WindowGeneric = {
     }
   },
 
-  render2D: function (options) {
-  },
+  render2D,
 
   render3D: function (options) {
   },

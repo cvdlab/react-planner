@@ -37,7 +37,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     rectShape.holes.push(holeShape);
 
     // Create Windows
-    if (hole.properties.get('altitude') !== 0) {
+    if (hole.type === 'windowGeneric') {
       let window3D = createSingleWindow(
         hole.properties.get('width'),
         hole.properties.get('height'),
@@ -90,7 +90,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
   let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
-  
+
   wall1.position.z -= thickness / 2 + 0.001;
   wall2.position.z += thickness / 2 + 0.001;
 

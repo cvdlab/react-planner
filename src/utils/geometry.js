@@ -133,3 +133,8 @@ export function pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp) {
 
   return distance / length;
 }
+
+export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2){
+  let length = distanceFromTwoPoints(x1, y1, x2, y2);
+  return (-Math.asin((y1 - y2) / length)) * 180 / Math.PI;
+}
