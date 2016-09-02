@@ -118,11 +118,9 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
           console.log("ChangedObject: ", oldLineObject);
           console.log("lineID? ", newLine.id);
           let newLineObject = createWall(layer, newLine, interactFunction);
-          console.log(oldLineObject);
 
           // Now I need to translate object to the original coordinates
           let oldBoundingBox = planData.boundingBox;
-
 
           let oldCenter = [
             (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
@@ -154,7 +152,7 @@ export function updateScene(planData, sceneData, scene, diffArray, editingAction
           planData.grid.position.y -= newCenter[1];
           planData.grid.position.z -= newCenter[2];
 
-          oldLineObject = newLineObject;
+          planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
       }
     }
   });
