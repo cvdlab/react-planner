@@ -152,18 +152,37 @@ function createWall(layer, line, editingActions) {
     holes.push({holeData: hole, holeInteractFunction});
   });
 
-  return createShapeWall(layer.vertices.get(line.vertices.get(0)),
-    layer.vertices.get(line.vertices.get(1)),
+  let vertex0 = layer.vertices.get(line.vertices.get(0));
+  let vertex1 = layer.vertices.get(line.vertices.get(1));
+
+  if (vertex0.x > vertex1.x) {
+    let app = vertex0;
+    vertex0 = vertex1;
+    vertex1 = app;
+  }
+
+  let bevelRadius = line.properties.get('thickness');
+
+  let wall = createShapeWall(vertex0,
+    vertex1,
     line.properties.get('height'),
     line.properties.get('thickness'),
     holes,
-    line.properties.get('thickness'),
+    bevelRadius,
     // line.id,
     line.selected,
     line.properties.get('textureA'),
     line.properties.get('textureB'),
     lineInteractFunction
   );
+
+  let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
+
+  let alpha = Math.asin((vertex1.y - vertex0.y) / (distance - bevelRadius)); //TODO: REMOVE WORKAROUND BEVELING
+  wall.position.x += vertex0.x;
+  wall.position.z -= vertex0.y;
+
+  return wall;
 }
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData) {

@@ -107,6 +107,8 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     applyTexture(wallMaterial2, textureA);
   }
 
+  assignUVs(lineGeometry);
+
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
   let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
 
@@ -117,8 +119,8 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   wall2.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
   pivot.rotation.y = alpha;
-  pivot.position.x += vertex0.x;
-  pivot.position.z -= vertex0.y;
+  // pivot.position.x += vertex0.x;
+  // pivot.position.z -= vertex0.y;
 
   // pivot.position.x -= thickness;
 
@@ -348,27 +350,57 @@ function applyTexture(material, textureName) {
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(.01, .01);
+      material.map.repeat.set(3, 3);
 
       material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(.01, .01);
+      material.normalMap.repeat.set(3, 3);
       break;
     case 'painted':
       material.map = loader.load(require('./textures/painted.jpg'));
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(.01, .01);
+      material.map.repeat.set(3, 3);
 
       material.normalMap = loader.load(require("./textures/painted-normal.png"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(.01, .01);
+      material.normalMap.repeat.set(3, 3);
 
       break;
   }
-};
+}
+
+function assignUVs(geometry) {
+  geometry.computeBoundingBox();
+
+  let max = geometry.boundingBox.max;
+  let min = geometry.boundingBox.min;
+
+  let offset = new Three.Vector2(0 - min.x, 0 - min.y);
+  let range = new Three.Vector2(max.x - min.x, max.y - min.y);
+
+  geometry.faceVertexUvs[0] = [];
+  let faces = geometry.faces;
+
+  for (let i = 0; i < geometry.faces.length; i++) {
+
+    let v1 = geometry.vertices[faces[i].a];
+    let v2 = geometry.vertices[faces[i].b];
+    let v3 = geometry.vertices[faces[i].c];
+
+    geometry.faceVertexUvs[0].push([
+      new Three.Vector2(( v1.x + offset.x ) / range.x, ( v1.y + offset.y ) / range.y),
+      new Three.Vector2(( v2.x + offset.x ) / range.x, ( v2.y + offset.y ) / range.y),
+      new Three.Vector2(( v3.x + offset.x ) / range.x, ( v3.y + offset.y ) / range.y)
+    ]);
+
+  }
+  geometry.uvsNeedUpdate = true;
+}
+
+
