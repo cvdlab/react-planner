@@ -22,8 +22,12 @@ export const AreaGeneric = {
       max: 359
     },
     texture: {
-      type: "string",
-      defaultValue: 'none'
+      type: "enum",
+      defaultValue: 'none',
+      values: {
+        'none': "Nessuna",
+        'parquet': "Parquet"
+      }
     }
   },
 
