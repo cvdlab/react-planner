@@ -78,10 +78,8 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     }
   });
 
-
   let lineGeometry = new Three.ShapeGeometry(rectShape);
   lineGeometry.computeVertexNormals();
-
 
   let wallColor = new Three.Color(1, 1, 1);
   if (isSelected) {
@@ -89,12 +87,12 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   }
 
   let wallMaterial1 = new Three.MeshPhongMaterial({
-    side: Three.DoubleSide,
+    side: Three.BackSide,
     color: wallColor
   });
 
   let wallMaterial2 = new Three.MeshPhongMaterial({
-    side: Three.DoubleSide,
+    side: Three.FrontSide,
     color: wallColor
   });
 
@@ -142,7 +140,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   let leftClosureGeometry = new Three.ShapeGeometry(leftShape);
 
   let topClosure = new Three.Mesh(topClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.DoubleSide,
+    side: Three.BackSide,
     color: wallColor
   }));
 
@@ -152,12 +150,12 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   // }));
 
   let leftClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.DoubleSide,
+    side: Three.FrontSide,
     color: wallColor
   }));
 
   let rightClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.DoubleSide,
+    side: Three.BackSide,
     color: wallColor
   }));
 

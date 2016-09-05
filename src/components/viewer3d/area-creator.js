@@ -14,20 +14,33 @@ export default function createArea(vertices, color, textureName, isSelected) {
     color = 0xffffff;
   }
 
-  let areaMaterial = new Three.MeshPhongMaterial({
-    side: Three.DoubleSide,
+  let areaMaterial1 = new Three.MeshPhongMaterial({
+    side: Three.FrontSide,
     color: color
   });
+
+  let areaMaterial2 = new Three.MeshPhongMaterial({
+    side: Three.BackSide,
+    color: color
+  });
+
 
   let loader = new Three.TextureLoader();
 
   switch (textureName) {
     case 'parquet':
-      areaMaterial.map = loader.load(require('./textures/parquet.jpg'));
-      areaMaterial.needsUpdate = true;
-      areaMaterial.map.wrapS = Three.RepeatWrapping;
-      areaMaterial.map.wrapT = Three.RepeatWrapping;
-      areaMaterial.map.repeat.set(2, 2);
+      areaMaterial1.map = loader.load(require('./textures/parquet.jpg'));
+      areaMaterial1.needsUpdate = true;
+      areaMaterial1.map.wrapS = Three.RepeatWrapping;
+      areaMaterial1.map.wrapT = Three.RepeatWrapping;
+      areaMaterial1.map.repeat.set(2, 2);
+
+      areaMaterial2.map = loader.load(require('./textures/parquet.jpg'));
+      areaMaterial2.needsUpdate = true;
+      areaMaterial2.map.wrapS = Three.RepeatWrapping;
+      areaMaterial2.map.wrapT = Three.RepeatWrapping;
+      areaMaterial2.map.repeat.set(2, 2);
+
       break;
     case 'none':
     default:
@@ -36,7 +49,13 @@ export default function createArea(vertices, color, textureName, isSelected) {
   let shapeGeometry = new Three.ShapeGeometry(shape);
   assignUVs(shapeGeometry);
 
-  let area = new Three.Mesh(shapeGeometry, areaMaterial);
+  let area = new Three.Object3D();
+
+  let areaFace1 = new Three.Mesh(shapeGeometry, areaMaterial1);
+  let areaFace2 = new Three.Mesh(shapeGeometry, areaMaterial2);
+
+  area.add(areaFace1);
+  area.add(areaFace2);
 
   area.rotation.x -= Math.PI / 2;
   return area;
