@@ -253,6 +253,9 @@ export function removeArea(layer, areaID) {
 }
 
 export function detectAndUpdateAreas(layer) {
+  console.groupCollapsed("Area detection");
+  console.log("vertices", layer.vertices.toJS());
+  console.log("lines", layer.lines.toJS());
 
   //generate LAR rappresentation
   let verticesArray = [];
@@ -279,7 +282,9 @@ export function detectAndUpdateAreas(layer) {
     });
 
     //add new areas
+    console.log("graphCycles call", verticesArray, linesArray);
     let cycles = graphCycles(verticesArray, linesArray);
+    console.log("graphCycles result", cycles);
     cycles.v_cycles.forEach(cycle => {
       cycle.shift();
       let verticesCoords = cycle.map(index => index2coord[index]);
@@ -287,6 +292,8 @@ export function detectAndUpdateAreas(layer) {
     });
   });
 
+  console.log("areas", layer.areas.toJS());
+  console.groupEnd();
   return {layer};
 }
 
