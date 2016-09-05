@@ -46,9 +46,7 @@
     "shortid": "^2.2.6",
     "three": "0.79.0",
     "webpack": "1.13.1",
-    "webpack-dev-server": "1.14.1"
-  },
-  "devDependencies": {
+    "webpack-dev-server": "1.14.1",
     "image-webpack-loader": "^2.0.0"
   }
 }
