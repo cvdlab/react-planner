@@ -15,7 +15,7 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit, isSe
   var frame1Geom = new Three.BoxGeometry(frame1_width, height, thickness + 0.05 * pixelPerUnit);
   var frame2Geom = new Three.BoxGeometry(width - 2 * frame1_width, frame2_height, thickness + 0.05 * pixelPerUnit);
 
-  var textureFrameImage = '/textures/door/frame-door.jpg';
+  var textureFrameImage = require('./textures/door/frame-door.jpg');
 
   frame1Geom.computeVertexNormals();
 
@@ -29,12 +29,12 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit, isSe
   let frame1 = new Three.Mesh(frame1Geom, frameMaterial);
   let frame2 = new Three.Mesh(frame2Geom, frameMaterial);
   let frame3 = new Three.Mesh(frame1Geom, frameMaterial);
-  
+
   let doorGeometry = new Three.BoxGeometry(width - frame1_width * 2, height, thickness);
 
   /* Creation of the central part of the door */
-  let imageFile = './textures/door/main-door.JPG';
-  let imageFile2 = './textures/door/main-door2.JPG';
+  let imageFile = require('./textures/door/main-door.jpg');
+  let imageFile2 = require('./textures/door/main-door2.jpg');
 
   doorGeometry.computeVertexNormals();
 

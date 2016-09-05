@@ -23,7 +23,7 @@ export default function createArea(vertices, color, textureName, isSelected) {
 
   switch (textureName) {
     case 'parquet':
-      areaMaterial.map = loader.load('./textures/parquet.jpg');
+      areaMaterial.map = loader.load(require('./textures/parquet.jpg'));
       areaMaterial.needsUpdate = true;
       areaMaterial.map.wrapS = Three.RepeatWrapping;
       areaMaterial.map.wrapT = Three.RepeatWrapping;

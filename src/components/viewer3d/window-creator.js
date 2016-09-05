@@ -39,7 +39,7 @@ export function createSingleWindow(width, height, thickness, x, y, z, pixelPerUn
   var frame1Geom = new Three.BoxGeometry(frame1_width, height, thickness);
   var frame2Geom = new Three.BoxGeometry(width - 2 * frame1_width, frame2_height, thickness);
 
-  var textureFrameImage = './textures/window/frame-window.jpg';
+  var textureFrameImage = require('./textures/window/frame-window.jpg');
 
   frame1Geom.computeVertexNormals();
 

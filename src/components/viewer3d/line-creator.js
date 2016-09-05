@@ -344,26 +344,26 @@ function applyTexture(material, textureName) {
 
   switch (textureName) {
     case 'bricks':
-      material.map = loader.load('./textures/bricks.jpg');
+      material.map = loader.load(require('./textures/bricks.jpg'));
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
       material.map.repeat.set(.01, .01);
 
-      material.normalMap = loader.load("./textures/bricks-normal.jpg");
+      material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
       material.normalMap.repeat.set(.01, .01);
       break;
     case 'painted':
-      material.map = loader.load('./textures/painted.jpg');
+      material.map = loader.load(require('./textures/painted.jpg'));
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
       material.map.repeat.set(.01, .01);
 
-      material.normalMap = loader.load("./textures/painted-normal.png");
+      material.normalMap = loader.load(require("./textures/painted-normal.png"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;

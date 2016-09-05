@@ -47,5 +47,8 @@
     "three": "0.79.0",
     "webpack": "1.13.1",
     "webpack-dev-server": "1.14.1"
+  },
+  "devDependencies": {
+    "image-webpack-loader": "^2.0.0"
   }
 }
