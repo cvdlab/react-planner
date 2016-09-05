@@ -1,4 +1,5 @@
 .idea
 npm-debug.log
 node_modules
-dist/*.js
+dist/*
+!dist/index.html
