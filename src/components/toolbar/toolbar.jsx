@@ -11,6 +11,7 @@ import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
 import IconSummary from 'react-icons/lib/fa/table';
 import IconAddLine from 'react-icons/lib/ti/pen';
 import IconAddHole from 'react-icons/lib/ti/plus-outline';
+import {IconDoor, IconWindow} from '../../utils/icons.jsx';
 
 import {
   MODE_IDLE,
@@ -94,14 +95,14 @@ export default function Toolbar({
         <IconAddLine />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add door"
+      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'doorGeneric'} tooltip="Add door"
                      onClick={event => drawingActions.selectToolDrawingHole('doorGeneric')}>
-        <IconAddHole />
+        <IconDoor />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode)} tooltip="Add window"
+      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'windowGeneric'} tooltip="Add window"
                      onClick={event => drawingActions.selectToolDrawingHole('windowGeneric')}>
-        <IconAddHole />
+        <IconWindow />
       </ToolbarButton>
     </aside>
   )
