@@ -1,13 +1,3 @@
-var eventFire = function eventFire(el, etype) {
-  if (el.fireEvent) {
-    el.fireEvent('on' + etype);
-  } else {
-    var evObj = document.createEvent('Events');
-    evObj.initEvent(etype, true, false);
-    el.dispatchEvent(evObj);
-  }
-};
-
 export function browserDownload(json) {
   var fileOutputLink = document.createElement('a');
 
@@ -20,7 +10,10 @@ export function browserDownload(json) {
   var url = window.URL.createObjectURL(data);
   fileOutputLink.setAttribute('download', filename);
   fileOutputLink.href = url;
-  eventFire(fileOutputLink, 'click');
+  fileOutputLink.style.display = 'none';
+  document.body.appendChild(fileOutputLink);
+  fileOutputLink.click();
+  document.body.removeChild(fileOutputLink);
 }
 
 
@@ -40,7 +33,6 @@ export function browserUpload() {
       reader.readAsText(file);
     });
 
-    eventFire(fileInput, 'click');
-
+    fileInput.click();
   });
 }
