@@ -97,16 +97,6 @@ export default class Scene3DViewer extends React.Component {
 
     let exportScene = () => {
 
-      let eventFire = function eventFire(el, etype) {
-        if (el.fireEvent) {
-          el.fireEvent('on' + etype);
-        } else {
-          var evObj = document.createEvent('Events');
-          evObj.initEvent(etype, true, false);
-          el.dispatchEvent(evObj);
-        }
-      };
-
       let convertToBufferGeometry = (geometry) => {
         console.log("geometry = ", geometry);
         let bufferGeometry = new Three.BufferGeometry().fromGeometry(geometry);
@@ -134,9 +124,11 @@ export default class Scene3DViewer extends React.Component {
       let url = window.URL.createObjectURL(blob);
       fileOutputLink.setAttribute('download', name);
       fileOutputLink.href = url;
-      eventFire(fileOutputLink, 'click');
+      document.body.appendChild(fileOutputLink);
+      fileOutputLink.click();
+      document.body.removeChild(fileOutputLink);
 
-      scene.add(planData.grid)
+      scene.add(planData.grid);
 
     };
 
