@@ -1,6 +1,6 @@
 import Three from 'three';
 import {createSingleWindow} from './window-creator';
-import {createDoor} from './door-creator';
+import {createDoor, createDoorFromObj} from './door-creator';
 
 export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
                                         bevelRadius, isSelected, textureA, textureB, interactFunction) {
@@ -62,19 +62,21 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
       pivot.add(window3D);
     } else {
-      let door3D = createDoor(
-        holeData.properties.get('width') - 0.1,
-        holeData.properties.get('height') - 0.1,
-        thickness,
-        (distance - bevelRadius) * holeData.offset,
-        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-        0,
-        100,
+
+      let doorPromise = createDoorFromObj(holeData.properties.get('width') - 0.1,
+        holeData.properties.get('height') + 0.1,
+        thickness + 10,
         holeData.selected);
 
-      applyInteract(door3D, holeInteractFunction);
+      doorPromise.then(object => {
+        let boundingBox = new Three.Box3().setFromObject(object);
+        object.position.x = (distance - bevelRadius) * holeData.offset;
+        object.position.y = holeData.properties.get('altitude') - 0.1;
+        object.position.z = 0;
+        pivot.add(object);
+        applyInteract(object, holeInteractFunction);
 
-      pivot.add(door3D)
+      });
     }
   });
 
@@ -144,8 +146,8 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     color: wallColor
   }));
 
-  // let bottomClosure = new Three.Mesh(topClosureGeometry, new Three.MeshLambertMaterial({
-  //   side: Three.DoubleSide,
+  // let bottomClosure = new THREE.Mesh(topClosureGeometry, new THREE.MeshLambertMaterial({
+  //   side: THREE.DoubleSide,
   //   color: wallColor
   // }));
 
@@ -229,21 +231,15 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     topHoleClosure.position.y += holeData.properties.get('height') + holeData.properties.get('altitude');
     topHoleClosure.position.x += startAt;
 
-    topHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
     leftHoleClosure.rotation.y -= Math.PI / 2;
     leftHoleClosure.position.z -= thickness / 2;
     leftHoleClosure.position.y += holeData.properties.get('altitude');
     leftHoleClosure.position.x += startAt;
 
-    leftHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
     rightHoleClosure.rotation.y -= Math.PI / 2;
     rightHoleClosure.position.z -= thickness / 2;
     rightHoleClosure.position.y += holeData.properties.get('altitude');
     rightHoleClosure.position.x += startAt + holeData.properties.get('width');
-
-    rightHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
     pivot.add(topHoleClosure);
     pivot.add(leftHoleClosure);
@@ -260,8 +256,6 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       bottomHoleClosure.position.z -= thickness / 2;
       bottomHoleClosure.position.y += holeData.properties.get('altitude');
       bottomHoleClosure.position.x += startAt;
-
-      bottomHoleClosure.position.x -= thickness / 2; //TODO: REMOVE WORKAROUND BEVELING
 
       pivot.add(bottomHoleClosure);
 

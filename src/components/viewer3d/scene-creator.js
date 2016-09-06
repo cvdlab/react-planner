@@ -2,7 +2,7 @@ import Three from 'three';
 import createShapeWall from './line-creator';
 import createArea from './area-creator';
 import createGrid from './grid-creator';
-import {createSingleWindow} from './window-creator';
+import {createDoorFromObj} from './door-creator';
 
 export function parseData(sceneData, editingActions) {
 
@@ -78,7 +78,7 @@ export function parseData(sceneData, editingActions) {
   grid.position.x -= center[0];
   grid.position.y -= center[1];
   grid.position.z -= center[2];
-
+  
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
