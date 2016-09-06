@@ -89,31 +89,35 @@ export function createDoor(width, height, thickness, x, y, z, pixelPerUnit, isSe
 
 export function createDoorFromObj(width, height, thickness, isSelected) {
 
+
   let mtlLoader = new MTLLoader();
   mtlLoader.setPath('obj/door-generic/');
   let url = "door.mtl";
-  return new Promise(
-    function (resolve, reject) {
+  return new Promise((resolve, reject) => {
 
-      mtlLoader.load(url, materials => {
-        materials.preload();
-        let objLoader = new OBJLoader();
-        objLoader.setMaterials(materials);
-        objLoader.setPath('obj/door-generic/');
-        objLoader.load('door.obj', object => {
+    mtlLoader.load(url, materials => {
+      materials.preload();
+      let objLoader = new OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath('obj/door-generic/');
+      objLoader.load('door.obj', object => {
 
-          let boundingBox = new Three.Box3().setFromObject(object);
+        let boundingBox = new Three.Box3().setFromObject(object);
 
-          let initialWidth = boundingBox.max.x - boundingBox.min.x;
-          let initialHeight = boundingBox.max.y - boundingBox.min.y;
-          let initialThickness = boundingBox.max.z - boundingBox.min.z;
+        let initialWidth = boundingBox.max.x - boundingBox.min.x;
+        let initialHeight = boundingBox.max.y - boundingBox.min.y;
+        let initialThickness = boundingBox.max.z - boundingBox.min.z;
 
-          object.scale.set(width / initialWidth, height / initialHeight, thickness / initialThickness);
+        if (isSelected) {
+          let box = new Three.BoxHelper(object, 0xffc107);
+          object.add(box);
+        }
 
-          resolve(object);
-        });
+        object.scale.set(width / initialWidth, height / initialHeight, thickness / initialThickness);
 
+        resolve(object);
       });
-    }
-  );
+
+    });
+  });
 }
