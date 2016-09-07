@@ -1,4 +1,5 @@
 import render2D from './area-generic.2d.jsx';
+import render3D from './area-generic.3d';
 
 export const AreaGeneric = {
   name: "areaGeneric",
@@ -33,8 +34,7 @@ export const AreaGeneric = {
 
   render2D,
 
-  render3D: function (element, layer) {
-  },
+  render3D,
 
   calculateVolume: function (element, layer) {
   }

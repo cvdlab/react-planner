@@ -1,8 +1,7 @@
 import Three from 'three';
 import createShapeWall from './line-creator';
-import createArea from './area-creator';
 import createGrid from './grid-creator';
-import {createDoorFromObj} from './door-creator';
+import {AreaGeneric} from '../../scene-components/areas/area-generic.js';
 
 export function parseData(sceneData, editingActions) {
 
@@ -35,22 +34,12 @@ export function parseData(sceneData, editingActions) {
 
     // Import areas
     layer.areas.forEach(area => {
-      let vertices = [];
 
-      area.vertices.forEach(vertexID => {
-        vertices.push(layer.vertices.get(vertexID));
-      });
-
-      let interactFunction = () => {
+      area.interactFunction = () => {
         editingActions.selectArea(layer.id, area.id);
-      }
+      };
 
-      let area3D = createArea(vertices,
-        parseInt(area.properties.get('patternColor').substring(1), 16),
-        area.properties.get('texture'),
-        area.selected,
-        interactFunction);
-
+      let area3D = AreaGeneric.render3D(area, layer);
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
     });
@@ -229,21 +218,11 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
 
 function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData) {
 
-  let vertices = [];
-
-  newAreaData.vertices.forEach(vertexID => {
-    vertices.push(layer.vertices.get(vertexID));
-  });
-
-  let interactFunction = () => {
+  newAreaData.interactFunction = () => {
     editingActions.selectArea(layer.id, newAreaData.id);
   };
 
-  let newAreaObject = createArea(vertices,
-    parseInt(newAreaData.properties.get('patternColor').substring(1), 16),
-    newAreaData.properties.get('texture'),
-    newAreaData.selected,
-    interactFunction);
+  let newAreaObject = AreaGeneric.render3D(newAreaData, layer);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;

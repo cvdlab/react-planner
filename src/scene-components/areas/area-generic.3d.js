@@ -1,6 +1,20 @@
 import Three from 'three';
 
-export default function createArea(vertices, color, textureName, isSelected, interactFunction) {
+export default function (element, layer) {
+  let vertices = [];
+
+  element.vertices.forEach(vertexID => {
+    vertices.push(layer.vertices.get(vertexID));
+  });
+
+  return createArea(vertices,
+    parseInt(element.properties.get('patternColor').substring(1), 16),
+    element.properties.get('texture'),
+    element.selected,
+    element.interactFunction);
+}
+
+function createArea(vertices, color, textureName, isSelected, interactFunction) {
 
   let shape = new Three.Shape();
   shape.moveTo(vertices[0].x, vertices[0].y);
@@ -23,7 +37,6 @@ export default function createArea(vertices, color, textureName, isSelected, int
     side: Three.BackSide,
     color: color
   });
-
 
   let loader = new Three.TextureLoader();
 
