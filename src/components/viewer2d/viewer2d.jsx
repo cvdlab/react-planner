@@ -81,6 +81,12 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
     MODE_DRAWING_HOLE
   ].includes(mode);
 
+  let detectAutoPan = [
+    MODE_WAITING_DRAWING_LINE,
+    MODE_DRAWING_LINE,
+    MODE_DRAWING_HOLE
+  ].includes(mode);
+
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
   activeDrawingHelper = activeDrawingHelper ?
@@ -91,7 +97,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   ) : null;
 
   return (
-    <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height}
+    <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
