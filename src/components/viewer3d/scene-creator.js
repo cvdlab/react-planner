@@ -41,14 +41,15 @@ export function parseData(sceneData, editingActions) {
         vertices.push(layer.vertices.get(vertexID));
       });
 
+      let interactFunction = () => {
+        editingActions.selectArea(layer.id, area.id);
+      }
+
       let area3D = createArea(vertices,
         parseInt(area.properties.get('patternColor').substring(1), 16),
         area.properties.get('texture'),
-        area.selected);
-
-      area3D.interact = () => {
-        editingActions.selectArea(layer.id, area.id);
-      };
+        area.selected,
+        interactFunction);
 
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
@@ -78,7 +79,7 @@ export function parseData(sceneData, editingActions) {
   grid.position.x -= center[0];
   grid.position.y -= center[1];
   grid.position.z -= center[2];
-  
+
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
@@ -234,14 +235,15 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
     vertices.push(layer.vertices.get(vertexID));
   });
 
+  let interactFunction = () => {
+    editingActions.selectArea(layer.id, newAreaData.id);
+  };
+
   let newAreaObject = createArea(vertices,
     parseInt(newAreaData.properties.get('patternColor').substring(1), 16),
     newAreaData.properties.get('texture'),
-    newAreaData.selected);
-
-  newAreaObject.interact = () => {
-    editingActions.selectArea(layer.id, newAreaData.id);
-  };
+    newAreaData.selected,
+    interactFunction);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;

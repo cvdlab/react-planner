@@ -1,6 +1,6 @@
 import Three from 'three';
 
-export default function createArea(vertices, color, textureName, isSelected) {
+export default function createArea(vertices, color, textureName, isSelected, interactFunction) {
 
   let shape = new Three.Shape();
   shape.moveTo(vertices[0].x, vertices[0].y);
@@ -53,6 +53,9 @@ export default function createArea(vertices, color, textureName, isSelected) {
 
   let areaFace1 = new Three.Mesh(shapeGeometry, areaMaterial1);
   let areaFace2 = new Three.Mesh(shapeGeometry, areaMaterial2);
+
+  areaFace1.interact = interactFunction;
+  areaFace2.interact = interactFunction;
 
   area.add(areaFace1);
   area.add(areaFace2);
