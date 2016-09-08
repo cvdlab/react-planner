@@ -10,7 +10,7 @@ import diff from 'immutablediff';
 export default class Scene3DViewer extends React.Component {
 
   componentDidMount() {
-
+    
     let editingActions = this.context.editingActions;
 
     let {width, height} = this.props;
