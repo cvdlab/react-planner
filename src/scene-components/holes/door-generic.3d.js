@@ -5,7 +5,7 @@ import OBJLoader from '../../components/viewer3d/libs/OBJLoader';
 export default function (hole, layer) {
 
   return createDoorGeneric(hole.properties.get('width') - 0.1,
-    hole.properties.get('height') + 0.1,
+    hole.properties.get('height'),
     hole.thickness + 10,
     hole.selected);
 }

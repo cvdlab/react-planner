@@ -1,4 +1,5 @@
 import render2D from './window-generic.2d.jsx';
+import render3D from './window-generic.3d';
 
 export const WindowGeneric = {
   name: "windowGeneric",
@@ -27,9 +28,8 @@ export const WindowGeneric = {
 
   render2D,
 
-  render3D: function (options) {
-  },
-
+  render3D,
+  
   calculateVolume: function (options) {
   }
 

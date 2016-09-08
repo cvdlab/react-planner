@@ -1,6 +1,6 @@
 import Three from 'three';
-import {createSingleWindow} from './window-creator';
 import {DoorGeneric} from '../../scene-components/holes/door-generic'
+import {WindowGeneric} from '../../scene-components/holes/window-generic'
 
 export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
                                         bevelRadius, isSelected, textureA, textureB, interactFunction) {
@@ -50,22 +50,18 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
     // Create Windows
     if (holeData.type === 'windowGeneric') {
-      let window3D = createSingleWindow(
-        holeData.properties.get('width'),
-        holeData.properties.get('height'),
-        thickness,
-        (distance - bevelRadius) * holeData.offset,
-        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-        0,
-        100,
-        holeData.selected);
 
-      applyInteract(window3D, holeInteractFunction);
+      let windowPromise = WindowGeneric.render3D(holeData, undefined);
 
-      pivot.add(window3D);
+      windowPromise.then(object => {
+        let boundingBox = new Three.Box3().setFromObject(object);
+        object.position.x = (distance - bevelRadius) * holeData.offset;
+        object.position.y = holeData.properties.get('altitude') + holeData.properties.get('height')/2;
+        object.position.z = thickness;
+        pivot.add(object);
+        applyInteract(object, holeInteractFunction);
+      });
     } else {
-
-      /*************************************/
 
       let doorPromise = DoorGeneric.render3D(holeData, undefined);
 
