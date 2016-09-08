@@ -1,11 +1,3 @@
-///**
-// * DATA
-// */
-//
-//var V = [[0.5774, 1.0], [1.0, 1.0], [1.1547, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.732], [1.0, 0.1547], [0.732, 0.0], [1.0491, 0.183], [-0.317, 0.549], [1.0, 0.268], [0.183, -0.3169], [0.5491, 1.049], [0.4642, 1.0], [0.0, -0.4226], [0.0, 1.0]]
-//
-//var EV = [[0, 1], [2, 3], [5, 4], [7, 6], [2, 8], [3, 6], [4, 9], [0, 10], [9, 5], [8, 10], [7, 11], [12, 13], [6, 8], [6, 10], [4, 7], [4, 11], [4, 14], [5, 15], [11, 14], [0, 12], [13, 15], [0, 13], [1, 10], [3, 7], [5, 13]]
-
 /**
  * UTILS
  */
@@ -27,7 +19,7 @@ function compute_ev_mapping (EV) {
     return {
       ev: ev,
       color: 0,
-      direction: 0
+      direction: -1
     }
   })
 
@@ -82,11 +74,12 @@ function get_starting_edge (incidences, ev_mapping) {
   var direction
   for (e = 0; e < ev_mapping.length; e += 1) {
     if (ev_mapping[e].color < 2) {
-      direction = ev_mapping[e].direction === 1 ? 0 : 1
+      direction = -1 * ev_mapping[e].direction
       color(ev_mapping, e, direction)
       return {
         edge: e,
-        position: direction
+        direction: direction,
+        position: direction === -1 ? 0 : 1
       }
     }
   }
@@ -106,7 +99,8 @@ function get_next_edge (incidences, edge, position, EV) {
       return {
         edge: out.index,
         vertex: out.endpoint,
-        position: out.position
+        position: out.position,
+        direction: out.position ? 1 : -1
       }
     }
   }
@@ -114,7 +108,7 @@ function get_next_edge (incidences, edge, position, EV) {
 
 function color (ev_mapping, index, direction) {
   ev_mapping[index].color += 1
-  ev_mapping[index].direction = direction === 1 ? 1 : -1
+  ev_mapping[index].direction = direction
 }
 
 function find_cycles (V, EV) {
@@ -133,13 +127,13 @@ function find_cycles (V, EV) {
   while (start !== undefined) {
     V_cycle = [EV[start.edge][mod(start.position + 1, 2)], EV[start.edge][start.position]]
     E_cycle = [start.edge]
-    dir_E_cycle = [start.edge * (start.position ? -1 : 1)]
+    dir_E_cycle = [start.direction]
     next = get_next_edge(incidences, start.edge, start.position, EV)
     while (next.edge !== start.edge) {
       V_cycle.push(next.vertex)
       E_cycle.push(next.edge)
-      dir_E_cycle.push(next.edge * (next.position ? -1 : 1))
-      color(ev_mapping, next.edge, next.position)
+      dir_E_cycle.push(next.direction)
+      color(ev_mapping, next.edge, next.direction)
       next = get_next_edge(incidences, next.edge, next.position, EV)
     }
     E_cycles.push(E_cycle)
@@ -165,15 +159,13 @@ function find_cycles (V, EV) {
 }
 
 function find_inner_cycles (V, EV) {
-
   var cycles = find_cycles(V, EV);
-
-  var rooms_values = cycles.dir_e_cycles.map(cycle => cycle.map(function (edge, i) {
+  var dir_e_cycles = cycles.dir_e_cycles;
+  var rooms_values = cycles.e_cycles.map((cycle, i) => cycle.map(function (edge, j) {
     var v1;
     var v2;
 
-    var dir = edge > 0
-    edge = Math.abs(edge);
+    var dir = dir_e_cycles[i][j] > 0
 
     if (dir > 0) {
       v1 = EV[edge][0];
@@ -204,19 +196,31 @@ function find_inner_cycles (V, EV) {
 
 export default find_inner_cycles;
 
-//
-///**
-// * MAIN
-// */
-//
-//var cycles_data = find_cycles(V, EV)
-//console.log('############## OUTPUT')
-//console.log('EDGES:')
-//console.log(cycles_data.e_cycles)
-//console.log('\n')
-//console.log('VERTICES:')
-//console.log(cycles_data.v_cycles)
-//console.log('\n')
-//console.log(cycles_data.ev_mapping.every(m => m.color === 2))
-//
-//
+/**
+* DATA
+*/
+
+// var V = [[0.5774, 1.0], [1.0, 1.0], [1.1547, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.732], [1.0, 0.1547], [0.732, 0.0], [1.0491, 0.183], [-0.317, 0.549], [1.0, 0.268], [0.183, -0.3169], [0.5491, 1.049], [0.4642, 1.0], [0.0, -0.4226], [0.0, 1.0]]
+// var EV = [[0, 1], [2, 3], [5, 4], [7, 6], [2, 8], [3, 6], [4, 9], [0, 10], [9, 5], [8, 10], [7, 11], [12, 13], [6, 8], [6, 10], [4, 7], [4, 11], [4, 14], [5, 15], [11, 14], [0, 12], [13, 15], [0, 13], [1, 10], [3, 7], [5, 13]]
+
+// var V = [[0,0],[10,0],[10,10],[0,10], [100,100],[110,100],[110,110],[100,110], [5,0], [5,10]]
+// var EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9]] // IT WORKS
+// var EV = [[3,2],[2,1],[1,0],[0,3]] // IT WORKS
+// var EV = [[2,3],[1,2],[0,1],[3,0]] // IT WORKS
+// var EV = [[2,3],[1,2],[0,1],[3,0],[6,7],[5,6],[4,5],[7,4]] // IT WORKS
+// var EV = [[3,2],[2,1],[1,0],[0,3],[7,6],[6,5],[5,4],[4,7]] // IT WORKS
+
+/**
+* MAIN
+*/
+
+// var cycles_data = find_inner_cycles(V, EV)
+// console.log('############## OUTPUT')
+// console.log('EDGES:')
+// console.log(cycles_data.e_cycles)
+// console.log('\n')
+// console.log('VERTICES:')
+// console.log(cycles_data.v_cycles)
+// console.log('\n')
+// console.log(cycles_data.ev_mapping.every(m => m.color === 2))
+
