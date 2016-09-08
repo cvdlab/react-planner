@@ -68,7 +68,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       /*************************************/
 
       let doorPromise = DoorGeneric.render3D(holeData, undefined);
-      
+
       doorPromise.then(object => {
         let boundingBox = new Three.Box3().setFromObject(object);
         object.position.x = (distance - bevelRadius) * holeData.offset;
@@ -101,11 +101,11 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
 
   if (alpha < 0) {
-    applyTexture(wallMaterial1, textureA);
-    applyTexture(wallMaterial2, textureB);
+    applyTexture(wallMaterial1, textureA, distance, height);
+    applyTexture(wallMaterial2, textureB, distance, height);
   } else {
-    applyTexture(wallMaterial1, textureB);
-    applyTexture(wallMaterial2, textureA);
+    applyTexture(wallMaterial1, textureB, distance, height);
+    applyTexture(wallMaterial2, textureA, distance, height);
   }
 
   assignUVs(lineGeometry);
@@ -333,7 +333,7 @@ function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitu
   return wallCoordinates;
 }
 
-function applyTexture(material, textureName) {
+function applyTexture(material, textureName, distance, height) {
 
   let loader = new Three.TextureLoader();
 
@@ -343,26 +343,26 @@ function applyTexture(material, textureName) {
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(3, 3);
+      material.map.repeat.set(distance / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(3, 3);
+      material.normalMap.repeat.set(distance / 100, height / 100);
       break;
     case 'painted':
       material.map = loader.load(require('./textures/painted.jpg'));
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(3, 3);
+      material.map.repeat.set(distance / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/painted-normal.png"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(3, 3);
+      material.normalMap.repeat.set(distance / 100, height / 100);
 
       break;
   }
