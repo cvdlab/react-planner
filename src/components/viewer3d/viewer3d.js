@@ -10,7 +10,7 @@ import diff from 'immutablediff';
 export default class Scene3DViewer extends React.Component {
 
   componentDidMount() {
-    
+
     let editingActions = this.context.editingActions;
 
     let {width, height} = this.props;
@@ -107,7 +107,7 @@ export default class Scene3DViewer extends React.Component {
 
       scene.traverse((child, child2) => {
         console.log(child);
-        if (child instanceof Three.Mesh)
+        if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
           child.geometry = convertToBufferGeometry(child.geometry);
       });
 
