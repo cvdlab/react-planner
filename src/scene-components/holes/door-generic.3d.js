@@ -11,8 +11,6 @@ export default function (hole, layer) {
 }
 
 function createDoorGeneric(width, height, thickness, isSelected) {
-
-
   let mtlLoader = new MTLLoader();
   mtlLoader.setPath('obj/door-generic/');
   let url = "door.mtl";

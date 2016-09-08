@@ -38,6 +38,14 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
     color: color
   });
 
+  let shapeGeometry = new Three.ShapeGeometry(shape);
+  assignUVs(shapeGeometry);
+
+  let boundingBox = new Three.Box3().setFromObject(new Three.Mesh(shapeGeometry, new Three.MeshBasicMaterial()));
+
+  let width = boundingBox.max.x - boundingBox.min.x;
+  let height = boundingBox.max.y - boundingBox.min.y;
+
   let loader = new Three.TextureLoader();
 
   switch (textureName) {
@@ -46,21 +54,18 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
       areaMaterial1.needsUpdate = true;
       areaMaterial1.map.wrapS = Three.RepeatWrapping;
       areaMaterial1.map.wrapT = Three.RepeatWrapping;
-      areaMaterial1.map.repeat.set(2, 2);
+      areaMaterial1.map.repeat.set(width / 250, height / 250);
 
       areaMaterial2.map = loader.load(require('./textures/parquet.jpg'));
       areaMaterial2.needsUpdate = true;
       areaMaterial2.map.wrapS = Three.RepeatWrapping;
       areaMaterial2.map.wrapT = Three.RepeatWrapping;
-      areaMaterial2.map.repeat.set(2, 2);
+      areaMaterial2.map.repeat.set(width / 250, height / 250);
 
       break;
     case 'none':
     default:
   }
-
-  let shapeGeometry = new Three.ShapeGeometry(shape);
-  assignUVs(shapeGeometry);
 
   let area = new Three.Object3D();
 
