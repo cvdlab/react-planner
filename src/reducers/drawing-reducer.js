@@ -70,15 +70,22 @@ function beginDrawingLine(state, layerID, x, y) {
   let a, b, c;
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
-    state.getIn(['scene', 'layers', layerID, 'vertices'])
-      .forEach(({id: vertexID, x, y}) => {
-        addPointHelper(drawingHelpers, x, y, 10, 10, vertexID);
+    let {lines, vertices}  = state.getIn(['scene', 'layers', layerID]);
+    vertices.forEach(({id: vertexID, x, y}) => {
+      addPointHelper(drawingHelpers, x, y, 10, 10, vertexID);
 
-        ({a, b, c} = Geometry.horizontalLine(y));
-        addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
-        ({a, b, c} = Geometry.verticalLine(x));
-        addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
-      });
+      ({a, b, c} = Geometry.horizontalLine(y));
+      addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+      ({a, b, c} = Geometry.verticalLine(x));
+      addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+    });
+
+    lines.forEach(({id: lineID, vertices: [v0, v1]}) => {
+      let {x: x1, y: y1} = vertices.get(v0);
+      let {x: x2, y:y2} = vertices.get(v1);
+
+      addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, lineID);
+    })
   });
 
   let nearestHelper = nearestDrawingHelper(drawingHelpers, x, y);
