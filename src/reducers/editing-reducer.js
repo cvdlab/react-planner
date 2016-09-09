@@ -5,11 +5,13 @@ import {
   SELECT_HOLE,
   SELECT_LINE,
   UNSELECT_ALL,
-  SET_PROPERTIES
+  SET_PROPERTIES,
+  REMOVE
 } from '../constants';
 
 import {ElementsSet} from '../models';
 import {Map} from 'immutable';
+import {removeLine, removeHole, detectAndUpdateAreas} from '../utils/layer-operations';
 
 export default function (state, action) {
   let {scene} = state;
@@ -32,6 +34,9 @@ export default function (state, action) {
 
     case SET_PROPERTIES:
       return state.set('scene', setProperties(scene, action.prototype, action.layerID, action.elementID, action.properties));
+
+    case REMOVE:
+      return state.set('scene', remove(scene));
 
     default:
       return state;
@@ -84,4 +89,12 @@ function selectHole(scene, layerID, holeID) {
 
 function unselectAll(scene) {
   return scene.update('layers', layer => layer.map(unselectAllFromLayer));
+}
+
+function remove(scene){
+  return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
+    layer.selected.lines.forEach(lineID => removeLine(layer, lineID));
+    layer.selected.holes.forEach(holeID => removeHole(layer, holeID));
+    detectAndUpdateAreas(layer);
+  }));
 }

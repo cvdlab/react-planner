@@ -73,6 +73,7 @@ export function removeLine(layer, lineID) {
   let line = layer.getIn(['lines', lineID]);
 
   layer = layer.withMutations(layer => {
+    unselect(layer, 'lines', lineID);
     layer.deleteIn(['lines', line.id]);
     line.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'lines', line.id));
   });
@@ -245,6 +246,7 @@ export function removeArea(layer, areaID) {
   let area = layer.getIn(['areas', areaID]);
 
   layer = layer.withMutations(layer => {
+    unselect(layer, 'areas', areaID);
     layer.deleteIn(['areas', area.id]);
     area.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'areas', area.id));
   });
@@ -321,6 +323,7 @@ export function addHole(layer, type, lineID, offset) {
 export function removeHole(layer, holeID) {
   let hole = layer.getIn(['holes', holeID]);
   layer = layer.withMutations(layer => {
+    unselect(layer, 'holes', holeID);
     layer.deleteIn(['holes', hole.id]);
     layer.updateIn(['lines', hole.line, 'holes'], holes => {
       let index = holes.findIndex(ID => holeID === ID);

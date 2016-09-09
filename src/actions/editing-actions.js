@@ -4,7 +4,8 @@ import {
   SELECT_HOLE,
   SELECT_LINE,
   UNSELECT_ALL,
-  SET_PROPERTIES
+  SET_PROPERTIES,
+  REMOVE
 } from '../constants';
 
 export function selectToolEdit() {
@@ -53,4 +54,8 @@ export function setProperties(prototype, layerID, elementID, properties) {
   }
 }
 
-
+export function remove() {
+  return {
+    type: REMOVE
+  }
+}
