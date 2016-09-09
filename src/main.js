@@ -6,8 +6,10 @@ import ReactDOM from 'react-dom';
 import App from './components/app.jsx';
 import store from './reducers/store';
 import autosave from './autosave';
+import keyboard from './keyboard';
 
 autosave(store);
+keyboard(store);
 
 ReactDOM.render(
   React.createElement(App, {store}),
