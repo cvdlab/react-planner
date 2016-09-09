@@ -11,7 +11,7 @@ import {
 
 import {ElementsSet} from '../models';
 import {Map} from 'immutable';
-import {removeLine, removeHole, detectAndUpdateAreas} from '../utils/layer-operations';
+import {removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp} from '../utils/layer-operations';
 
 export default function (state, action) {
   let {scene} = state;
@@ -33,7 +33,7 @@ export default function (state, action) {
       return state.set('scene', unselectAll(scene));
 
     case SET_PROPERTIES:
-      return state.set('scene', setProperties(scene, action.prototype, action.layerID, action.elementID, action.properties));
+      return state.set('scene', setProperties(scene, action.properties));
 
     case REMOVE:
       return state.set('scene', remove(scene));
@@ -54,11 +54,12 @@ function unselectAllFromLayer(layer) {
   });
 }
 
-function setProperties(scene, prototype, layerID, elementID, properties) {
-  return scene.withMutations(scene => {
-    scene.setIn(['layers', layerID, prototype, elementID, 'properties'], new Map(properties));
-    unselectAll(scene);
-  });
+function setProperties(scene, properties) {
+  return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
+    layer.selected.lines.forEach(lineID => setPropertiesOp(layer, 'lines', lineID, properties));
+    layer.selected.holes.forEach(holeID => setPropertiesOp(layer, 'holes', holeID, properties));
+    layer.selected.areas.forEach(areaID => setPropertiesOp(layer, 'areas', areaID, properties));
+  }));
 }
 
 function selectLine(scene, layerID, lineID) {

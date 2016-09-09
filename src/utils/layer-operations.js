@@ -1,4 +1,4 @@
-import {List, Seq} from 'immutable';
+import {List, Seq, Map} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area, ElementsSet} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
@@ -205,6 +205,11 @@ export function unselect(layer, prototype, ID) {
   );
 }
 
+export function setProperties(layer, prototype, ID, properties) {
+  properties = Map(properties);
+  return layer.setIn([prototype, ID, 'properties'], properties);
+}
+
 export function unselectAll(layer) {
   let selected = layer.get('selected');
 
@@ -333,3 +338,5 @@ export function removeHole(layer, holeID) {
 
   return {layer, hole};
 }
+
+

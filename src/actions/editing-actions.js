@@ -44,12 +44,9 @@ export function selectArea(layerID, areaID) {
   }
 }
 
-export function setProperties(prototype, layerID, elementID, properties) {
+export function setProperties(properties) {
   return {
     type: SET_PROPERTIES,
-    prototype,
-    layerID,
-    elementID,
     properties
   }
 }

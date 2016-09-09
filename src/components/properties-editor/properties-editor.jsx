@@ -57,7 +57,7 @@ export default class PropertiesEditor extends Component {
     let {editingActions} = this.context;
 
     let properties = Seq(state).map(configs => configs.currentValue).toMap().toJS();
-    editingActions.setProperties(element.prototype, layer.id, element.id, properties);
+    editingActions.setProperties(properties);
   }
 
   render() {
