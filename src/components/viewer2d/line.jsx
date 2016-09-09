@@ -1,7 +1,8 @@
 import React, {PropTypes} from 'react';
 import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
+import {MODE_IDLE} from '../../constants';
 
-export default function Line({line, layer}, {editingActions, sceneComponents}) {
+export default function Line({line, layer, mode}, {editingActions, sceneComponents}) {
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -23,8 +24,12 @@ export default function Line({line, layer}, {editingActions, sceneComponents}) {
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let onHoleClick = event => {
-      editingActions.selectHole(layer.id, hole.id);
-      event.stopPropagation();
+      switch (mode) {
+        case MODE_IDLE:
+          editingActions.selectHole(layer.id, hole.id);
+          event.stopPropagation();
+          break;
+      }
     };
 
     let startAt = length * hole.offset - hole.properties.get('width') / 2;
@@ -52,7 +57,8 @@ export default function Line({line, layer}, {editingActions, sceneComponents}) {
 
 Line.propTypes = {
   line: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired
+  layer: PropTypes.object.isRequired,
+  mode: PropTypes.string.isRequired
 };
 
 Line.contextTypes = {

@@ -1,12 +1,18 @@
 import React, {PropTypes} from 'react';
 import Layer from './layer.jsx';
 import Grid from './grid.jsx';
-
-export default function Scene({scene, ignoreEvents}) {
+import {MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE} from '../../constants';
+export default function Scene({scene, mode}) {
 
   let {height, layers} = scene;
-  let style = ignoreEvents ? {pointerEvents: 'none'} : {};
   let selectedLayer = scene.layers.get(scene.selectedLayer);
+
+  let style = [
+    MODE_WAITING_DRAWING_LINE,
+    MODE_DRAWING_LINE,
+    MODE_DRAWING_HOLE,
+    MODE_DRAWING_HOLE
+  ].includes(mode) ? {pointerEvents: 'none'} : {};
 
   return (
     <g style={style}>
@@ -18,7 +24,7 @@ export default function Scene({scene, ignoreEvents}) {
           .map(([layerID, layer]) => <Layer key={layerID} layer={layer}/>)}
       </g>
 
-      <Layer key={selectedLayer.id} layer={selectedLayer}/>
+      <Layer key={selectedLayer.id} layer={selectedLayer} mode={mode}/>
     </g>
   );
 }
@@ -26,5 +32,5 @@ export default function Scene({scene, ignoreEvents}) {
 
 Scene.propTypes = {
   scene: PropTypes.object.isRequired,
-  ignoreEvents: PropTypes.bool.isRequired
+  mode: PropTypes.string.isRequired
 };
