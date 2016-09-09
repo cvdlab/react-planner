@@ -10,7 +10,7 @@ export default function Vertex({vertex, layer, mode}) {
 
   return (
     <g transform={`translate(${x}, ${y})`}>
-      <circle cx="0" cy="0" r="4" style={STYLE}></circle>
+      <circle cx="0" cy="0" r="4" style={STYLE} />
     </g>
   );
 }
