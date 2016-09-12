@@ -10,7 +10,8 @@ import {
   MODE_2D_ZOOM_OUT,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
-  MODE_DRAWING_HOLE
+  MODE_DRAWING_HOLE,
+  MODE_DRAGGING_LINE
 } from '../../constants';
 import Scene from './scene.jsx';
 import ActiveDrawingHelper from './active-drawing-helper.jsx';
@@ -71,6 +72,28 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
       case MODE_DRAWING_HOLE:
         drawingActions.updateDrawingHole(layerID, x, y);
         break;
+
+      case MODE_DRAGGING_LINE:
+        drawingActions.updateDraggingLine(x, y);
+        break;
+    }
+  };
+
+  let onMouseDown = event => {
+    if(event.originalEvent.shiftKey) {
+      let {x, y} = mapCursorPosition(event);
+      event.originalEvent.stopPropagation();
+      drawingActions.beginDraggingLine(x, y);
+    }
+  };
+
+  let onMouseUp = event => {
+    let {x, y} = mapCursorPosition(event);
+
+    switch (mode) {
+      case MODE_DRAGGING_LINE:
+        drawingActions.endDraggingLine(x, y);
+        break;
     }
   };
 
@@ -90,7 +113,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
-            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick}>
+            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
           <Scene scene={scene} mode={mode}/>
