@@ -34,6 +34,7 @@ export default function appReducers(state, action) {
     case constants.SELECT_HOLE:
     case constants.UNSELECT_ALL:
     case constants.SET_PROPERTIES:
+    case constants.REMOVE:
       return editingReducer(state, action);
 
     case constants.SELECT_TOOL_3D_VIEW:
@@ -50,6 +51,9 @@ export default function appReducers(state, action) {
     case constants.END_DRAWING_LINE:
     case constants.UPDATE_DRAWING_HOLE:
     case constants.END_DRAWING_HOLE:
+    case constants.BEGIN_DRAGGING_LINE:
+    case constants.UPDATE_DRAGGING_LINE:
+    case constants.END_DRAGGING_LINE:
       return drawingReducer(state, action);
 
     case constants.ADD_LAYER:

@@ -5,7 +5,10 @@ import {
   END_DRAWING_LINE,
   SELECT_TOOL_DRAWING_HOLE,
   UPDATE_DRAWING_HOLE,
-  END_DRAWING_HOLE
+  END_DRAWING_HOLE,
+  BEGIN_DRAGGING_LINE,
+  UPDATE_DRAGGING_LINE,
+  END_DRAGGING_LINE
 } from '../constants';
 
 
@@ -56,5 +59,26 @@ export function endDrawingHole(layerID, x, y) {
   return {
     type: END_DRAWING_HOLE,
     layerID, x, y
+  }
+}
+
+export function beginDraggingLine(x, y) {
+  return {
+    type: BEGIN_DRAGGING_LINE,
+    x, y
+  }
+}
+
+export function updateDraggingLine(x, y) {
+  return {
+    type: UPDATE_DRAGGING_LINE,
+    x, y
+  }
+}
+
+export function endDraggingLine(x, y) {
+  return {
+    type: END_DRAGGING_LINE,
+    x, y
   }
 }

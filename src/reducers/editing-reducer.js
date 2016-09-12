@@ -5,11 +5,13 @@ import {
   SELECT_HOLE,
   SELECT_LINE,
   UNSELECT_ALL,
-  SET_PROPERTIES
+  SET_PROPERTIES,
+  REMOVE
 } from '../constants';
 
 import {ElementsSet} from '../models';
 import {Map} from 'immutable';
+import {removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp} from '../utils/layer-operations';
 
 export default function (state, action) {
   let {scene} = state;
@@ -31,7 +33,10 @@ export default function (state, action) {
       return state.set('scene', unselectAll(scene));
 
     case SET_PROPERTIES:
-      return state.set('scene', setProperties(scene, action.prototype, action.layerID, action.elementID, action.properties));
+      return state.set('scene', setProperties(scene, action.properties));
+
+    case REMOVE:
+      return state.set('scene', remove(scene));
 
     default:
       return state;
@@ -49,11 +54,13 @@ function unselectAllFromLayer(layer) {
   });
 }
 
-function setProperties(scene, prototype, layerID, elementID, properties) {
-  return scene.withMutations(scene => {
-    scene.setIn(['layers', layerID, prototype, elementID, 'properties'], new Map(properties));
-    unselectAll(scene);
-  });
+function setProperties(scene, properties) {
+  return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
+    layer.selected.lines.forEach(lineID => setPropertiesOp(layer, 'lines', lineID, properties));
+    layer.selected.holes.forEach(holeID => setPropertiesOp(layer, 'holes', holeID, properties));
+    layer.selected.areas.forEach(areaID => setPropertiesOp(layer, 'areas', areaID, properties));
+    unselectAllFromLayer(layer);
+  }));
 }
 
 function selectLine(scene, layerID, lineID) {
@@ -84,4 +91,12 @@ function selectHole(scene, layerID, holeID) {
 
 function unselectAll(scene) {
   return scene.update('layers', layer => layer.map(unselectAllFromLayer));
+}
+
+function remove(scene){
+  return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
+    layer.selected.lines.forEach(lineID => removeLine(layer, lineID));
+    layer.selected.holes.forEach(holeID => removeHole(layer, holeID));
+    detectAndUpdateAreas(layer);
+  }));
 }

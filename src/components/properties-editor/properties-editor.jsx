@@ -9,6 +9,7 @@ const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
 const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
 const STYLE_BUTTON_RESET = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
 const STYLE_BUTTON_SAVE = {backgroundColor: "green", border: 0, color: "white", margin: "3px"};
+const STYLE_BUTTON_REMOVE = {backgroundColor: "red", border: 0, color: "white", margin: "3px"};
 
 export default class PropertiesEditor extends Component {
 
@@ -56,7 +57,7 @@ export default class PropertiesEditor extends Component {
     let {editingActions} = this.context;
 
     let properties = Seq(state).map(configs => configs.currentValue).toMap().toJS();
-    editingActions.setProperties(element.prototype, layer.id, element.id, properties);
+    editingActions.setProperties(properties);
   }
 
   render() {
@@ -96,6 +97,7 @@ export default class PropertiesEditor extends Component {
 
         <div style={STYLE_WRAPPER_BUTTONS}>
           <button style={STYLE_BUTTON_UNSELECT} onClick={event => editingActions.unselectAll()}>Unselect</button>
+          <button style={STYLE_BUTTON_REMOVE} onClick={event => editingActions.remove()}>Remove</button>
           <button style={STYLE_BUTTON_RESET} onClick={event => this.reset()}>Reset</button>
           <button style={STYLE_BUTTON_SAVE} onClick={event => this.save()}>Save</button>
         </div>

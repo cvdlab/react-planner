@@ -1,4 +1,4 @@
-import {List, Seq} from 'immutable';
+import {List, Seq, Map} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area, ElementsSet} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
@@ -73,6 +73,7 @@ export function removeLine(layer, lineID) {
   let line = layer.getIn(['lines', lineID]);
 
   layer = layer.withMutations(layer => {
+    unselect(layer, 'lines', lineID);
     layer.deleteIn(['lines', line.id]);
     line.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'lines', line.id));
   });
@@ -204,6 +205,11 @@ export function unselect(layer, prototype, ID) {
   );
 }
 
+export function setProperties(layer, prototype, ID, properties) {
+  properties = Map(properties);
+  return layer.setIn([prototype, ID, 'properties'], properties);
+}
+
 export function unselectAll(layer) {
   let selected = layer.get('selected');
 
@@ -245,6 +251,7 @@ export function removeArea(layer, areaID) {
   let area = layer.getIn(['areas', areaID]);
 
   layer = layer.withMutations(layer => {
+    unselect(layer, 'areas', areaID);
     layer.deleteIn(['areas', area.id]);
     area.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'areas', area.id));
   });
@@ -321,6 +328,7 @@ export function addHole(layer, type, lineID, offset) {
 export function removeHole(layer, holeID) {
   let hole = layer.getIn(['holes', holeID]);
   layer = layer.withMutations(layer => {
+    unselect(layer, 'holes', holeID);
     layer.deleteIn(['holes', hole.id]);
     layer.updateIn(['lines', hole.line, 'holes'], holes => {
       let index = holes.findIndex(ID => holeID === ID);
@@ -330,3 +338,5 @@ export function removeHole(layer, holeID) {
 
   return {layer, hole};
 }
+
+

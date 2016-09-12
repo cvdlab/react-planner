@@ -8,9 +8,15 @@ import {
   SELECT_TOOL_DRAWING_HOLE,
   UPDATE_DRAWING_HOLE,
   END_DRAWING_HOLE,
+  BEGIN_DRAGGING_LINE,
+  UPDATE_DRAGGING_LINE,
+  END_DRAGGING_LINE,
+
+  MODE_IDLE,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_HOLE,
-  MODE_DRAWING_LINE
+  MODE_DRAWING_LINE,
+  MODE_DRAGGING_LINE
 } from '../constants';
 
 import * as Geometry from '../utils/geometry';
@@ -51,6 +57,15 @@ export default function (state, action) {
     case END_DRAWING_HOLE:
       return endDrawingHole(state, action.layerID, action.x, action.y);
 
+    case BEGIN_DRAGGING_LINE:
+      return beginDraggingLine(state, action.x, action.y);
+
+    case UPDATE_DRAGGING_LINE:
+      return updateDraggingLine(state, action.x, action.y);
+
+    case END_DRAGGING_LINE:
+      return endDraggingLine(state, action.x, action.y);
+
     default:
       return state;
   }
@@ -70,15 +85,22 @@ function beginDrawingLine(state, layerID, x, y) {
   let a, b, c;
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
-    state.getIn(['scene', 'layers', layerID, 'vertices'])
-      .forEach(({id: vertexID, x, y}) => {
-        addPointHelper(drawingHelpers, x, y, 10, 10, vertexID);
+    let {lines, vertices}  = state.getIn(['scene', 'layers', layerID]);
+    vertices.forEach(({id: vertexID, x, y}) => {
+      addPointHelper(drawingHelpers, x, y, 10, 10, vertexID);
 
-        ({a, b, c} = Geometry.horizontalLine(y));
-        addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
-        ({a, b, c} = Geometry.verticalLine(x));
-        addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
-      });
+      ({a, b, c} = Geometry.horizontalLine(y));
+      addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+      ({a, b, c} = Geometry.verticalLine(x));
+      addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+    });
+
+    lines.forEach(({id: lineID, vertices: [v0, v1]}) => {
+      let {x: x1, y: y1} = vertices.get(v0);
+      let {x: x2, y:y2} = vertices.get(v1);
+
+      addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, lineID);
+    })
   });
 
   let nearestHelper = nearestDrawingHelper(drawingHelpers, x, y);
@@ -212,4 +234,53 @@ function endDrawingHole(state, layerID, x, y) {
   state = updateDrawingHole(state, layerID, x, y);
   return state.updateIn(['scene', 'layers', layerID], layer => unselectAll(layer));
 
+}
+
+function beginDraggingLine(state, x, y) {
+  let layer = state.scene.layers.get(state.scene.selectedLayer);
+  let lineID = layer.selected.lines.get(0);
+  let line = layer.lines.get(lineID);
+
+  let vertex0 = layer.vertices.get(line.vertices.get(0));
+  let vertex1 = layer.vertices.get(line.vertices.get(1));
+
+  return state.merge({
+    mode: MODE_DRAGGING_LINE,
+    draggingSupport: Map({
+      lineID: line.id,
+      startPointX: x,
+      startPointY: y,
+      startVertex0X: vertex0.x,
+      startVertex0Y: vertex0.y,
+      startVertex1X: vertex1.x,
+      startVertex1Y: vertex1.y,
+    })
+  })
+}
+
+function updateDraggingLine(state, x, y) {
+  let layerID = state.scene.selectedLayer;
+  let draggingSupport = state.draggingSupport;
+
+  let lineID = draggingSupport.get('lineID');
+  let diffX = x - draggingSupport.get('startPointX');
+  let diffY = y - draggingSupport.get('startPointY');
+  let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
+  let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
+  let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
+  let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
+
+  return state.updateIn(['scene', 'layers', layerID], layer => layer.withMutations(layer => {
+    let lineVertices = layer.getIn(['lines', lineID, 'vertices']);
+    layer.updateIn(['vertices', lineVertices.get(0)], vertex => vertex.merge({x: newVertex0X, y: newVertex0Y}));
+    layer.updateIn(['vertices', lineVertices.get(1)], vertex => vertex.merge({x: newVertex1X, y: newVertex1Y}));
+    return layer;
+  }));
+}
+
+function endDraggingLine(state, x, y) {
+  return state.withMutations(state => {
+    updateDraggingLine(state, x, y);
+    state.set('mode', MODE_IDLE);
+  });
 }
