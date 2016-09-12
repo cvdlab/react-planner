@@ -105,7 +105,7 @@ export default class Scene3DViewer extends React.Component {
 
       scene.remove(planData.grid);
 
-      scene.traverse((child, child2) => {
+      scene.traverse((child) => {
         console.log(child);
         if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
           child.geometry = convertToBufferGeometry(child.geometry);
@@ -136,6 +136,52 @@ export default class Scene3DViewer extends React.Component {
 
 
     /************************************/
+
+
+    /************************************/
+    /********** PLAN EXPORTER ***********/
+    /************************************/
+
+
+    let exportPlan = () => {
+
+      let convertToBufferGeometry = (geometry) => {
+        console.log("geometry = ", geometry);
+        let bufferGeometry = new Three.BufferGeometry().fromGeometry(geometry);
+        return bufferGeometry;
+      };
+
+      planData.plan.traverse((child) => {
+        console.log(child);
+        if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
+          child.geometry = convertToBufferGeometry(child.geometry);
+      });
+
+      let output = planData.plan.toJSON();
+
+      output = JSON.stringify(output, null, '\t');
+      output = output.replace(/[\n\t]+([\d\.e\-\[\]]+)/g, '$1');
+
+      let name = prompt('insert file name');
+      name = name.trim() || 'plan';
+      let blob = new Blob([output], {type: 'text/plain'});
+
+      let fileOutputLink = document.createElement('a');
+      let url = window.URL.createObjectURL(blob);
+      fileOutputLink.setAttribute('download', name);
+      fileOutputLink.href = url;
+      document.body.appendChild(fileOutputLink);
+      fileOutputLink.click();
+      document.body.removeChild(fileOutputLink);
+
+      scene.add(planData.grid);
+
+    };
+
+    window.exportPlan = exportPlan;
+
+    /************************************/
+
 
     render();
     function render() {
