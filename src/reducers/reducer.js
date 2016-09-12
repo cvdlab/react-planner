@@ -51,6 +51,9 @@ export default function appReducers(state, action) {
     case constants.END_DRAWING_LINE:
     case constants.UPDATE_DRAWING_HOLE:
     case constants.END_DRAWING_HOLE:
+    case constants.BEGIN_DRAGGING_LINE:
+    case constants.UPDATE_DRAGGING_LINE:
+    case constants.END_DRAGGING_LINE:
       return drawingReducer(state, action);
 
     case constants.ADD_LAYER:

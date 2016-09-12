@@ -76,7 +76,8 @@ export const State = Record({
   viewer2D: new Map(),
   drawingHelpers: new List(),
   activeDrawingHelper: null,
-  drawingConfig: Map()
+  drawingConfig: Map(),
+  draggingSupport: Map()
 });
 
 export const ElementVolume = Record({
