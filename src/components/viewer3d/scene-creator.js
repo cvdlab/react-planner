@@ -1,8 +1,7 @@
 import Three from 'three';
 import createShapeWall from './line-creator';
-import createArea from './area-creator';
 import createGrid from './grid-creator';
-import {createSingleWindow} from './window-creator';
+import {AreaGeneric} from '../../scene-components/areas/area-generic.js';
 
 export function parseData(sceneData, editingActions) {
 
@@ -35,21 +34,12 @@ export function parseData(sceneData, editingActions) {
 
     // Import areas
     layer.areas.forEach(area => {
-      let vertices = [];
 
-      area.vertices.forEach(vertexID => {
-        vertices.push(layer.vertices.get(vertexID));
-      });
-
-      let area3D = createArea(vertices,
-        parseInt(area.properties.get('patternColor').substring(1), 16),
-        area.properties.get('texture'),
-        area.selected);
-
-      area3D.interact = () => {
+      area.interactFunction = () => {
         editingActions.selectArea(layer.id, area.id);
       };
 
+      let area3D = AreaGeneric.render3D(area, layer);
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
     });
@@ -152,18 +142,37 @@ function createWall(layer, line, editingActions) {
     holes.push({holeData: hole, holeInteractFunction});
   });
 
-  return createShapeWall(layer.vertices.get(line.vertices.get(0)),
-    layer.vertices.get(line.vertices.get(1)),
+  let vertex0 = layer.vertices.get(line.vertices.get(0));
+  let vertex1 = layer.vertices.get(line.vertices.get(1));
+
+  if (vertex0.x > vertex1.x) {
+    let app = vertex0;
+    vertex0 = vertex1;
+    vertex1 = app;
+  }
+
+  let bevelRadius = line.properties.get('thickness');
+
+  let wall = createShapeWall(vertex0,
+    vertex1,
     line.properties.get('height'),
     line.properties.get('thickness'),
     holes,
-    line.properties.get('thickness'),
+    bevelRadius,
     // line.id,
     line.selected,
     line.properties.get('textureA'),
     line.properties.get('textureB'),
     lineInteractFunction
   );
+
+  let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
+
+  let alpha = Math.asin((vertex1.y - vertex0.y) / (distance - bevelRadius)); //TODO: REMOVE WORKAROUND BEVELING
+  wall.position.x += vertex0.x;
+  wall.position.z -= vertex0.y;
+
+  return wall;
 }
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData) {
@@ -209,20 +218,11 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
 
 function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData) {
 
-  let vertices = [];
-
-  newAreaData.vertices.forEach(vertexID => {
-    vertices.push(layer.vertices.get(vertexID));
-  });
-
-  let newAreaObject = createArea(vertices,
-    parseInt(newAreaData.properties.get('patternColor').substring(1), 16),
-    newAreaData.properties.get('texture'),
-    newAreaData.selected);
-
-  newAreaObject.interact = () => {
+  newAreaData.interactFunction = () => {
     editingActions.selectArea(layer.id, newAreaData.id);
   };
+
+  let newAreaObject = AreaGeneric.render3D(newAreaData, layer);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;

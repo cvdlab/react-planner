@@ -187,8 +187,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     // // OBJECT PICKING
     // let toIntersect = [planData.plan];
-    // let mouse = new Three.Vector2();
-    // let raycaster = new Three.Raycaster();
+    // let mouse = new THREE.Vector2();
+    // let raycaster = new THREE.Raycaster();
     //
     // renderer.domElement.addEventListener('mousedown', (event) => {
     //   this.lastMousePosition.x = event.offsetX / width * 2 - 1;

@@ -1,6 +1,6 @@
 import Three from 'three';
-import {createSingleWindow} from './window-creator';
-import {createDoor} from './door-creator';
+import {DoorGeneric} from '../../scene-components/holes/door-generic'
+import {WindowGeneric} from '../../scene-components/holes/window-generic'
 
 export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
                                         bevelRadius, isSelected, textureA, textureB, interactFunction) {
@@ -45,43 +45,40 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       });
     };
 
+    // Add thickness to hole properties
+    holeData.thickness = thickness;
 
     // Create Windows
     if (holeData.type === 'windowGeneric') {
-      let window3D = createSingleWindow(
-        holeData.properties.get('width'),
-        holeData.properties.get('height'),
-        thickness,
-        (distance - bevelRadius) * holeData.offset,
-        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-        0,
-        100,
-        holeData.selected);
 
-      applyInteract(window3D, holeInteractFunction);
+      let windowPromise = WindowGeneric.render3D(holeData, undefined);
 
-      pivot.add(window3D);
+      windowPromise.then(object => {
+        let boundingBox = new Three.Box3().setFromObject(object);
+        object.position.x = (distance - bevelRadius) * holeData.offset;
+        object.position.y = holeData.properties.get('altitude') + holeData.properties.get('height')/2;
+        object.position.z = thickness;
+        pivot.add(object);
+        applyInteract(object, holeInteractFunction);
+      });
     } else {
-      let door3D = createDoor(
-        holeData.properties.get('width') - 0.1,
-        holeData.properties.get('height') - 0.1,
-        thickness,
-        (distance - bevelRadius) * holeData.offset,
-        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-        0,
-        100,
-        holeData.selected);
 
-      applyInteract(door3D, holeInteractFunction);
+      let doorPromise = DoorGeneric.render3D(holeData, undefined);
 
-      pivot.add(door3D)
+      doorPromise.then(object => {
+        let boundingBox = new Three.Box3().setFromObject(object);
+        object.position.x = (distance - bevelRadius) * holeData.offset;
+        object.position.y = holeData.properties.get('altitude') - 0.1;
+        object.position.z = 0;
+        pivot.add(object);
+        applyInteract(object, holeInteractFunction);
+
+      });
     }
   });
 
-
   let lineGeometry = new Three.ShapeGeometry(rectShape);
   lineGeometry.computeVertexNormals();
-
 
   let wallColor = new Three.Color(1, 1, 1);
   if (isSelected) {
@@ -89,23 +86,25 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   }
 
   let wallMaterial1 = new Three.MeshPhongMaterial({
-    side: Three.DoubleSide,
+    side: Three.BackSide,
     color: wallColor
   });
 
   let wallMaterial2 = new Three.MeshPhongMaterial({
-    side: Three.DoubleSide,
+    side: Three.FrontSide,
     color: wallColor
   });
 
 
   if (alpha < 0) {
-    applyTexture(wallMaterial1, textureA);
-    applyTexture(wallMaterial2, textureB);
+    applyTexture(wallMaterial1, textureA, distance, height);
+    applyTexture(wallMaterial2, textureB, distance, height);
   } else {
-    applyTexture(wallMaterial1, textureB);
-    applyTexture(wallMaterial2, textureA);
+    applyTexture(wallMaterial1, textureB, distance, height);
+    applyTexture(wallMaterial2, textureA, distance, height);
   }
+
+  assignUVs(lineGeometry);
 
   let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
   let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
@@ -117,8 +116,8 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   wall2.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
   pivot.rotation.y = alpha;
-  pivot.position.x += vertex0.x;
-  pivot.position.z -= vertex0.y;
+  // pivot.position.x += vertex0.x;
+  // pivot.position.z -= vertex0.y;
 
   // pivot.position.x -= thickness;
 
@@ -140,22 +139,22 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
   let leftClosureGeometry = new Three.ShapeGeometry(leftShape);
 
   let topClosure = new Three.Mesh(topClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.DoubleSide,
+    side: Three.BackSide,
     color: wallColor
   }));
 
-  // let bottomClosure = new Three.Mesh(topClosureGeometry, new Three.MeshLambertMaterial({
-  //   side: Three.DoubleSide,
+  // let bottomClosure = new THREE.Mesh(topClosureGeometry, new THREE.MeshLambertMaterial({
+  //   side: THREE.DoubleSide,
   //   color: wallColor
   // }));
 
   let leftClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.DoubleSide,
+    side: Three.FrontSide,
     color: wallColor
   }));
 
   let rightClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.DoubleSide,
+    side: Three.BackSide,
     color: wallColor
   }));
 
@@ -229,21 +228,15 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     topHoleClosure.position.y += holeData.properties.get('height') + holeData.properties.get('altitude');
     topHoleClosure.position.x += startAt;
 
-    topHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
     leftHoleClosure.rotation.y -= Math.PI / 2;
     leftHoleClosure.position.z -= thickness / 2;
     leftHoleClosure.position.y += holeData.properties.get('altitude');
     leftHoleClosure.position.x += startAt;
 
-    leftHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
     rightHoleClosure.rotation.y -= Math.PI / 2;
     rightHoleClosure.position.z -= thickness / 2;
     rightHoleClosure.position.y += holeData.properties.get('altitude');
     rightHoleClosure.position.x += startAt + holeData.properties.get('width');
-
-    rightHoleClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
 
     pivot.add(topHoleClosure);
     pivot.add(leftHoleClosure);
@@ -260,8 +253,6 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       bottomHoleClosure.position.z -= thickness / 2;
       bottomHoleClosure.position.y += holeData.properties.get('altitude');
       bottomHoleClosure.position.x += startAt;
-
-      bottomHoleClosure.position.x -= thickness / 2; //TODO: REMOVE WORKAROUND BEVELING
 
       pivot.add(bottomHoleClosure);
 
@@ -338,7 +329,7 @@ function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitu
   return wallCoordinates;
 }
 
-function applyTexture(material, textureName) {
+function applyTexture(material, textureName, distance, height) {
 
   let loader = new Three.TextureLoader();
 
@@ -348,27 +339,57 @@ function applyTexture(material, textureName) {
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(.01, .01);
+      material.map.repeat.set(distance / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(.01, .01);
+      material.normalMap.repeat.set(distance / 100, height / 100);
       break;
     case 'painted':
       material.map = loader.load(require('./textures/painted.jpg'));
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(.01, .01);
+      material.map.repeat.set(distance / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/painted-normal.png"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(.01, .01);
+      material.normalMap.repeat.set(distance / 100, height / 100);
 
       break;
   }
-};
+}
+
+function assignUVs(geometry) {
+  geometry.computeBoundingBox();
+
+  let max = geometry.boundingBox.max;
+  let min = geometry.boundingBox.min;
+
+  let offset = new Three.Vector2(0 - min.x, 0 - min.y);
+  let range = new Three.Vector2(max.x - min.x, max.y - min.y);
+
+  geometry.faceVertexUvs[0] = [];
+  let faces = geometry.faces;
+
+  for (let i = 0; i < geometry.faces.length; i++) {
+
+    let v1 = geometry.vertices[faces[i].a];
+    let v2 = geometry.vertices[faces[i].b];
+    let v3 = geometry.vertices[faces[i].c];
+
+    geometry.faceVertexUvs[0].push([
+      new Three.Vector2(( v1.x + offset.x ) / range.x, ( v1.y + offset.y ) / range.y),
+      new Three.Vector2(( v2.x + offset.x ) / range.x, ( v2.y + offset.y ) / range.y),
+      new Three.Vector2(( v3.x + offset.x ) / range.x, ( v3.y + offset.y ) / range.y)
+    ]);
+
+  }
+  geometry.uvsNeedUpdate = true;
+}
+
+
