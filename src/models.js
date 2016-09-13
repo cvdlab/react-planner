@@ -28,8 +28,8 @@ export const Scene = Record({
     'layer-1': new Layer({id:'layer-1'})
   }),
   selectedLayer: 'layer-1',
-  width: 2000,
-  height: 2000
+  width: 10000,
+  height: 10000
 });
 
 
