@@ -35,9 +35,8 @@ export default function CompositionForm(props) {
 
       <li style={STYLE_LI}>
         <label style={STYLE_LABEL}>Danger</label>
-        <select value="H3" style={STYLE_SELECT} onChange={event => console.log(event)}>
+        <select style={STYLE_SELECT} onChange={event => console.log(event)}>
           <option value=""/>
-          <option value="H3">H3. Cancerogeno</option>
         </select>
       </li>
 

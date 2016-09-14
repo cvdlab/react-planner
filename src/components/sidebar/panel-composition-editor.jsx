@@ -12,6 +12,8 @@ const STYLE_BUTTON_SAVE = {backgroundColor: "green", border: 0, color: "white", 
 export default function PanelCompositionEditor({scene, mode}) {
 
   if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
+  let hasSelection = scene.layers.some(layer => layer.selected.some(elementsIDS => !elementsIDS.isEmpty()));
+  if(!hasSelection) return null;
 
   return (
     <Panel name="Composition">

@@ -16,6 +16,7 @@ export const Layer = Record({
   lines: new Map(),
   holes: new Map(),
   areas: new Map(),
+  images: new Map(),
   selected: new ElementsSet(),
   visible: true
 });
@@ -28,8 +29,8 @@ export const Scene = Record({
     'layer-1': new Layer({id:'layer-1'})
   }),
   selectedLayer: 'layer-1',
-  width: 10000,
-  height: 10000
+  width: 3000,
+  height: 2000
 });
 
 
@@ -38,7 +39,8 @@ export const Vertex = Record({
   x: -1,
   y: -1,
   lines: new List(),
-  areas: new List()
+  areas: new List(),
+  images: new List()
 });
 
 export const Line = Record({
@@ -68,6 +70,12 @@ export const Area = Record({
   vertices: new List(),
   selected: false,
   properties: new Map()
+});
+
+export const Image = Record({
+  id: "",
+  uri: "",
+  vertices: new List()
 });
 
 export const State = Record({

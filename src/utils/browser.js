@@ -36,3 +36,31 @@ export function browserUpload() {
     fileInput.click();
   });
 }
+
+
+export function browserImageUpload() {
+  return new Promise(function (resolve, reject) {
+
+    var fileInput = document.createElement('input');
+    fileInput.type = "file";
+
+    fileInput.addEventListener('change', function (event) {
+      var file = event.target.files[0];
+      var reader = new FileReader();
+      reader.addEventListener('load', (fileEvent) => {
+        var loadedData = fileEvent.target.result;
+
+        var fileInput = document.createElement('input');
+
+        var image = new Image();
+        image.onload = ()=> {
+          resolve({data: loadedData, width: image.width, height: image.height});
+        };
+        image.src = loadedData;
+      });
+      reader.readAsDataURL(file);
+    });
+
+    fileInput.click();
+  });
+}

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {PropTypes} from 'react';
 import IconNewFile from 'react-icons/lib/fa/file-o';
 import IconSave from 'react-icons/lib/fa/floppy-o';
 import IconLoad from 'react-icons/lib/fa/folder-open-o';
@@ -10,7 +10,7 @@ import Icon3D from 'react-icons/lib/fa/cube';
 import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
 import IconSummary from 'react-icons/lib/fa/table';
 import IconAddLine from 'react-icons/lib/ti/pen';
-import IconAddHole from 'react-icons/lib/ti/plus-outline';
+import IconAddImage from 'react-icons/lib/fa/image';
 import {IconDoor, IconWindow} from '../../utils/icons.jsx';
 
 import {
@@ -23,20 +23,22 @@ import {
   MODE_VOLUMES_SUMMARY,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
-  MODE_DRAWING_HOLE
+  MODE_DRAWING_HOLE,
+  MODE_FITTING_IMAGE,
+  MODE_UPLOADING_IMAGE
 } from '../../constants';
 
 import ToolbarButton from './toolbar-button.jsx';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
-export default function Toolbar({
-  state,
+export default function Toolbar({state}, {
   projectActions,
   viewer2DActions,
   editingActions,
   viewer3DActions,
   volumesActions,
-  drawingActions
+  drawingActions,
+  imagesActions
 }) {
 
   let mode = state.get('mode');
@@ -90,20 +92,44 @@ export default function Toolbar({
         <IconPan />
       </ToolbarButton>
 
+      <ToolbarButton active={[MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE].includes(mode)} tooltip="Upload image"
+                     onClick={event => imagesActions.selectToolUploadImage()}>
+        <IconAddImage />
+      </ToolbarButton>
+
       <ToolbarButton active={[MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE].includes(mode)} tooltip="Add wall"
                      onClick={event => drawingActions.selectToolDrawingLine('wallGeneric')}>
         <IconAddLine />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'doorGeneric'} tooltip="Add door"
-                     onClick={event => drawingActions.selectToolDrawingHole('doorGeneric')}>
+      <ToolbarButton
+        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'doorGeneric'}
+        tooltip="Add door"
+        onClick={event => drawingActions.selectToolDrawingHole('doorGeneric')}>
         <IconDoor />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'windowGeneric'} tooltip="Add window"
-                     onClick={event => drawingActions.selectToolDrawingHole('windowGeneric')}>
+      <ToolbarButton
+        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'windowGeneric'}
+        tooltip="Add window"
+        onClick={event => drawingActions.selectToolDrawingHole('windowGeneric')}>
         <IconWindow />
       </ToolbarButton>
     </aside>
   )
 }
+
+
+Toolbar.propTypes = {
+  state: PropTypes.object.isRequired
+};
+
+Toolbar.contextTypes = {
+  projectActions: PropTypes.object.isRequired,
+  viewer2DActions: PropTypes.object.isRequired,
+  editingActions: PropTypes.object.isRequired,
+  viewer3DActions: PropTypes.object.isRequired,
+  volumesActions: PropTypes.object.isRequired,
+  drawingActions: PropTypes.object.isRequired,
+  imagesActions: PropTypes.object.isRequired
+};

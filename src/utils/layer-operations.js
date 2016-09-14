@@ -1,5 +1,5 @@
 import {List, Seq, Map} from 'immutable';
-import {Layer, Vertex, Line, Hole, Area, ElementsSet} from '../models';
+import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
@@ -339,4 +339,25 @@ export function removeHole(layer, holeID) {
   return {layer, hole};
 }
 
+/** images features **/
+export function addImage(layer, uri, x0, y0, x1, y1) {
+  let image;
 
+  layer = layer.withMutations(layer => {
+    let imageID = IDBroker.acquireID();
+
+    let v0, v1;
+    ({layer, vertex: v0} = addVertex(layer, x0, y0, 'images', imageID));
+    ({layer, vertex: v1} = addVertex(layer, x1, y1, 'images', imageID));
+
+    image = new Image({
+      id: imageID,
+      vertices: new List([v0.id, v1.id]),
+      uri
+    });
+
+    layer.setIn(['images', imageID], image);
+  });
+
+  return {layer, image};
+}

@@ -2,7 +2,7 @@ import {List, Map, Iterable, fromJS, Seq} from "immutable";
 import {ViewerHelper} from 'react-svg-pan-zoom';
 
 import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
-import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet} from "../models";
+import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet, Image} from "../models";
 import SceneComponents from '../scene-components/scene-components';
 
 export default function (state, action) {
@@ -43,6 +43,9 @@ function loadProject(state, data) {
     .set('vertices', new List(area.vertices))
     .set('properties', new Map(area.properties || {}))
 
+  let readImage = image => new Image(image)
+    .set('vertices', new List(image.vertices));
+
   let readElementsSet = (elementsSet => {
     return new ElementsSet({
       lines: new List(elementsSet.lines),
@@ -57,6 +60,7 @@ function loadProject(state, data) {
     .set('lines', new Seq(layer.lines).map(line => readLine(line)).toMap())
     .set('holes', new Seq(layer.holes).map(hole => readHole(hole)).toMap())
     .set('areas', new Seq(layer.areas).map(area => readArea(area)).toMap())
+    .set('images', new Seq(layer.images).map(image => readImage(image)).toMap())
     .set('selected', layer.selected ? readElementsSet(layer.selected) : new ElementsSet());
 
 
@@ -67,7 +71,6 @@ function loadProject(state, data) {
   let scene = readScene(data);
 
 
-  return state.set('scene', scene)
-    .set('viewer2D', new Map()); //reset 2d camera
+  return new State({scene});
 }
 

@@ -7,6 +7,8 @@ import viewer3DReducer from './viewer3d-reducer';
 import volumesReducer from './volumes-reducer';
 import drawingReducer from './drawing-reducer';
 import sceneReducer from './scene-reducer';
+import imagesReducer from './images-reducer';
+
 import {State} from '../models';
 
 export const initialState = new State();
@@ -27,6 +29,13 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_ZOOM_IN:
     case constants.SELECT_TOOL_ZOOM_OUT:
       return viewer2DReducer(state, action);
+
+    case constants.SELECT_TOOL_UPLOAD_IMAGE:
+    case constants.BEGIN_UPLOADING_IMAGE:
+    case constants.END_UPLOADING_IMAGE:
+    case constants.BEGIN_FITTING_IMAGE:
+    case constants.END_FITTING_IMAGE:
+      return imagesReducer(state, action);
 
     case constants.SELECT_TOOL_EDIT:
     case constants.SELECT_LINE:
