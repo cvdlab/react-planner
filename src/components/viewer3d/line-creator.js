@@ -56,7 +56,7 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
       windowPromise.then(object => {
         let boundingBox = new Three.Box3().setFromObject(object);
         object.position.x = (distance - bevelRadius) * holeData.offset;
-        object.position.y = holeData.properties.get('altitude') + holeData.properties.get('height')/2;
+        object.position.y = holeData.properties.get('altitude') + holeData.properties.get('height') / 2;
         object.position.z = thickness;
         pivot.add(object);
         applyInteract(object, holeInteractFunction);
@@ -67,9 +67,26 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
 
       doorPromise.then(object => {
         let boundingBox = new Three.Box3().setFromObject(object);
-        object.position.x = (distance - bevelRadius) * holeData.offset;
-        object.position.y = holeData.properties.get('altitude') - 0.1;
-        object.position.z = 0;
+
+        let center = [
+          (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+          (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+          (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+        let doorCoordinates = [
+          (distance - bevelRadius) * holeData.offset,
+          holeData.properties.get('altitude'),
+          0];
+
+        object.position.x += doorCoordinates[0] - center[0];
+        object.position.y += doorCoordinates[1];
+        object.position.z += doorCoordinates[2] - center[2];
+
+        console.log(doorCoordinates, center[0],doorCoordinates[0] - center[0], object.position);
+
+        // object.position.x = (distance - bevelRadius) * holeData.offset;
+        // object.position.y = holeData.properties.get('altitude') - 0.1;
+        // object.position.z = 0;
         pivot.add(object);
         applyInteract(object, holeInteractFunction);
 
