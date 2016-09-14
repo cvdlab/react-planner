@@ -3,7 +3,8 @@ import Viewer2D from './viewer2d/viewer2d.jsx';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import VolumesTable from './volumes-summary/volumes-table.jsx';
-import {MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VOLUMES_SUMMARY} from '../constants';
+import ImageEditor from './image-editor/image-editor.jsx';
+import * as constants from '../constants';
 
 export default function Content({width, height, state}) {
   let scene = state.get('scene');
@@ -12,26 +13,23 @@ export default function Content({width, height, state}) {
   let activeDrawingHelper = state.get('activeDrawingHelper');
   let drawingHelpers = state.get('drawingHelpers');
 
-  let viewer;
-
   switch (mode) {
-    case MODE_3D_VIEW:
-      viewer = React.createElement(Viewer3D, {scene, mode, width, height});
-      break;
+    case constants.MODE_3D_VIEW:
+      return React.createElement(Viewer3D, {scene, mode, width, height});
 
-    case MODE_3D_FIRST_PERSON:
-      viewer = React.createElement(Viewer3DFirstPerson, {scene, mode, width, height});
-      break;
+    case constants.MODE_3D_FIRST_PERSON:
+      return React.createElement(Viewer3DFirstPerson, {scene, mode, width, height});
 
-    case MODE_VOLUMES_SUMMARY:
-      viewer = React.createElement(VolumesTable, {scene, mode, width, height});
-      break;
+    case constants.MODE_VOLUMES_SUMMARY:
+      return React.createElement(VolumesTable, {scene, mode, width, height});
+
+    case constants.MODE_UPLOADING_IMAGE:
+    case constants.MODE_FITTING_IMAGE:
+      return React.createElement(ImageEditor, {scene, mode, width, height});
 
     default:
-      viewer = React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeDrawingHelper, drawingHelpers});
+      return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeDrawingHelper, drawingHelpers});
   }
-
-  return viewer;
 }
 
 Content.propTypes = {

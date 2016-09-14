@@ -12,6 +12,7 @@ import * as viewer3DActions from '../actions/viewer3d-actions';
 import * as volumesActions from '../actions/volumes-actions';
 import * as drawingActions from '../actions/drawing-actions';
 import * as sceneActions from '../actions/scene-actions';
+import * as imagesActions from '../actions/images-actions';
 import SceneComponents from '../scene-components/scene-components';
 import Layout from './layout.jsx';
 
@@ -27,6 +28,7 @@ class App extends React.Component {
       volumesActions: this.props.volumesActions,
       drawingActions: this.props.drawingActions,
       sceneActions: this.props.sceneActions,
+      imagesActions: this.props.imagesActions,
       sceneComponents: SceneComponents
     }
   }
@@ -45,7 +47,8 @@ App.childContextTypes = {
   volumesActions: React.PropTypes.object,
   drawingActions: React.PropTypes.object,
   sceneActions: React.PropTypes.object,
-  sceneComponents: React.PropTypes.object
+  sceneComponents: React.PropTypes.object,
+  imagesActions: React.PropTypes.object
 };
 
 
@@ -61,7 +64,8 @@ function mapDispatchToProps(dispatch) {
     viewer3DActions: bindActionCreators(viewer3DActions, dispatch),
     volumesActions: bindActionCreators(volumesActions, dispatch),
     drawingActions: bindActionCreators(drawingActions, dispatch),
-    sceneActions: bindActionCreators(sceneActions, dispatch)
+    sceneActions: bindActionCreators(sceneActions, dispatch),
+    imagesActions: bindActionCreators(imagesActions, dispatch)
   }
 }
 

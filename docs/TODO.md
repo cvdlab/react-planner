@@ -6,4 +6,5 @@
 -Adds item elements
 -Adds catalog elements
 -Adds back/forward buttons
+-Enhances actions structure (force ctx use)
 
