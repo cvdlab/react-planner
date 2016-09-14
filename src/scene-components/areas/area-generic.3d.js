@@ -63,6 +63,20 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
       areaMaterial2.map.repeat.set(width / 250, height / 250);
 
       break;
+    case 'tile1':
+      areaMaterial1.map = loader.load(require('./textures/tile1.jpg'));
+      areaMaterial1.needsUpdate = true;
+      areaMaterial1.map.wrapS = Three.RepeatWrapping;
+      areaMaterial1.map.wrapT = Three.RepeatWrapping;
+      areaMaterial1.map.repeat.set(width / 100, height / 100);
+
+      areaMaterial2.map = loader.load(require('./textures/tile1.jpg'));
+      areaMaterial2.needsUpdate = true;
+      areaMaterial2.map.wrapS = Three.RepeatWrapping;
+      areaMaterial2.map.wrapT = Three.RepeatWrapping;
+      areaMaterial2.map.repeat.set(width / 100, height / 100);
+
+      break;
     case 'none':
     default:
   }

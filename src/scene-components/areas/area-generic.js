@@ -27,7 +27,8 @@ export const AreaGeneric = {
       defaultValue: 'none',
       values: {
         'none': "Nessuna",
-        'parquet': "Parquet"
+        'parquet': "Parquet",
+        'tile1': "Tile 1",
       }
     }
   },
