@@ -26,7 +26,6 @@ export function beginUploadingImage() {
 }
 
 export function endUploadingImage(image, width, height) {
-  console.log(width, height)
   return {
     type: END_UPLOADING_IMAGE,
     image, width, height
