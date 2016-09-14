@@ -1,6 +1,5 @@
 #TODO
--Adds image upload
--Adds ESC supports
+-Adds image resizing
 -Implements mouse position
 -Adds MODE_SELECTED
 -Adds item elements
