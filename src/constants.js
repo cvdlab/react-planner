@@ -63,3 +63,12 @@ export const MODE_DRAWING_LINE = 'MODE_DRAWING_LINE';
 export const MODE_DRAWING_HOLE = 'MODE_DRAWING_HOLE';
 export const MODE_UPLOADING_IMAGE = 'MODE_UPLOADING_IMAGE';
 export const MODE_FITTING_IMAGE = 'MODE_FITTING_IMAGE';
+
+//additional
+export const STORAGE_KEY = 'metior_scene_autosave_v1';
+export const SAFE_SCENE_MODES = [
+  MODE_IDLE,
+  MODE_3D_VIEW,
+  MODE_3D_FIRST_PERSON,
+  MODE_WAITING_DRAWING_LINE
+];

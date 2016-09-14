@@ -71,7 +71,6 @@ function loadProject(state, data) {
   let scene = readScene(data);
 
 
-  return state.set('scene', scene)
-    .set('viewer2D', new Map()); //reset 2d camera
+  return new State({scene});
 }
 

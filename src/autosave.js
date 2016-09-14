@@ -1,22 +1,15 @@
 import {loadProject} from './actions/project-actions';
-import * as constants from './constants';
+import {SAFE_SCENE_MODES, STORAGE_KEY}  from './constants';
 
-const storageKey = 'metior_scene_autosave_v1';
 const localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
-const SAFE_MODES = [
-  constants.MODE_IDLE,
-  constants.MODE_3D_VIEW,
-  constants.MODE_3D_FIRST_PERSON,
-  constants.MODE_WAITING_DRAWING_LINE
-];
 
 export default function autosave(store) {
 
   if (!localStorage) return;
 
   //revert
-  if (localStorage.getItem(storageKey) !== null) {
-    let data = localStorage.getItem(storageKey);
+  if (localStorage.getItem(STORAGE_KEY) !== null) {
+    let data = localStorage.getItem(STORAGE_KEY);
     let json = JSON.parse(data);
     store.dispatch(loadProject(json));
   }
@@ -24,9 +17,9 @@ export default function autosave(store) {
   //update
   store.subscribe(() => {
     let {scene, mode} = store.getState();
-    if (SAFE_MODES.includes(mode)) {
+    if (SAFE_SCENE_MODES.includes(mode)) {
       let json = JSON.stringify(scene.toJSON());
-      localStorage.setItem(storageKey, json);
+      localStorage.setItem(STORAGE_KEY, json);
     }
   });
 
