@@ -41,12 +41,12 @@
     "react-dom": "15.3.1",
     "react-icons": "2.2.1",
     "react-redux": "4.4.5",
-    "react-svg-pan-zoom": "1.5.0",
+    "react-svg-pan-zoom": "1.6.1",
     "redux": "3.6.0",
     "redux-thunk": "2.1.0",
     "shortid": "^2.2.6",
     "three": "0.79.0",
     "webpack": "1.13.2",
-    "webpack-dev-server": "1.15.1"
+    "webpack-dev-server": "1.15.2"
   }
 }
