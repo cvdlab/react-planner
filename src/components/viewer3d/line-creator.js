@@ -48,50 +48,39 @@ export default function createShapeWall(vertex0, vertex1, height, thickness, hol
     // Add thickness to hole properties
     holeData.thickness = thickness;
 
-    // Create Windows
-    if (holeData.type === 'windowGeneric') {
-
-      let windowPromise = WindowGeneric.render3D(holeData, undefined);
-
-      windowPromise.then(object => {
-        let boundingBox = new Three.Box3().setFromObject(object);
-        object.position.x = (distance - bevelRadius) * holeData.offset;
-        object.position.y = holeData.properties.get('altitude') + holeData.properties.get('height') / 2;
-        object.position.z = thickness;
-        pivot.add(object);
-        applyInteract(object, holeInteractFunction);
-      });
-    } else {
-
-      let doorPromise = DoorGeneric.render3D(holeData, undefined);
-
-      doorPromise.then(object => {
-        let boundingBox = new Three.Box3().setFromObject(object);
-
-        let center = [
-          (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-          (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-          (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-
-        let doorCoordinates = [
-          (distance - bevelRadius) * holeData.offset,
-          holeData.properties.get('altitude'),
-          0];
-
-        object.position.x += doorCoordinates[0] - center[0];
-        object.position.y += doorCoordinates[1];
-        object.position.z += doorCoordinates[2] - center[2];
-
-        console.log(doorCoordinates, center[0],doorCoordinates[0] - center[0], object.position);
-
-        // object.position.x = (distance - bevelRadius) * holeData.offset;
-        // object.position.y = holeData.properties.get('altitude') - 0.1;
-        // object.position.z = 0;
-        pivot.add(object);
-        applyInteract(object, holeInteractFunction);
-
-      });
+    // Create the hole object:
+    let holePromise;
+    switch (holeData.type) {
+      case 'windowGeneric':
+        holePromise = WindowGeneric.render3D(holeData, undefined);
+        break;
+      case 'doorGeneric':
+        holePromise = DoorGeneric.render3D(holeData, undefined);
+        break;
+      case 'none':
+      default:
     }
+
+    holePromise.then(object => {
+      let boundingBox = new Three.Box3().setFromObject(object);
+      let center = [
+        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+      let coordinates = [
+        (distance - bevelRadius) * holeData.offset,
+        holeData.properties.get('altitude'),
+        0];
+
+      object.position.x += coordinates[0] - center[0];
+      //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+      object.position.y += coordinates[1] - center[1] + holeData.properties.get('height') / 2;
+      object.position.z += coordinates[2] - center[2];
+      pivot.add(object);
+      applyInteract(object, holeInteractFunction);
+    });
+
   });
 
   let lineGeometry = new Three.ShapeGeometry(rectShape);
