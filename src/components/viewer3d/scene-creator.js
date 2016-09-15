@@ -1,7 +1,7 @@
 import Three from 'three';
-import createShapeWall from './line-creator';
 import createGrid from './grid-creator';
 import {AreaGeneric} from '../../scene-components/areas/area-generic.js';
+import {WallGeneric} from '../../scene-components/lines/wall-generic.js';
 
 export function parseData(sceneData, editingActions) {
 
@@ -125,22 +125,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
 }
 
 function createWall(layer, line, editingActions) {
-  let holes = [];
-
-  let lineInteractFunction = () => {
-    return editingActions.selectLine(layer.id, line.id)
-  };
-
-  line.holes.forEach(holeID => {
-
-    let hole = layer.holes.get(holeID);
-
-    let holeInteractFunction = () => {
-      return editingActions.selectHole(layer.id, hole.id)
-    };
-
-    holes.push({holeData: hole, holeInteractFunction});
-  });
+  line.editingActions = editingActions;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -153,18 +138,7 @@ function createWall(layer, line, editingActions) {
 
   let bevelRadius = line.properties.get('thickness');
 
-  let wall = createShapeWall(vertex0,
-    vertex1,
-    line.properties.get('height'),
-    line.properties.get('thickness'),
-    holes,
-    bevelRadius,
-    // line.id,
-    line.selected,
-    line.properties.get('textureA'),
-    line.properties.get('textureB'),
-    lineInteractFunction
-  );
+  let wall = WallGeneric.render3D(line, layer);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
 

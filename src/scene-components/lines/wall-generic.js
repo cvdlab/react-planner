@@ -1,4 +1,5 @@
 import render2D from './wall-generic.2d.jsx';
+import render3D from './wall-generic.3d.js';
 
 export const WallGeneric = {
   name: "wallGeneric",
@@ -38,8 +39,7 @@ export const WallGeneric = {
 
   render2D,
 
-  render3D: function (options) {
-  },
+  render3D,
 
   calculateVolume: function (options) {
   }
