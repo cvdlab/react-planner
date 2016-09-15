@@ -1,6 +1,6 @@
 import Three from 'three';
-import MTLLoader from '../../components/viewer3d/libs/MTLLoader';
-import OBJLoader from '../../components/viewer3d/libs/OBJLoader';
+import MTLLoader from '../../components/viewer3d/libs/mtl-loader';
+import OBJLoader from '../../components/viewer3d/libs/obj-loader';
 
 export default function (hole, layer) {
 

@@ -1,8 +1,52 @@
 import Three from 'three';
-import {DoorGeneric} from '../../scene-components/holes/door-generic'
-import {WindowGeneric} from '../../scene-components/holes/window-generic'
+import {DoorGeneric} from '../holes/door-generic'
+import {WindowGeneric} from '../holes/window-generic'
 
-export default function createShapeWall(vertex0, vertex1, height, thickness, holes,
+export default function (line, layer) {
+  
+  let holes = [];
+
+  let lineInteractFunction = () => {
+    return line.editingActions.selectLine(layer.id, line.id)
+  };
+
+  line.holes.forEach(holeID => {
+
+    let hole = layer.holes.get(holeID);
+
+    let holeInteractFunction = () => {
+      return line.editingActions.selectHole(layer.id, hole.id)
+    };
+
+    holes.push({holeData: hole, holeInteractFunction});
+  });
+
+
+  let vertex0 = layer.vertices.get(line.vertices.get(0));
+  let vertex1 = layer.vertices.get(line.vertices.get(1));
+
+  if (vertex0.x > vertex1.x) {
+    let app = vertex0;
+    vertex0 = vertex1;
+    vertex1 = app;
+  }
+
+  let bevelRadius = line.properties.get('thickness');
+
+  return createShapeWall(vertex0,
+    vertex1,
+    line.properties.get('height'),
+    line.properties.get('thickness'),
+    holes,
+    bevelRadius,
+    line.selected,
+    line.properties.get('textureA'),
+    line.properties.get('textureB'),
+    lineInteractFunction
+  );
+}
+
+function createShapeWall(vertex0, vertex1, height, thickness, holes,
                                         bevelRadius, isSelected, textureA, textureB, interactFunction) {
 
   if (vertex0.x > vertex1.x) {
@@ -397,5 +441,4 @@ function assignUVs(geometry) {
   }
   geometry.uvsNeedUpdate = true;
 }
-
 

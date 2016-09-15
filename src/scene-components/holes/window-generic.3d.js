@@ -1,5 +1,5 @@
 import Three from 'three';
-import OBJLoader from '../../components/viewer3d/libs/OBJLoader';
+import OBJLoader from '../../components/viewer3d/libs/obj-loader';
 
 export default function (hole, layer) {
   return createWindowGeneric(hole.properties.get('width') - 0.1,
