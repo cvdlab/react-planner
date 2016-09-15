@@ -1,4 +1,5 @@
 import Three from 'three';
+import MTLLoader from '../../components/viewer3d/libs/mtl-loader';
 import OBJLoader from '../../components/viewer3d/libs/obj-loader';
 
 export default function (hole, layer) {
@@ -10,26 +11,34 @@ export default function (hole, layer) {
 }
 
 function createWindowGeneric(width, height, thickness, isSelected) {
-  let objLoader = new OBJLoader();
-  objLoader.setPath('obj/window-generic/');
+  let mtlLoader = new MTLLoader();
+  mtlLoader.setPath('obj/window-generic/');
+  let url = "window-generic.mtl";
   return new Promise((resolve, reject) => {
-    objLoader.load('window-generic.obj', object => {
-      
-      let boundingBox = new Three.Box3().setFromObject(object);
 
-      let initialWidth = boundingBox.max.x - boundingBox.min.x;
-      let initialHeight = boundingBox.max.y - boundingBox.min.y;
-      let initialThickness = boundingBox.max.z - boundingBox.min.z;
+    mtlLoader.load(url, materials => {
+      materials.preload();
+      let objLoader = new OBJLoader();
+      objLoader.setMaterials(materials);
+      objLoader.setPath('obj/window-generic/');
+      objLoader.load('window-generic.obj', object => {
 
-      if (isSelected) {
-        let box = new Three.BoxHelper(object, 0xffc107);
-        box.material.depthTest = false;
-        object.add(box);
-      }
+        let boundingBox = new Three.Box3().setFromObject(object);
 
-      object.scale.set(width / initialWidth, height / initialHeight, thickness / initialThickness);
+        let initialWidth = boundingBox.max.x - boundingBox.min.x;
+        let initialHeight = boundingBox.max.y - boundingBox.min.y;
+        let initialThickness = boundingBox.max.z - boundingBox.min.z;
 
-      resolve(object);
+        if (isSelected) {
+          let box = new Three.BoxHelper(object, 0xffc107);
+          box.material.depthTest = false;
+          object.add(box);
+        }
+
+        object.scale.set(width / initialWidth, height / initialHeight, thickness / initialThickness);
+
+        resolve(object);
+      });
     });
-  });
+  })
 }
