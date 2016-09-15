@@ -31,7 +31,7 @@ import {
 import ToolbarButton from './toolbar-button.jsx';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
-export default function Toolbar({state}, {
+export default function Toolbar({state, width, height}, {
   projectActions,
   viewer2DActions,
   editingActions,
@@ -44,7 +44,7 @@ export default function Toolbar({state}, {
   let mode = state.get('mode');
 
   return (
-    <aside style={STYLE}>
+    <aside style={{...STYLE, width, height}}>
       <ToolbarButton tooltip="New project" onClick={event => projectActions.newProject()}>
         <IconNewFile />
       </ToolbarButton>

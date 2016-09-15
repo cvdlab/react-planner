@@ -5,7 +5,7 @@ import Sidebar from './sidebar/sidebar.jsx';
 
 export default function ({width, height, ...rest}) {
 
-  let toolbarWidth = 30;
+  let toolbarWidth = 50;
   let sidebarWidth = 270;
   let contentWidth = width - toolbarWidth - sidebarWidth;
 
