@@ -6,7 +6,13 @@ export default function Area({layer, area, mode}, {editingActions, sceneComponen
   let rendered = sceneComponents[area.type].render2D(area, layer);
 
   return (
-    <g data-element-root data-prototype={area.prototype} data-id={area.id} data-selected={area.selected}>{rendered}</g>
+    <g
+      data-element-root
+      data-prototype={area.prototype}
+      data-id={area.id}
+      data-selected={area.selected}
+      data-layer={area.layer}
+    >{rendered}</g>
   )
 
 }

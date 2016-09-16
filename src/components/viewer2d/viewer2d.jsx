@@ -29,7 +29,7 @@ function mode2Tool(mode) {
   }
 }
 
-function extractAttribute(node, attribute){
+function extractAttribute(node, attribute) {
   let data = node.attributes.getNamedItem(attribute);
   return data ? data.value : null;
 }
@@ -54,8 +54,9 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
     let {x, y} = mapCursorPosition(event);
 
     let elementRoot = extractElementRoot(event.originalEvent.target);
-    let prototype = null, id = null, selected = null;
-    if(elementRoot) {
+    let prototype = null, id = null, selected = null, layer = null;
+    if (elementRoot) {
+      layer = extractAttribute(elementRoot, 'data-layer');
       prototype = extractAttribute(elementRoot, 'data-prototype');
       selected = extractAttribute(elementRoot, 'data-selected');
       id = extractAttribute(elementRoot, 'data-id');
@@ -65,7 +66,15 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
       case MODE_IDLE:
         switch (prototype) {
           case 'areas':
-            editingActions.selectArea('layer-1', id);
+            editingActions.selectArea(layer, id);
+            break;
+
+          case 'lines':
+            editingActions.selectLine(layer, id);
+            break;
+
+          case 'holes':
+            editingActions.selectHole(layer, id);
             break;
 
           default:

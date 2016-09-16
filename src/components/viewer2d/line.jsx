@@ -23,31 +23,32 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
 
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
-    let onHoleClick = event => {
-      switch (mode) {
-        case MODE_IDLE:
-          editingActions.selectHole(layer.id, hole.id);
-          event.stopPropagation();
-          break;
-      }
-    };
-
     let startAt = length * hole.offset - hole.properties.get('width') / 2;
     let renderedHole = sceneComponents[hole.type].render2D(hole, layer);
 
-    return (<g key={holeID} transform={`translate(${startAt}, 0)`} onClick={onHoleClick}> {renderedHole} </g>);
+    return <g
+      key={holeID}
+      transform={`translate(${startAt}, 0)`}
+      data-element-root
+      data-prototype={hole.prototype}
+      data-id={hole.id}
+      data-selected={hole.selected}
+      data-layer={hole.layer}
+    > {renderedHole} </g>;
   });
-
-
-  let onLineClick = event => {
-    editingActions.selectLine(layer.id, line.id);
-    event.stopPropagation();
-  };
 
   let renderedLine = sceneComponents[line.type].render2D(line, layer);
 
   return (
-    <g transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`} onClick={onLineClick}>
+    <g
+      transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`}
+      onClick={onLineClick}
+      data-element-root
+      data-prototype={line.prototype}
+      data-id={line.id}
+      data-selected={line.selected}
+      data-layer={line.layer}
+    >
       {renderedLine}
       {renderedHoles}
     </g>
