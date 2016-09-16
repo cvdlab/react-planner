@@ -29,16 +29,18 @@ function mode2Tool(mode) {
   }
 }
 
-function extractAttribute(node, attribute) {
-  let data = node.attributes.getNamedItem(attribute);
-  return data ? data.value : null;
-}
-
-function extractElementRoot(node) {
-  while (!extractAttribute(node, 'data-element-root') && node.tagName !== 'svg') {
+function extractElementData(node) {
+  while (!node.attributes.getNamedItem('data-element-root') && node.tagName !== 'svg') {
     node = node.parentNode;
   }
-  return node.tagName === 'svg' ? null : node;
+  if (node.tagName === 'svg') return null;
+
+  return {
+    layer: node.attributes.getNamedItem('data-layer').value,
+    prototype: node.attributes.getNamedItem('data-prototype').value,
+    selected: node.attributes.getNamedItem('data-selected').value,
+    id: node.attributes.getNamedItem('data-id').value
+  }
 }
 
 export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers}, {editingActions, viewer2DActions, drawingActions}) {
@@ -53,28 +55,21 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   let onClick = event => {
     let {x, y} = mapCursorPosition(event);
 
-    let elementRoot = extractElementRoot(event.originalEvent.target);
-    let prototype = null, id = null, selected = null, layer = null;
-    if (elementRoot) {
-      layer = extractAttribute(elementRoot, 'data-layer');
-      prototype = extractAttribute(elementRoot, 'data-prototype');
-      selected = extractAttribute(elementRoot, 'data-selected');
-      id = extractAttribute(elementRoot, 'data-id');
-    }
+    let elementData = extractElementData(event.originalEvent.target);
 
     switch (mode) {
       case MODE_IDLE:
-        switch (prototype) {
+        switch (elementData.prototype) {
           case 'areas':
-            editingActions.selectArea(layer, id);
+            editingActions.selectArea(elementData.layer, elementData.id);
             break;
 
           case 'lines':
-            editingActions.selectLine(layer, id);
+            editingActions.selectLine(elementData.layer, elementData.id);
             break;
 
           case 'holes':
-            editingActions.selectHole(layer, id);
+            editingActions.selectHole(elementData.layer, elementData.id);
             break;
 
           default:
