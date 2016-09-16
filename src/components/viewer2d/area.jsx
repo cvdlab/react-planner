@@ -11,7 +11,7 @@ export default function Area({layer, area, mode}, {editingActions, sceneComponen
       data-prototype={area.prototype}
       data-id={area.id}
       data-selected={area.selected}
-      data-layer={area.layer}
+      data-layer={layer.id}
     >{rendered}</g>
   )
 

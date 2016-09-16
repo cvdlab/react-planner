@@ -38,7 +38,7 @@ function extractElementData(node) {
   return {
     layer: node.attributes.getNamedItem('data-layer').value,
     prototype: node.attributes.getNamedItem('data-prototype').value,
-    selected: node.attributes.getNamedItem('data-selected').value,
+    selected: node.attributes.getNamedItem('data-selected').value === 'true',
     id: node.attributes.getNamedItem('data-id').value
   }
 }
@@ -55,11 +55,13 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   let onClick = event => {
     let {x, y} = mapCursorPosition(event);
 
-    let elementData = extractElementData(event.originalEvent.target);
-
     switch (mode) {
       case MODE_IDLE:
-        switch (elementData.prototype) {
+        let elementData = extractElementData(event.originalEvent.target);
+
+        if (elementData && elementData.selected) return;
+
+        switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
             editingActions.selectArea(elementData.layer, elementData.id);
             break;
@@ -72,8 +74,9 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
             editingActions.selectHole(elementData.layer, elementData.id);
             break;
 
-          default:
+          case 'none':
             editingActions.unselectAll();
+            break;
         }
         break;
 
@@ -110,10 +113,13 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   };
 
   let onMouseDown = event => {
-    if (event.originalEvent.shiftKey) {
-      let {x, y} = mapCursorPosition(event);
-      event.originalEvent.stopPropagation();
-      drawingActions.beginDraggingLine(x, y);
+    let {x, y} = mapCursorPosition(event);
+
+    switch (mode) {
+      case MODE_IDLE:
+        let elementData = extractElementData(event.originalEvent.target);
+        if (elementData && elementData.selected) drawingActions.beginDraggingLine(x, y);
+        break;
     }
   };
 

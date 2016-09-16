@@ -33,7 +33,7 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
       data-prototype={hole.prototype}
       data-id={hole.id}
       data-selected={hole.selected}
-      data-layer={hole.layer}
+      data-layer={layer.id}
     > {renderedHole} </g>;
   });
 
@@ -42,12 +42,11 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
   return (
     <g
       transform={`translate(${x1}, ${y1}) rotate(${angle}, 0, 0)`}
-      onClick={onLineClick}
       data-element-root
       data-prototype={line.prototype}
       data-id={line.id}
       data-selected={line.selected}
-      data-layer={line.layer}
+      data-layer={layer.id}
     >
       {renderedLine}
       {renderedHoles}
