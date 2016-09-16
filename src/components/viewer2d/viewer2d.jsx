@@ -29,6 +29,17 @@ function mode2Tool(mode) {
   }
 }
 
+function extractAttribute(node, attribute){
+  let data = node.attributes.getNamedItem(attribute);
+  return data ? data.value : null;
+}
+
+function extractElementRoot(node) {
+  while (!extractAttribute(node, 'data-element-root') && node.tagName !== 'svg') {
+    node = node.parentNode;
+  }
+  return node.tagName === 'svg' ? null : node;
+}
 
 export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers}, {editingActions, viewer2DActions, drawingActions}) {
 
@@ -42,9 +53,24 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   let onClick = event => {
     let {x, y} = mapCursorPosition(event);
 
+    let elementRoot = extractElementRoot(event.originalEvent.target);
+    let prototype = null, id = null, selected = null;
+    if(elementRoot) {
+      prototype = extractAttribute(elementRoot, 'data-prototype');
+      selected = extractAttribute(elementRoot, 'data-selected');
+      id = extractAttribute(elementRoot, 'data-id');
+    }
+
     switch (mode) {
       case MODE_IDLE:
-        editingActions.unselectAll();
+        switch (prototype) {
+          case 'areas':
+            editingActions.selectArea('layer-1', id);
+            break;
+
+          default:
+            editingActions.unselectAll();
+        }
         break;
 
       case MODE_WAITING_DRAWING_LINE:
@@ -80,7 +106,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   };
 
   let onMouseDown = event => {
-    if(event.originalEvent.shiftKey) {
+    if (event.originalEvent.shiftKey) {
       let {x, y} = mapCursorPosition(event);
       event.originalEvent.stopPropagation();
       drawingActions.beginDraggingLine(x, y);
@@ -113,7 +139,8 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
-            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
+            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
           <Scene scene={scene} mode={mode}/>
