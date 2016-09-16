@@ -117,9 +117,14 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_IDLE:
+
         let elementData = extractElementData(event.originalEvent.target);
-        if (elementData && elementData.selected) drawingActions.beginDraggingLine(x, y);
-        break;
+
+        switch (elementData ? elementData.prototype : 'none') {
+          case 'lines':
+            if (elementData && elementData.selected) drawingActions.beginDraggingLine(x, y);
+            break;
+        }
     }
   };
 
