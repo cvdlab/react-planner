@@ -129,7 +129,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'lines':
-            linesActions.beginDraggingLine(x, y);
+            linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y);
             break;
 
           case 'vertices':

@@ -43,7 +43,7 @@ export default function (state, action) {
       return endDrawingLine(state, action.layerID, action.x, action.y);
 
     case BEGIN_DRAGGING_LINE:
-      return beginDraggingLine(state, action.x, action.y);
+      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y);
 
     case UPDATE_DRAGGING_LINE:
       return updateDraggingLine(state, action.x, action.y);
@@ -126,7 +126,7 @@ function updateDrawingLine(state, layerID, x, y) {
     helper = nearestHelper.helper;
   }
 
-  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations( layer => {
+  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     let vertex;
     ({layer, vertex} = replaceLineVertex(layer, lineID, 1, x, y));
@@ -167,9 +167,8 @@ function endDrawingLine(state, layerID, x, y) {
   });
 }
 
-function beginDraggingLine(state, x, y) {
-  let layer = state.scene.layers.get(state.scene.selectedLayer);
-  let lineID = layer.selected.lines.get(0);
+function beginDraggingLine(state, layerID, lineID, x, y) {
+  let layer = state.scene.layers.get(layerID);
   let line = layer.lines.get(lineID);
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -178,7 +177,7 @@ function beginDraggingLine(state, x, y) {
   return state.merge({
     mode: MODE_DRAGGING_LINE,
     draggingSupport: Map({
-      lineID: line.id,
+      layerID, lineID,
       startPointX: x,
       startPointY: y,
       startVertex0X: vertex0.x,
@@ -190,9 +189,9 @@ function beginDraggingLine(state, x, y) {
 }
 
 function updateDraggingLine(state, x, y) {
-  let layerID = state.scene.selectedLayer;
   let draggingSupport = state.draggingSupport;
 
+  let layerID = draggingSupport.get('layerID');
   let lineID = draggingSupport.get('lineID');
   let diffX = x - draggingSupport.get('startPointX');
   let diffY = y - draggingSupport.get('startPointY');
@@ -212,6 +211,9 @@ function updateDraggingLine(state, x, y) {
 function endDraggingLine(state, x, y) {
   return state.withMutations(state => {
     updateDraggingLine(state, x, y);
-    state.set('mode', MODE_IDLE);
+    state.merge({
+      mode: MODE_IDLE,
+      draggingSupport: null,
+    });
   });
 }

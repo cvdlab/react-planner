@@ -37,10 +37,10 @@ export function endDrawingLine(layerID, x, y) {
   }
 }
 
-export function beginDraggingLine(x, y) {
+export function beginDraggingLine(layerID, lineID, x, y) {
   return {
     type: BEGIN_DRAGGING_LINE,
-    x, y
+    layerID, lineID, x, y
   }
 }
 
