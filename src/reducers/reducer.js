@@ -5,7 +5,8 @@ import editingReducer from './editing-reducer';
 import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
 import volumesReducer from './volumes-reducer';
-import drawingReducer from './drawing-reducer';
+import holesReducer from './holes-reducer';
+import linesReducer from './lines-reducer';
 import sceneReducer from './scene-reducer';
 import imagesReducer from './images-reducer';
 import verticesReducer from './vertices-reducer';
@@ -54,17 +55,19 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_VOLUMES_SUMMARY:
       return volumesReducer(state, action);
 
-    case constants.SELECT_TOOL_DRAWING_HOLE:
     case constants.SELECT_TOOL_DRAWING_LINE:
     case constants.BEGIN_DRAWING_LINE:
     case constants.UPDATE_DRAWING_LINE:
     case constants.END_DRAWING_LINE:
-    case constants.UPDATE_DRAWING_HOLE:
-    case constants.END_DRAWING_HOLE:
     case constants.BEGIN_DRAGGING_LINE:
     case constants.UPDATE_DRAGGING_LINE:
     case constants.END_DRAGGING_LINE:
-      return drawingReducer(state, action);
+      return linesReducer(state, action);
+
+    case constants.SELECT_TOOL_DRAWING_HOLE:
+    case constants.UPDATE_DRAWING_HOLE:
+    case constants.END_DRAWING_HOLE:
+      return holesReducer(state, action);
 
     case constants.ADD_LAYER:
     case constants.SET_LAYER_PROPERTIES:
