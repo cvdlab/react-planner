@@ -104,14 +104,14 @@ export default function Toolbar({state, width, height}, {
       </ToolbarButton>
 
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawSupport', 'type']) === 'doorGeneric'}
+        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'doorGeneric'}
         tooltip="Add door"
         onClick={event => holesActions.selectToolDrawingHole('doorGeneric')}>
         <IconDoor />
       </ToolbarButton>
 
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawSupport', 'type']) === 'windowGeneric'}
+        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'windowGeneric'}
         tooltip="Add window"
         onClick={event => holesActions.selectToolDrawingHole('windowGeneric')}>
         <IconWindow />

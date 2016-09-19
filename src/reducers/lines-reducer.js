@@ -59,7 +59,7 @@ export default function (state, action) {
 function selectToolDrawingLine(state, sceneComponentType) {
   return state.merge({
     mode: MODE_WAITING_DRAWING_LINE,
-    drawSupport: Map({
+    drawingSupport: Map({
       type: sceneComponentType
     })
   });
@@ -104,7 +104,7 @@ function beginDrawingLine(state, layerID, x, y) {
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     unselectAll(layer);
-    let {line} = addLine(layer, state.drawSupport.get('type'), x, y, x, y);
+    let {line} = addLine(layer, state.drawingSupport.get('type'), x, y, x, y);
     select(layer, 'lines', line.id);
     select(layer, 'vertices', line.vertices.get(0));
     select(layer, 'vertices', line.vertices.get(1));

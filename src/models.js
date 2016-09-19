@@ -87,7 +87,7 @@ export const State = Record({
   drawingHelpers: new List(),
   activeDrawingHelper: null,
 
-  drawSupport: Map(),
+  drawingSupport: Map(),
   draggingSupport: Map()
 });
 

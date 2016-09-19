@@ -51,7 +51,7 @@ function selectToolDrawingHole(state, sceneComponentType) {
   return state.merge({
     mode: MODE_DRAWING_HOLE,
     drawingHelpers,
-    drawSupport: Map({
+    drawingSupport: Map({
       type: sceneComponentType
     })
   });
@@ -81,7 +81,7 @@ function updateDrawingHole(state, layerID, x, y) {
       let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));
 
       let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
-      let {hole} = addHole(layer, state.drawSupport.get('type'), lineID, offset);
+      let {hole} = addHole(layer, state.drawingSupport.get('type'), lineID, offset);
       select(layer, 'holes', hole.id);
     }
   }));
