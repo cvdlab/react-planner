@@ -121,6 +121,8 @@ function beginDrawingLine(state, layerID, x, y) {
     unselectAll(layer);
     let {line} = addLine(layer, state.drawingConfig.get('type'), x, y, x, y);
     select(layer, 'lines', line.id);
+    select(layer, 'vertices', line.vertices.get(0));
+    select(layer, 'vertices', line.vertices.get(1));
   }));
 
   return state.merge({
@@ -139,11 +141,13 @@ function updateDrawingLine(state, layerID, x, y) {
     helper = nearestHelper.helper;
   }
 
-  let scene = state.scene.updateIn(['layers', layerID], layer => {
+  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations( layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
-    ({layer} = replaceLineVertex(layer, lineID, 1, x, y));
+    let vertex;
+    ({layer, vertex} = replaceLineVertex(layer, lineID, 1, x, y));
+    select(layer, 'vertices', vertex.id);
     return layer;
-  });
+  }));
 
   return state.merge({
     scene,
@@ -163,6 +167,8 @@ function endDrawingLine(state, layerID, x, y) {
     let v0 = layer.vertices.get(line.vertices.get(0));
 
     unselect(layer, 'lines', lineID);
+    unselect(layer, 'vertices', line.vertices.get(0));
+    unselect(layer, 'vertices', line.vertices.get(1));
     removeLine(layer, lineID);
     addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y);
     detectAndUpdateAreas(layer);

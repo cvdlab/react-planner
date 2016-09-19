@@ -1,8 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const STYLE={
-  fill: '#485054'
-};
+const STYLE = {fill: "#0096fd", stroke: "#fff"};
 
 export default function Vertex({vertex, layer, mode}) {
 
@@ -10,7 +8,7 @@ export default function Vertex({vertex, layer, mode}) {
 
   return (
     <g transform={`translate(${x}, ${y})`}>
-      <circle cx="0" cy="0" r="4" style={STYLE} />
+      <circle cx="0" cy="0" r="7" style={STYLE}/>
     </g>
   );
 }

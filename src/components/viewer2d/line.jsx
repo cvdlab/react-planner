@@ -47,6 +47,7 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
       data-id={line.id}
       data-selected={line.selected}
       data-layer={layer.id}
+      style={line.selected ? {cursor: "move"} : {}}
     >
       {renderedLine}
       {renderedHoles}

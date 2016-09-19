@@ -11,7 +11,7 @@ import {
 
 import {ElementsSet} from '../models';
 import {Map} from 'immutable';
-import {removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp} from '../utils/layer-operations';
+import {removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, select} from '../utils/layer-operations';
 
 export default function (state, action) {
   let {scene} = state;
@@ -50,6 +50,7 @@ function unselectAllFromLayer(layer) {
     selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
     selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
     selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
+    selected.get('vertices').forEach(vertexID => layer.setIn(['vertices', vertexID, 'selected'], false));
     layer.set('selected', new ElementsSet());
   });
 }
@@ -64,11 +65,13 @@ function setProperties(scene, properties) {
 }
 
 function selectLine(scene, layerID, lineID) {
-  return scene.updateIn(['layers', layerID], layer => {
+  return scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+      let line = layer.getIn(['lines', lineID]);
       layer = unselectAllFromLayer(layer);
-      layer = layer.setIn(['lines', lineID, 'selected'], true);
-      return layer.updateIn(['selected', 'lines'], lines => lines.push(lineID));
-    }
+      select(layer, 'lines', lineID);
+      select(layer, 'vertices', line.vertices.get(0));
+      select(layer, 'vertices', line.vertices.get(1));
+    })
   );
 }
 
