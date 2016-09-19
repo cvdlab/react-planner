@@ -1,7 +1,7 @@
 import {List, Record} from 'immutable';
 import * as Geometry from './geometry';
 
-class PointHelper extends Record({
+class PointSnap extends Record({
   type: "point",
   x: -1, y: -1,
   radius: 1, priority: 1,
@@ -16,7 +16,7 @@ class PointHelper extends Record({
   }
 }
 
-class LineHelper extends Record({
+class LineSnap extends Record({
   type: "line",
   a: -1, b: -1, c: -1,
   radius: 1, priority: 1,
@@ -30,7 +30,7 @@ class LineHelper extends Record({
   }
 }
 
-class LineSegmentHelper extends Record({
+class LineSegmentSnap extends Record({
   type: "line-segment",
   x1: -1, y1: -1, x2: -1, y2: -1,
   radius: 1, priority: 1,
@@ -44,9 +44,9 @@ class LineSegmentHelper extends Record({
   }
 }
 
-export function nearestDrawingHelper(drawingHelpers, x, y) {
+export function nearestSnap(snapElements, x, y) {
 
-  let nearestHelper = drawingHelpers
+  let nearestHelper = snapElements
     .valueSeq()
     .map(helper => {
       return {helper, point: helper.nearestPoint(x, y)}
@@ -63,29 +63,29 @@ export function nearestDrawingHelper(drawingHelpers, x, y) {
   return nearestHelper;
 }
 
-export function addPointHelper(drawingHelpers, x, y, radius, priority, related) {
+export function addPointSnap(snapElements, x, y, radius, priority, related) {
   related = new List([related]);
-  return drawingHelpers.push(new PointHelper({x, y, radius, priority, related}));
+  return snapElements.push(new PointSnap({x, y, radius, priority, related}));
 }
 
-export function addLineHelper(drawingHelpers, a, b, c, radius, priority, related) {
+export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
   related = new List([related]);
 
-  return drawingHelpers.withMutations(drawingHelpers => {
+  return snapElements.withMutations(snapElements => {
 
-    let intersections = drawingHelpers
+    let intersections = snapElements
       .valueSeq()
       .filter(helper => helper.type === 'line')
       .map(helper => Geometry.intersectionFromTwoLines(helper.a, helper.b, helper.c, a, b, c))
       .filter(intersection => intersection !== undefined)
-      .forEach(({x, y}) => addPointHelper(drawingHelpers, x, y, 20, 40));
+      .forEach(({x, y}) => addPointSnap(snapElements, x, y, 20, 40));
 
-    drawingHelpers.push(new LineHelper({a, b, c, radius, priority, related}));
+    snapElements.push(new LineSnap({a, b, c, radius, priority, related}));
   })
 }
 
-export function addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, radius, priority, related) {
+export function addLineSegmentSnap(snapElements, x1, y1, x2, y2, radius, priority, related) {
   related = new List([related]);
 
-  return drawingHelpers.push(new LineSegmentHelper({x1, y1, x2, y2, radius, priority, related}));
+  return snapElements.push(new LineSegmentSnap({x1, y1, x2, y2, radius, priority, related}));
 }

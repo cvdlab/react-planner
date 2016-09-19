@@ -84,7 +84,7 @@ export const State = Record({
   mode: MODE_IDLE,
   scene: new Scene(),
   viewer2D: new Map(),
-  drawingHelpers: new List(),
+  snapElements: new List(),
   activeDrawingHelper: null,
 
   drawingSupport: Map(),

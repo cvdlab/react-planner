@@ -17,7 +17,7 @@ import {
   addHole,
   removeHole
 } from '../utils/layer-operations';
-import {nearestDrawingHelper, addPointHelper, addLineHelper, addLineSegmentHelper} from '../utils/drawing-helpers';
+import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
 
 export default function (state, action) {
   switch (action.type) {
@@ -37,20 +37,20 @@ export default function (state, action) {
 
 function selectToolDrawingHole(state, sceneComponentType) {
 
-  let drawingHelpers = (new List()).withMutations(drawingHelpers => {
+  let snapElements = (new List()).withMutations(snapElements => {
     let {lines, vertices} = state.getIn(['scene', 'layers', state.scene.selectedLayer]);
 
     lines.forEach(line => {
       let {x: x1, y: y1} = vertices.get(line.vertices.get(0));
       let {x: x2, y:y2} = vertices.get(line.vertices.get(1));
 
-      addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, line.id);
+      addLineSegmentSnap(snapElements, x1, y1, x2, y2, 20, 1, line.id);
     })
   });
 
   return state.merge({
     mode: MODE_DRAWING_HOLE,
-    drawingHelpers,
+    snapElements,
     drawingSupport: Map({
       type: sceneComponentType
     })
@@ -60,7 +60,7 @@ function selectToolDrawingHole(state, sceneComponentType) {
 /** holes operations **/
 function updateDrawingHole(state, layerID, x, y) {
 
-  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let nearestHelper = nearestSnap(state.snapElements, x, y);
   let helper = null;
   if (nearestHelper) {
     ({x, y} = nearestHelper.point);

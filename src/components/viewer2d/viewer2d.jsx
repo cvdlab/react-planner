@@ -44,7 +44,7 @@ function extractElementData(node) {
   }
 }
 
-export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers},
+export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, snapElements},
   {editingActions, viewer2DActions, linesActions, holesActions, verticesActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
@@ -163,7 +163,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
   activeDrawingHelper = activeDrawingHelper ?
     <ActiveDrawingHelper helper={activeDrawingHelper} width={scene.width} height={scene.height}/> : null;
 
-  drawingHelpers = false ? drawingHelpers.map(
+  snapElements = false ? snapElements.map(
     helper => <ActiveDrawingHelper helper={helper} width={scene.width} height={scene.height}/>
   ) : null;
 
@@ -175,7 +175,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
           <Scene scene={scene} mode={mode}/>
           {activeDrawingHelper}
-          {drawingHelpers}
+          {snapElements}
         </g>
       </svg>
     </Viewer>

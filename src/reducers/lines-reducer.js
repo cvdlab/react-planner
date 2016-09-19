@@ -26,7 +26,7 @@ import {
   unselectAll,
   detectAndUpdateAreas,
 } from '../utils/layer-operations';
-import {nearestDrawingHelper, addPointHelper, addLineHelper, addLineSegmentHelper} from '../utils/drawing-helpers';
+import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
 
 export default function (state, action) {
   switch (action.type) {
@@ -71,37 +71,37 @@ function beginDrawingLine(state, layerID, x, y) {
 
   let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
 
-  let drawingHelpers = (new List()).withMutations(drawingHelpers => {
+  let snapElements = (new List()).withMutations(snapElements => {
     let {lines, vertices}  = state.getIn(['scene', 'layers', layerID]);
     vertices.forEach(({id: vertexID, x, y}) => {
-      addPointHelper(drawingHelpers, x, y, 10, 10, vertexID);
+      addPointSnap(snapElements, x, y, 10, 10, vertexID);
 
       ({a, b, c} = Geometry.horizontalLine(y));
-      addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+      addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
       ({a, b, c} = Geometry.verticalLine(x));
-      addLineHelper(drawingHelpers, a, b, c, 10, 1, vertexID);
+      addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
     });
 
     lines.forEach(({id: lineID, vertices: [v0, v1]}) => {
       let {x: x1, y: y1} = vertices.get(v0);
       let {x: x2, y:y2} = vertices.get(v1);
 
-      addLineSegmentHelper(drawingHelpers, x1, y1, x2, y2, 20, 1, lineID);
+      addLineSegmentSnap(snapElements, x1, y1, x2, y2, 20, 1, lineID);
     })
   });
 
-  let nearestHelper = nearestDrawingHelper(drawingHelpers, x, y);
+  let nearestHelper = nearestSnap(snapElements, x, y);
   let helper = null;
   if (nearestHelper) {
     ({x, y} = nearestHelper.point);
     helper = nearestHelper.helper;
   }
 
-  drawingHelpers = drawingHelpers.withMutations(drawingHelpers => {
+  snapElements = snapElements.withMutations(snapElements => {
     ({a, b, c} = Geometry.horizontalLine(y));
-    addLineHelper(drawingHelpers, a, b, c, 10, 3, null);
+    addLineSnap(snapElements, a, b, c, 10, 3, null);
     ({a, b, c} = Geometry.verticalLine(x));
-    addLineHelper(drawingHelpers, a, b, c, 10, 3, null);
+    addLineSnap(snapElements, a, b, c, 10, 3, null);
   });
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
@@ -114,7 +114,7 @@ function beginDrawingLine(state, layerID, x, y) {
 
   return state.merge({
     mode: MODE_DRAWING_LINE,
-    scene, drawingHelpers,
+    scene, snapElements,
     activeDrawingHelper: helper,
     drawingSupport
   });
@@ -123,7 +123,7 @@ function beginDrawingLine(state, layerID, x, y) {
 function updateDrawingLine(state, x, y) {
 
   let layerID = state.getIn(['drawingSupport', 'layerID']);
-  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let nearestHelper = nearestSnap(state.snapElements, x, y);
   let helper = null;
   if (nearestHelper) {
     ({x, y} = nearestHelper.point);
@@ -146,7 +146,7 @@ function updateDrawingLine(state, x, y) {
 
 function endDrawingLine(state, x, y) {
   let layerID = state.getIn(['drawingSupport', 'layerID']);
-  let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
+  let nearestHelper = nearestSnap(state.snapElements, x, y);
   if (nearestHelper) {
     ({x, y} = nearestHelper.point);
   }
@@ -167,7 +167,7 @@ function endDrawingLine(state, x, y) {
   return state.merge({
     mode: MODE_WAITING_DRAWING_LINE,
     scene,
-    drawingHelpers: new List(),
+    snapElements: new List(),
     activeDrawingHelper: null
   });
 }
