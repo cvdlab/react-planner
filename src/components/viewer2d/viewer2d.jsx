@@ -87,7 +87,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
         break;
 
       case MODE_DRAWING_LINE:
-        linesActions.endDrawingLine(layerID, x, y);
+        linesActions.endDrawingLine(x, y);
         break;
 
       case MODE_DRAWING_HOLE:
@@ -101,7 +101,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_DRAWING_LINE:
-        linesActions.updateDrawingLine(layerID, x, y);
+        linesActions.updateDrawingLine(x, y);
         break;
 
       case MODE_DRAWING_HOLE:

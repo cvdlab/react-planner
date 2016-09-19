@@ -37,10 +37,10 @@ export default function (state, action) {
       return beginDrawingLine(state, action.layerID, action.x, action.y);
 
     case UPDATE_DRAWING_LINE:
-      return updateDrawingLine(state, action.layerID, action.x, action.y);
+      return updateDrawingLine(state, action.x, action.y);
 
     case END_DRAWING_LINE:
-      return endDrawingLine(state, action.layerID, action.x, action.y);
+      return endDrawingLine(state, action.x, action.y);
 
     case BEGIN_DRAGGING_LINE:
       return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y);
@@ -68,6 +68,8 @@ function selectToolDrawingLine(state, sceneComponentType) {
 /** lines operations **/
 function beginDrawingLine(state, layerID, x, y) {
   let a, b, c;
+
+  let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
 
   let drawingHelpers = (new List()).withMutations(drawingHelpers => {
     let {lines, vertices}  = state.getIn(['scene', 'layers', layerID]);
@@ -104,7 +106,7 @@ function beginDrawingLine(state, layerID, x, y) {
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     unselectAll(layer);
-    let {line} = addLine(layer, state.drawingSupport.get('type'), x, y, x, y);
+    let {line} = addLine(layer, drawingSupport.get('type'), x, y, x, y);
     select(layer, 'lines', line.id);
     select(layer, 'vertices', line.vertices.get(0));
     select(layer, 'vertices', line.vertices.get(1));
@@ -113,12 +115,14 @@ function beginDrawingLine(state, layerID, x, y) {
   return state.merge({
     mode: MODE_DRAWING_LINE,
     scene, drawingHelpers,
-    activeDrawingHelper: helper
+    activeDrawingHelper: helper,
+    drawingSupport
   });
 }
 
-function updateDrawingLine(state, layerID, x, y) {
+function updateDrawingLine(state, x, y) {
 
+  let layerID = state.getIn(['drawingSupport', 'layerID']);
   let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
   let helper = null;
   if (nearestHelper) {
@@ -140,7 +144,8 @@ function updateDrawingLine(state, layerID, x, y) {
   });
 }
 
-function endDrawingLine(state, layerID, x, y) {
+function endDrawingLine(state, x, y) {
+  let layerID = state.getIn(['drawingSupport', 'layerID']);
   let nearestHelper = nearestDrawingHelper(state.drawingHelpers, x, y);
   if (nearestHelper) {
     ({x, y} = nearestHelper.point);

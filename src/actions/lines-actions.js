@@ -23,17 +23,17 @@ export function beginDrawingLine(layerID, x, y) {
   }
 }
 
-export function updateDrawingLine(layerID, x, y) {
+export function updateDrawingLine(x, y) {
   return {
     type: UPDATE_DRAWING_LINE,
-    layerID, x, y
+    x, y
   }
 }
 
-export function endDrawingLine(layerID, x, y) {
+export function endDrawingLine(x, y) {
   return {
     type: END_DRAWING_LINE,
-    layerID, x, y
+    x, y
   }
 }
 
