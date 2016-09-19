@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 
-const STYLE = {fill: "#0096fd", stroke: "#fff"};
+const STYLE = {fill: "#0096fd", stroke: "#fff", cursor: "move"};
 
 export default function Vertex({vertex, layer, mode}) {
 
