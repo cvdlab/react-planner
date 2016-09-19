@@ -217,10 +217,9 @@ export function unselectAll(layer) {
   let selected = layer.get('selected');
 
   return layer.withMutations(layer => {
-    selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
-    selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
-    selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
-    layer.set('selected', new ElementsSet());
+    layer.selected.forEach((ids, prototype)=> {
+      ids.forEach(id => unselect(layer, prototype, id));
+    });
   });
 }
 

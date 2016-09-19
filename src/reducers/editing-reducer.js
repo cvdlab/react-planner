@@ -11,7 +11,15 @@ import {
 
 import {ElementsSet} from '../models';
 import {Map} from 'immutable';
-import {removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, select} from '../utils/layer-operations';
+import {
+  removeLine,
+  removeHole,
+  detectAndUpdateAreas,
+  setProperties as setPropertiesOp,
+  select,
+  unselect,
+  unselectAll as unselectAllOp
+} from '../utils/layer-operations';
 
 export default function (state, action) {
   let {scene} = state;
@@ -43,17 +51,6 @@ export default function (state, action) {
   }
 }
 
-function unselectAllFromLayer(layer) {
-  let selected = layer.get('selected');
-
-  return layer.withMutations(layer => {
-    selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
-    selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
-    selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
-    selected.get('vertices').forEach(vertexID => layer.setIn(['vertices', vertexID, 'selected'], false));
-    layer.set('selected', new ElementsSet());
-  });
-}
 
 function setProperties(scene, properties) {
   return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
@@ -67,7 +64,7 @@ function setProperties(scene, properties) {
 function selectLine(scene, layerID, lineID) {
   return scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let line = layer.getIn(['lines', lineID]);
-      layer = unselectAllFromLayer(layer);
+      unselectAllOp(layer);
       select(layer, 'lines', lineID);
       select(layer, 'vertices', line.vertices.get(0));
       select(layer, 'vertices', line.vertices.get(1));
@@ -76,27 +73,27 @@ function selectLine(scene, layerID, lineID) {
 }
 
 function selectArea(scene, layerID, areaID) {
-  return scene.updateIn(['layers', layerID], layer => {
-      layer = unselectAllFromLayer(layer);
-      layer = layer.setIn(['areas', areaID, 'selected'], true);
-      return layer.updateIn(['selected', 'areas'], areas => areas.push(areaID));
-    }
+  return scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+      let area = layer.getIn(['areas', areaID]);
+      unselectAllOp(layer);
+      select(layer, 'areas', areaID);
+      area.vertices.forEach(vertexID => select(layer, 'vertices', vertexID));
+    })
   );
 }
 
 function selectHole(scene, layerID, holeID) {
-  return scene.updateIn(['layers', layerID], layer => {
-    layer = unselectAllFromLayer(layer);
-    layer = layer.setIn(['holes', holeID, 'selected'], true);
-    return layer.updateIn(['selected', 'holes'], holes => holes.push(holeID));
-  });
+  return scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+    unselectAllOp(layer);
+    select(layer, 'holes', holeID);
+  }));
 }
 
 function unselectAll(scene) {
-  return scene.update('layers', layer => layer.map(unselectAllFromLayer));
+  return scene.update('layers', layer => layer.map(unselectAllOp));
 }
 
-function remove(scene){
+function remove(scene) {
   return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
     layer.selected.lines.forEach(lineID => removeLine(layer, lineID));
     layer.selected.holes.forEach(holeID => removeHole(layer, holeID));
