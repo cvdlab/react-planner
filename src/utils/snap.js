@@ -46,21 +46,19 @@ class LineSegmentSnap extends Record({
 
 export function nearestSnap(snapElements, x, y) {
 
-  let nearestHelper = snapElements
+  return snapElements
     .valueSeq()
-    .map(helper => {
-      return {helper, point: helper.nearestPoint(x, y)}
+    .map(snap => {
+      return {snap, point: snap.nearestPoint(x, y)}
     })
-    .filter(({helper: {radius}, point: {distance}}) => distance < radius)
-    .min(({helper: helper1, point: point1}, {helper: helper2, point: point2}) => {
-      if (helper1.priority === helper2.priority) {
+    .filter(({snap: {radius}, point: {distance}}) => distance < radius)
+    .min(({snap: snap1, point: point1}, {snap: snap2, point: point2}) => {
+      if (snap1.priority === snap2.priority) {
         if (point1.distance < point2.distance) return -1; else return 1;
       } else {
-        if (helper1.priority > helper2.priority) return -1; else return 1;
+        if (snap1.priority > snap2.priority) return -1; else return 1;
       }
     });
-
-  return nearestHelper;
 }
 
 export function addPointSnap(snapElements, x, y, radius, priority, related) {
@@ -75,8 +73,8 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
 
     let intersections = snapElements
       .valueSeq()
-      .filter(helper => helper.type === 'line')
-      .map(helper => Geometry.intersectionFromTwoLines(helper.a, helper.b, helper.c, a, b, c))
+      .filter(snap => snap.type === 'line')
+      .map(snap => Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, a, b, c))
       .filter(intersection => intersection !== undefined)
       .forEach(({x, y}) => addPointSnap(snapElements, x, y, 20, 40));
 

@@ -27,6 +27,7 @@ import {
   detectAndUpdateAreas,
 } from '../utils/layer-operations';
 import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
+import {sceneSnapElements, vertexSnapElements} from '../utils/snap-scene';
 
 export default function (state, action) {
   switch (action.type) {
@@ -67,43 +68,21 @@ function selectToolDrawingLine(state, sceneComponentType) {
 
 /** lines operations **/
 function beginDrawingLine(state, layerID, x, y) {
-  let a, b, c;
 
-  let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
-
-  let snapElements = (new List()).withMutations(snapElements => {
-    let {lines, vertices}  = state.getIn(['scene', 'layers', layerID]);
-    vertices.forEach(({id: vertexID, x, y}) => {
-      addPointSnap(snapElements, x, y, 10, 10, vertexID);
-
-      ({a, b, c} = Geometry.horizontalLine(y));
-      addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
-      ({a, b, c} = Geometry.verticalLine(x));
-      addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
-    });
-
-    lines.forEach(({id: lineID, vertices: [v0, v1]}) => {
-      let {x: x1, y: y1} = vertices.get(v0);
-      let {x: x2, y:y2} = vertices.get(v1);
-
-      addLineSegmentSnap(snapElements, x1, y1, x2, y2, 20, 1, lineID);
-    })
-  });
-
-  let nearestHelper = nearestSnap(snapElements, x, y);
-  let helper = null;
-  if (nearestHelper) {
-    ({x, y} = nearestHelper.point);
-    helper = nearestHelper.helper;
-  }
+  //calculate snap and overwrite coords if needed
+  let snapElements = sceneSnapElements(state.scene);
+  let snap = nearestSnap(snapElements, x, y);
+  if (snap) ({x, y} = snap.point);
 
   snapElements = snapElements.withMutations(snapElements => {
+    let a, b, c;
     ({a, b, c} = Geometry.horizontalLine(y));
     addLineSnap(snapElements, a, b, c, 10, 3, null);
     ({a, b, c} = Geometry.verticalLine(x));
     addLineSnap(snapElements, a, b, c, 10, 3, null);
   });
 
+  let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     unselectAll(layer);
     let {line} = addLine(layer, drawingSupport.get('type'), x, y, x, y);
@@ -114,22 +93,20 @@ function beginDrawingLine(state, layerID, x, y) {
 
   return state.merge({
     mode: MODE_DRAWING_LINE,
-    scene, snapElements,
-    activeDrawingHelper: helper,
+    scene,
+    snapElements,
+    activeSnapElement: snap ? snap.snap : null,
     drawingSupport
   });
 }
 
 function updateDrawingLine(state, x, y) {
 
-  let layerID = state.getIn(['drawingSupport', 'layerID']);
-  let nearestHelper = nearestSnap(state.snapElements, x, y);
-  let helper = null;
-  if (nearestHelper) {
-    ({x, y} = nearestHelper.point);
-    helper = nearestHelper.helper;
-  }
+  //calculate snap and overwrite coords if needed
+  let snap = nearestSnap(state.snapElements, x, y);
+  if (snap) ({x, y} = snap.point);
 
+  let layerID = state.getIn(['drawingSupport', 'layerID']);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     let vertex;
@@ -140,17 +117,16 @@ function updateDrawingLine(state, x, y) {
 
   return state.merge({
     scene,
-    activeDrawingHelper: helper
+    activeSnapElement: snap ? snap.snap : null,
   });
 }
 
 function endDrawingLine(state, x, y) {
-  let layerID = state.getIn(['drawingSupport', 'layerID']);
-  let nearestHelper = nearestSnap(state.snapElements, x, y);
-  if (nearestHelper) {
-    ({x, y} = nearestHelper.point);
-  }
+  //calculate snap and overwrite coords if needed
+  let snap = nearestSnap(state.snapElements, x, y);
+  if (snap) ({x, y} = snap.point);
 
+  let layerID = state.getIn(['drawingSupport', 'layerID']);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     let line = layer.getIn(['lines', lineID]);
@@ -168,7 +144,7 @@ function endDrawingLine(state, x, y) {
     mode: MODE_WAITING_DRAWING_LINE,
     scene,
     snapElements: new List(),
-    activeDrawingHelper: null
+    activeSnapElement: null,
   });
 }
 

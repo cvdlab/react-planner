@@ -15,7 +15,7 @@ import {
   MODE_DRAGGING_VERTEX
 } from '../../constants';
 import Scene from './scene.jsx';
-import ActiveDrawingHelper from './active-drawing-helper.jsx';
+import Snap from './snap.jsx';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -44,7 +44,7 @@ function extractElementData(node) {
   }
 }
 
-export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, snapElements},
+export default function Viewer2D({scene, width, height, viewer2D, mode, activeSnapElement, snapElements},
   {editingActions, viewer2DActions, linesActions, holesActions, verticesActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
@@ -160,12 +160,8 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
-  activeDrawingHelper = activeDrawingHelper ?
-    <ActiveDrawingHelper helper={activeDrawingHelper} width={scene.width} height={scene.height}/> : null;
-
-  snapElements = false ? snapElements.map(
-    helper => <ActiveDrawingHelper helper={helper} width={scene.width} height={scene.height}/>
-  ) : null;
+  activeSnapElement = activeSnapElement ? <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
+  snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
@@ -174,7 +170,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
           <Scene scene={scene} mode={mode}/>
-          {activeDrawingHelper}
+          {activeSnapElement}
           {snapElements}
         </g>
       </svg>
