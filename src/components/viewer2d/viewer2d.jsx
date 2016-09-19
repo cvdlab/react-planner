@@ -45,7 +45,7 @@ function extractElementData(node) {
 }
 
 export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers},
-  {editingActions, viewer2DActions, drawingActions, verticesActions}) {
+  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
   let layerID = scene.selectedLayer;
@@ -83,15 +83,15 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
         break;
 
       case MODE_WAITING_DRAWING_LINE:
-        drawingActions.beginDrawingLine(layerID, x, y);
+        linesActions.beginDrawingLine(layerID, x, y);
         break;
 
       case MODE_DRAWING_LINE:
-        drawingActions.endDrawingLine(layerID, x, y);
+        linesActions.endDrawingLine(layerID, x, y);
         break;
 
       case MODE_DRAWING_HOLE:
-        drawingActions.endDrawingHole(layerID, x, y);
+        holesActions.endDrawingHole(layerID, x, y);
         break;
     }
   };
@@ -101,15 +101,15 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_DRAWING_LINE:
-        drawingActions.updateDrawingLine(layerID, x, y);
+        linesActions.updateDrawingLine(layerID, x, y);
         break;
 
       case MODE_DRAWING_HOLE:
-        drawingActions.updateDrawingHole(layerID, x, y);
+        holesActions.updateDrawingHole(layerID, x, y);
         break;
 
       case MODE_DRAGGING_LINE:
-        drawingActions.updateDraggingLine(x, y);
+        linesActions.updateDraggingLine(x, y);
         break;
 
       case MODE_DRAGGING_VERTEX:
@@ -129,7 +129,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'lines':
-            drawingActions.beginDraggingLine(x, y);
+            linesActions.beginDraggingLine(x, y);
             break;
 
           case 'vertices':
@@ -144,7 +144,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_DRAGGING_LINE:
-        drawingActions.endDraggingLine(x, y);
+        linesActions.endDraggingLine(x, y);
         break;
 
       case MODE_DRAGGING_VERTEX:
@@ -195,6 +195,7 @@ Viewer2D.propTypes = {
 Viewer2D.contextTypes = {
   viewer2DActions: PropTypes.object.isRequired,
   editingActions: PropTypes.object.isRequired,
-  drawingActions: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
   verticesActions: PropTypes.object.isRequired
 };
