@@ -71,6 +71,13 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
 
   return snapElements.withMutations(snapElements => {
 
+    let alreadyPresent = snapElements.some(lineSnap =>
+    lineSnap.type === 'line' &&
+    a === lineSnap.a &&
+    b === lineSnap.b &&
+    c === lineSnap.c);
+    if (alreadyPresent) return snapElements;
+
     let intersections = snapElements
       .valueSeq()
       .filter(snap => snap.type === 'line')
