@@ -6,6 +6,7 @@ import * as volumesActions from '../actions/volumes-actions';
 import * as drawingActions from '../actions/drawing-actions';
 import * as sceneActions from '../actions/scene-actions';
 import * as imagesActions from '../actions/images-actions';
+import * as verticesActions from '../actions/vertices-actions';
 
 export default {
   projectActions,
@@ -16,4 +17,5 @@ export default {
   drawingActions,
   sceneActions,
   imagesActions,
+  verticesActions,
 }

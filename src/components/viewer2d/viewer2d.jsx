@@ -11,7 +11,8 @@ import {
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
   MODE_DRAWING_HOLE,
-  MODE_DRAGGING_LINE
+  MODE_DRAGGING_LINE,
+  MODE_DRAGGING_VERTEX
 } from '../../constants';
 import Scene from './scene.jsx';
 import ActiveDrawingHelper from './active-drawing-helper.jsx';
@@ -43,7 +44,8 @@ function extractElementData(node) {
   }
 }
 
-export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers}, {editingActions, viewer2DActions, drawingActions}) {
+export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers},
+  {editingActions, viewer2DActions, drawingActions, verticesActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
   let layerID = scene.selectedLayer;
@@ -109,6 +111,10 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
       case MODE_DRAGGING_LINE:
         drawingActions.updateDraggingLine(x, y);
         break;
+
+      case MODE_DRAGGING_VERTEX:
+        verticesActions.updateDraggingVertex(x, y);
+        break;
     }
   };
 
@@ -119,10 +125,15 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
       case MODE_IDLE:
 
         let elementData = extractElementData(event.originalEvent.target);
+        if (!(elementData && elementData.selected)) return;
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'lines':
-            if (elementData && elementData.selected) drawingActions.beginDraggingLine(x, y);
+            drawingActions.beginDraggingLine(x, y);
+            break;
+
+          case 'vertices':
+            verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y);
             break;
         }
     }
@@ -134,6 +145,10 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
     switch (mode) {
       case MODE_DRAGGING_LINE:
         drawingActions.endDraggingLine(x, y);
+        break;
+
+      case MODE_DRAGGING_VERTEX:
+        verticesActions.endDraggingVertex(x, y);
         break;
     }
   };
@@ -180,5 +195,6 @@ Viewer2D.propTypes = {
 Viewer2D.contextTypes = {
   viewer2DActions: PropTypes.object.isRequired,
   editingActions: PropTypes.object.isRequired,
-  drawingActions: PropTypes.object.isRequired
+  drawingActions: PropTypes.object.isRequired,
+  verticesActions: PropTypes.object.isRequired
 };

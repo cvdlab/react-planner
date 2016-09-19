@@ -8,6 +8,7 @@ import volumesReducer from './volumes-reducer';
 import drawingReducer from './drawing-reducer';
 import sceneReducer from './scene-reducer';
 import imagesReducer from './images-reducer';
+import verticesReducer from './vertices-reducer';
 
 import {State} from '../models';
 
@@ -69,6 +70,11 @@ export default function appReducers(state, action) {
     case constants.SET_LAYER_PROPERTIES:
     case constants.SELECT_LAYER:
       return sceneReducer(state, action);
+
+    case constants.BEGIN_DRAGGING_VERTEX:
+    case constants.UPDATE_DRAGGING_VERTEX:
+    case constants.END_DRAGGING_VERTEX:
+      return verticesReducer(state, action);
 
     default:
       return state;

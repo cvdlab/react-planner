@@ -38,6 +38,7 @@ export const Vertex = Record({
   id: "",
   x: -1,
   y: -1,
+  prototype: "vertices",
   selected: false,
   lines: new List(),
   areas: new List(),
