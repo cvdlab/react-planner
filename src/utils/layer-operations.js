@@ -4,6 +4,8 @@ import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
 import sceneComponents from '../scene-components/scene-components';
+import Graph from 'biconnected-components/src/graph';
+import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
 /** factory **/
 export function sceneComponentsFactory(type, options) {
@@ -290,8 +292,24 @@ export function detectAndUpdateAreas(layer) {
 
     //add new areas
     console.log("graphCycles call", verticesArray, linesArray);
-    let cycles = graphCycles(verticesArray, linesArray);
-    console.log("graphCycles result", cycles);
+
+    let graph = new Graph(verticesArray.length);
+    linesArray.forEach(line => {
+      graph.addEdge(line[0], line[1]);
+      graph.addEdge(line[1], line[0]);
+    });
+
+    graph.BCC();
+
+    let subgraphs = graph.subgraphs.filter(subgraph => subgraph.length >= 3);
+    let edgesArray = getEdgesOfSubgraphs(subgraphs, graph);
+
+    let edges = [];
+    edgesArray.forEach(es => {
+      es.forEach(edge => edges.push(edge))
+    });
+
+    let cycles = graphCycles(verticesArray, edges);
     cycles.v_cycles.forEach(cycle => {
       cycle.shift();
       let verticesCoords = cycle.map(index => index2coord[index]);
