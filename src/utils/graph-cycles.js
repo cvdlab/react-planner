@@ -158,8 +158,30 @@ function find_cycles (V, EV) {
   }
 }
 
+function find_short_cycles_indexes (cycles) {
+  var indexes = [];
+  var cycle;
+  var i;
+
+  for (i = 0; i < cycles.length; i += 1) {
+    cycle = cycles[i]
+    if (cycle.length < 3 || cycle[0] !== cycle[cycle.length - 1]) {
+      indexes.push(i);
+    }
+  }
+
+  return indexes;
+}
+
 function find_inner_cycles (V, EV) {
   var cycles = find_cycles(V, EV);
+  var v_cycles = cycles.v_cycles;
+  var e_cycles = cycles.e_cycles;
+  var short_cycles_indexes = find_short_cycles_indexes(e_cycles);
+  short_cycles_indexes.forEach(indx => {
+    v_cycles.splice(indx, 1);
+    e_cycles.splice(indx, 1);
+  })
   var dir_e_cycles = cycles.dir_e_cycles;
   var rooms_values = cycles.e_cycles.map((cycle, i) => cycle.map(function (edge, j) {
     var v1;
@@ -190,11 +212,10 @@ function find_inner_cycles (V, EV) {
     e_cycles: cycles.e_cycles.filter((v, i) => (rm_neg * rooms_sums[i]) > 0 ),
     ev_mapping: cycles.ev_mapping
   }
-
-
 }
 
-export default find_inner_cycles;
+// export default find_inner_cycles;
+module.exports = find_inner_cycles
 
 /**
 * DATA
@@ -204,11 +225,16 @@ export default find_inner_cycles;
 // var EV = [[0, 1], [2, 3], [5, 4], [7, 6], [2, 8], [3, 6], [4, 9], [0, 10], [9, 5], [8, 10], [7, 11], [12, 13], [6, 8], [6, 10], [4, 7], [4, 11], [4, 14], [5, 15], [11, 14], [0, 12], [13, 15], [0, 13], [1, 10], [3, 7], [5, 13]]
 
 // var V = [[0,0],[10,0],[10,10],[0,10], [100,100],[110,100],[110,110],[100,110], [5,0], [5,10]]
+// var V = [[0,0.5],[12,-0.7],[14,14],[-2,10], [103,106],[117,98],[96,112],[104,109], [5.5,0.8], [4.8,10.5]]
 // var EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9]] // IT WORKS
+// var EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9], [5,6], [6,7], [2,5]] // IT DOESN'T WORK
 // var EV = [[3,2],[2,1],[1,0],[0,3]] // IT WORKS
 // var EV = [[2,3],[1,2],[0,1],[3,0]] // IT WORKS
 // var EV = [[2,3],[1,2],[0,1],[3,0],[6,7],[5,6],[4,5],[7,4]] // IT WORKS
 // var EV = [[3,2],[2,1],[1,0],[0,3],[7,6],[6,5],[5,4],[4,7]] // IT WORKS
+
+// var V = [[2,5],[5,6],[10,6.8],[23,8],[9.6,11.3],[20,15],[25,16],[29,18],[30,22],[4,11],[6,10],[24,25],[18,20],[27,7]]
+// var EV = [[0,1],[10,0],[9,10],[9,1],[1,2],[4,2],[3,13],[2,3],[4,5],[5,6],[6,7],[12,5],[12,11],[11,6],[11,8],[7,8],[9,4]]
 
 /**
 * MAIN
