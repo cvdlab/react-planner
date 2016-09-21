@@ -7,6 +7,7 @@ import App from './components/app.jsx';
 import store from './reducers/store';
 import autosave from './autosave';
 import keyboard from './keyboard';
+import actions from './actions/actions';
 
 autosave(store);
 keyboard(store);
@@ -25,13 +26,7 @@ window.Metior = {
   store: store,
   dispatch: store.dispatch,
   getState: () => store.getState().toJS(),
-  projectActions: require('./actions/project-actions'),
-  editingActions: require('./actions/editing-actions'),
-  viewer2DActions: require('./actions/viewer2d-actions'),
-  viewer3DActions: require('./actions/viewer3d-actions'),
-  volumesActions: require('./actions/volumes-actions'),
-  drawingActions: require('./actions/drawing-actions'),
-  sceneActions: require('./actions/scene-actions')
+  ...actions
 };
 console.groupCollapsed("Metior");
 console.info("Metior is ready");

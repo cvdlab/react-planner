@@ -158,14 +158,16 @@ function find_cycles (V, EV) {
   }
 }
 
-function find_short_cycles_indexes (cycles) {
+function find_short_cycles_indexes (v_cycles, e_cycles) {
   var indexes = [];
-  var cycle;
+  var e_cycle;
+  var v_cycle;
   var i;
 
-  for (i = 0; i < cycles.length; i += 1) {
-    cycle = cycles[i]
-    if (cycle.length < 3 || cycle[0] !== cycle[cycle.length - 1]) {
+  for (i = 0; i < e_cycles.length; i += 1) {
+    e_cycle = e_cycles[i];
+    v_cycle = v_cycles[i];
+    if ((e_cycle.length < 3) || (v_cycle[0] !== v_cycle[v_cycle.length - 1])) {
       indexes.push(i);
     }
   }
@@ -177,7 +179,7 @@ function find_inner_cycles (V, EV) {
   var cycles = find_cycles(V, EV);
   var v_cycles = cycles.v_cycles;
   var e_cycles = cycles.e_cycles;
-  var short_cycles_indexes = find_short_cycles_indexes(e_cycles);
+  var short_cycles_indexes = find_short_cycles_indexes(v_cycles, e_cycles);
   short_cycles_indexes.forEach(indx => {
     v_cycles.splice(indx, 1);
     e_cycles.splice(indx, 1);

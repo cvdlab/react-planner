@@ -11,7 +11,7 @@ export default function Content({width, height, state}) {
   let mode = state.get('mode');
   let viewer2D = state.get('viewer2D');
   let activeDrawingHelper = state.get('activeDrawingHelper');
-  let drawingHelpers = state.get('drawingHelpers');
+  let snapElements = state.get('snapElements');
 
   switch (mode) {
     case constants.MODE_3D_VIEW:
@@ -28,7 +28,7 @@ export default function Content({width, height, state}) {
       return React.createElement(ImageEditor, {scene, mode, width, height});
 
     default:
-      return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeDrawingHelper, drawingHelpers});
+      return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeDrawingHelper, snapElements});
   }
 }
 

@@ -40,6 +40,7 @@ export function parseData(sceneData, editingActions) {
       };
 
       let area3D = AreaGeneric.render3D(area, layer);
+      area3D.position.y += layer.altitude;
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
     });
@@ -144,6 +145,7 @@ function createWall(layer, line, editingActions) {
 
   let alpha = Math.asin((vertex1.y - vertex0.y) / (distance - bevelRadius)); //TODO: REMOVE WORKAROUND BEVELING
   wall.position.x += vertex0.x;
+  wall.position.y += layer.altitude;
   wall.position.z -= vertex0.y;
 
   return wall;
@@ -197,6 +199,8 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
   };
 
   let newAreaObject = AreaGeneric.render3D(newAreaData, layer);
+
+  newAreaObject.position.y += layer.altitude;
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;

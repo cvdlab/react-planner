@@ -3,19 +3,16 @@ import {MODE_IDLE} from '../../constants';
 
 export default function Area({layer, area, mode}, {editingActions, sceneComponents}) {
 
-  let onClick = event => {
-    switch (mode) {
-      case MODE_IDLE:
-        editingActions.selectArea(layer.id, area.id);
-        event.stopPropagation();
-        break;
-    }
-  };
-
   let rendered = sceneComponents[area.type].render2D(area, layer);
 
   return (
-    <g onClick={onClick}> {rendered} </g>
+    <g
+      data-element-root
+      data-prototype={area.prototype}
+      data-id={area.id}
+      data-selected={area.selected}
+      data-layer={layer.id}
+    >{rendered}</g>
   )
 
 }

@@ -4,6 +4,8 @@ import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
 import sceneComponents from '../scene-components/scene-components';
+import Graph from 'biconnected-components/src/graph';
+import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
 /** factory **/
 export function sceneComponentsFactory(type, options) {
@@ -56,17 +58,17 @@ export function addLine(layer, type, x0, y0, x1, y1) {
 
 export function replaceLineVertex(layer, lineID, vertexIndex, x, y) {
   let line = layer.getIn(['lines', lineID]);
+  let vertex;
 
-  layer = layer.withMutations(layer => {
-    let vertex;
+  layer = layer.withMutations(layer => layer.withMutations(layer => {
     let vertexID = line.vertices.get(vertexIndex);
-
+    unselect(layer, 'vertices', vertexID);
     removeVertex(layer, vertexID, 'lines', line.id);
     ({layer, vertex} = addVertex(layer, x, y, 'lines', line.id));
     line = line.setIn(['vertices', vertexIndex], vertex.id);
     layer.setIn(['lines', lineID], line);
-  });
-  return {layer, line};
+  }));
+  return {layer, line, vertex};
 }
 
 export function removeLine(layer, lineID) {
@@ -199,8 +201,11 @@ export function select(layer, prototype, ID) {
 
 export function unselect(layer, prototype, ID) {
   return layer.withMutations(layer => {
-      layer.setIn([prototype, ID, 'selected'], false);
-      layer.updateIn(['selected', prototype], ids => ids.filter(curID => ID !== curID));
+      let ids = layer.getIn(['selected', prototype]);
+      ids = ids.remove(ids.indexOf(ID));
+      let selected = ids.some(key => key === ID);
+      layer.setIn(['selected', prototype], ids);
+      layer.setIn([prototype, ID, 'selected'], selected);
     }
   );
 }
@@ -214,10 +219,9 @@ export function unselectAll(layer) {
   let selected = layer.get('selected');
 
   return layer.withMutations(layer => {
-    selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
-    selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
-    selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
-    layer.set('selected', new ElementsSet());
+    layer.selected.forEach((ids, prototype)=> {
+      ids.forEach(id => unselect(layer, prototype, id));
+    });
   });
 }
 
@@ -290,8 +294,24 @@ export function detectAndUpdateAreas(layer) {
 
     //add new areas
     console.log("graphCycles call", verticesArray, linesArray);
-    let cycles = graphCycles(verticesArray, linesArray);
-    console.log("graphCycles result", cycles);
+
+    let graph = new Graph(verticesArray.length);
+    linesArray.forEach(line => {
+      graph.addEdge(line[0], line[1]);
+      graph.addEdge(line[1], line[0]);
+    });
+
+    graph.BCC();
+
+    let subgraphs = graph.subgraphs.filter(subgraph => subgraph.length >= 3);
+    let edgesArray = getEdgesOfSubgraphs(subgraphs, graph);
+
+    let edges = [];
+    edgesArray.forEach(es => {
+      es.forEach(edge => edges.push(edge))
+    });
+
+    let cycles = graphCycles(verticesArray, edges);
     cycles.v_cycles.forEach(cycle => {
       cycle.shift();
       let verticesCoords = cycle.map(index => index2coord[index]);

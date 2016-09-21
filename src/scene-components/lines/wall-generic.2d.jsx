@@ -2,7 +2,7 @@ import React from 'react';
 import {distanceFromTwoPoints} from '../../utils/geometry';
 
 const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
-const STYLE_SELECTED = {stroke: "#FFC107", strokeWidth: "1px", fill: "orange"};
+const STYLE_SELECTED = {stroke: "#99c3fb", strokeWidth: "5px", fill: "#000"};
 
 export default function (line, layer) {
 

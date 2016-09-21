@@ -20,8 +20,7 @@ export default function (state, action) {
       return state.set('mode', MODE_UPLOADING_IMAGE);
 
     case BEGIN_UPLOADING_IMAGE:
-      //noop
-      break;
+      return state;
 
     case END_UPLOADING_IMAGE:
       return endUploadingImage(state, action.image, action.width, action.height);

@@ -45,7 +45,7 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
   let addClick = event => {
     let name = window.prompt("layer name");
     let altitude = window.prompt("layer altitude");
-    sceneActions.addLayer(name, altitude);
+    sceneActions.addLayer(name, parseFloat(altitude));
     event.stopPropagation();
   }
 
@@ -53,8 +53,10 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
     <Panel name="Layers">
       {scene.layers.entrySeq().map(([layerID, layer]) => {
 
-        let style = layerID === scene.selectedLayer ? STYLE_LAYER_ACTIVE : STYLE_LAYER_WRAPPER;
-        let icon = layer.visible || layerID === scene.selectedLayer ? <IconVisible /> : <IconHide style={{color:"#a5a1a1"}} />;
+        let isCurrentLayer = layerID === scene.selectedLayer;
+        let style = isCurrentLayer ? STYLE_LAYER_ACTIVE : STYLE_LAYER_WRAPPER;
+        let icon = layer.visible || layerID === scene.selectedLayer ? <IconVisible /> :
+          <IconHide style={{color: "#a5a1a1"}}/>;
 
         let selectClick = event => sceneActions.selectLayer(layerID);
 
@@ -63,9 +65,12 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
           event.stopPropagation();
         };
 
+        let iconRendered = isCurrentLayer ?
+          <div style={STYLE_ICON}></div> : <div style={STYLE_ICON} onClick={swapVisibility}>{icon}</div>;
+
         return (
           <div style={style} key={layerID} onClick={selectClick}>
-            <div style={STYLE_ICON} onClick={swapVisibility}>{icon}</div>
+            {iconRendered}
             <div style={STYLE_NAME}>[{layer.id}] {layer.name}</div>
           </div>
         )
