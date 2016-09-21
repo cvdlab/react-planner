@@ -45,7 +45,7 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
   let addClick = event => {
     let name = window.prompt("layer name");
     let altitude = window.prompt("layer altitude");
-    sceneActions.addLayer(name, altitude);
+    sceneActions.addLayer(name, parseFloat(altitude));
     event.stopPropagation();
   }
 
