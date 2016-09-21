@@ -10,7 +10,7 @@ export default function Content({width, height, state}) {
   let scene = state.get('scene');
   let mode = state.get('mode');
   let viewer2D = state.get('viewer2D');
-  let activeDrawingHelper = state.get('activeDrawingHelper');
+  let activeSnapElement = state.get('activeSnapElement');
   let snapElements = state.get('snapElements');
 
   switch (mode) {
@@ -28,7 +28,7 @@ export default function Content({width, height, state}) {
       return React.createElement(ImageEditor, {scene, mode, width, height});
 
     default:
-      return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeDrawingHelper, snapElements});
+      return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeSnapElement, snapElements});
   }
 }
 
