@@ -14,13 +14,7 @@ export const AreaGeneric = {
   properties: {
     patternColor: {
       type: "color",
-      defaultValue: "#cccccc"
-    },
-    patternDirection: {
-      type: "number",
-      defaultValue: 0,
-      min: 0,
-      max: 359
+      defaultValue: "#f5f4f4"
     },
     texture: {
       type: "enum",

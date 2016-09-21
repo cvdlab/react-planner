@@ -58,17 +58,17 @@ export function addLine(layer, type, x0, y0, x1, y1) {
 
 export function replaceLineVertex(layer, lineID, vertexIndex, x, y) {
   let line = layer.getIn(['lines', lineID]);
+  let vertex;
 
-  layer = layer.withMutations(layer => {
-    let vertex;
+  layer = layer.withMutations(layer => layer.withMutations(layer => {
     let vertexID = line.vertices.get(vertexIndex);
-
+    unselect(layer, 'vertices', vertexID);
     removeVertex(layer, vertexID, 'lines', line.id);
     ({layer, vertex} = addVertex(layer, x, y, 'lines', line.id));
     line = line.setIn(['vertices', vertexIndex], vertex.id);
     layer.setIn(['lines', lineID], line);
-  });
-  return {layer, line};
+  }));
+  return {layer, line, vertex};
 }
 
 export function removeLine(layer, lineID) {
@@ -201,8 +201,11 @@ export function select(layer, prototype, ID) {
 
 export function unselect(layer, prototype, ID) {
   return layer.withMutations(layer => {
-      layer.setIn([prototype, ID, 'selected'], false);
-      layer.updateIn(['selected', prototype], ids => ids.filter(curID => ID !== curID));
+      let ids = layer.getIn(['selected', prototype]);
+      ids = ids.remove(ids.indexOf(ID));
+      let selected = ids.some(key => key === ID);
+      layer.setIn(['selected', prototype], ids);
+      layer.setIn([prototype, ID, 'selected'], selected);
     }
   );
 }
@@ -216,10 +219,9 @@ export function unselectAll(layer) {
   let selected = layer.get('selected');
 
   return layer.withMutations(layer => {
-    selected.get('lines').forEach(lineID => layer.setIn(['lines', lineID, 'selected'], false));
-    selected.get('areas').forEach(areaID => layer.setIn(['areas', areaID, 'selected'], false));
-    selected.get('holes').forEach(holeID => layer.setIn(['holes', holeID, 'selected'], false));
-    layer.set('selected', new ElementsSet());
+    layer.selected.forEach((ids, prototype)=> {
+      ids.forEach(id => unselect(layer, prototype, id));
+    });
   });
 }
 

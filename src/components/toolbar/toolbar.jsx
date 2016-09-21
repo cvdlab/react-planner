@@ -37,7 +37,8 @@ export default function Toolbar({state, width, height}, {
   editingActions,
   viewer3DActions,
   volumesActions,
-  drawingActions,
+  linesActions,
+  holesActions,
   imagesActions
 }) {
 
@@ -98,21 +99,21 @@ export default function Toolbar({state, width, height}, {
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE].includes(mode)} tooltip="Add wall"
-                     onClick={event => drawingActions.selectToolDrawingLine('wallGeneric')}>
+                     onClick={event => linesActions.selectToolDrawingLine('wallGeneric')}>
         <IconAddLine />
       </ToolbarButton>
 
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'doorGeneric'}
+        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'doorGeneric'}
         tooltip="Add door"
-        onClick={event => drawingActions.selectToolDrawingHole('doorGeneric')}>
+        onClick={event => holesActions.selectToolDrawingHole('doorGeneric')}>
         <IconDoor />
       </ToolbarButton>
 
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingConfig', 'type']) === 'windowGeneric'}
+        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'windowGeneric'}
         tooltip="Add window"
-        onClick={event => drawingActions.selectToolDrawingHole('windowGeneric')}>
+        onClick={event => holesActions.selectToolDrawingHole('windowGeneric')}>
         <IconWindow />
       </ToolbarButton>
     </aside>
@@ -130,6 +131,7 @@ Toolbar.contextTypes = {
   editingActions: PropTypes.object.isRequired,
   viewer3DActions: PropTypes.object.isRequired,
   volumesActions: PropTypes.object.isRequired,
-  drawingActions: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
   imagesActions: PropTypes.object.isRequired
 };

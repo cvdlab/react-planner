@@ -38,6 +38,8 @@ export const Vertex = Record({
   id: "",
   x: -1,
   y: -1,
+  prototype: "vertices",
+  selected: false,
   lines: new List(),
   areas: new List(),
   images: new List()
@@ -82,9 +84,11 @@ export const State = Record({
   mode: MODE_IDLE,
   scene: new Scene(),
   viewer2D: new Map(),
-  drawingHelpers: new List(),
-  activeDrawingHelper: null,
-  drawingConfig: Map(),
+
+  snapElements: new List(),
+  activeSnapElement: null,
+
+  drawingSupport: Map(),
   draggingSupport: Map()
 });
 

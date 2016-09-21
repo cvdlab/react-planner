@@ -11,10 +11,11 @@ import {
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
   MODE_DRAWING_HOLE,
-  MODE_DRAGGING_LINE
+  MODE_DRAGGING_LINE,
+  MODE_DRAGGING_VERTEX
 } from '../../constants';
 import Scene from './scene.jsx';
-import ActiveDrawingHelper from './active-drawing-helper.jsx';
+import Snap from './snap.jsx';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -29,8 +30,22 @@ function mode2Tool(mode) {
   }
 }
 
+function extractElementData(node) {
+  while (!node.attributes.getNamedItem('data-element-root') && node.tagName !== 'svg') {
+    node = node.parentNode;
+  }
+  if (node.tagName === 'svg') return null;
 
-export default function Viewer2D({scene, width, height, viewer2D, mode, activeDrawingHelper, drawingHelpers}, {editingActions, viewer2DActions, drawingActions}) {
+  return {
+    layer: node.attributes.getNamedItem('data-layer').value,
+    prototype: node.attributes.getNamedItem('data-prototype').value,
+    selected: node.attributes.getNamedItem('data-selected').value === 'true',
+    id: node.attributes.getNamedItem('data-id').value
+  }
+}
+
+export default function Viewer2D({scene, width, height, viewer2D, mode, activeSnapElement, snapElements},
+  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
   let layerID = scene.selectedLayer;
@@ -44,19 +59,39 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_IDLE:
-        editingActions.unselectAll();
+        let elementData = extractElementData(event.originalEvent.target);
+
+        if (elementData && elementData.selected) return;
+
+        switch (elementData ? elementData.prototype : 'none') {
+          case 'areas':
+            editingActions.selectArea(elementData.layer, elementData.id);
+            break;
+
+          case 'lines':
+            editingActions.selectLine(elementData.layer, elementData.id);
+            break;
+
+          case 'holes':
+            editingActions.selectHole(elementData.layer, elementData.id);
+            break;
+
+          case 'none':
+            editingActions.unselectAll();
+            break;
+        }
         break;
 
       case MODE_WAITING_DRAWING_LINE:
-        drawingActions.beginDrawingLine(layerID, x, y);
+        linesActions.beginDrawingLine(layerID, x, y);
         break;
 
       case MODE_DRAWING_LINE:
-        drawingActions.endDrawingLine(layerID, x, y);
+        linesActions.endDrawingLine(x, y);
         break;
 
       case MODE_DRAWING_HOLE:
-        drawingActions.endDrawingHole(layerID, x, y);
+        holesActions.endDrawingHole(layerID, x, y);
         break;
     }
   };
@@ -66,24 +101,41 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_DRAWING_LINE:
-        drawingActions.updateDrawingLine(layerID, x, y);
+        linesActions.updateDrawingLine(x, y);
         break;
 
       case MODE_DRAWING_HOLE:
-        drawingActions.updateDrawingHole(layerID, x, y);
+        holesActions.updateDrawingHole(layerID, x, y);
         break;
 
       case MODE_DRAGGING_LINE:
-        drawingActions.updateDraggingLine(x, y);
+        linesActions.updateDraggingLine(x, y);
+        break;
+
+      case MODE_DRAGGING_VERTEX:
+        verticesActions.updateDraggingVertex(x, y);
         break;
     }
   };
 
   let onMouseDown = event => {
-    if(event.originalEvent.shiftKey) {
-      let {x, y} = mapCursorPosition(event);
-      event.originalEvent.stopPropagation();
-      drawingActions.beginDraggingLine(x, y);
+    let {x, y} = mapCursorPosition(event);
+
+    switch (mode) {
+      case MODE_IDLE:
+
+        let elementData = extractElementData(event.originalEvent.target);
+        if (!(elementData && elementData.selected)) return;
+
+        switch (elementData ? elementData.prototype : 'none') {
+          case 'lines':
+            linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y);
+            break;
+
+          case 'vertices':
+            verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y);
+            break;
+        }
     }
   };
 
@@ -92,7 +144,11 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
     switch (mode) {
       case MODE_DRAGGING_LINE:
-        drawingActions.endDraggingLine(x, y);
+        linesActions.endDraggingLine(x, y);
+        break;
+
+      case MODE_DRAGGING_VERTEX:
+        verticesActions.endDraggingVertex(x, y);
         break;
     }
   };
@@ -104,21 +160,18 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeDr
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
-  activeDrawingHelper = activeDrawingHelper ?
-    <ActiveDrawingHelper helper={activeDrawingHelper} width={scene.width} height={scene.height}/> : null;
-
-  drawingHelpers = false ? drawingHelpers.map(
-    helper => <ActiveDrawingHelper helper={helper} width={scene.width} height={scene.height}/>
-  ) : null;
+  activeSnapElement = activeSnapElement ? <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
+  snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
-            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown} onMouseUp={onMouseUp}>
+            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
+            onMouseUp={onMouseUp}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
         <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
           <Scene scene={scene} mode={mode}/>
-          {activeDrawingHelper}
-          {drawingHelpers}
+          {activeSnapElement}
+          {snapElements}
         </g>
       </svg>
     </Viewer>
@@ -138,5 +191,7 @@ Viewer2D.propTypes = {
 Viewer2D.contextTypes = {
   viewer2DActions: PropTypes.object.isRequired,
   editingActions: PropTypes.object.isRequired,
-  drawingActions: PropTypes.object.isRequired
+  linesActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
+  verticesActions: PropTypes.object.isRequired
 };
