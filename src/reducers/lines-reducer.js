@@ -149,6 +149,9 @@ function endDrawingLine(state, x, y) {
 }
 
 function beginDraggingLine(state, layerID, lineID, x, y) {
+
+  let snapElements = sceneSnapElements(state.scene);
+
   let layer = state.scene.layers.get(layerID);
   let line = layer.lines.get(lineID);
 
@@ -157,6 +160,7 @@ function beginDraggingLine(state, layerID, lineID, x, y) {
 
   return state.merge({
     mode: MODE_DRAGGING_LINE,
+    snapElements,
     draggingSupport: Map({
       layerID, lineID,
       startPointX: x,
@@ -171,6 +175,7 @@ function beginDraggingLine(state, layerID, lineID, x, y) {
 
 function updateDraggingLine(state, x, y) {
   let draggingSupport = state.draggingSupport;
+  let snapElements = state.snapElements;
 
   let layerID = draggingSupport.get('layerID');
   let lineID = draggingSupport.get('lineID');
@@ -181,12 +186,49 @@ function updateDraggingLine(state, x, y) {
   let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
   let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
 
-  return state.updateIn(['scene', 'layers', layerID], layer => layer.withMutations(layer => {
-    let lineVertices = layer.getIn(['lines', lineID, 'vertices']);
-    layer.updateIn(['vertices', lineVertices.get(0)], vertex => vertex.merge({x: newVertex0X, y: newVertex0Y}));
-    layer.updateIn(['vertices', lineVertices.get(1)], vertex => vertex.merge({x: newVertex1X, y: newVertex1Y}));
-    return layer;
-  }));
+
+  let activeSnapElement = null;
+  let curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y);
+  let curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y);
+
+  let deltaX = 0, deltaY = 0;
+  if (curSnap0 && curSnap1) {
+    if (curSnap0.point.distance < curSnap1.point.distance) {
+      deltaX = curSnap0.point.x - newVertex0X;
+      deltaY = curSnap0.point.y - newVertex0Y;
+      activeSnapElement = curSnap0.snap;
+    } else {
+      deltaX = curSnap1.point.x - newVertex1X;
+      deltaY = curSnap1.point.y - newVertex1Y;
+      activeSnapElement = curSnap1.snap;
+    }
+  } else {
+    if (curSnap0) {
+      deltaX = curSnap0.point.x - newVertex0X;
+      deltaY = curSnap0.point.y - newVertex0Y;
+      activeSnapElement = curSnap0.snap;
+    }
+    if (curSnap1) {
+      deltaX = curSnap1.point.x - newVertex1X;
+      deltaY = curSnap1.point.y - newVertex1Y;
+      activeSnapElement = curSnap1.snap;
+    }
+  }
+
+  newVertex0X += deltaX;
+  newVertex0Y += deltaY;
+  newVertex1X += deltaX;
+  newVertex1Y += deltaY;
+
+  return state.merge({
+    activeSnapElement,
+    scene: state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+      let lineVertices = layer.getIn(['lines', lineID, 'vertices']);
+      layer.updateIn(['vertices', lineVertices.get(0)], vertex => vertex.merge({x: newVertex0X, y: newVertex0Y}));
+      layer.updateIn(['vertices', lineVertices.get(1)], vertex => vertex.merge({x: newVertex1X, y: newVertex1Y}));
+      return layer;
+    }))
+  });
 }
 
 function endDraggingLine(state, x, y) {
@@ -195,6 +237,8 @@ function endDraggingLine(state, x, y) {
     state.merge({
       mode: MODE_IDLE,
       draggingSupport: null,
+      activeSnapElement: null,
+      snapElements: new List()
     });
   });
 }
