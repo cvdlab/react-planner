@@ -20,14 +20,15 @@ export function parseData(sceneData, editingActions) {
     sceneGraph.layers[layer.id] = {
       lines: {},
       holes: {},
-      areas: {}
+      areas: {},
+      visible: layer.visible,
+      altitude: layer.altitude
     };
 
     // Import lines
     layer.lines.forEach(line => {
 
-      let wall = createWall(layer, line, editingActions);
-
+      let wall = createWall(layer, line, editingActions, layer.visible);
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
@@ -43,8 +44,8 @@ export function parseData(sceneData, editingActions) {
       area3D.position.y += layer.altitude;
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
+      area3D.visible = layer.visible;
     });
-
 
   });
 
@@ -78,6 +79,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
   diffArray.forEach(diff => {
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
+    console.log("modifiedPath = ", modifiedPath);
 
     let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
 
@@ -102,7 +104,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
 
           oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
           newLineData = layer.lines.get(lineID);
-          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData);
+          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
           planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
 
           break;
@@ -110,14 +112,26 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
           // Now I can replace the wall
           oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
           newLineData = layer.lines.get(modifiedPath[4]);
-          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData);
+          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
           planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
           break;
         case "areas":
           oldAreaObject = planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]];
           newAreaData = layer.areas.get(modifiedPath[4]);
-          newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData);
+          newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, layer.visible);
+          newAreaObject.visible = layer.visible;
           planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]] = newAreaObject;
+          break;
+        case "visible":
+          let layerGraph = planData.sceneGraph.layers[layer.id];
+          layerGraph.visible = layer.visible;
+          for (let lineID in layerGraph.lines) {
+            layerGraph.lines[lineID].visible = layer.visible;
+          }
+
+          for (let areaID in layerGraph.areas) {
+            layerGraph.areas[areaID].visible = layer.visible;
+          }
           break;
       }
     }
@@ -125,7 +139,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
   return planData;
 }
 
-function createWall(layer, line, editingActions) {
+function createWall(layer, line, editingActions, isVisible) {
   line.editingActions = editingActions;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -148,12 +162,14 @@ function createWall(layer, line, editingActions) {
   wall.position.y += layer.altitude;
   wall.position.z -= vertex0.y;
 
+  wall.visible = isVisible;
+
   return wall;
 }
 
-function replaceLine(layer, oldLineObject, newLineData, editingActions, planData) {
+function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible) {
 
-  let newLineObject = createWall(layer, newLineData, editingActions);
+  let newLineObject = createWall(layer, newLineData, editingActions, isVisible);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;
@@ -192,7 +208,7 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
 
 }
 
-function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData) {
+function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, isVisible) {
 
   newAreaData.interactFunction = () => {
     editingActions.selectArea(layer.id, newAreaData.id);
@@ -234,6 +250,8 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
   planData.grid.position.x -= newCenter[0];
   planData.grid.position.y -= newCenter[1];
   planData.grid.position.z -= newCenter[2];
+
+  newAreaObject.visible = isVisible;
 
   return newAreaObject;
 
