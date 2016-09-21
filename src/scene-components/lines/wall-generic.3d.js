@@ -3,7 +3,7 @@ import {DoorGeneric} from '../holes/door-generic'
 import {WindowGeneric} from '../holes/window-generic'
 
 export default function (line, layer) {
-  
+
   let holes = [];
 
   let lineInteractFunction = () => {
@@ -130,9 +130,9 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   let lineGeometry = new Three.ShapeGeometry(rectShape);
   lineGeometry.computeVertexNormals();
 
-  let wallColor = new Three.Color(1, 1, 1);
+  let wallColor = 0xffffff;
   if (isSelected) {
-    wallColor = new Three.Color(1, 0.76, 0);
+    wallColor = 0x99c3fb;
   }
 
   let wallMaterial1 = new Three.MeshPhongMaterial({

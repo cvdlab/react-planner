@@ -23,7 +23,7 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
   }
 
   if (isSelected) {
-    color = new Three.Color(1, 0.76, 0);
+    color = 0x99c3fb;
   } else if (textureName && textureName !== 'none') {
     color = 0xffffff;
   }
