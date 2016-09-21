@@ -79,60 +79,62 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
   diffArray.forEach(diff => {
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
-    console.log("modifiedPath = ", modifiedPath);
 
-    let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
+    if (modifiedPath[1] === "layers") {
 
-    if (modifiedPath.length > 2) {
+      let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
 
-      let oldLineObject;
-      let newLineData;
-      let newLineObject;
+      if (modifiedPath.length > 2) {
 
-      let oldAreaObject;
-      let newAreaData;
-      let newAreaObject;
+        let oldLineObject;
+        let newLineData;
+        let newLineObject;
 
-      switch (modifiedPath[3]) {
-        case "layer":
-          break;
-        case "vertices":
-          break;
-        case "holes":
-          let newHoleData = layer.holes.get(modifiedPath[4]);
-          let lineID = newHoleData.line;
+        let oldAreaObject;
+        let newAreaData;
+        let newAreaObject;
 
-          oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
-          newLineData = layer.lines.get(lineID);
-          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
-          planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
+        switch (modifiedPath[3]) {
+          case "layer":
+            break;
+          case "vertices":
+            break;
+          case "holes":
+            let newHoleData = layer.holes.get(modifiedPath[4]);
+            let lineID = newHoleData.line;
 
-          break;
-        case "lines":
-          // Now I can replace the wall
-          oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
-          newLineData = layer.lines.get(modifiedPath[4]);
-          newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
-          planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
-          break;
-        case "areas":
-          oldAreaObject = planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]];
-          newAreaData = layer.areas.get(modifiedPath[4]);
-          newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, layer.visible);
-          newAreaObject.visible = layer.visible;
-          planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]] = newAreaObject;
-          break;
-        case "visible":
-          let layerGraph = planData.sceneGraph.layers[layer.id];
-          layerGraph.visible = layer.visible;
-          for (let lineID in layerGraph.lines) {
-            layerGraph.lines[lineID].visible = layer.visible;
-          }
+            oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
+            newLineData = layer.lines.get(lineID);
+            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
+            planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
 
-          for (let areaID in layerGraph.areas) {
-            layerGraph.areas[areaID].visible = layer.visible;
-          }
-          break;
+            break;
+          case "lines":
+            // Now I can replace the wall
+            oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
+            newLineData = layer.lines.get(modifiedPath[4]);
+            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
+            planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
+            break;
+          case "areas":
+            oldAreaObject = planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]];
+            newAreaData = layer.areas.get(modifiedPath[4]);
+            newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, layer.visible);
+            newAreaObject.visible = layer.visible;
+            planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]] = newAreaObject;
+            break;
+          case "visible":
+            let layerGraph = planData.sceneGraph.layers[layer.id];
+            layerGraph.visible = layer.visible;
+            for (let lineID in layerGraph.lines) {
+              layerGraph.lines[lineID].visible = layer.visible;
+            }
+
+            for (let areaID in layerGraph.areas) {
+              layerGraph.areas[areaID].visible = layer.visible;
+            }
+            break;
+        }
       }
     }
   });

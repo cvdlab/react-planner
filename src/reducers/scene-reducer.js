@@ -11,10 +11,9 @@ export default function (state, action) {
 
     case SELECT_LAYER:
       return state.merge({
-        'scene': selectLayer(state.scene, action.layerID),
-        'mode': MODE_IDLE
+        'scene': selectLayer(state.scene, action.layerID)
       });
-
+    
     case SET_LAYER_PROPERTIES:
       return state.set('scene', setLayerProperties(state.scene, action.layerID, action.properties));
 
