@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
 import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
 import {MODE_IDLE} from '../../constants';
+import Ruler from './ruler.jsx';
 
 export default function Line({line, layer, mode}, {editingActions, sceneComponents}) {
 
@@ -38,6 +39,7 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
   });
 
   let renderedLine = sceneComponents[line.type].render2D(line, layer);
+  let renderedRuler = line.selected ? <Ruler pixelPerUnit={100} unit={"m"} length={length} /> : null;
 
   return (
     <g
@@ -49,6 +51,7 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
       data-layer={layer.id}
       style={line.selected ? {cursor: "move"} : {}}
     >
+      {renderedRuler}
       {renderedLine}
       {renderedHoles}
     </g>
