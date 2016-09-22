@@ -23,7 +23,7 @@ const STYLE_TEXT = {
 
 export default function Ruler({length, pixelPerUnit, unit}) {
 
-  let distanceText = `${(length / pixelPerUnit).toPrecision(3)} ${unit}`;
+  let distanceText = `${(length / pixelPerUnit).toFixed(2)} ${unit}`;
 
   return (
     <g transform="translate(0, 15)">
