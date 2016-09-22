@@ -24,7 +24,8 @@ export default function Scene({scene, mode}) {
           .map(([layerID, layer]) => <Layer key={layerID} layer={layer} mode={mode}/>)}
       </g>
 
-      <Layer key={selectedLayer.id} layer={selectedLayer} mode={mode}/>
+      <Layer key={selectedLayer.id} layer={selectedLayer} mode={mode} pixelPerUnit={scene.pixelPerUnit}
+             unit={scene.unit}/>
     </g>
   );
 }

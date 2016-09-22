@@ -60,12 +60,9 @@ function selectToolDrawingHole(state, sceneComponentType) {
 /** holes operations **/
 function updateDrawingHole(state, layerID, x, y) {
 
-  let nearestHelper = nearestSnap(state.snapElements, x, y);
-  let helper = null;
-  if (nearestHelper) {
-    ({x, y} = nearestHelper.point);
-    helper = nearestHelper.helper;
-  }
+  //calculate snap and overwrite coords if needed
+  let snap = nearestSnap(state.snapElements, x, y);
+  if (snap) ({x, y} = snap.point);
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let selectedHole = layer.getIn(['selected', 'holes']).first();
@@ -74,8 +71,8 @@ function updateDrawingHole(state, layerID, x, y) {
       removeHole(layer, selectedHole);
     }
 
-    if (helper) {
-      let lineID = helper.related.get(0);
+    if (snap) {
+      let lineID = snap.snap.related.get(0);
       let line = layer.getIn(['lines', lineID]);
       let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(0));
       let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));

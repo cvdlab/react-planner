@@ -161,7 +161,8 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
   activeSnapElement = activeSnapElement ? <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
-  snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
+  // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
+  snapElements = null; //only for debug purpose
 
   return (
     <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}

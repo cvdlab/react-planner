@@ -1,8 +1,9 @@
 import React, {PropTypes} from 'react';
 import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
 import {MODE_IDLE} from '../../constants';
+import Ruler from './ruler.jsx';
 
-export default function Line({line, layer, mode}, {editingActions, sceneComponents}) {
+export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingActions, sceneComponents}) {
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -38,6 +39,7 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
   });
 
   let renderedLine = sceneComponents[line.type].render2D(line, layer);
+  let renderedRuler = line.selected ? <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={length}/> : null;
 
   return (
     <g
@@ -49,6 +51,7 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
       data-layer={layer.id}
       style={line.selected ? {cursor: "move"} : {}}
     >
+      {renderedRuler}
       {renderedLine}
       {renderedHoles}
     </g>
@@ -59,7 +62,9 @@ export default function Line({line, layer, mode}, {editingActions, sceneComponen
 Line.propTypes = {
   line: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired
+  mode: PropTypes.string.isRequired,
+  pixelPerUnit: PropTypes.number.isRequired,
+  unit: PropTypes.string.isRequired,
 };
 
 Line.contextTypes = {

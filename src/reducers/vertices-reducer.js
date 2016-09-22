@@ -5,7 +5,9 @@ import {
   MODE_DRAGGING_VERTEX,
   MODE_IDLE
 } from '../constants'
-import {Map} from 'immutable';
+import {Map, List} from 'immutable';
+import {sceneSnapElements} from '../utils/snap-scene';
+import {nearestSnap} from '../utils/snap';
 
 export default function (state, action) {
   switch (action.type) {
@@ -24,8 +26,12 @@ export default function (state, action) {
 }
 
 function beginDraggingVertex(state, layerID, vertexID, x, y) {
+
+  let snapElements = sceneSnapElements(state.scene);
+
   return state.merge({
     mode: MODE_DRAGGING_VERTEX,
+    snapElements,
     draggingSupport: Map({
       layerID, vertexID
     })
@@ -33,10 +39,16 @@ function beginDraggingVertex(state, layerID, vertexID, x, y) {
 }
 
 function updateDraggingVertex(state, x, y) {
-  let {draggingSupport} = state;
+  let {draggingSupport, snapElements, scene} = state;
+  let snap = nearestSnap(snapElements, x, y);
+  if (snap) ({x, y} = snap.point);
+
   let layerID = draggingSupport.get('layerID');
   let vertexID = draggingSupport.get('vertexID');
-  return state.mergeIn(['scene', 'layers', layerID, 'vertices', vertexID], {x, y});
+  return state.merge({
+    activeSnapElement: snap ? snap.snap : null,
+    scene: scene.mergeIn(['layers', layerID, 'vertices', vertexID], {x, y})
+  });
 }
 
 function endDraggingVertex(state, x, y) {
@@ -44,5 +56,8 @@ function endDraggingVertex(state, x, y) {
   return state.merge({
     mode: MODE_IDLE,
     draggingSupport: null,
+
+    activeSnapElement: null,
+    snapElements: new List()
   });
 }
