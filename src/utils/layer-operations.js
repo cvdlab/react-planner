@@ -3,13 +3,13 @@ import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
-import sceneComponents from '../scene-components/scene-components';
+import catalog from '../catalog/catalog';
 import Graph from 'biconnected-components/src/graph';
 import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
 /** factory **/
-export function sceneComponentsFactory(type, options) {
-  let component = sceneComponents[type];
+export function catalogFactory(type, options) {
+  let component = catalog[type];
   if (!component) throw new Error(`scene component ${type} not found`);
 
   let properties = new Seq(component.properties)
@@ -44,7 +44,7 @@ export function addLine(layer, type, x0, y0, x1, y1) {
     ({layer, vertex: v0} = addVertex(layer, x0, y0, 'lines', lineID));
     ({layer, vertex: v1} = addVertex(layer, x1, y1, 'lines', lineID));
 
-    line = sceneComponentsFactory(type, {
+    line = catalogFactory(type, {
       id: lineID,
       vertices: new List([v0.id, v1.id]),
       type
@@ -238,7 +238,7 @@ export function addArea(layer, type, verticesCoords) {
       vertices.push(vertex.id);
     });
 
-    area = sceneComponentsFactory(type, {
+    area = catalogFactory(type, {
       id: areaID,
       type,
       prototype: "areas",
@@ -331,7 +331,7 @@ export function addHole(layer, type, lineID, offset) {
   layer = layer.withMutations(layer => {
     let holeID = IDBroker.acquireID();
 
-    hole = sceneComponentsFactory(type, {
+    hole = catalogFactory(type, {
       id: holeID,
       type,
       offset,

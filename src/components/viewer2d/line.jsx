@@ -3,7 +3,7 @@ import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils
 import {MODE_IDLE} from '../../constants';
 import Ruler from './ruler.jsx';
 
-export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingActions, sceneComponents}) {
+export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingActions, catalog}) {
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -25,7 +25,7 @@ export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingAc
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let startAt = length * hole.offset - hole.properties.get('width') / 2;
-    let renderedHole = sceneComponents[hole.type].render2D(hole, layer);
+    let renderedHole = catalog[hole.type].render2D(hole, layer);
 
     return <g
       key={holeID}
@@ -38,7 +38,7 @@ export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingAc
     > {renderedHole} </g>;
   });
 
-  let renderedLine = sceneComponents[line.type].render2D(line, layer);
+  let renderedLine = catalog[line.type].render2D(line, layer);
   let renderedRuler = line.selected ? <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={length}/> : null;
 
   return (
@@ -69,5 +69,5 @@ Line.propTypes = {
 
 Line.contextTypes = {
   editingActions: PropTypes.object,
-  sceneComponents: React.PropTypes.object
+  catalog: React.PropTypes.object
 };

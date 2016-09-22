@@ -7,7 +7,7 @@ import ReactDimensions from 'react-dimensions';
 
 import actions from '../actions/actions';
 
-import SceneComponents from '../scene-components/scene-components';
+import Catalog from '../catalog/catalog';
 import Layout from './layout.jsx';
 
 
@@ -15,7 +15,7 @@ class App extends React.Component {
 
   getChildContext() {
     let ctx = {
-      sceneComponents: SceneComponents
+      catalog: Catalog
     };
 
     for(let actionGroupName in actions){
@@ -33,7 +33,7 @@ class App extends React.Component {
 
 
 App.childContextTypes={
-  sceneComponents: React.PropTypes.object,
+  catalog: React.PropTypes.object,
 };
 for(let actionName in actions){
   App.childContextTypes[actionName] = PropTypes.object

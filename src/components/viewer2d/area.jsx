@@ -19,9 +19,9 @@ const STYLE_TEXT = {
 };
 
 
-export default function Area({layer, area, mode, pixelPerUnit, unit}, {editingActions, sceneComponents}) {
+export default function Area({layer, area, mode, pixelPerUnit, unit}, {editingActions, catalog}) {
 
-  let rendered = sceneComponents[area.type].render2D(area, layer);
+  let rendered = catalog[area.type].render2D(area, layer);
 
   let renderedAreaSize = null;
 
@@ -66,6 +66,6 @@ Area.propTypes = {
 
 Area.contextTypes = {
   editingActions: PropTypes.object,
-  sceneComponents: PropTypes.object
+  catalog: PropTypes.object
 };
 

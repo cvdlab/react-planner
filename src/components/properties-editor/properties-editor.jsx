@@ -24,9 +24,9 @@ export default class PropertiesEditor extends Component {
 
   calculateDefaultState() {
     let {element} = this.props;
-    let {sceneComponents} = this.context;
+    let {catalog} = this.context;
 
-    let sceneComponent = sceneComponents[element.type];
+    let sceneComponent = catalog[element.type];
 
     return Seq(sceneComponent.properties).map((configs, propertyName) => {
       return {
@@ -114,5 +114,5 @@ PropertiesEditor.propTypes = {
 
 PropertiesEditor.contextTypes = {
   editingActions: PropTypes.object.isRequired,
-  sceneComponents: PropTypes.object.isRequired
+  catalog: PropTypes.object.isRequired
 };

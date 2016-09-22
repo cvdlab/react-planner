@@ -1,7 +1,7 @@
 import Three from 'three';
 import createGrid from './grid-creator';
-import {AreaGeneric} from '../../scene-components/areas/area-generic.js';
-import {WallGeneric} from '../../scene-components/lines/wall-generic.js';
+import {AreaGeneric} from '../../catalog/areas/area-generic.js';
+import {WallGeneric} from '../../catalog/lines/wall-generic.js';
 
 export function parseData(sceneData, editingActions) {
 
