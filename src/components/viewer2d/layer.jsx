@@ -3,10 +3,11 @@ import Line from './line.jsx';
 import Area from './area.jsx';
 import Vertex from './vertex.jsx';
 import Image from './image.jsx';
+import Item from './item.jsx';
 
 export default function Layer({layer, mode, pixelPerUnit, unit}) {
 
-  let {lines, areas, vertices, holes, images, id: layerID} = layer;
+  let {lines, areas, vertices, holes, images, id: layerID, items} = layer;
 
   return (
     <g>
@@ -14,6 +15,8 @@ export default function Layer({layer, mode, pixelPerUnit, unit}) {
       {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} layer={layer} area={area} mode={mode}
                                                       pixelPerUnit={pixelPerUnit} unit={unit}/>)}
       {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} layer={layer} line={line} mode={mode}
+                                                      pixelPerUnit={pixelPerUnit} unit={unit}/>)}
+      {items.entrySeq().map(([itemID, item]) => <Item key={itemID} layer={layer} item={item} mode={mode}
                                                       pixelPerUnit={pixelPerUnit} unit={unit}/>)}
       {vertices.entrySeq()
         .filter(([vertexID, vertex]) => vertex.selected)

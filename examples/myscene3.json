@@ -1,0 +1,23 @@
+{
+  "pixelPerUnit": 100,
+  "unit": "m",
+  "layers": {
+    "layer-floor-1": {
+      "id": "37r89",
+      "altitude": 0,
+      "items": {
+        "ab": {
+          "id": "ab",
+          "height": 100,
+          "width": 100,
+          "x": 200,
+          "y": 200,
+          "rotation": 20,
+          "selected": false
+        }
+      }
+    }
+  },
+  "width": 1500,
+  "height": 1100
+}

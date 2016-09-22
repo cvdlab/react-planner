@@ -5,7 +5,8 @@ export const ElementsSet = Record({
   vertices: new List(),
   lines: new List(),
   holes: new List(),
-  areas: new List()
+  areas: new List(),
+  items: new List(),
 });
 
 export const Layer = Record({
@@ -17,6 +18,7 @@ export const Layer = Record({
   holes: new Map(),
   areas: new Map(),
   images: new Map(),
+  items: new Map(),
   selected: new ElementsSet(),
   visible: true
 });
@@ -78,6 +80,18 @@ export const Image = Record({
   id: "",
   uri: "",
   vertices: new List()
+});
+
+export const Item = Record({
+  id: "",
+  prototype: 'items',
+  properties: new Map(),
+  selected: false,
+  height: 100,
+  width: 100,
+  x: 0,
+  y: 0,
+  rotation: 0
 });
 
 export const State = Record({
