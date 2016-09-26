@@ -31,7 +31,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     /********************************/
 
 
-    let editingActions = this.context.editingActions;
+    let {editingActions, catalog} = this.context;
 
     let {width, height} = this.props;
     let data = this.props.scene;
@@ -45,7 +45,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     renderer.setSize(width, height);
 
     // LOAD DATA
-    let planData = parseData(data, editingActions);
+    let planData = parseData(data, editingActions, catalog);
 
     scene.add(planData.plan);
 
@@ -333,5 +333,6 @@ Viewer3DFirstPerson.propTypes = {
 };
 
 Viewer3DFirstPerson.contextTypes = {
-  editingActions: React.PropTypes.object.isRequired
+  editingActions: React.PropTypes.object.isRequired,
+  catalog: React.PropTypes.object
 };
