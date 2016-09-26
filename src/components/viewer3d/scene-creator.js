@@ -1,9 +1,7 @@
 import Three from 'three';
 import createGrid from './grid-creator';
-import {AreaGeneric} from '../../catalog/areas/area-generic.js';
-import {WallGeneric} from '../../catalog/lines/wall-generic.js';
 
-export function parseData(sceneData, editingActions) {
+export function parseData(sceneData, editingActions, catalog) {
 
   let sceneGraph = {
     pixelPerUnit: sceneData.pixelPerUnit,
@@ -28,7 +26,7 @@ export function parseData(sceneData, editingActions) {
     // Import lines
     layer.lines.forEach(line => {
 
-      let wall = createWall(layer, line, editingActions, layer.visible);
+      let wall = createWall(layer, line, editingActions, layer.visible, catalog);
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
@@ -40,7 +38,7 @@ export function parseData(sceneData, editingActions) {
         editingActions.selectArea(layer.id, area.id);
       };
 
-      let area3D = AreaGeneric.render3D(area, layer);
+      let area3D = catalog.getElement(area.type).render3D(area, layer);
       area3D.position.y += layer.altitude;
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
@@ -74,7 +72,7 @@ export function parseData(sceneData, editingActions) {
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
-export function updateScene(planData, sceneData, diffArray, editingActions) {
+export function updateScene(planData, sceneData, diffArray, editingActions, catalog) {
 
   diffArray.forEach(diff => {
     /* First of all I need to find the object I need to update */
@@ -105,7 +103,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
 
             oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
             newLineData = layer.lines.get(lineID);
-            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
+            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog);
             planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
 
             break;
@@ -113,13 +111,13 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
             // Now I can replace the wall
             oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
             newLineData = layer.lines.get(modifiedPath[4]);
-            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible);
+            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog);
             planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
             break;
           case "areas":
             oldAreaObject = planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]];
             newAreaData = layer.areas.get(modifiedPath[4]);
-            newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, layer.visible);
+            newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, layer.visible, catalog);
             newAreaObject.visible = layer.visible;
             planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]] = newAreaObject;
             break;
@@ -141,7 +139,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions) {
   return planData;
 }
 
-function createWall(layer, line, editingActions, isVisible) {
+function createWall(layer, line, editingActions, isVisible, catalog) {
   line.editingActions = editingActions;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -152,14 +150,11 @@ function createWall(layer, line, editingActions, isVisible) {
     vertex0 = vertex1;
     vertex1 = app;
   }
-
-  let bevelRadius = line.properties.get('thickness');
-
-  let wall = WallGeneric.render3D(line, layer);
+  
+  let wall = catalog.getElement(line.type).render3D(line, layer);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
 
-  let alpha = Math.asin((vertex1.y - vertex0.y) / (distance - bevelRadius)); //TODO: REMOVE WORKAROUND BEVELING
   wall.position.x += vertex0.x;
   wall.position.y += layer.altitude;
   wall.position.z -= vertex0.y;
@@ -169,9 +164,9 @@ function createWall(layer, line, editingActions, isVisible) {
   return wall;
 }
 
-function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible) {
+function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog) {
 
-  let newLineObject = createWall(layer, newLineData, editingActions, isVisible);
+  let newLineObject = createWall(layer, newLineData, editingActions, isVisible, catalog);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;
@@ -210,13 +205,13 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
 
 }
 
-function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, isVisible) {
+function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, isVisible, catalog) {
 
   newAreaData.interactFunction = () => {
     editingActions.selectArea(layer.id, newAreaData.id);
   };
 
-  let newAreaObject = AreaGeneric.render3D(newAreaData, layer);
+  let newAreaObject = catalog.getElement(newAreaData.type).render3D(newAreaData, layer);
 
   newAreaObject.position.y += layer.altitude;
 

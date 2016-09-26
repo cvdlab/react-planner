@@ -25,7 +25,7 @@ export default class Scene3DViewer extends React.Component {
     renderer.setSize(width, height);
 
     // LOAD DATA
-    let planData = parseData(data, editingActions);
+    let planData = parseData(data, editingActions, this.context.catalog);
 
     scene.add(planData.plan);
     scene.add(planData.grid);
@@ -225,7 +225,7 @@ export default class Scene3DViewer extends React.Component {
 
       let changedValues = diff(this.props.scene, nextProps.scene);
 
-      updateScene(this.planData, nextProps.scene, changedValues.toJS(), this.context.editingActions);
+      updateScene(this.planData, nextProps.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 
     renderer.setSize(width, height);
@@ -247,5 +247,6 @@ Scene3DViewer.propTypes = {
 };
 
 Scene3DViewer.contextTypes = {
-  editingActions: React.PropTypes.object.isRequired
+  editingActions: React.PropTypes.object.isRequired,
+  catalog: React.PropTypes.object
 };

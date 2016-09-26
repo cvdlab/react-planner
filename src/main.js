@@ -8,12 +8,13 @@ import store from './reducers/store';
 import autosave from './autosave';
 import keyboard from './keyboard';
 import actions from './actions/actions';
+import Catalog from './catalog/catalog';
 
 autosave(store);
 keyboard(store);
 
 ReactDOM.render(
-  React.createElement(App, {store}),
+  React.createElement(App, {store, catalog: new Catalog()}),
   document.getElementById('app')
 );
 

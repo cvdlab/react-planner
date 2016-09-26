@@ -3,13 +3,14 @@ import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
-import catalog from '../catalog/catalog';
+import Catalog from '../catalog/catalog'; // TODO: Use a catalog instance
 import Graph from 'biconnected-components/src/graph';
 import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
 /** factory **/
 export function catalogFactory(type, options) {
-  let component = catalog[type];
+  let catalog = new Catalog();
+  let component = catalog.getElement(type);
   if (!component) throw new Error(`scene component ${type} not found`);
 
   let properties = new Seq(component.properties)

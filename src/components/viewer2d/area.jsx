@@ -21,7 +21,7 @@ const STYLE_TEXT = {
 
 export default function Area({layer, area, mode, pixelPerUnit, unit}, {editingActions, catalog}) {
 
-  let rendered = catalog[area.type].render2D(area, layer);
+  let rendered = catalog.getElement(area.type).render2D(area, layer);
 
   let renderedAreaSize = null;
 
