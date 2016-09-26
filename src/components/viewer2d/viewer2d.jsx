@@ -76,6 +76,10 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
             editingActions.selectHole(elementData.layer, elementData.id);
             break;
 
+          case 'items':
+            editingActions.selectItem(elementData.layer, elementData.id);
+            break;
+
           case 'none':
             editingActions.unselectAll();
             break;

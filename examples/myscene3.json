@@ -1,0 +1,24 @@
+{
+  "pixelPerUnit": 100,
+  "unit": "m",
+  "layers": {
+    "layer-1": {
+      "id": "layer-1",
+      "altitude": 0,
+      "items": {
+        "ab": {
+          "type": "itemGeneric",
+          "id": "ab",
+          "height": 100,
+          "width": 300,
+          "x": 200,
+          "y": 200,
+          "rotation": 20,
+          "selected": false
+        }
+      }
+    }
+  },
+  "width": 400,
+  "height": 400
+}

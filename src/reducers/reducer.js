@@ -43,6 +43,7 @@ export default function appReducers(state, action) {
     case constants.SELECT_LINE:
     case constants.SELECT_AREA:
     case constants.SELECT_HOLE:
+    case constants.SELECT_ITEM:
     case constants.UNSELECT_ALL:
     case constants.SET_PROPERTIES:
     case constants.REMOVE:

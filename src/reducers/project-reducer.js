@@ -2,7 +2,7 @@ import {List, Map, Iterable, fromJS, Seq} from "immutable";
 import {ViewerHelper} from 'react-svg-pan-zoom';
 
 import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
-import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet, Image} from "../models";
+import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from "../models";
 import Catalog from '../catalog/catalog'; // TODO: Use a catalog instance
 
 export default function (state, action) {
@@ -48,11 +48,14 @@ function loadProject(state, data) {
   let readImage = image => new Image(image)
     .set('vertices', new List(image.vertices));
 
+  let readItem = item => new Item(item);
+
   let readElementsSet = (elementsSet => {
     return new ElementsSet({
       lines: new List(elementsSet.lines),
       areas: new List(elementsSet.areas),
-      holes: new List(elementsSet.holes)
+      holes: new List(elementsSet.holes),
+      items: new List(elementsSet.items)
     });
   });
 
@@ -63,6 +66,7 @@ function loadProject(state, data) {
     .set('holes', new Seq(layer.holes).map(hole => readHole(hole)).toMap())
     .set('areas', new Seq(layer.areas).map(area => readArea(area)).toMap())
     .set('images', new Seq(layer.images).map(image => readImage(image)).toMap())
+    .set('items', new Seq(layer.items).map(item => readItem(item)).toMap())
     .set('selected', layer.selected ? readElementsSet(layer.selected) : new ElementsSet());
 
 

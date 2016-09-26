@@ -2,6 +2,7 @@ import {WindowGeneric} from './holes/window-generic';
 import {DoorGeneric} from './holes/door-generic';
 import {AreaGeneric} from './areas/area-generic';
 import {WallGeneric} from './lines/wall-generic';
+import {ItemGeneric} from './items/item-generic';
 
 const elements = {
   //holes
@@ -15,8 +16,10 @@ const elements = {
 
   //area
   defaultArea: AreaGeneric,
-  areaGeneric: AreaGeneric
+  areaGeneric: AreaGeneric,
 
+  //items
+  itemGeneric: ItemGeneric
 };
 
 export default class Catalog {
@@ -33,5 +36,5 @@ export default class Catalog {
   hasElement(type) {
     return elements.hasOwnProperty(type);
   }
-  
+
 }

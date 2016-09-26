@@ -39,7 +39,7 @@ export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingAc
   });
 
   let renderedLine = catalog.getElement(line.type).render2D(line, layer);
-  let renderedRuler = line.selected ? <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={length}/> : null;
+  let renderedRuler = line.selected ? <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={length} transform="translate(0, 15)"/> : null;
 
   return (
     <g

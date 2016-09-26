@@ -3,6 +3,7 @@ import {
   SELECT_AREA,
   SELECT_HOLE,
   SELECT_LINE,
+  SELECT_ITEM,
   UNSELECT_ALL,
   SET_PROPERTIES,
   REMOVE
@@ -41,6 +42,14 @@ export function selectArea(layerID, areaID) {
     type: SELECT_AREA,
     layerID,
     areaID
+  }
+}
+
+export function selectItem(layerID, itemID) {
+  return {
+    type: SELECT_ITEM,
+    layerID,
+    itemID
   }
 }
 
