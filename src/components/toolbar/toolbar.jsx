@@ -12,6 +12,7 @@ import IconSummary from 'react-icons/lib/fa/table';
 import IconAddLine from 'react-icons/lib/ti/pen';
 import IconAddImage from 'react-icons/lib/fa/image';
 import {IconDoor, IconWindow} from '../../utils/icons.jsx';
+import IconItem from 'react-icons/lib/ti/point-of-interest-outline';
 
 import {
   MODE_IDLE,
@@ -24,6 +25,7 @@ import {
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
   MODE_DRAWING_HOLE,
+  MODE_DRAWING_ITEM,
   MODE_FITTING_IMAGE,
   MODE_UPLOADING_IMAGE
 } from '../../constants';
@@ -39,7 +41,8 @@ export default function Toolbar({state, width, height}, {
   volumesActions,
   linesActions,
   holesActions,
-  imagesActions
+  imagesActions,
+  itemsActions,
 }) {
 
   let mode = state.get('mode');
@@ -104,17 +107,24 @@ export default function Toolbar({state, width, height}, {
       </ToolbarButton>
 
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'doorGeneric'}
+        active={[MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'doorGeneric'}
         tooltip="Add door"
         onClick={event => holesActions.selectToolDrawingHole('doorGeneric')}>
         <IconDoor />
       </ToolbarButton>
 
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE, MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'windowGeneric'}
+        active={[MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'windowGeneric'}
         tooltip="Add window"
         onClick={event => holesActions.selectToolDrawingHole('windowGeneric')}>
         <IconWindow />
+      </ToolbarButton>
+
+      <ToolbarButton
+        active={[MODE_DRAWING_ITEM].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'itemGeneric'}
+        tooltip="Add item"
+        onClick={event => itemsActions.selectToolDrawingItem('itemGeneric')}>
+        <IconItem />
       </ToolbarButton>
     </aside>
   )
@@ -133,5 +143,6 @@ Toolbar.contextTypes = {
   volumesActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
-  imagesActions: PropTypes.object.isRequired
+  imagesActions: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired
 };

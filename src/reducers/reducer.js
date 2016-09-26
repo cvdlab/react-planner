@@ -10,6 +10,7 @@ import linesReducer from './lines-reducer';
 import sceneReducer from './scene-reducer';
 import imagesReducer from './images-reducer';
 import verticesReducer from './vertices-reducer';
+import itemsReducer from './items-reducer';
 
 import {State} from '../models';
 
@@ -79,6 +80,11 @@ export default function appReducers(state, action) {
     case constants.UPDATE_DRAGGING_VERTEX:
     case constants.END_DRAGGING_VERTEX:
       return verticesReducer(state, action);
+
+    case constants.SELECT_TOOL_DRAWING_ITEM:
+    case constants.UPDATE_DRAWING_ITEM:
+    case constants.END_DRAWING_ITEM:
+      return itemsReducer(state, action);
 
     default:
       return state;
