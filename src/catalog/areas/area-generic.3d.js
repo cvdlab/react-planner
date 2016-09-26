@@ -22,7 +22,9 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
     shape.lineTo(vertices[i].x, vertices[i].y);
   }
 
-  if (textureName && textureName !== 'none') {
+  if(isSelected) {
+    color = 0x99c3fb
+  }else if (textureName && textureName !== 'none') {
     color = 0xffffff;
   }
 
@@ -91,19 +93,7 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
   area.add(areaFace2);
 
   area.rotation.x -= Math.PI / 2;
-
-  if (isSelected) {
-    let box1 = new Three.BoxHelper(areaFace1, 0x99c3fb);
-    box1.material.linewidth = 2;
-    box1.material.depthTest = false;
-    area.add(box1);
-
-    let box2 = new Three.BoxHelper(areaFace2, 0x99c3fb);
-    box2.material.linewidth = 2;
-    box2.material.depthTest = false;
-    area.add(box2);
-  }
-
+  
   return area;
 }
 
