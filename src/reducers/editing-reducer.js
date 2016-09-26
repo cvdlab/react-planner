@@ -19,7 +19,8 @@ import {
   setProperties as setPropertiesOp,
   select,
   unselect,
-  unselectAll as unselectAllOp
+  unselectAll as unselectAllOp,
+  removeItem
 } from '../utils/layer-operations';
 
 export default function (state, action) {
@@ -110,6 +111,7 @@ function remove(scene) {
   return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
     layer.selected.lines.forEach(lineID => removeLine(layer, lineID));
     layer.selected.holes.forEach(holeID => removeHole(layer, holeID));
+    layer.selected.items.forEach(itemID => removeItem(layer, itemID));
     detectAndUpdateAreas(layer);
   }));
 }
