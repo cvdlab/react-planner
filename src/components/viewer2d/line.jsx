@@ -25,7 +25,7 @@ export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingAc
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
     let startAt = length * hole.offset - hole.properties.get('width') / 2;
-    let renderedHole = catalog[hole.type].render2D(hole, layer);
+    let renderedHole = catalog.getElement(hole.type).render2D(hole, layer);
 
     return <g
       key={holeID}
@@ -38,7 +38,7 @@ export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingAc
     > {renderedHole} </g>;
   });
 
-  let renderedLine = catalog[line.type].render2D(line, layer);
+  let renderedLine = catalog.getElement(line.type).render2D(line, layer);
   let renderedRuler = line.selected ? <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={length}/> : null;
 
   return (

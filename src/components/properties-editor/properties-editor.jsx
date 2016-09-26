@@ -26,9 +26,9 @@ export default class PropertiesEditor extends Component {
     let {element} = this.props;
     let {catalog} = this.context;
 
-    let sceneComponent = catalog[element.type];
+    let catalogElement = catalog.getElement(element.type);
 
-    return Seq(sceneComponent.properties).map((configs, propertyName) => {
+    return Seq(catalogElement.properties).map((configs, propertyName) => {
       return {
         currentValue: element.properties.has(propertyName) ? element.properties.get(propertyName) : configs.defaultValue,
         inputElement: configs.type,

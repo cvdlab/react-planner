@@ -7,7 +7,6 @@ import ReactDimensions from 'react-dimensions';
 
 import actions from '../actions/actions';
 
-import Catalog from '../catalog/catalog';
 import Layout from './layout.jsx';
 
 
@@ -15,7 +14,7 @@ class App extends React.Component {
 
   getChildContext() {
     let ctx = {
-      catalog: Catalog
+      catalog: this.props.catalog
     };
 
     for(let actionGroupName in actions){

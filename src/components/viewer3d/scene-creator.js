@@ -38,7 +38,7 @@ export function parseData(sceneData, editingActions, catalog) {
         editingActions.selectArea(layer.id, area.id);
       };
 
-      let area3D = catalog[area.type].render3D(area, layer);
+      let area3D = catalog.getElement(area.type).render3D(area, layer);
       area3D.position.y += layer.altitude;
       plan.add(area3D);
       sceneGraph.layers[layer.id].areas[area.id] = area3D;
@@ -150,14 +150,11 @@ function createWall(layer, line, editingActions, isVisible, catalog) {
     vertex0 = vertex1;
     vertex1 = app;
   }
-
-  let bevelRadius = line.properties.get('thickness');
-
-  let wall = catalog[line.type].render3D(line, layer);
+  
+  let wall = catalog.getElement(line.type).render3D(line, layer);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
 
-  let alpha = Math.asin((vertex1.y - vertex0.y) / (distance - bevelRadius)); //TODO: REMOVE WORKAROUND BEVELING
   wall.position.x += vertex0.x;
   wall.position.y += layer.altitude;
   wall.position.z -= vertex0.y;
@@ -214,7 +211,7 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
     editingActions.selectArea(layer.id, newAreaData.id);
   };
 
-  let newAreaObject = catalog[newAreaData.type].render3D(newAreaData, layer);
+  let newAreaObject = catalog.getElement(newAreaData.type).render3D(newAreaData, layer);
 
   newAreaObject.position.y += layer.altitude;
 
