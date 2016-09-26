@@ -85,6 +85,7 @@ export const Image = Record({
 export const Item = Record({
   id: "",
   prototype: 'items',
+  type: "",
   properties: new Map(),
   selected: false,
   height: 100,
