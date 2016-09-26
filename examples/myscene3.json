@@ -7,9 +7,10 @@
       "altitude": 0,
       "items": {
         "ab": {
+          "type": "itemGeneric",
           "id": "ab",
           "height": 100,
-          "width": 100,
+          "width": 300,
           "x": 200,
           "y": 200,
           "rotation": 20,
@@ -18,6 +19,6 @@
       }
     }
   },
-  "width": 1500,
-  "height": 1100
+  "width": 400,
+  "height": 400
 }
