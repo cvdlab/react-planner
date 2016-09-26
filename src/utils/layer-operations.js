@@ -1,5 +1,5 @@
 import {List, Seq, Map} from 'immutable';
-import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image} from '../models';
+import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
@@ -28,6 +28,9 @@ export function catalogFactory(type, options) {
 
     case 'areas':
       return new Area(options);
+
+    case 'items':
+      return new Item(options);
 
     default:
       throw new Error('prototype not valid');
@@ -381,4 +384,37 @@ export function addImage(layer, uri, x0, y0, x1, y1) {
   });
 
   return {layer, image};
+}
+
+/** items features **/
+export function addItem(layer, type, x, y, width, height, rotation) {
+  let item;
+
+  layer = layer.withMutations(layer => {
+    let itemID = IDBroker.acquireID();
+
+    item = catalogFactory(type, {
+      id: itemID,
+      type,
+      height,
+      width,
+      x,
+      y,
+      rotation
+    });
+
+    layer.setIn(['items', itemID], item);
+  });
+
+  return {layer, item};
+}
+
+export function removeItem(layer, itemID) {
+  let item = layer.getIn(['items', itemID]);
+  layer = layer.withMutations(layer => {
+    unselect(layer, 'items', itemID);
+    layer.deleteIn(['items', item.id]);
+  });
+
+  return {layer, item};
 }

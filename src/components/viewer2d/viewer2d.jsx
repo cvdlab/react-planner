@@ -11,6 +11,7 @@ import {
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
   MODE_DRAWING_HOLE,
+  MODE_DRAWING_ITEM,
   MODE_DRAGGING_LINE,
   MODE_DRAGGING_VERTEX
 } from '../../constants';
@@ -45,7 +46,7 @@ function extractElementData(node) {
 }
 
 export default function Viewer2D({scene, width, height, viewer2D, mode, activeSnapElement, snapElements},
-  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions}) {
+  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions}) {
 
   viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
   let layerID = scene.selectedLayer;
@@ -97,6 +98,10 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
       case MODE_DRAWING_HOLE:
         holesActions.endDrawingHole(layerID, x, y);
         break;
+
+      case MODE_DRAWING_ITEM:
+        itemsActions.endDrawingItem(layerID, x, y);
+        break;
     }
   };
 
@@ -110,6 +115,10 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
 
       case MODE_DRAWING_HOLE:
         holesActions.updateDrawingHole(layerID, x, y);
+        break;
+
+      case MODE_DRAWING_ITEM:
+        itemsActions.updateDrawingItem(layerID, x, y);
         break;
 
       case MODE_DRAGGING_LINE:
@@ -164,7 +173,8 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
-  activeSnapElement = activeSnapElement ? <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
+  activeSnapElement = activeSnapElement ?
+    <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
   // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
   snapElements = null; //only for debug purpose
 
@@ -198,5 +208,6 @@ Viewer2D.contextTypes = {
   editingActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
-  verticesActions: PropTypes.object.isRequired
+  verticesActions: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired,
 };
