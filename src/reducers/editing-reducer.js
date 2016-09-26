@@ -4,6 +4,7 @@ import {
   SELECT_AREA,
   SELECT_HOLE,
   SELECT_LINE,
+  SELECT_ITEM,
   UNSELECT_ALL,
   SET_PROPERTIES,
   REMOVE
@@ -36,6 +37,9 @@ export default function (state, action) {
 
     case SELECT_LINE:
       return state.set('scene', selectLine(scene, action.layerID, action.lineID));
+
+    case SELECT_ITEM:
+      return state.set('scene', selectItem(scene, action.layerID, action.itemID));
 
     case UNSELECT_ALL:
       return state.set('scene', unselectAll(scene));
@@ -78,6 +82,15 @@ function selectArea(scene, layerID, areaID) {
       unselectAllOp(layer);
       select(layer, 'areas', areaID);
       area.vertices.forEach(vertexID => select(layer, 'vertices', vertexID));
+    })
+  );
+}
+
+function selectItem(scene, layerID, itemID) {
+  return scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+      let item = layer.getIn(['items', itemID]);
+      unselectAllOp(layer);
+      select(layer, 'items', itemID);
     })
   );
 }

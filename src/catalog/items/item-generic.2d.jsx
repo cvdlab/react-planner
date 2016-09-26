@@ -8,10 +8,10 @@ export default function (element, layer, scene) {
         y="0"
         width={element.width}
         height={element.height}
-        style={{stroke: "black", strokeWidth: "2px", fill: "none"}}
+        style={{stroke: "black", strokeWidth: "2px", fill: "#84e1ce"}}
       />
       <text x="0" y="0" transform={`translate(${element.width / 2}, ${element.height / 2}) scale(1,-1)`}
-            style={{textAnchor: "middle", fontSize: "11px"}}>itemGeneric
+            style={{textAnchor: "middle", fontSize: "11px"}}>{element.type}
       </text>
     </g>
   );

@@ -15,7 +15,14 @@ export default function Item({layer, item, pixelPerUnit, unit}, {catalog}) {
   let renderedItem = catalog.getElement(item.type).render2D(item, layer);
 
   return (
-    <g transform={`translate(${x},${y}) rotate(${rotation}) translate(${-width / 2},${-height / 2})`}>
+    <g
+      data-element-root
+      data-prototype={item.prototype}
+      data-id={item.id}
+      data-selected={item.selected}
+      data-layer={layer.id}
+      style={item.selected ? {cursor: "move"} : {}}
+      transform={`translate(${x},${y}) rotate(${rotation}) translate(${-width / 2},${-height / 2})`}>
       {renderedItem}
       {renderedRuler}
     </g>

@@ -2,8 +2,8 @@
   "pixelPerUnit": 100,
   "unit": "m",
   "layers": {
-    "layer-floor-1": {
-      "id": "37r89",
+    "layer-1": {
+      "id": "layer-1",
       "altitude": 0,
       "items": {
         "ab": {

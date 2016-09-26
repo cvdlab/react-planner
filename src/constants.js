@@ -10,6 +10,7 @@ export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 export const SELECT_LINE = 'SELECT_LINE';
 export const SELECT_HOLE = 'SELECT_HOLE';
 export const SELECT_AREA = 'SELECT_AREA';
+export const SELECT_ITEM = 'SELECT_ITEM';
 export const UNSELECT_ALL = 'UNSELECT_ALL';
 export const SET_PROPERTIES = 'SET_PROPERTIES';
 export const REMOVE = 'REMOVE';
