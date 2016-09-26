@@ -31,6 +31,7 @@ function createDoorGeneric(width, height, thickness, isSelected) {
 
         if (isSelected) {
           let box = new Three.BoxHelper(object, 0x99c3fb);
+          box.material.linewidth = 2;
           box.material.depthTest = false;
           object.add(box);
         }

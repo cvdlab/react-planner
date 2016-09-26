@@ -47,7 +47,7 @@ export default function (line, layer) {
 }
 
 function createShapeWall(vertex0, vertex1, height, thickness, holes,
-                                        bevelRadius, isSelected, textureA, textureB, interactFunction) {
+                         bevelRadius, isSelected, textureA, textureB, interactFunction) {
 
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
@@ -131,9 +131,6 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   lineGeometry.computeVertexNormals();
 
   let wallColor = 0xffffff;
-  if (isSelected) {
-    wallColor = 0x99c3fb;
-  }
 
   let wallMaterial1 = new Three.MeshPhongMaterial({
     side: Three.BackSide,
@@ -316,6 +313,34 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   topClosure.interact = interactFunction;
   leftClosure.interact = interactFunction;
   rightClosure.interact = interactFunction;
+
+  if (isSelected) {
+    let box1 = new Three.BoxHelper(wall1, 0x99c3fb);
+    box1.material.depthTest = false;
+    box1.material.linewidth = 2;
+    box1.material.vertexColor = Three.VertexColors;
+    pivot.add(box1);
+
+    let box2 = new Three.BoxHelper(wall2, 0x99c3fb);
+    box2.material.depthTest = false;
+    box2.material.linewidth = 2;
+    pivot.add(box2);
+
+    let box3 = new Three.BoxHelper(topClosure, 0x99c3fb);
+    box3.material.depthTest = false;
+    box3.material.linewidth = 2;
+    pivot.add(box3);
+
+    let box4 = new Three.BoxHelper(leftClosure, 0x99c3fb);
+    box4.material.depthTest = false;
+    box4.material.linewidth = 2;
+    pivot.add(box4);
+
+    let box5 = new Three.BoxHelper(rightClosure, 0x99c3fb);
+    box5.material.depthTest = false;
+    box5.material.linewidth = 2;
+    pivot.add(box5);
+  }
 
   return pivot;
 }
