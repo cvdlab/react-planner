@@ -30,7 +30,7 @@ function createWindowGeneric(width, height, thickness, isSelected) {
         let initialThickness = boundingBox.max.z - boundingBox.min.z;
 
         if (isSelected) {
-          let box = new Three.BoxHelper(object, 0xffc107);
+          let box = new Three.BoxHelper(object, 0x99c3fb);
           box.material.depthTest = false;
           object.add(box);
         }
