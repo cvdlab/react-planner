@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 
-import {Viewer, ViewerHelper, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
+import {Viewer, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
 import {
   MODE_IDLE,
   MODE_2D_PAN,
@@ -48,7 +48,7 @@ function extractElementData(node) {
 export default function Viewer2D({scene, width, height, viewer2D, mode, activeSnapElement, snapElements},
   {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions}) {
 
-  viewer2D = viewer2D.isEmpty() ? ViewerHelper.getDefaultValue() : viewer2D.toJS();
+  viewer2D = viewer2D.isEmpty() ? null : viewer2D.toJS();
   let layerID = scene.selectedLayer;
 
   let mapCursorPosition = ({x, y}) => {
