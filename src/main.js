@@ -10,13 +10,14 @@ import keyboard from './keyboard';
 import actions from './actions/actions';
 import Catalog from './catalog/catalog';
 
-let store = initStore();
+let catalog = new Catalog();
+let store = initStore({catalog});
 
 autosave(store);
 keyboard(store);
 
 ReactDOM.render(
-  React.createElement(App, {store, catalog: new Catalog()}),
+  React.createElement(App, {store, catalog}),
   document.getElementById('app')
 );
 
