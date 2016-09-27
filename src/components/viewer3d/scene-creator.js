@@ -155,6 +155,20 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
 }
 
 function createWall(layer, line, editingActions, catalog) {
+
+  let holes = [];
+
+  line.holes.forEach(holeID => {
+
+    let hole = layer.holes.get(holeID);
+
+    let holeInteractFunction = () => {
+      return line.editingActions.selectHole(layer.id, hole.id)
+    };
+
+    holes.push({holeData: hole, holeInteractFunction});
+  });
+
   line.editingActions = editingActions;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -169,6 +183,38 @@ function createWall(layer, line, editingActions, catalog) {
   let wall = catalog.getElement(line.type).render3D(line, layer);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
+  let bevelRadius = line.properties.get('thickness');
+
+  holes.forEach(({holeData, holeInteractFunction}) => {
+
+    // Add thickness to hole properties
+    holeData.thickness = line.properties.get('thickness');
+
+    // Create the hole object:
+    let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined);
+
+    holePromise.then(object => {
+      let boundingBox = new Three.Box3().setFromObject(object);
+      let center = [
+        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+      let coordinates = [
+        (distance - bevelRadius) * holeData.offset,
+        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
+        0];
+
+      object.position.x += coordinates[0] - center[0] + bevelRadius / 2;
+      //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+      object.position.y += coordinates[1] - center[1];
+      object.position.z += coordinates[2] - center[2];
+      wall.add(object);
+      applyInteract(object, holeInteractFunction);
+    });
+
+  });
+
 
   wall.position.x += vertex0.x;
   wall.position.y += layer.altitude;
@@ -290,15 +336,6 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
     item3D.position.x += center[0] + item.x;
     item3D.position.z -= center[2] + item.y;
 
-    // Apply interact function to children of an Object3D
-    let applyInteract = (object, interactFunction) => {
-      object.traverse(function (child) {
-        if (child instanceof Three.Mesh) {
-          child.interact = interactFunction;
-        }
-      });
-    };
-
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, item.id);
       }
@@ -314,8 +351,7 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
 function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog) {
 
   planData.plan.remove(oldItemObject);
-
-
+  
   let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer);
 
   item3DPromise.then(item3D => {
@@ -335,15 +371,6 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
 
     item3D.position.x += center[0] + newItemData.x;
     item3D.position.z -= center[2] + newItemData.y;
-
-    // Apply interact function to children of an Object3D
-    let applyInteract = (object, interactFunction) => {
-      object.traverse(function (child) {
-        if (child instanceof Three.Mesh) {
-          child.interact = interactFunction;
-        }
-      });
-    };
 
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, newItemData.id);
@@ -383,5 +410,14 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
     planData.grid.position.y -= newCenter[1];
     planData.grid.position.z -= newCenter[2];
 
+  });
+}
+
+// Apply interact function to children of an Object3D
+function applyInteract(object, interactFunction) {
+  object.traverse(function (child) {
+    if (child instanceof Three.Mesh) {
+      child.interact = interactFunction;
+    }
   });
 }
