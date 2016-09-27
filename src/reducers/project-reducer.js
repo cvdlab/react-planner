@@ -1,7 +1,6 @@
 import {Seq} from "immutable";
 import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
 import {State, Scene} from "../models";
-import Catalog from '../catalog/catalog'; // TODO: Use a catalog instance
 import {loadLayerFromJSON} from '../utils/layer-operations';
 
 export default function (state, action) {
@@ -12,7 +11,7 @@ export default function (state, action) {
       return new State();
 
     case LOAD_PROJECT:
-      return loadProject(state, action.data);
+      return loadProject(state, action.data, action.catalog);
 
     default:
       return state;
@@ -21,9 +20,9 @@ export default function (state, action) {
 }
 
 
-function loadProject(state, data) {
+function loadProject(state, data, catalog) {
   let readScene = scene => new Scene(scene)
-    .set('layers', new Seq(scene.layers).map(layer => loadLayerFromJSON(layer)))
+    .set('layers', new Seq(scene.layers).map(layer => loadLayerFromJSON(layer, catalog)))
     .set('selectedLayer', Object.keys(scene.layers)[0]);
 
   let scene = readScene(data);

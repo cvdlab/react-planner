@@ -17,10 +17,10 @@ export default function (state, action) {
       return selectToolDrawingItem(state, action.sceneComponentType);
 
     case UPDATE_DRAWING_ITEM:
-      return updateDrawingItem(state, action.layerID, action.x, action.y);
+      return updateDrawingItem(state, action.layerID, action.x, action.y, action.catalog);
 
     case END_DRAWING_ITEM:
-      return endDrawingItem(state, action.layerID, action.x, action.y);
+      return endDrawingItem(state, action.layerID, action.x, action.y, action.catalog);
 
     default:
       return state;
@@ -37,8 +37,7 @@ function selectToolDrawingItem(state, sceneComponentType) {
 }
 
 /** holes operations **/
-function updateDrawingItem(state, layerID, x, y) {
-
+function updateDrawingItem(state, layerID, x, y, catalog) {
   let {drawingSupport} = state;
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
@@ -46,7 +45,7 @@ function updateDrawingItem(state, layerID, x, y) {
     if (drawingSupport.has('currentID')) {
       layer.updateIn(['items', drawingSupport.get('currentID')], item => item.merge({x, y}));
     } else {
-      let {item} = addItem(layer, drawingSupport.get('type'), x, y, 200, 100, 0);
+      let {item} = addItem(layer, drawingSupport.get('type'), x, y, 200, 100, 0, catalog);
       select(layer, 'items', item.id);
       drawingSupport = drawingSupport.set('currentID', item.id);
     }
@@ -58,8 +57,8 @@ function updateDrawingItem(state, layerID, x, y) {
   });
 }
 
-function endDrawingItem(state, layerID, x, y) {
-  state = updateDrawingItem(state, layerID, x, y);
+function endDrawingItem(state, layerID, x, y, catalog) {
+  state = updateDrawingItem(state, layerID, x, y, catalog);
   return state.merge({
     mode: MODE_IDLE,
     scene: state.scene.updateIn(['layers', layerID], layer => unselectAll(layer)),

@@ -35,22 +35,22 @@ export default function (state, action) {
       return selectToolDrawingLine(state, action.sceneComponentType);
 
     case BEGIN_DRAWING_LINE:
-      return beginDrawingLine(state, action.layerID, action.x, action.y);
+      return beginDrawingLine(state, action.layerID, action.x, action.y, action.catalog);
 
     case UPDATE_DRAWING_LINE:
-      return updateDrawingLine(state, action.x, action.y);
+      return updateDrawingLine(state, action.x, action.y, action.catalog);
 
     case END_DRAWING_LINE:
-      return endDrawingLine(state, action.x, action.y);
+      return endDrawingLine(state, action.x, action.y, action.catalog);
 
     case BEGIN_DRAGGING_LINE:
-      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y);
+      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y, action.catalog);
 
     case UPDATE_DRAGGING_LINE:
-      return updateDraggingLine(state, action.x, action.y);
+      return updateDraggingLine(state, action.x, action.y, action.catalog);
 
     case END_DRAGGING_LINE:
-      return endDraggingLine(state, action.x, action.y);
+      return endDraggingLine(state, action.x, action.y, action.catalog);
 
     default:
       return state;
@@ -67,7 +67,7 @@ function selectToolDrawingLine(state, sceneComponentType) {
 }
 
 /** lines operations **/
-function beginDrawingLine(state, layerID, x, y) {
+function beginDrawingLine(state, layerID, x, y, catalog) {
 
   //calculate snap and overwrite coords if needed
   let snapElements = sceneSnapElements(state.scene);
@@ -85,7 +85,7 @@ function beginDrawingLine(state, layerID, x, y) {
   let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     unselectAll(layer);
-    let {line} = addLine(layer, drawingSupport.get('type'), x, y, x, y);
+    let {line} = addLine(layer, drawingSupport.get('type'), x, y, x, y, catalog);
     select(layer, 'lines', line.id);
     select(layer, 'vertices', line.vertices.get(0));
     select(layer, 'vertices', line.vertices.get(1));
@@ -100,7 +100,7 @@ function beginDrawingLine(state, layerID, x, y) {
   });
 }
 
-function updateDrawingLine(state, x, y) {
+function updateDrawingLine(state, x, y, catalog) {
 
   //calculate snap and overwrite coords if needed
   let snap = nearestSnap(state.snapElements, x, y);
@@ -121,7 +121,7 @@ function updateDrawingLine(state, x, y) {
   });
 }
 
-function endDrawingLine(state, x, y) {
+function endDrawingLine(state, x, y, catalog) {
   //calculate snap and overwrite coords if needed
   let snap = nearestSnap(state.snapElements, x, y);
   if (snap) ({x, y} = snap.point);
@@ -136,8 +136,8 @@ function endDrawingLine(state, x, y) {
     unselect(layer, 'vertices', line.vertices.get(0));
     unselect(layer, 'vertices', line.vertices.get(1));
     removeLine(layer, lineID);
-    addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y);
-    detectAndUpdateAreas(layer);
+    addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y, catalog);
+    detectAndUpdateAreas(layer, catalog);
   }));
 
   return state.merge({
@@ -148,7 +148,7 @@ function endDrawingLine(state, x, y) {
   });
 }
 
-function beginDraggingLine(state, layerID, lineID, x, y) {
+function beginDraggingLine(state, layerID, lineID, x, y, catalog) {
 
   let snapElements = sceneSnapElements(state.scene);
 
@@ -173,7 +173,7 @@ function beginDraggingLine(state, layerID, lineID, x, y) {
   })
 }
 
-function updateDraggingLine(state, x, y) {
+function updateDraggingLine(state, x, y, catalog) {
   let draggingSupport = state.draggingSupport;
   let snapElements = state.snapElements;
 
@@ -231,9 +231,9 @@ function updateDraggingLine(state, x, y) {
   });
 }
 
-function endDraggingLine(state, x, y) {
+function endDraggingLine(state, x, y, catalog) {
   return state.withMutations(state => {
-    updateDraggingLine(state, x, y);
+    updateDraggingLine(state, x, y, catalog);
     state.merge({
       mode: MODE_IDLE,
       draggingSupport: null,
