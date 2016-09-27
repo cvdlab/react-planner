@@ -4,11 +4,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import App from './components/app.jsx';
-import store from './reducers/store';
+import initStore from './reducers/store';
 import autosave from './autosave';
 import keyboard from './keyboard';
 import actions from './actions/actions';
 import Catalog from './catalog/catalog';
+
+let store = initStore();
 
 autosave(store);
 keyboard(store);
