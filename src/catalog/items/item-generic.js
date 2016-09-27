@@ -1,7 +1,7 @@
 import render2D from './item-generic.2d.jsx';
 import render3D from './item-generic.3d.js';
 
-export const ItemGeneric = {
+export default {
   name: "itemGeneric",
   prototype: "items",
 

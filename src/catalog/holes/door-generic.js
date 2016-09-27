@@ -1,12 +1,15 @@
 import render2D from './door-generic.2d.jsx';
 import render3D from './door-generic.3d';
 
-export const DoorGeneric = {
+export default {
   name: "doorGeneric",
   prototype: "holes",
-  tag: ['window', 'door', 'opening'],
-  group: "Comunicazione orizzontale",
-  description: "Porta generica",
+
+  info: {
+    tag: ['window', 'door', 'opening'],
+    group: "Comunicazione orizzontale",
+    description: "Porta generica",
+  },
 
   properties: {
     width: {
@@ -29,8 +32,5 @@ export const DoorGeneric = {
   render2D,
 
   render3D,
-
-  calculateVolume: function (options) {
-  }
 
 };

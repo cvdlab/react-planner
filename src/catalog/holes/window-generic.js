@@ -1,12 +1,15 @@
 import render2D from './window-generic.2d.jsx';
 import render3D from './window-generic.3d';
 
-export const WindowGeneric = {
+export default {
   name: "windowGeneric",
   prototype: "holes",
-  tag: ['window', 'door', 'opening'],
-  group: "Comunicazione orizzontale",
-  description: "Finestra generica",
+
+  info: {
+    tag: ['window', 'door', 'opening'],
+    group: "Comunicazione orizzontale",
+    description: "Finestra generica",
+  },
 
   properties: {
     width: {
@@ -29,8 +32,5 @@ export const WindowGeneric = {
   render2D,
 
   render3D,
-  
-  calculateVolume: function (options) {
-  }
 
 };

@@ -1,12 +1,15 @@
 import render2D from './wall-generic.2d.jsx';
 import render3D from './wall-generic.3d.js';
 
-export const WallGeneric = {
+export default {
   name: "wallGeneric",
   prototype: "lines",
-  tag: ['wall'],
-  group: "Comunicazione orizzontale",
-  description: "Finestra generica",
+  
+  info: {
+    tag: ['wall'],
+    group: "Comunicazione orizzontale",
+    description: "Finestra generica",
+  },
 
   properties: {
     height: {
@@ -40,8 +43,5 @@ export const WallGeneric = {
   render2D,
 
   render3D,
-
-  calculateVolume: function (options) {
-  }
 
 };
