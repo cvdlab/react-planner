@@ -1,4 +1,5 @@
 import render2D from './item-generic.2d.jsx';
+import render3D from './item-generic.3d.js';
 
 export const ItemGeneric = {
   name: "itemGeneric",
@@ -10,10 +11,9 @@ export const ItemGeneric = {
     description: "Item",
   },
 
-  properties: {
-
-  },
+  properties: {},
 
   render2D,
+  render3D
 
 };

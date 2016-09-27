@@ -45,16 +45,58 @@ export function parseData(sceneData, editingActions, catalog) {
       area3D.visible = layer.visible;
     });
 
+    // Import items
+    layer.items.forEach(item => {
+
+      let item3DPromise = catalog.getElement(item.type).render3D(item, layer);
+
+      item3DPromise.then(item3D => {
+
+        let boundingBox = new Three.Box3().setFromObject(item3D);
+
+        let initialWidth = boundingBox.max.x - boundingBox.min.x;
+        let initialHeight = boundingBox.max.y - boundingBox.min.y;
+        let initialThickness = boundingBox.max.z - boundingBox.min.z;
+
+        item3D.scale.set(item.width / initialWidth, 1, item.height / initialThickness);
+
+        let center = [
+          (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+          (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+          (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+        item3D.position.x += center[0] + item.x;
+        item3D.position.z -= center[2] + item.y;
+
+        // Apply interact function to children of an Object3D
+        let applyInteract = (object, interactFunction) => {
+          object.traverse(function (child) {
+            if (child instanceof Three.Mesh) {
+              child.interact = interactFunction;
+            }
+          });
+        };
+
+        applyInteract(item3D, () => {
+            editingActions.selectItem(layer.id, item.id);
+          }
+        );
+
+        plan.add(item3D);
+
+      });
+    });
+
   });
 
   // Compute bounding box for the plan
   let boundingBox = new Three.Box3().setFromObject(plan);
 
-// Add a grid to the plan
+  // Add a grid to the plan
 
   let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
 
-// Set center of plan in the origin
+  // Set center of plan in the origin
 
   let center = [
     (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
@@ -150,7 +192,7 @@ function createWall(layer, line, editingActions, isVisible, catalog) {
     vertex0 = vertex1;
     vertex1 = app;
   }
-  
+
   let wall = catalog.getElement(line.type).render3D(line, layer);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
