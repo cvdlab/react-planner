@@ -1,8 +1,6 @@
-import {List, Map, Iterable, fromJS, Seq} from "immutable";
-import {ViewerHelper} from 'react-svg-pan-zoom';
-
+import {Seq} from "immutable";
 import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
-import {State, Scene, Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from "../models";
+import {State, Scene} from "../models";
 import Catalog from '../catalog/catalog'; // TODO: Use a catalog instance
 import {loadLayerFromJSON} from '../utils/layer-operations';
 
