@@ -418,3 +418,53 @@ export function removeItem(layer, itemID) {
 
   return {layer, item};
 }
+
+//JSON serializer
+export function loadLayerFromJSON(json) {
+  let catalog = new Catalog();
+
+  let loadVertex = vertex => new Vertex(vertex)
+    .set('lines', new List(vertex.lines))
+    .set('areas', new List(vertex.areas));
+
+  let loadLine = line => new Line(line)
+    .set('type', catalog.getElement(line.type).name)
+    .set('vertices', new List(line.vertices))
+    .set('holes', new List(line.holes))
+    .set('properties', new Map(line.properties || {}));
+
+  let loadHole = hole => new Hole(hole)
+    .set('type', catalog.getElement(hole.type).name)
+    .set('properties', new Map(hole.properties || {}));
+
+  let loadArea = area => new Area(area)
+    .set('type', catalog.getElement(area.type).name)
+    .set('vertices', new List(area.vertices))
+    .set('properties', new Map(area.properties || {}));
+
+  let loadImage = image => new Image(image)
+    .set('vertices', new List(image.vertices));
+
+  let loadItem = item => new Item(item);
+
+  let loadElementsSet = (elementsSet => {
+    return new ElementsSet({
+      lines: new List(elementsSet.lines),
+      areas: new List(elementsSet.areas),
+      holes: new List(elementsSet.holes),
+      items: new List(elementsSet.items)
+    });
+  });
+
+
+  let loadLayer = layer => new Layer(layer)
+    .set('vertices', new Seq(layer.vertices).map(vertex => loadVertex(vertex)).toMap())
+    .set('lines', new Seq(layer.lines).map(line => loadLine(line)).toMap())
+    .set('holes', new Seq(layer.holes).map(hole => loadHole(hole)).toMap())
+    .set('areas', new Seq(layer.areas).map(area => loadArea(area)).toMap())
+    .set('images', new Seq(layer.images).map(image => loadImage(image)).toMap())
+    .set('items', new Seq(layer.items).map(item => loadItem(item)).toMap())
+    .set('selected', layer.selected ? loadElementsSet(layer.selected) : new ElementsSet());
+
+  return loadLayer(json);
+}
