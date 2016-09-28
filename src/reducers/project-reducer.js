@@ -22,9 +22,8 @@ export default function (state, action) {
 
 function loadProject(state, data, catalog) {
   let readScene = scene => new Scene(scene)
-    .set('layers', new Seq(scene.layers).map(layer => loadLayerFromJSON(layer, catalog)))
+    .set('layers', new Seq(scene.layers).map(layer => loadLayerFromJSON(layer, catalog)).toMap())
     .set('selectedLayer', Object.keys(scene.layers)[0]);
-
   let scene = readScene(data);
 
   return new State({scene});
