@@ -6,6 +6,7 @@ import graphCycles from './graph-cycles';
 import Graph from 'biconnected-components/src/graph';
 import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
+const AREA_ELEMENT_TYPE = 'area';
 
 /** lines features **/
 export function addLine(layer, type, x0, y0, x1, y1, catalog) {
@@ -289,7 +290,7 @@ export function detectAndUpdateAreas(layer, catalog) {
     cycles.v_cycles.forEach(cycle => {
       cycle.shift();
       let verticesCoords = cycle.map(index => index2coord[index]);
-      addArea(layer, 'room', verticesCoords, catalog);
+      addArea(layer, AREA_ELEMENT_TYPE, verticesCoords, catalog);
     });
   });
 
