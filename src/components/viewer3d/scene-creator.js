@@ -62,6 +62,15 @@ export function parseData(sceneData, editingActions, catalog) {
 
   // Set center of plan in the origin
 
+  if (!isFinite(boundingBox.max.x) || !isFinite(boundingBox.min.x) ||
+    !isFinite(boundingBox.max.y) ||!isFinite(boundingBox.min.y) ||
+    !isFinite(boundingBox.max.z) || !isFinite(boundingBox.min.z)) {
+    // The plan is Empty
+    boundingBox = new Three.Box3().setFromObject(grid);
+    console.log(boundingBox);
+  }
+
+
   let center = [
     (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
     (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
