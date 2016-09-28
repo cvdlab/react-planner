@@ -168,7 +168,12 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
 
 
   let detectAutoPan = [
-    MODE_DRAWING_LINE
+    MODE_DRAWING_LINE,
+    MODE_DRAGGING_LINE,
+    MODE_DRAGGING_VERTEX,
+    MODE_DRAWING_LINE,
+    MODE_DRAWING_HOLE,
+    MODE_DRAWING_ITEM,
   ].includes(mode);
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
