@@ -25,10 +25,10 @@ export default function (state, action) {
       return selectToolDrawingHole(state, action.sceneComponentType);
 
     case UPDATE_DRAWING_HOLE:
-      return updateDrawingHole(state, action.layerID, action.x, action.y);
+      return updateDrawingHole(state, action.layerID, action.x, action.y, action.catalog);
 
     case END_DRAWING_HOLE:
-      return endDrawingHole(state, action.layerID, action.x, action.y);
+      return endDrawingHole(state, action.layerID, action.x, action.y, action.catalog);
 
     default:
       return state;
@@ -58,7 +58,7 @@ function selectToolDrawingHole(state, sceneComponentType) {
 }
 
 /** holes operations **/
-function updateDrawingHole(state, layerID, x, y) {
+function updateDrawingHole(state, layerID, x, y, catalog) {
 
   //calculate snap and overwrite coords if needed
   let snap = nearestSnap(state.snapElements, x, y);
@@ -78,7 +78,7 @@ function updateDrawingHole(state, layerID, x, y) {
       let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));
 
       let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
-      let {hole} = addHole(layer, state.drawingSupport.get('type'), lineID, offset);
+      let {hole} = addHole(layer, state.drawingSupport.get('type'), lineID, offset, catalog);
       select(layer, 'holes', hole.id);
     }
   }));
@@ -86,8 +86,8 @@ function updateDrawingHole(state, layerID, x, y) {
   return state.set('scene', scene);
 }
 
-function endDrawingHole(state, layerID, x, y) {
-  state = updateDrawingHole(state, layerID, x, y);
+function endDrawingHole(state, layerID, x, y, catalog) {
+  state = updateDrawingHole(state, layerID, x, y, catalog);
   return state.updateIn(['scene', 'layers', layerID], layer => unselectAll(layer));
 
 }

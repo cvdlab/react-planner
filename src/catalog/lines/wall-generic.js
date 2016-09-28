@@ -1,12 +1,19 @@
-import render2D from './wall-generic.2d.jsx';
 import render3D from './wall-generic.3d.js';
+import React from 'react';
+import {distanceFromTwoPoints} from '../../utils/geometry';
 
-export const WallGeneric = {
+let pathSVG = React.createFactory('path');
+
+export default {
   name: "wallGeneric",
   prototype: "lines",
-  tag: ['wall'],
-  group: "Comunicazione orizzontale",
-  description: "Finestra generica",
+
+  info: {
+    tag: ['wall'],
+    group: "Comunicazione orizzontale",
+    description: "Finestra generica",
+    image: require('./wall.png')
+  },
 
   properties: {
     height: {
@@ -37,11 +44,26 @@ export const WallGeneric = {
     }
   },
 
-  render2D,
+  render2D: function (line, layer, scene) {
+    const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
+    const STYLE_SELECTED = {stroke: "#99c3fb", strokeWidth: "5px", fill: "#000"};
+
+    //let line = layer.lines.get(hole.line);
+    //let epsilon = line.properties.get('thickness') / 2;
+
+    let epsilon = 3;
+
+    let {x:x1, y:y1} = layer.vertices.get(line.vertices.get(0));
+    let {x:x2, y: y2} = layer.vertices.get(line.vertices.get(1));
+
+    let length = distanceFromTwoPoints(x1, y1, x2, y2);
+
+    return pathSVG({
+      d: `M${0} ${ -epsilon}  L${length} ${-epsilon}  L${length} ${epsilon}  L${0} ${epsilon}  z`,
+      style: line.selected ? STYLE_SELECTED : STYLE_BASE
+    });
+  },
 
   render3D,
-
-  calculateVolume: function (options) {
-  }
 
 };

@@ -13,15 +13,19 @@ export function selectToolDrawingItem(sceneComponentType) {
 }
 
 export function updateDrawingItem(layerID, x, y) {
-  return {
-    type: UPDATE_DRAWING_ITEM,
-    layerID, x, y
-  }
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: UPDATE_DRAWING_ITEM,
+      layerID, x, y, catalog
+    })
+  };
 }
 
 export function endDrawingItem(layerID, x, y) {
-  return {
-    type: END_DRAWING_ITEM,
-    layerID, x, y
-  }
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: END_DRAWING_ITEM,
+      layerID, x, y, catalog
+    })
+  };
 }

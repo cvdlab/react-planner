@@ -4,6 +4,7 @@ export const LOAD_PROJECT = 'LOAD_PROJECT';
 export const SAVE_PROJECT = 'SAVE_PROJECT';
 export const LOAD_PROJECT_FROM_FILE = 'LOAD_PROJECT_FROM_FILE';
 export const SAVE_PROJECT_TO_FILE = 'SAVE_PROJECT_TO_FILE';
+export const OPEN_CATALOG = 'OPEN_CATALOG';
 
 // ACTIONS editing
 export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
@@ -77,6 +78,7 @@ export const MODE_DRAWING_HOLE = 'MODE_DRAWING_HOLE';
 export const MODE_DRAWING_ITEM = 'MODE_DRAWING_ITEM';
 export const MODE_UPLOADING_IMAGE = 'MODE_UPLOADING_IMAGE';
 export const MODE_FITTING_IMAGE = 'MODE_FITTING_IMAGE';
+export const MODE_VIEWING_CATALOG = 'MODE_VIEWING_CATALOG';
 
 //additional
 export const STORAGE_KEY = 'metior_scene_autosave_v1';

@@ -170,7 +170,7 @@
       "lines": {
         "ab": {
           "id": "ab",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "a",
             "b"
@@ -187,7 +187,7 @@
         },
         "bc": {
           "id": "bc",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "b",
             "c"
@@ -204,7 +204,7 @@
         },
         "cd": {
           "id": "cd",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "c",
             "d"
@@ -221,7 +221,7 @@
         },
         "de": {
           "id": "de",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "d",
             "e"
@@ -238,7 +238,7 @@
         },
         "ef": {
           "id": "ef",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "e",
             "f"
@@ -255,7 +255,7 @@
         },
         "fg": {
           "id": "fg",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "f",
             "g"
@@ -270,7 +270,7 @@
         },
         "gh": {
           "id": "gh",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "g",
             "h"
@@ -287,7 +287,7 @@
         },
         "hi": {
           "id": "hi",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "h",
             "i"
@@ -304,7 +304,7 @@
         },
         "ij": {
           "id": "ij",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "i",
             "j"
@@ -321,7 +321,7 @@
         },
         "jk": {
           "id": "jk",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "j",
             "k"
@@ -336,7 +336,7 @@
         },
         "kl": {
           "id": "kl",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "k",
             "l"
@@ -353,7 +353,7 @@
         },
         "gj": {
           "id": "gj",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "g",
             "j"
@@ -370,7 +370,7 @@
         },
         "fl": {
           "id": "fl",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "f",
             "l"
@@ -387,7 +387,7 @@
         },
         "ai": {
           "id": "ai",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "a",
             "i"
@@ -404,7 +404,7 @@
         },
         "kb": {
           "id": "kb",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "k",
             "b"
@@ -421,7 +421,7 @@
         },
         "ld": {
           "id": "ld",
-          "type": "wall",
+          "type": "wallGeneric",
           "vertices": [
             "l",
             "d"

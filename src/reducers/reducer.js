@@ -25,6 +25,7 @@ export default function appReducers(state, action) {
     case constants.SAVE_PROJECT:
     case constants.LOAD_PROJECT_FROM_FILE:
     case constants.SAVE_PROJECT_TO_FILE:
+    case constants.OPEN_CATALOG:
       return projectReducer(state, action);
 
     case constants.UPDATE_2D_CAMERA:

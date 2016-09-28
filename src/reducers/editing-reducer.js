@@ -49,7 +49,7 @@ export default function (state, action) {
       return state.set('scene', setProperties(scene, action.properties));
 
     case REMOVE:
-      return state.set('scene', remove(scene));
+      return state.set('scene', remove(scene, action.catalog));
 
     default:
       return state;
@@ -107,11 +107,11 @@ function unselectAll(scene) {
   return scene.update('layers', layer => layer.map(unselectAllOp));
 }
 
-function remove(scene) {
+function remove(scene, catalog) {
   return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
     layer.selected.lines.forEach(lineID => removeLine(layer, lineID));
     layer.selected.holes.forEach(holeID => removeHole(layer, holeID));
     layer.selected.items.forEach(itemID => removeItem(layer, itemID));
-    detectAndUpdateAreas(layer);
+    detectAndUpdateAreas(layer, catalog);
   }));
 }

@@ -13,15 +13,19 @@ export function selectToolDrawingHole(sceneComponentType) {
 }
 
 export function updateDrawingHole(layerID, x, y) {
-  return {
-    type: UPDATE_DRAWING_HOLE,
-    layerID, x, y
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: UPDATE_DRAWING_HOLE,
+      layerID, x, y, catalog
+    });
   }
 }
 
 export function endDrawingHole(layerID, x, y) {
-  return {
-    type: END_DRAWING_HOLE,
-    layerID, x, y
-  }
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: END_DRAWING_HOLE,
+      layerID, x, y, catalog
+    });
+  };
 }

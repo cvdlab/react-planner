@@ -4,6 +4,7 @@ import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import VolumesTable from './volumes-summary/volumes-table.jsx';
 import ImageEditor from './image-editor/image-editor.jsx';
+import CatalogList from './catalog-view/catalog-list.jsx';
 import * as constants from '../constants';
 
 export default function Content({width, height, state}) {
@@ -26,6 +27,9 @@ export default function Content({width, height, state}) {
     case constants.MODE_UPLOADING_IMAGE:
     case constants.MODE_FITTING_IMAGE:
       return React.createElement(ImageEditor, {scene, mode, width, height});
+
+    case constants.MODE_VIEWING_CATALOG:
+      return React.createElement(CatalogList, {mode, width, height});
 
     default:
       return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeSnapElement, snapElements});

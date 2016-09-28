@@ -3,42 +3,13 @@ import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../mode
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
-import Catalog from '../catalog/catalog'; // TODO: Use a catalog instance
 import Graph from 'biconnected-components/src/graph';
 import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
-/** factory **/
-export function catalogFactory(type, options) {
-  let catalog = new Catalog();
-  let component = catalog.getElement(type);
-  if (!component) throw new Error(`scene component ${type} not found`);
-
-  let properties = new Seq(component.properties)
-    .map(value => value.defaultValue)
-    .toMap();
-
-  options = {...options, properties};
-
-  switch (component.prototype) {
-    case 'lines':
-      return new Line(options);
-
-    case 'holes':
-      return new Hole(options);
-
-    case 'areas':
-      return new Area(options);
-
-    case 'items':
-      return new Item(options);
-
-    default:
-      throw new Error('prototype not valid');
-  }
-}
+const AREA_ELEMENT_TYPE = 'area';
 
 /** lines features **/
-export function addLine(layer, type, x0, y0, x1, y1) {
+export function addLine(layer, type, x0, y0, x1, y1, catalog) {
   let line;
 
   layer = layer.withMutations(layer => {
@@ -48,7 +19,7 @@ export function addLine(layer, type, x0, y0, x1, y1) {
     ({layer, vertex: v0} = addVertex(layer, x0, y0, 'lines', lineID));
     ({layer, vertex: v1} = addVertex(layer, x1, y1, 'lines', lineID));
 
-    line = catalogFactory(type, {
+    line = catalog.createElement(type, {
       id: lineID,
       vertices: new List([v0.id, v1.id]),
       type
@@ -87,7 +58,7 @@ export function removeLine(layer, lineID) {
   return {layer, line};
 }
 
-export function splitLine(layer, lineID, x, y) {
+export function splitLine(layer, lineID, x, y, catalog) {
   let line0, line1;
 
   layer = layer.withMutations(layer => {
@@ -96,14 +67,14 @@ export function splitLine(layer, lineID, x, y) {
     let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
 
     removeLine(layer, lineID);
-    ({line: line0} = addLine(layer, line.type, x0, y0, x, y));
-    ({line: line1} = addLine(layer, line.type, x1, y1, x, y));
+    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog));
+    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog));
   });
 
   return {layer, lines: new List([line0, line1])};
 }
 
-export function addLinesFromPoints(layer, type, points) {
+export function addLinesFromPoints(layer, type, points, catalog) {
   points = new List(points)
     .sort(({x:x1, y:y1}, {x:x2, y:y2}) => {
       return x1 === x2 ? y1 - y2 : x1 - x2;
@@ -117,7 +88,7 @@ export function addLinesFromPoints(layer, type, points) {
   let lines = (new List()).withMutations(lines => {
     layer = layer.withMutations(layer => {
       pointsPair.forEach(([{x:x1, y:y1}, {x:x2, y:y2}]) => {
-        let {line} = addLine(layer, type, x1, y1, x2, y2);
+        let {line} = addLine(layer, type, x1, y1, x2, y2, catalog);
         lines.push(line);
       });
     });
@@ -126,7 +97,7 @@ export function addLinesFromPoints(layer, type, points) {
   return {layer, lines};
 }
 
-export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1) {
+export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalog) {
 
   let points = [{x: x0, y: y0}, {x: x1, y: y1}];
 
@@ -153,12 +124,12 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1) {
         }
 
         if (intersection.type === "intersecting") {
-          splitLine(layer, line.id, intersection.point.x, intersection.point.y);
+          splitLine(layer, line.id, intersection.point.x, intersection.point.y, catalog);
           points.push(intersection.point);
         }
       }
     });
-    addLinesFromPoints(layer, type, points);
+    addLinesFromPoints(layer, type, points, catalog);
   });
 
   return {layer};
@@ -230,7 +201,7 @@ export function unselectAll(layer) {
 }
 
 /** areas features **/
-export function addArea(layer, type, verticesCoords) {
+export function addArea(layer, type, verticesCoords, catalog) {
   let area;
 
   layer = layer.withMutations(layer => {
@@ -242,7 +213,7 @@ export function addArea(layer, type, verticesCoords) {
       vertices.push(vertex.id);
     });
 
-    area = catalogFactory(type, {
+    area = catalog.createElement(type, {
       id: areaID,
       type,
       prototype: "areas",
@@ -267,10 +238,10 @@ export function removeArea(layer, areaID) {
   return {layer, area};
 }
 
-export function detectAndUpdateAreas(layer) {
-  console.groupCollapsed("Area detection");
-  console.log("vertices", layer.vertices.toJS());
-  console.log("lines", layer.lines.toJS());
+export function detectAndUpdateAreas(layer, catalog) {
+  // console.groupCollapsed("Area detection");
+  // console.log("vertices", layer.vertices.toJS());
+  // console.log("lines", layer.lines.toJS());
 
   //generate LAR rappresentation
   let verticesArray = [];
@@ -319,23 +290,23 @@ export function detectAndUpdateAreas(layer) {
     cycles.v_cycles.forEach(cycle => {
       cycle.shift();
       let verticesCoords = cycle.map(index => index2coord[index]);
-      addArea(layer, 'areaGeneric', verticesCoords);
+      addArea(layer, AREA_ELEMENT_TYPE, verticesCoords, catalog);
     });
   });
 
-  console.log("areas", layer.areas.toJS());
-  console.groupEnd();
+  // console.log("areas", layer.areas.toJS());
+  // console.groupEnd();
   return {layer};
 }
 
 /** holes features **/
-export function addHole(layer, type, lineID, offset) {
+export function addHole(layer, type, lineID, offset, catalog) {
   let hole;
 
   layer = layer.withMutations(layer => {
     let holeID = IDBroker.acquireID();
 
-    hole = catalogFactory(type, {
+    hole = catalog.createElement(type, {
       id: holeID,
       type,
       offset,
@@ -387,13 +358,13 @@ export function addImage(layer, uri, x0, y0, x1, y1) {
 }
 
 /** items features **/
-export function addItem(layer, type, x, y, width, height, rotation) {
+export function addItem(layer, type, x, y, width, height, rotation, catalog) {
   let item;
 
   layer = layer.withMutations(layer => {
     let itemID = IDBroker.acquireID();
 
-    item = catalogFactory(type, {
+    item = catalog.createElement(type, {
       id: itemID,
       type,
       height,
@@ -417,4 +388,52 @@ export function removeItem(layer, itemID) {
   });
 
   return {layer, item};
+}
+
+//JSON serializer
+export function loadLayerFromJSON(json, catalog) {
+  let loadVertex = vertex => new Vertex(vertex)
+    .set('lines', new List(vertex.lines))
+    .set('areas', new List(vertex.areas));
+
+  let loadLine = line => new Line(line)
+    .set('type', catalog.getElement(line.type).name)
+    .set('vertices', new List(line.vertices))
+    .set('holes', new List(line.holes))
+    .set('properties', new Map(line.properties || {}));
+
+  let loadHole = hole => new Hole(hole)
+    .set('type', catalog.getElement(hole.type).name)
+    .set('properties', new Map(hole.properties || {}));
+
+  let loadArea = area => new Area(area)
+    .set('type', catalog.getElement(area.type).name)
+    .set('vertices', new List(area.vertices))
+    .set('properties', new Map(area.properties || {}));
+
+  let loadImage = image => new Image(image)
+    .set('vertices', new List(image.vertices));
+
+  let loadItem = item => new Item(item);
+
+  let loadElementsSet = (elementsSet => {
+    return new ElementsSet({
+      lines: new List(elementsSet.lines),
+      areas: new List(elementsSet.areas),
+      holes: new List(elementsSet.holes),
+      items: new List(elementsSet.items)
+    });
+  });
+
+
+  let loadLayer = layer => new Layer(layer)
+    .set('vertices', new Seq(layer.vertices).map(vertex => loadVertex(vertex)).toMap())
+    .set('lines', new Seq(layer.lines).map(line => loadLine(line)).toMap())
+    .set('holes', new Seq(layer.holes).map(hole => loadHole(hole)).toMap())
+    .set('areas', new Seq(layer.areas).map(area => loadArea(area)).toMap())
+    .set('images', new Seq(layer.images).map(image => loadImage(image)).toMap())
+    .set('items', new Seq(layer.items).map(item => loadItem(item)).toMap())
+    .set('selected', layer.selected ? loadElementsSet(layer.selected) : new ElementsSet());
+
+  return loadLayer(json);
 }
