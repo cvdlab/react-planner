@@ -1,6 +1,6 @@
 # Blender v2.70 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib generic-item.mtl
+mtllib sofa.mtl
 o KARLSTAD_Cube_11
 v -62.379612 -0.822771 -25.602030
 v -62.447788 -0.811098 -25.602030

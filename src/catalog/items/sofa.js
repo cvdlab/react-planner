@@ -1,4 +1,6 @@
-import render3D from './item-generic.3d.js';
+import Three from 'three';
+import {loadObjWithMaterial} from '../../utils/load-obj';
+
 import React from 'react';
 
 let rectSVG = React.createFactory('rect');
@@ -38,6 +40,21 @@ export default {
     ]);
   },
 
-  render3D
+  render3D: function (item, layer) {
+
+    let onLoadItem = (object) => {
+      if (item.selected) {
+        let box = new Three.BoxHelper(object, 0x99c3fb);
+        box.material.linewidth = 2;
+        box.material.depthTest = false;
+        object.add(box);
+      }
+      return object;
+    };
+
+    return loadObjWithMaterial('obj/sofa/', 'sofa.mtl', 'obj/sofa/',
+      'sofa.obj', onLoadItem)
+      .then(object => onLoadItem(object))
+  }
 
 };

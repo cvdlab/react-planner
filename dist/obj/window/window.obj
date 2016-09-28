@@ -1,6 +1,6 @@
 # Blender v2.76 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib window-generic.mtl
+mtllib window.mtl
 o Plane.001_Plane.004
 v 49.093739 -102.204041 -4.315505
 v -50.440449 -102.204041 -4.315505

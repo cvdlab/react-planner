@@ -1,10 +1,10 @@
 import React from 'react';
+import Three from 'three';
+import {loadObjWithMaterial} from '../../utils/load-obj';
 
 let pathSVG = React.createFactory('path');
 let lineSVG = React.createFactory('line');
 let gSVG = React.createFactory('g');
-
-import render3D from './window-generic.3d';
 
 export default {
   name: "window",
@@ -65,6 +65,31 @@ export default {
 
   },
 
-  render3D,
+  render3D: function (hole, layer, scene) {
+    let onLoadItem = (object) => {
+      let boundingBox = new Three.Box3().setFromObject(object);
+
+      let initialWidth = boundingBox.max.x - boundingBox.min.x;
+      let initialHeight = boundingBox.max.y - boundingBox.min.y;
+      let initialThickness = boundingBox.max.z - boundingBox.min.z;
+
+      if (hole.selected) {
+        let box = new Three.BoxHelper(object, 0x99c3fb);
+        box.material.linewidth = 2;
+        box.material.depthTest = false;
+        object.add(box);
+      }
+
+      object.scale.set(hole.properties.get('width') / initialWidth, hole.properties.get('height') / initialHeight,
+        hole.thickness / initialThickness);
+
+      return object;
+    };
+
+    return loadObjWithMaterial('obj/window/', 'window.mtl', 'obj/window/',
+      'window.obj', onLoadItem)
+      .then(object => onLoadItem(object));
+
+  }
 
 };
