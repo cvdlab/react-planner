@@ -239,9 +239,9 @@ export function removeArea(layer, areaID) {
 }
 
 export function detectAndUpdateAreas(layer, catalog) {
-  console.groupCollapsed("Area detection");
-  console.log("vertices", layer.vertices.toJS());
-  console.log("lines", layer.lines.toJS());
+  // console.groupCollapsed("Area detection");
+  // console.log("vertices", layer.vertices.toJS());
+  // console.log("lines", layer.lines.toJS());
 
   //generate LAR rappresentation
   let verticesArray = [];
@@ -294,8 +294,8 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
   });
 
-  console.log("areas", layer.areas.toJS());
-  console.groupEnd();
+  // console.log("areas", layer.areas.toJS());
+  // console.groupEnd();
   return {layer};
 }
 
