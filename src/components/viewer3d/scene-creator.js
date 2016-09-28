@@ -333,16 +333,24 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-    item3D.position.x += center[0] + item.x;
-    item3D.position.z -= center[2] + item.y;
+    item3D.position.x -= center[0];
+    item3D.position.z -= center[2];
+
+    let pivot = new Three.Object3D();
+    pivot.add(item3D)
+
+    pivot.rotation.y = item.rotation * Math.PI / 180;
+
+    pivot.position.x = item.x;
+    pivot.position.z -= item.y;
 
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, item.id);
       }
     );
 
-    plan.add(item3D);
-    sceneGraph.layers[layer.id].items[item.id] = item3D;
+    plan.add(pivot);
+    sceneGraph.layers[layer.id].items[item.id] = pivot;
 
   });
 }
@@ -351,7 +359,7 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
 function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog) {
 
   planData.plan.remove(oldItemObject);
-  
+
   let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer);
 
   item3DPromise.then(item3D => {
@@ -369,16 +377,24 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-    item3D.position.x += center[0] + newItemData.x;
-    item3D.position.z -= center[2] + newItemData.y;
+    item3D.position.x -= center[0];
+    item3D.position.z -= center[2];
+
+    let pivot = new Three.Object3D();
+    pivot.add(item3D)
+
+    pivot.rotation.y = newItemData.rotation * Math.PI / 180;
+
+    pivot.position.x = newItemData.x;
+    pivot.position.z -= newItemData.y;
 
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, newItemData.id);
       }
     );
 
-    planData.plan.add(item3D);
-    planData.sceneGraph.layers[layer.id].items[newItemData.id] = item3D;
+    planData.plan.add(pivot);
+    planData.sceneGraph.layers[layer.id].items[newItemData.id] = pivot;
 
     // Now I need to translate object to the original coordinates
     let oldBoundingBox = planData.boundingBox;

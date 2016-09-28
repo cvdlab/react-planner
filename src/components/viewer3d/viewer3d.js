@@ -28,6 +28,7 @@ export default class Scene3DViewer extends React.Component {
     let planData = parseData(data, editingActions, this.context.catalog);
 
     scene.add(planData.plan);
+    console.log(planData);
     scene.add(planData.grid);
 
     let aspectRatio = width / height;

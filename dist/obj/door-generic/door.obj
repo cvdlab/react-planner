@@ -1,6 +1,6 @@
 # Blender v2.76 (sub 0) OBJ File: ''
 # www.blender.org
-mtllib model.mtl
+mtllib door.mtl
 o zobject
 v -47.673817 199.931244 1.339417
 v -39.413769 199.931244 1.339417
