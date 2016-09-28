@@ -156,19 +156,6 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
 
 function createWall(layer, line, editingActions, catalog) {
 
-  let holes = [];
-
-  line.holes.forEach(holeID => {
-
-    let hole = layer.holes.get(holeID);
-
-    let holeInteractFunction = () => {
-      return line.editingActions.selectHole(layer.id, hole.id)
-    };
-
-    holes.push({holeData: hole, holeInteractFunction});
-  });
-
   line.editingActions = editingActions;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -185,7 +172,9 @@ function createWall(layer, line, editingActions, catalog) {
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
   let bevelRadius = line.properties.get('thickness');
 
-  holes.forEach(({holeData, holeInteractFunction}) => {
+  line.holes.forEach(holeID => {
+
+    let holeData = layer.holes.get(holeID);
 
     // Add thickness to hole properties
     holeData.thickness = line.properties.get('thickness');
@@ -210,7 +199,10 @@ function createWall(layer, line, editingActions, catalog) {
       object.position.y += coordinates[1] - center[1];
       object.position.z += coordinates[2] - center[2];
       wall.add(object);
-      applyInteract(object, holeInteractFunction);
+
+      applyInteract(object, () => {
+        return line.editingActions.selectHole(layer.id, holeData.id)
+      });
     });
 
   });
