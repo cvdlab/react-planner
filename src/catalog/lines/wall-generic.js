@@ -4,11 +4,12 @@ import render3D from './wall-generic.3d.js';
 export default {
   name: "wallGeneric",
   prototype: "lines",
-  
+
   info: {
     tag: ['wall'],
     group: "Comunicazione orizzontale",
     description: "Finestra generica",
+    image: require('./wall.png')
   },
 
   properties: {

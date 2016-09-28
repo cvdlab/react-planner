@@ -1,5 +1,12 @@
-import {browserUpload,browserDownload}  from '../utils/browser';
-import {NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, LOAD_PROJECT_FROM_FILE, SAVE_PROJECT_TO_FILE} from '../constants';
+import {browserUpload, browserDownload}  from '../utils/browser';
+import {
+  NEW_PROJECT,
+  LOAD_PROJECT,
+  SAVE_PROJECT,
+  LOAD_PROJECT_FROM_FILE,
+  SAVE_PROJECT_TO_FILE,
+  OPEN_CATALOG
+} from '../constants';
 
 export function loadProject(data) {
   return (dispatch, getState, {catalog}) => {
@@ -45,4 +52,13 @@ export function saveProjectToFile() {
     browserDownload(scene);
     dispatch(saveProject());
   };
+}
+
+export function openCatalog() {
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: OPEN_CATALOG,
+      catalog
+    });
+  }
 }

@@ -11,7 +11,7 @@ import actions from './actions/actions';
 import Catalog from './catalog/catalog';
 
 
-//init catalog
+//init catalog-view
 import area from './catalog/areas/area-generic';
 import door from './catalog/holes/door-generic';
 import window from './catalog/holes/window-generic';

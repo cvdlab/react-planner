@@ -9,6 +9,7 @@ export default {
     tag: [],
     group: "Items",
     description: "Item",
+    image: require('./sofa.png')
   },
 
   properties: {},

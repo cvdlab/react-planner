@@ -1,5 +1,5 @@
 import {Seq} from "immutable";
-import {LOAD_PROJECT, NEW_PROJECT} from '../constants';
+import {LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG} from '../constants';
 import {State, Scene} from "../models";
 import {loadLayerFromJSON} from '../utils/layer-operations';
 
@@ -12,6 +12,9 @@ export default function (state, action) {
 
     case LOAD_PROJECT:
       return loadProject(state, action.data, action.catalog);
+
+    case OPEN_CATALOG:
+      return state.set('mode', MODE_VIEWING_CATALOG);
 
     default:
       return state;

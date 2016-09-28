@@ -9,6 +9,7 @@ export default {
     tag: ['window', 'door', 'opening'],
     group: "Comunicazione orizzontale",
     description: "Finestra generica",
+    image: require('./window.png')
   },
 
   properties: {

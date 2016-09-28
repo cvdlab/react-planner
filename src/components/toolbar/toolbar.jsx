@@ -9,10 +9,9 @@ import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import Icon3D from 'react-icons/lib/fa/cube';
 import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
 import IconSummary from 'react-icons/lib/fa/table';
-import IconAddLine from 'react-icons/lib/ti/pen';
 import IconAddImage from 'react-icons/lib/fa/image';
-import {IconDoor, IconWindow} from '../../utils/icons.jsx';
-import IconItem from 'react-icons/lib/ti/point-of-interest-outline';
+import IconCatalog from 'react-icons/lib/fa/plus-circle';
+
 
 import {
   MODE_IDLE,
@@ -27,7 +26,8 @@ import {
   MODE_DRAWING_HOLE,
   MODE_DRAWING_ITEM,
   MODE_FITTING_IMAGE,
-  MODE_UPLOADING_IMAGE
+  MODE_UPLOADING_IMAGE,
+  MODE_VIEWING_CATALOG
 } from '../../constants';
 
 import ToolbarButton from './toolbar-button.jsx';
@@ -101,30 +101,11 @@ export default function Toolbar({state, width, height}, {
         <IconAddImage />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE].includes(mode)} tooltip="Add wall"
-                     onClick={event => linesActions.selectToolDrawingLine('wallGeneric')}>
-        <IconAddLine />
-      </ToolbarButton>
-
       <ToolbarButton
-        active={[MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'doorGeneric'}
-        tooltip="Add door"
-        onClick={event => holesActions.selectToolDrawingHole('doorGeneric')}>
-        <IconDoor />
-      </ToolbarButton>
-
-      <ToolbarButton
-        active={[MODE_DRAWING_HOLE].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'windowGeneric'}
-        tooltip="Add window"
-        onClick={event => holesActions.selectToolDrawingHole('windowGeneric')}>
-        <IconWindow />
-      </ToolbarButton>
-
-      <ToolbarButton
-        active={[MODE_DRAWING_ITEM].includes(mode) && state.getIn(['drawingSupport', 'type']) === 'itemGeneric'}
-        tooltip="Add item"
-        onClick={event => itemsActions.selectToolDrawingItem('itemGeneric')}>
-        <IconItem />
+        active={[MODE_VIEWING_CATALOG].includes(mode)}
+        tooltip="Open catalog"
+        onClick={event => projectActions.openCatalog()}>
+        <IconCatalog />
       </ToolbarButton>
     </aside>
   )
