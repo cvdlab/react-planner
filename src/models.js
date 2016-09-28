@@ -7,7 +7,7 @@ export const ElementsSet = Record({
   holes: new List(),
   areas: new List(),
   items: new List(),
-});
+}, 'ElementsSet');
 
 export const Layer = Record({
   id: "",
@@ -21,19 +21,19 @@ export const Layer = Record({
   items: new Map(),
   selected: new ElementsSet(),
   visible: true
-});
+}, 'Layer');
 
 
 export const Scene = Record({
   pixelPerUnit: 100,
   unit: "m",
   layers: new Map({
-    'layer-1': new Layer({id:'layer-1'})
+    'layer-1': new Layer({id: 'layer-1'})
   }),
   selectedLayer: 'layer-1',
   width: 3000,
   height: 2000
-});
+}, 'Scene');
 
 
 export const Vertex = Record({
@@ -45,7 +45,7 @@ export const Vertex = Record({
   lines: new List(),
   areas: new List(),
   images: new List()
-});
+}, 'Vertex');
 
 export const Line = Record({
   id: "",
@@ -55,7 +55,7 @@ export const Line = Record({
   holes: new List(),
   selected: false,
   properties: new Map()
-});
+}, 'Line');
 
 export const Hole = Record({
   id: "",
@@ -65,7 +65,7 @@ export const Hole = Record({
   line: "",
   selected: false,
   properties: new Map(),
-});
+}, 'Hole');
 
 export const Area = Record({
   id: "",
@@ -74,13 +74,13 @@ export const Area = Record({
   vertices: new List(),
   selected: false,
   properties: new Map()
-});
+}, 'Area');
 
 export const Image = Record({
   id: "",
   uri: "",
   vertices: new List()
-});
+}, 'Image');
 
 export const Item = Record({
   id: "",
@@ -93,7 +93,7 @@ export const Item = Record({
   x: 0,
   y: 0,
   rotation: 0
-});
+}, 'Item');
 
 export const State = Record({
   mode: MODE_IDLE,
@@ -105,7 +105,7 @@ export const State = Record({
 
   drawingSupport: Map(),
   draggingSupport: Map()
-});
+}, 'State');
 
 export const ElementVolume = Record({
   id: "",
@@ -115,4 +115,4 @@ export const ElementVolume = Record({
   prototype: "",
   volume: "",
   composition: ""
-});
+}, 'ElementVolume');
