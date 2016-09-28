@@ -11,9 +11,9 @@ export default {
   prototype: "holes",
 
   info: {
-    tag: ['window', 'door', 'opening'],
+    tag: ['porta'],
     group: "Comunicazione orizzontale",
-    description: "Porta",
+    description: "Porta di legno",
     image: require('./door.png')
   },
 

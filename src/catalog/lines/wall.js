@@ -9,9 +9,9 @@ export default {
   prototype: "lines",
 
   info: {
-    tag: ['wall'],
+    tag: ['muro'],
     group: "Comunicazione orizzontale",
-    description: "Finestra generica",
+    description: "Muro in mattoni o pittura",
     image: require('./wall.png')
   },
 

@@ -10,7 +10,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: [],
+    tag: ['arredamento', 'pelle'],
     group: "Items",
     description: "Divano in pelle",
     image: require('./sofa.png')
