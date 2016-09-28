@@ -1,6 +1,5 @@
 import Three from 'three';
-import {DoorGeneric} from '../holes/door-generic'
-import {WindowGeneric} from '../holes/window-generic'
+import catalog from '../catalog';
 
 export default function (line, layer) {
 
@@ -88,43 +87,6 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
         }
       });
     };
-
-    // Add thickness to hole properties
-    holeData.thickness = thickness;
-
-    // Create the hole object:
-    let holePromise;
-    switch (holeData.type) {
-      case 'windowGeneric':
-        holePromise = WindowGeneric.render3D(holeData, undefined);
-        break;
-      case 'doorGeneric':
-        holePromise = DoorGeneric.render3D(holeData, undefined);
-        break;
-      case 'none':
-      default:
-    }
-
-    holePromise.then(object => {
-      let boundingBox = new Three.Box3().setFromObject(object);
-      let center = [
-        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-
-      let coordinates = [
-        (distance - bevelRadius) * holeData.offset,
-        holeData.properties.get('altitude'),
-        0];
-
-      object.position.x += coordinates[0] - center[0];
-      //coordinates[1] - center[1] put the center of the door at the beginning of the hole
-      object.position.y += coordinates[1] - center[1] + holeData.properties.get('height') / 2;
-      object.position.z += coordinates[2] - center[2];
-      pivot.add(object);
-      applyInteract(object, holeInteractFunction);
-    });
-
   });
 
   let lineGeometry = new Three.ShapeGeometry(rectShape);

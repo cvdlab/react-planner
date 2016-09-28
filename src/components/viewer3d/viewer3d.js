@@ -39,6 +39,7 @@ export default class Scene3DViewer extends React.Component {
     let cameraPositionX = -(planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
     let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 10;
     let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
+    
     camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
     camera.up = new Three.Vector3(0, 1, 0);
 
