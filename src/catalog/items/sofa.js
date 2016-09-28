@@ -6,13 +6,13 @@ let gSVG = React.createFactory('g');
 let textSVG = React.createFactory('text');
 
 export default {
-  name: "itemGeneric",
+  name: "sofa",
   prototype: "items",
 
   info: {
     tag: [],
     group: "Items",
-    description: "Item",
+    description: "Divano in pelle",
     image: require('./sofa.png')
   },
 

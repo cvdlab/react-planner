@@ -5,7 +5,7 @@ import {distanceFromTwoPoints} from '../../utils/geometry';
 let pathSVG = React.createFactory('path');
 
 export default {
-  name: "wallGeneric",
+  name: "wall",
   prototype: "lines",
 
   info: {

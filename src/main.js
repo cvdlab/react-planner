@@ -12,11 +12,11 @@ import Catalog from './catalog/catalog';
 
 
 //init catalog-view
-import area from './catalog/areas/area-generic';
-import door from './catalog/holes/door-generic';
-import window from './catalog/holes/window-generic';
-import wall from './catalog/lines/wall-generic';
-import item from './catalog/items/item-generic';
+import area from './catalog/areas/area';
+import door from './catalog/holes/door';
+import window from './catalog/holes/window';
+import wall from './catalog/lines/wall';
+import item from './catalog/items/sofa';
 
 let catalog = new Catalog();
 catalog.registerElement(area);

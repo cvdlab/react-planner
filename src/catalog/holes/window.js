@@ -4,33 +4,33 @@ let pathSVG = React.createFactory('path');
 let lineSVG = React.createFactory('line');
 let gSVG = React.createFactory('g');
 
-import render3D from './door-generic.3d';
+import render3D from './window-generic.3d';
 
 export default {
-  name: "doorGeneric",
+  name: "window",
   prototype: "holes",
 
   info: {
     tag: ['window', 'door', 'opening'],
     group: "Comunicazione orizzontale",
-    description: "Porta generica",
-    image: require('./door.png')
+    description: "Finestra",
+    image: require('./window.png')
   },
 
   properties: {
     width: {
       type: "number",
-      defaultValue: 80,
+      defaultValue: 90,
       min: 0
     },
     height: {
       type: "number",
-      defaultValue: 215,
+      defaultValue: 100,
       min: 0
     },
     altitude: {
       type: "number",
-      defaultValue: 0,
+      defaultValue: 90,
       min: 0
     }
   },
@@ -38,7 +38,6 @@ export default {
   render2D: function (hole, layer, scene) {
     const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
     const STYLE_HOLE_SELECTED = {stroke: "orange", strokeWidth: "3px", fill: "orange"};
-
     //let line = layer.lines.get(hole.line);
     //let epsilon = line.properties.get('thickness') / 2;
 
@@ -56,21 +55,14 @@ export default {
       }),
       lineSVG({
         key: 2,
-        x1: holeWidth / 2 - 5,
+        x1: holeWidth / 2,
         y1: -10 - epsilon,
-        x2: holeWidth / 2 - 5,
-        y2: 10 + epsilon,
-        style: holeStyle
-      }),
-      lineSVG({
-        key: 3,
-        x1: holeWidth / 2 + 5,
-        y1: -10 - epsilon,
-        x2: holeWidth / 2 + 5,
+        x2: holeWidth / 2,
         y2: 10 + epsilon,
         style: holeStyle
       }),
     ]);
+
   },
 
   render3D,
