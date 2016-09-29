@@ -48,7 +48,6 @@ function extractElementData(node) {
 export default function Viewer2D({scene, width, height, viewer2D, mode, activeSnapElement, snapElements},
   {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions}) {
 
-  viewer2D = viewer2D.isEmpty() ? null : viewer2D.toJS();
   let layerID = scene.selectedLayer;
 
   let mapCursorPosition = ({x, y}) => {
@@ -184,7 +183,7 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
   snapElements = null; //only for debug purpose
 
   return (
-    <Viewer value={viewer2D} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
+    <Viewer value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
