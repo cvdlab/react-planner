@@ -62,9 +62,7 @@ export function parseData(sceneData, editingActions, catalog) {
 
   // Set center of plan in the origin
 
-  if (!isFinite(boundingBox.max.x) || !isFinite(boundingBox.min.x) ||
-    !isFinite(boundingBox.max.y) ||!isFinite(boundingBox.min.y) ||
-    !isFinite(boundingBox.max.z) || !isFinite(boundingBox.min.z)) {
+  if (!isFinite(boundingBox.max.x) || !isFinite(boundingBox.min.x) || !isFinite(boundingBox.max.y) || !isFinite(boundingBox.min.y) || !isFinite(boundingBox.max.z) || !isFinite(boundingBox.min.z)) {
     // The plan is Empty
     boundingBox = new Three.Box3().setFromObject(grid);
     console.log(boundingBox);
@@ -203,8 +201,13 @@ function createWall(layer, line, editingActions, catalog) {
         holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
         0];
 
-      object.position.x += coordinates[0] - center[0] + bevelRadius / 2;
-      //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+      var geometry = new Three.SphereGeometry(5, 32, 32);
+      var material = new Three.MeshBasicMaterial({color: 0xff0000});
+      var sphere = new Three.Mesh(geometry, material);
+      // wall.add(sphere);
+
+      object.position.x += coordinates[0] - center[0];
+      // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
       object.position.y += coordinates[1] - center[1];
       object.position.z += coordinates[2] - center[2];
       wall.add(object);
