@@ -22,7 +22,16 @@ module.exports = {
         loader: 'babel'
       },
       {
+        test: /\.(jpe?g|png|gif|mtl|obj)$/i,
+        include: /src\/catalog/,
+        loaders: [
+          'file?hash=sha512&digest=hex&name=[path][name].[ext]?[hash]&context=src',
+          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
+        ]
+      },
+      {
         test: /\.(jpe?g|png|gif|svg)$/i,
+        exclude: /src\/catalog/,
         loaders: [
           'file?hash=sha512&digest=hex&name=[hash].[ext]',
           'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'

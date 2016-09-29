@@ -16,7 +16,7 @@ import area from './catalog/areas/area';
 import door from './catalog/holes/door';
 import window from './catalog/holes/window';
 import wall from './catalog/lines/wall';
-import item from './catalog/items/sofa';
+import item from './catalog/items/sofa/sofa';
 
 let catalog = new Catalog();
 catalog.registerElement(area);

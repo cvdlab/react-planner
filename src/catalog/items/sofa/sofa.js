@@ -1,5 +1,6 @@
 import Three from 'three';
-import {loadObjWithMaterial} from '../../utils/load-obj';
+import {loadObjWithMaterial} from '../../../utils/load-obj';
+import path from 'path';
 
 import React from 'react';
 
@@ -52,8 +53,11 @@ export default {
       return object;
     };
 
-    return loadObjWithMaterial('obj/sofa/', 'sofa.mtl', 'obj/sofa/',
-      'sofa.obj', onLoadItem)
+    let mtl = require('./sofa.mtl');
+    let obj = require('./sofa.obj');
+    let img = require('./texture.jpg');
+
+    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
       .then(object => onLoadItem(object))
   }
 
