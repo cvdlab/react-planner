@@ -17,6 +17,7 @@ import door from './catalog/holes/door/door';
 import window from './catalog/holes/window/window';
 import wall from './catalog/lines/wall/wall';
 import item from './catalog/items/sofa/sofa';
+import tv from './catalog/items/tv/tv';
 
 let catalog = new Catalog();
 catalog.registerElement(area);
@@ -24,6 +25,7 @@ catalog.registerElement(door);
 catalog.registerElement(window);
 catalog.registerElement(wall);
 catalog.registerElement(item);
+catalog.registerElement(tv);
 
 
 //init store
