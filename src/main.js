@@ -11,7 +11,7 @@ import actions from './actions/actions';
 import Catalog from './catalog/catalog';
 
 
-//init catalog-view
+//INIT CATALOG
 import area from './catalog/areas/area/area';
 import door from './catalog/holes/door/door';
 import window from './catalog/holes/window/window';
@@ -19,13 +19,27 @@ import wall from './catalog/lines/wall/wall';
 import item from './catalog/items/sofa/sofa';
 import tv from './catalog/items/tv/tv';
 
+import PropertyColor from './catalog/properties/property-color.jsx';
+import PropertyEnum from './catalog/properties/property-enum.jsx';
+import PropertyString from './catalog/properties/property-string.jsx';
+import PropertyNumber from './catalog/properties/property-number.jsx';
+
 let catalog = new Catalog();
+
+catalog.registerPropertyType('color', PropertyColor, PropertyColor);
+catalog.registerPropertyType('enum', PropertyEnum, PropertyEnum);
+catalog.registerPropertyType('string', PropertyString, PropertyString);
+catalog.registerPropertyType('number', PropertyNumber, PropertyNumber);
+
+
 catalog.registerElement(area);
 catalog.registerElement(door);
 catalog.registerElement(window);
 catalog.registerElement(wall);
 catalog.registerElement(item);
 catalog.registerElement(tv);
+//END CATALOG
+
 
 
 //init store

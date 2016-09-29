@@ -5,6 +5,7 @@ export default class Catalog {
 
   constructor(){
     this.elements = {};
+    this.propertyTypes = {};
   }
 
   getElement(type) {
@@ -19,6 +20,14 @@ export default class Catalog {
   registerElement(json) {
     if(this.validateElement(json)){
       this.elements[json.name] = json;
+    }
+  }
+
+  registerPropertyType(propertyType, propertyViewer, propertyEditor){
+    this.propertyTypes[propertyType] = {
+      type: propertyType,
+      Viewer: propertyViewer,
+      Editor: propertyEditor
     }
   }
 
