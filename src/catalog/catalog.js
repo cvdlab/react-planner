@@ -18,6 +18,7 @@ export default class Catalog {
   }
 
   registerElement(json) {
+    json.properties = json.properties || {};
     if(this.validateElement(json)){
       this.elements[json.name] = json;
     }
@@ -39,6 +40,14 @@ export default class Catalog {
     if (!json.hasOwnProperty('info')) throw new Error(`Element ${name} doesn't have info`);
     if (!json.hasOwnProperty('render2D')) throw new Error(`Element ${name} doesn't have render2D handler`);
     if (!json.hasOwnProperty('render3D')) throw new Error(`Element ${name} doesn't have render3D handler`);
+    if (!json.hasOwnProperty('properties')) throw new Error(`Element ${name} doesn't have properties`);
+
+    for(let propertyName in json.properties){
+      let propertyConfigs = json.properties[propertyName];
+      if (!propertyConfigs.hasOwnProperty('type')) throw new Error(`Element ${name}, Property ${propertyName} doesn't have type`);
+      if (!propertyConfigs.hasOwnProperty('defaultValue')) throw new Error(`Element ${name}, Property ${propertyName} doesn't have defaultValue`);
+    }
+
     return true;
   }
 
