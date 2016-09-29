@@ -15,7 +15,7 @@ import Catalog from './catalog/catalog';
 import area from './catalog/areas/area';
 import door from './catalog/holes/door/door';
 import window from './catalog/holes/window/window';
-import wall from './catalog/lines/wall';
+import wall from './catalog/lines/wall/wall';
 import item from './catalog/items/sofa/sofa';
 
 let catalog = new Catalog();

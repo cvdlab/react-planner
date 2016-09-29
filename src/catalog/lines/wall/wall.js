@@ -1,6 +1,6 @@
-import render3D from './wall-generic.3d.js';
+import render3D from './wall-3d.js';
 import React from 'react';
-import {distanceFromTwoPoints} from '../../utils/geometry';
+import {distanceFromTwoPoints} from '../../../utils/geometry';
 
 let pathSVG = React.createFactory('path');
 let gSVG = React.createFactory('g');

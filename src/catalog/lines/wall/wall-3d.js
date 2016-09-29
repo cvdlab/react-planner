@@ -1,5 +1,4 @@
 import Three from 'three';
-import catalog from '../catalog';
 
 export default function (line, layer) {
 
