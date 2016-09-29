@@ -1,27 +1,27 @@
 import Three from 'three';
 
-export default function (line, layer) {
+export default function (element, layer, scene) {
 
   let holes = [];
 
   let lineInteractFunction = () => {
-    return line.editingActions.selectLine(layer.id, line.id)
+    return element.editingActions.selectLine(layer.id, element.id)
   };
 
-  line.holes.forEach(holeID => {
+  element.holes.forEach(holeID => {
 
     let hole = layer.holes.get(holeID);
 
     let holeInteractFunction = () => {
-      return line.editingActions.selectHole(layer.id, hole.id)
+      return element.editingActions.selectHole(layer.id, hole.id)
     };
 
     holes.push({holeData: hole, holeInteractFunction});
   });
 
 
-  let vertex0 = layer.vertices.get(line.vertices.get(0));
-  let vertex1 = layer.vertices.get(line.vertices.get(1));
+  let vertex0 = layer.vertices.get(element.vertices.get(0));
+  let vertex1 = layer.vertices.get(element.vertices.get(1));
 
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
@@ -29,17 +29,17 @@ export default function (line, layer) {
     vertex1 = app;
   }
 
-  let bevelRadius = line.properties.get('thickness');
+  let bevelRadius = element.properties.get('thickness');
 
   return createShapeWall(vertex0,
     vertex1,
-    line.properties.get('height'),
-    line.properties.get('thickness'),
+    element.properties.get('height'),
+    element.properties.get('thickness'),
     holes,
     bevelRadius,
-    line.selected,
-    line.properties.get('textureA'),
-    line.properties.get('textureB'),
+    element.selected,
+    element.properties.get('textureA'),
+    element.properties.get('textureB'),
     lineInteractFunction
   );
 }

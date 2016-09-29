@@ -1,6 +1,6 @@
 import Three from 'three';
 
-export default function (element, layer) {
+export default function (element, layer, scene) {
   let vertices = [];
 
   element.vertices.forEach(vertexID => {
@@ -93,7 +93,7 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
   area.add(areaFace2);
 
   area.rotation.x -= Math.PI / 2;
-  
+
   return area;
 }
 

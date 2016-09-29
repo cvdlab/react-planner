@@ -41,7 +41,7 @@ export default {
     ]);
   },
 
-  render3D: function (item, layer) {
+  render3D: function (element, layer, scene) {
 
     let onLoadItem = (object) => {
 
@@ -51,9 +51,9 @@ export default {
       let initialHeight = boundingBox.max.y - boundingBox.min.y;
       let initialThickness = boundingBox.max.z - boundingBox.min.z;
 
-      object.scale.set(item.width / initialWidth, 1, item.height / initialThickness);
+      object.scale.set(element.width / initialWidth, 1, element.height / initialThickness);
 
-      if (item.selected) {
+      if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);
         box.material.linewidth = 2;
         box.material.depthTest = false;

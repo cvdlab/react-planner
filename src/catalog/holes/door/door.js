@@ -36,7 +36,7 @@ export default {
     }
   },
 
-  render2D: function (hole, layer, scene) {
+  render2D: function (element, layer, scene) {
     const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
     const STYLE_HOLE_SELECTED = {stroke: "orange", strokeWidth: "3px", fill: "orange"};
 
@@ -45,9 +45,9 @@ export default {
 
     let epsilon = 3;
 
-    let holeWidth = hole.properties.get('width');
+    let holeWidth = element.properties.get('width');
     let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
-    let holeStyle = hole.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
+    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
 
     return gSVG({}, [
       pathSVG({
@@ -74,7 +74,7 @@ export default {
     ]);
   },
 
-  render3D: function(hole, layer, scene) {
+  render3D: function(element, layer, scene) {
     let onLoadItem = (object) => {
       let boundingBox = new Three.Box3().setFromObject(object);
 
@@ -82,15 +82,15 @@ export default {
       let initialHeight = boundingBox.max.y - boundingBox.min.y;
       let initialThickness = boundingBox.max.z - boundingBox.min.z;
 
-      if (hole.selected) {
+      if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);
         box.material.linewidth = 2;
         box.material.depthTest = false;
         object.add(box);
       }
 
-      object.scale.set(hole.properties.get('width') / initialWidth, hole.properties.get('height') / initialHeight,
-        hole.thickness / initialThickness);
+      object.scale.set(element.properties.get('width') / initialWidth, element.properties.get('height') / initialHeight,
+        element.thickness / initialThickness);
 
       return object;
     };
