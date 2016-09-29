@@ -229,7 +229,7 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
       + Math.pow((vertex1.y - vertex0.y), 2));
 
-    let startAt = length * holeData.offset - holeData.properties.get('width') / 2;
+    let startAt = (length - bevelRadius) * holeData.offset - holeData.properties.get('width') / 2;
 
     topHoleClosure.rotation.x += Math.PI / 2;
     topHoleClosure.position.z -= thickness / 2;
@@ -354,7 +354,7 @@ function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitu
   let length = Math.sqrt(Math.pow((lineVertex1.x - lineVertex0.x), 2)
     + Math.pow((lineVertex1.y - lineVertex0.y), 2));
 
-  let startAt = length * offset - width / 2 + bevelRadius / 2;
+  let startAt = (length - bevelRadius) * offset - width / 2 + bevelRadius / 2;
   let wallCoordinates = [
     [startAt, altitude],
     [width + startAt, altitude],
