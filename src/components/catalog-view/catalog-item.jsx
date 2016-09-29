@@ -110,7 +110,7 @@ export default class CatalogItem extends Component {
         </If>
         <div style={STYLE_NAME}>{element.name}</div>
         <ul style={STYLE_TAGS}>
-          {new Seq(element.info.tag).map(tag => <li style={STYLE_TAG}>{tag}</li>)}
+          {new Seq(element.info.tag).map((tag, index) => <li style={STYLE_TAG} key={index}>{tag}</li>)}
         </ul>
         <div style={STYLE_DESCRIPTION}>{element.info.description}</div>
         <div style={STYLE_ICON}>
