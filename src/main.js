@@ -12,7 +12,7 @@ import Catalog from './catalog/catalog';
 
 
 //init catalog-view
-import area from './catalog/areas/area';
+import area from './catalog/areas/area/area';
 import door from './catalog/holes/door/door';
 import window from './catalog/holes/window/window';
 import wall from './catalog/lines/wall/wall';
