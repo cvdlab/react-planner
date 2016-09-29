@@ -33,6 +33,11 @@ export default {
       type: "number",
       defaultValue: 0,
       min: 0
+    },
+    thickness: {
+      type: "number",
+      defaultValue: 30,
+      min: 0
     }
   },
 
@@ -89,8 +94,9 @@ export default {
         object.add(box);
       }
 
+      console.log(element.properties.get('thickness'));
       object.scale.set(element.properties.get('width') / initialWidth, element.properties.get('height') / initialHeight,
-        element.thickness / initialThickness);
+        element.properties.get('thickness') / initialThickness);
 
       return object;
     };

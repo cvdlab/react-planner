@@ -183,9 +183,6 @@ function createWall(layer, line, editingActions, catalog) {
 
     let holeData = layer.holes.get(holeID);
 
-    // Add thickness to hole properties
-    holeData.thickness = line.properties.get('thickness');
-
     // Create the hole object:
     let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined);
 
@@ -200,12 +197,7 @@ function createWall(layer, line, editingActions, catalog) {
         (distance - bevelRadius) * holeData.offset,
         holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
         0];
-
-      var geometry = new Three.SphereGeometry(5, 32, 32);
-      var material = new Three.MeshBasicMaterial({color: 0xff0000});
-      var sphere = new Three.Mesh(geometry, material);
-      // wall.add(sphere);
-
+      
       object.position.x += coordinates[0] - center[0];
       // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
       object.position.y += coordinates[1] - center[1];
