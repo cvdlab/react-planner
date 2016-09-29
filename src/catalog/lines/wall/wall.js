@@ -44,6 +44,10 @@ export default {
         'bricks': "Mattoni",
         'painted': "Pittura"
       }
+    },
+    composition: {
+      type: "composition",
+      defaultValue: {}
     }
   },
 

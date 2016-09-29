@@ -19,7 +19,12 @@ export default {
     image: require('./sofa.png')
   },
 
-  properties: {},
+  properties: {
+    composition: {
+      type: "composition",
+      defaultValue: {}
+    }
+  },
 
   render2D: function (element, layer, scene) {
     return gSVG({}, [

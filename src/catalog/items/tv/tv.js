@@ -18,7 +18,12 @@ export default {
     image: require('./tv.png')
   },
 
-  properties: {},
+  properties: {
+    composition: {
+      type: "composition",
+      defaultValue: {}
+    }
+  },
 
   render2D: function (element, layer, scene) {
     return gSVG({}, [

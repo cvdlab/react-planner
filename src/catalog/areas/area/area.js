@@ -11,6 +11,7 @@ export default {
     tag: ['area'],
     group: "Chiusura orizzontale",
     description: "Stanza generica",
+    image: ""
   },
 
   properties: {
@@ -26,6 +27,10 @@ export default {
         'parquet': "Parquet",
         'tile1': "Tile 1",
       }
+    },
+    composition: {
+      type: "composition",
+      defaultValue: {}
     }
   },
 
