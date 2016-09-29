@@ -268,7 +268,7 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     //add new areas
-    console.log("graphCycles call", verticesArray, linesArray);
+    // console.log("graphCycles call", verticesArray, linesArray);
 
     let graph = new Graph(verticesArray.length);
     linesArray.forEach(line => {
