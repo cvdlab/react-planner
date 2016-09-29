@@ -23,6 +23,8 @@ import PropertyColor from './catalog/properties/property-color.jsx';
 import PropertyEnum from './catalog/properties/property-enum.jsx';
 import PropertyString from './catalog/properties/property-string.jsx';
 import PropertyNumber from './catalog/properties/property-number.jsx';
+import PropertyComposition from './catalog/properties/property-composition.jsx';
+
 
 let catalog = new Catalog();
 
@@ -30,6 +32,7 @@ catalog.registerPropertyType('color', PropertyColor, PropertyColor);
 catalog.registerPropertyType('enum', PropertyEnum, PropertyEnum);
 catalog.registerPropertyType('string', PropertyString, PropertyString);
 catalog.registerPropertyType('number', PropertyNumber, PropertyNumber);
+catalog.registerPropertyType('composition', PropertyComposition, PropertyComposition);
 
 
 catalog.registerElement(area);
