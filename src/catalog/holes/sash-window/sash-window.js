@@ -8,13 +8,13 @@ let lineSVG = React.createFactory('line');
 let gSVG = React.createFactory('g');
 
 export default {
-  name: "window",
+  name: "sash window",
   prototype: "holes",
 
   info: {
     tag: ['finestra'],
     group: "Comunicazione orizzontale",
-    description: "Finestra",
+    description: "Finestra con grate",
     image: require('./window.png')
   },
 
@@ -92,8 +92,8 @@ export default {
       return object;
     };
 
-    let mtl = require('./window.mtl');
-    let obj = require('./window.obj');
+    let mtl = require('./sash-window.mtl');
+    let obj = require('./sash-window.obj');
     let img = require('./texture.png');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
