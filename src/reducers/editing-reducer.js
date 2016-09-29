@@ -109,9 +109,11 @@ function unselectAll(scene) {
 
 function remove(scene, catalog) {
   return scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
-    layer.selected.lines.forEach(lineID => removeLine(layer, lineID));
-    layer.selected.holes.forEach(holeID => removeHole(layer, holeID));
-    layer.selected.items.forEach(itemID => removeItem(layer, itemID));
+    let {lines: selectedLines, holes: selectedHoles, items: selectedItems} = layer.selected;
+    unselectAllOp(layer);
+    selectedLines.forEach(lineID => removeLine(layer, lineID));
+    selectedHoles.forEach(holeID => removeHole(layer, holeID));
+    selectedItems.forEach(itemID => removeItem(layer, itemID));
     detectAndUpdateAreas(layer, catalog);
   }));
 }

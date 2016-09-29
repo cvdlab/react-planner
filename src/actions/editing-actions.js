@@ -61,7 +61,10 @@ export function setProperties(properties) {
 }
 
 export function remove() {
-  return {
-    type: REMOVE
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: REMOVE,
+      catalog
+    })
   }
 }
