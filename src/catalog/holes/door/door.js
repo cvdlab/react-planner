@@ -1,6 +1,7 @@
 import React from 'react';
 import Three from 'three';
-import {loadObjWithMaterial} from '../../utils/load-obj';
+import {loadObjWithMaterial} from '../../../utils/load-obj';
+import path from 'path';
 
 let pathSVG = React.createFactory('path');
 let lineSVG = React.createFactory('line');
@@ -94,9 +95,12 @@ export default {
       return object;
     };
 
-    return loadObjWithMaterial('obj/door/', 'door.mtl', 'obj/door/',
-      'door.obj', onLoadItem)
-      .then(object => onLoadItem(object));
+    let mtl = require('./door.mtl');
+    let obj = require('./door.obj');
+    let img = require('./texture.png');
+
+    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+      .then(object => onLoadItem(object))
 
   }
 };
