@@ -44,6 +44,15 @@ export default {
   render3D: function (item, layer) {
 
     let onLoadItem = (object) => {
+
+      let boundingBox = new Three.Box3().setFromObject(object);
+
+      let initialWidth = boundingBox.max.x - boundingBox.min.x;
+      let initialHeight = boundingBox.max.y - boundingBox.min.y;
+      let initialThickness = boundingBox.max.z - boundingBox.min.z;
+
+      object.scale.set(item.width / initialWidth, 1, item.height / initialThickness);
+
       if (item.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);
         box.material.linewidth = 2;

@@ -323,12 +323,6 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
 
     let boundingBox = new Three.Box3().setFromObject(item3D);
 
-    let initialWidth = boundingBox.max.x - boundingBox.min.x;
-    let initialHeight = boundingBox.max.y - boundingBox.min.y;
-    let initialThickness = boundingBox.max.z - boundingBox.min.z;
-
-    item3D.scale.set(item.width / initialWidth, 1, item.height / initialThickness);
-
     let center = [
       (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
@@ -366,12 +360,6 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
   item3DPromise.then(item3D => {
 
     let boundingBox = new Three.Box3().setFromObject(item3D);
-
-    let initialWidth = boundingBox.max.x - boundingBox.min.x;
-    let initialHeight = boundingBox.max.y - boundingBox.min.y;
-    let initialThickness = boundingBox.max.z - boundingBox.min.z;
-
-    item3D.scale.set(newItemData.width / initialWidth, 1, newItemData.height / initialThickness);
 
     let center = [
       (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
