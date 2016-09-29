@@ -106,11 +106,11 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
 
 
   if (alpha < 0) {
-    applyTexture(wallMaterial1, textureA, distance, height);
-    applyTexture(wallMaterial2, textureB, distance, height);
-  } else {
     applyTexture(wallMaterial1, textureB, distance, height);
     applyTexture(wallMaterial2, textureA, distance, height);
+  } else {
+    applyTexture(wallMaterial1, textureA, distance, height);
+    applyTexture(wallMaterial2, textureB, distance, height);
   }
 
   assignUVs(lineGeometry);
