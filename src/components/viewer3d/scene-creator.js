@@ -329,13 +329,13 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
     item3D.position.x -= center[0];
+    item3D.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
     item3D.position.z -= center[2];
 
     let pivot = new Three.Object3D();
-    pivot.add(item3D)
+    pivot.add(item3D);
 
     pivot.rotation.y = item.rotation * Math.PI / 180;
-
     pivot.position.x = item.x;
     pivot.position.z -= item.y;
 
@@ -367,13 +367,14 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
     item3D.position.x -= center[0];
+    item3D.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
     item3D.position.z -= center[2];
 
+
     let pivot = new Three.Object3D();
-    pivot.add(item3D)
+    pivot.add(item3D);
 
     pivot.rotation.y = newItemData.rotation * Math.PI / 180;
-
     pivot.position.x = newItemData.x;
     pivot.position.z -= newItemData.y;
 
