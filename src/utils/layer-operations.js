@@ -3,7 +3,7 @@ import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../mode
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import graphCycles from './graph-cycles';
-import Graph from 'biconnected-components/src/graph';
+import Graph from './graph';
 import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 
 const AREA_ELEMENT_TYPE = 'area';
