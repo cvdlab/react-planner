@@ -1,11 +1,11 @@
 import React, {PropTypes} from 'react';
 import ToolbarButton from '../components/toolbar/toolbar-button.jsx';
-import Icon from 'react-icons/lib/fa/cube';
+import Icon from 'react-icons/lib/fa/trash';
 
 
 export default function ButtonX({mode}, {editingActions}){
   return (
-    <ToolbarButton active={["MODE_3D_VIEW"].includes(mode)} tooltip="3D View" onClick={event => editingActions.selectLine('layer-1', 'HJW7YRkA')}>
+    <ToolbarButton active={["MODE_3D_VIEW"].includes(mode)} tooltip="3D View" onClick={event => editingActions.remove()}>
       <Icon />
     </ToolbarButton>
   )

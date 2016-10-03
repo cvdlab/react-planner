@@ -3,10 +3,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './components/app.jsx';
-import initStore from './reducers/store';
-import autosave from './autosave';
-import keyboard from './keyboard';
+import Planner from './components/planner.jsx';
 import actions from './actions/actions';
 import Catalog from './catalog/catalog';
 
@@ -14,7 +11,7 @@ import Catalog from './catalog/catalog';
 //INIT CATALOG
 import area from './catalog/areas/area/area';
 import door from './catalog/holes/door/door';
-import window from './catalog/holes/window/window';
+import windowCat from './catalog/holes/window/window';
 import sashWindow from './catalog/holes/sash-window/sash-window';
 import wall from './catalog/lines/wall/wall';
 import item from './catalog/items/sofa/sofa';
@@ -38,7 +35,7 @@ catalog.registerPropertyType('composition', PropertyComposition, PropertyComposi
 
 catalog.registerElement(area);
 catalog.registerElement(door);
-catalog.registerElement(window);
+catalog.registerElement(windowCat);
 catalog.registerElement(sashWindow);
 catalog.registerElement(wall);
 catalog.registerElement(item);
@@ -57,31 +54,30 @@ let customContents = {
   'MODE_MY_MODE': ContentX
 };
 
+//INIT CUSTOM REDUCER
+let customReducer = (state, action) => {
+  console.log(action)
+  return state;
+};
 
-//init store
-let store = initStore({catalog});
 
-autosave(store);
-keyboard(store);
+
+let onReady = (store) => {
+  window.Metior = {
+    store,
+    dispatch: store.dispatch,
+    getState: () => store.getState().toJS(),
+    ...actions
+  };
+  console.groupCollapsed("Metior");
+  console.info("Metior is ready");
+  console.info("console.log(Metior)");
+  console.log(window.Metior);
+  console.groupEnd();
+};
 
 ReactDOM.render(
-  React.createElement(App, {store, catalog, toolbarButtons, customContents}),
+  React.createElement(Planner, {onReady, catalog, toolbarButtons, customContents, customReducer}),
   document.getElementById('app')
 );
 
-
-/*************************************************************************
- ****************************** DEBUG ************************************
- *************************************************************************/
-window.Metior = {
-  ReactPerf: require('react-addons-perf'),
-  store: store,
-  dispatch: store.dispatch,
-  getState: () => store.getState().toJS(),
-  ...actions
-};
-console.groupCollapsed("Metior");
-console.info("Metior is ready");
-console.info("console.log(Metior)");
-console.log(window.Metior);
-console.groupEnd();
