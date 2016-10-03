@@ -5,6 +5,6 @@ import ToolbarButton from './components/toolbar/toolbar-button.jsx';
 console.info("react-planner started"); //MIT LICENSE COMPLIANT
 
 
-export default {
+export {
   Planner, Catalog, ToolbarButton
 };

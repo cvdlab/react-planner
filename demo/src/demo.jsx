@@ -1,12 +1,6 @@
-"use strict";
-
-import React from 'react';
-import ReactDOM from 'react-dom';
-
-import Planner from './components/planner.jsx';
-import actions from './actions/actions';
-import Catalog from './catalog/catalog';
-
+import React, {PropTypes, Component} from 'react';
+import {Planner, Catalog} from '../../src/index';
+import actions from '../../src/actions/actions';
 
 //INIT CATALOG
 import area from './catalog/areas/area/area';
@@ -16,22 +10,11 @@ import sashWindow from './catalog/holes/sash-window/sash-window';
 import wall from './catalog/lines/wall/wall';
 import item from './catalog/items/sofa/sofa';
 import tv from './catalog/items/tv/tv';
-
-import PropertyColor from './catalog/properties/property-color.jsx';
-import PropertyEnum from './catalog/properties/property-enum.jsx';
-import PropertyString from './catalog/properties/property-string.jsx';
-import PropertyNumber from './catalog/properties/property-number.jsx';
-import PropertyComposition from './catalog/properties/property-composition.jsx';
+import PropertyComposition from './addons/property-composition.jsx';
 
 
 let catalog = new Catalog();
-
-catalog.registerPropertyType('color', PropertyColor, PropertyColor);
-catalog.registerPropertyType('enum', PropertyEnum, PropertyEnum);
-catalog.registerPropertyType('string', PropertyString, PropertyString);
-catalog.registerPropertyType('number', PropertyNumber, PropertyNumber);
 catalog.registerPropertyType('composition', PropertyComposition, PropertyComposition);
-
 
 catalog.registerElement(area);
 catalog.registerElement(door);
@@ -42,24 +25,24 @@ catalog.registerElement(item);
 catalog.registerElement(tv);
 //END CATALOG
 
+
 //INIT TOOLBAR BUTTONS
-import ButtonX from './demo/buttonX.jsx';
+import ButtonX from './addons/buttonX.jsx';
 let toolbarButtons = [
   ButtonX
 ];
 
 //INIT CUSTOM CONTENT
-import ContentX from './demo/contentX.jsx';
+import ContentX from './addons/contentX.jsx';
 let customContents = {
   'MODE_MY_MODE': ContentX
 };
 
 //INIT CUSTOM REDUCER
 let customReducer = (state, action) => {
-  console.log(action)
+  // console.log(action);
   return state;
 };
-
 
 
 let onReady = (store) => {
@@ -76,8 +59,21 @@ let onReady = (store) => {
   console.groupEnd();
 };
 
-ReactDOM.render(
-  React.createElement(Planner, {onReady, catalog, toolbarButtons, customContents, customReducer}),
-  document.getElementById('app')
-);
+export default class Demo extends Component {
 
+  render() {
+    return (
+      <Planner onReady={onReady}
+               catalog={catalog}
+               toolbarButtons={toolbarButtons}
+               customContents={customContents}
+               customReducer={customReducer}/>
+
+    )
+  }
+
+}
+
+Demo.propTypes = {};
+
+Demo.contextTypes = {};

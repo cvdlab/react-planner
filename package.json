@@ -4,14 +4,10 @@
   "description": "An online plan designer",
   "main": "lib/index.js",
   "scripts": {
-    "start": "npm run watch",
-    "serve": "webpack-dev-server",
-    "serve:public": "webpack-dev-server --host 0.0.0.0",
-    "watch": "webpack-dev-server --inline",
-    "build": "webpack --production",
+    "start": "webpack-dev-server --inline --config demo/webpack.config.js",
     "build:lib": "babel src --out-dir lib",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "version": "npm run build:lib && git add -A lib"
+    "version": "npm run build:lib && git add -A lib",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

@@ -1,6 +1,7 @@
 import React, {PropTypes} from 'react';
-import ToolbarButton from '../components/toolbar/toolbar-button.jsx';
+import {Planner, Catalog, ToolbarButton} from '../../../src/index';
 import Icon from 'react-icons/lib/fa/trash';
+
 
 
 export default function ButtonX({mode}, {editingActions}){

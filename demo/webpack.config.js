@@ -1,19 +1,20 @@
-var OpenBrowserPlugin = require('open-browser-webpack-plugin');
-var path = require('path');
-var webpack = require('webpack');
-
-var isProduction = process.argv.indexOf('--production') !== -1;
+const path = require('path');
+const webpack = require("webpack");
+const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'src/main.js'),
-  devtool: isProduction ? 'eval' : 'source-map',
-  devServer: {
-    contentBase: path.resolve(__dirname, "dist")
-  },
+  entry: path.resolve(__dirname, 'src/renderer.js'),
   output: {
-    path: __dirname + "/dist",
-    filename: "build.js"
+    path: __dirname + "/build",
+    filename: "demo.build.js"
   },
+  plugins: [
+    new OpenBrowserPlugin({url: 'http://localhost:8080'})
+  ],
+  devServer: {
+    contentBase: path.resolve(__dirname)
+  },
+  devtool: "eval",
   module: {
     loaders: [
       {
@@ -37,9 +38,7 @@ module.exports = {
           'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       }
-    ]
+    ],
+    plugins: [new OpenBrowserPlugin({url: 'http://localhost:8080'})]
   },
-  plugins: isProduction ?
-    [new webpack.optimize.UglifyJsPlugin()] :
-    [new OpenBrowserPlugin({url: 'http://localhost:8080'})]
 };

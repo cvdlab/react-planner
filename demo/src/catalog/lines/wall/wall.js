@@ -1,11 +1,14 @@
 import render3D from './wall-3d.js';
 import React from 'react';
-import {distanceFromTwoPoints} from '../../../utils/geometry';
 
 let pathSVG = React.createFactory('path');
 let gSVG = React.createFactory('g');
 let textSVG = React.createFactory('text');
 let lineSVG = React.createFactory('line');
+
+function distanceFromTwoPoints(x0, y0, x1, y1) {
+  return Math.sqrt(Math.pow((x1 - x0), 2) + Math.pow((y1 - y0), 2));
+}
 
 export default {
   name: "wall",

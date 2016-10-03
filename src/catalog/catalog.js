@@ -1,11 +1,21 @@
 import {Seq} from 'immutable';
 import {Line, Area, Hole, Item} from '../models';
+import PropertyColor from './properties/property-color.jsx';
+import PropertyEnum from './properties/property-enum.jsx';
+import PropertyString from './properties/property-string.jsx';
+import PropertyNumber from './properties/property-number.jsx';
+
 
 export default class Catalog {
 
   constructor(){
     this.elements = {};
     this.propertyTypes = {};
+
+    this.registerPropertyType('color', PropertyColor, PropertyColor);
+    this.registerPropertyType('enum', PropertyEnum, PropertyEnum);
+    this.registerPropertyType('string', PropertyString, PropertyString);
+    this.registerPropertyType('number', PropertyNumber, PropertyNumber);
   }
 
   getElement(type) {
