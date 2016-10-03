@@ -1,4 +1,4 @@
-# Metior
+# react-planner [WIP]
 An online plan designer
 
 ## Start project

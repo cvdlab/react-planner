@@ -2,14 +2,16 @@
   "name": "react-planner",
   "version": "0.0.1",
   "description": "An online plan designer",
-  "main": "src/index.js",
+  "main": "lib/index.js",
   "scripts": {
     "start": "npm run watch",
     "serve": "webpack-dev-server",
     "serve:public": "webpack-dev-server --host 0.0.0.0",
     "watch": "webpack-dev-server --inline",
     "build": "webpack --production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:lib": "babel src --out-dir lib",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "version": "npm run build:lib && git add -A lib"
   },
   "repository": {
     "type": "git",
