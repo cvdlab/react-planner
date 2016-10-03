@@ -51,6 +51,13 @@ let toolbarButtons = [
   ButtonX
 ];
 
+//INIT CUSTOM CONTENT
+import ContentX from './demo/contentX.jsx';
+let customContents = {
+  'MODE_MY_MODE': ContentX
+};
+
+
 //init store
 let store = initStore({catalog});
 
@@ -58,7 +65,7 @@ autosave(store);
 keyboard(store);
 
 ReactDOM.render(
-  React.createElement(App, {store, catalog, toolbarButtons}),
+  React.createElement(App, {store, catalog, toolbarButtons, customContents}),
   document.getElementById('app')
 );
 

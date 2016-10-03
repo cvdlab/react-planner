@@ -7,7 +7,7 @@ import ImageEditor from './image-editor/image-editor.jsx';
 import CatalogList from './catalog-view/catalog-list.jsx';
 import * as constants from '../constants';
 
-export default function Content({width, height, state}) {
+export default function Content({width, height, state, customContents}) {
   let scene = state.get('scene');
   let mode = state.get('mode');
   let viewer2D = state.get('viewer2D');
@@ -43,6 +43,14 @@ export default function Content({width, height, state}) {
     case constants.MODE_DRAWING_ITEM:
       return <Viewer2D scene={scene} mode={mode} width={width} height={height} viewer2D={viewer2D}
                        activeSnapElement={activeSnapElement} snapElement={snapElements}/>;
+
+    default:
+      if(customContents.hasOwnProperty(mode)){
+        let CustomContent = customContents[mode];
+        return <CustomContent width={width} height={height} state={state}/>
+      }else{
+        throw new Error(`Mode ${mode} doesn't have a mapped content`);
+      }
   }
 }
 
