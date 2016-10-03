@@ -16,23 +16,33 @@ export default function Content({width, height, state}) {
 
   switch (mode) {
     case constants.MODE_3D_VIEW:
-      return React.createElement(Viewer3D, {scene, mode, width, height});
+      return <Viewer3D scene={scene} mode={mode} width={width} height={height}/>;
 
     case constants.MODE_3D_FIRST_PERSON:
-      return React.createElement(Viewer3DFirstPerson, {scene, mode, width, height});
+      return <Viewer3DFirstPerson scene={scene} mode={mode} width={width} height={height}/>;
 
     case constants.MODE_VOLUMES_SUMMARY:
-      return React.createElement(VolumesTable, {scene, mode, width, height});
+      return <VolumesTable scene={scene} mode={mode} width={width} height={height}/>;
 
     case constants.MODE_UPLOADING_IMAGE:
     case constants.MODE_FITTING_IMAGE:
-      return React.createElement(ImageEditor, {scene, mode, width, height});
+      return <ImageEditor scene={scene} mode={mode} width={width} height={height}/>;
 
     case constants.MODE_VIEWING_CATALOG:
-      return React.createElement(CatalogList, {mode, width, height});
+      return <CatalogList scene={scene} mode={mode} width={width} height={height}/>;
 
-    default:
-      return React.createElement(Viewer2D, {scene, mode, width, height, viewer2D, activeSnapElement, snapElements});
+    case constants.MODE_IDLE:
+    case constants.MODE_2D_ZOOM_IN:
+    case constants.MODE_2D_ZOOM_OUT:
+    case constants.MODE_2D_PAN:
+    case constants.MODE_WAITING_DRAWING_LINE:
+    case constants.MODE_DRAGGING_LINE:
+    case constants.MODE_DRAGGING_VERTEX:
+    case constants.MODE_DRAWING_LINE:
+    case constants.MODE_DRAWING_HOLE:
+    case constants.MODE_DRAWING_ITEM:
+      return <Viewer2D scene={scene} mode={mode} width={width} height={height} viewer2D={viewer2D}
+                       activeSnapElement={activeSnapElement} snapElement={snapElements}/>;
   }
 }
 
