@@ -45,7 +45,11 @@ catalog.registerElement(item);
 catalog.registerElement(tv);
 //END CATALOG
 
-
+//INIT TOOLBAR BUTTONS
+import ButtonX from './demo/buttonX.jsx';
+let toolbarButtons = [
+  ButtonX
+];
 
 //init store
 let store = initStore({catalog});
@@ -54,7 +58,7 @@ autosave(store);
 keyboard(store);
 
 ReactDOM.render(
-  React.createElement(App, {store, catalog}),
+  React.createElement(App, {store, catalog, toolbarButtons}),
   document.getElementById('app')
 );
 

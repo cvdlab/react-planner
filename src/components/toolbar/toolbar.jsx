@@ -33,7 +33,7 @@ import {
 import ToolbarButton from './toolbar-button.jsx';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
-export default function Toolbar({state, width, height}, {
+export default function Toolbar({state, width, height, toolbarButtons}, {
   projectActions,
   viewer2DActions,
   editingActions,
@@ -107,6 +107,8 @@ export default function Toolbar({state, width, height}, {
         onClick={event => projectActions.openCatalog()}>
         <IconCatalog />
       </ToolbarButton>
+
+      {toolbarButtons.map((Component, index) => <Component mode={mode} key={index}/>)}
     </aside>
   )
 }
