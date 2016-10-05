@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import Panel from './panel.jsx';
-import {Seq} from 'immutable';
+import {Map, Seq} from 'immutable';
 import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../constants';
 
 export default function PanelPropertiesEditor({scene, mode}) {
@@ -58,8 +58,12 @@ class PropertiesEditor extends Component {
     let catalogElement = catalog.getElement(element.type);
 
     return Seq(catalogElement.properties).map((configs, propertyName) => {
+
+      let currentValue = element.properties.has(propertyName) ? element.properties.get(propertyName) : configs.defaultValue;
+      currentValue = currentValue instanceof Object ? new Map(currentValue) : currentValue;
+
       return {
-        currentValue: element.properties.has(propertyName) ? element.properties.get(propertyName) : configs.defaultValue,
+        currentValue,
         inputElement: configs.type,
         configs
       }

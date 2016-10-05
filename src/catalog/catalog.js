@@ -1,4 +1,4 @@
-import {Seq} from 'immutable';
+import {Seq, fromJS} from 'immutable';
 import {Line, Area, Hole, Item} from '../models';
 import PropertyColor from './properties/property-color.jsx';
 import PropertyEnum from './properties/property-enum.jsx';
@@ -72,7 +72,7 @@ export default class Catalog {
     let element = this.getElement(type);
 
     let properties = new Seq(element.properties)
-      .map(value => value.defaultValue)
+      .map(value => fromJS(value.defaultValue))
       .toMap();
 
     options = {...options, properties};
