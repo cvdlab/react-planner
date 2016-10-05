@@ -29,13 +29,14 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_DRAWING_LINE:
     case constants.MODE_DRAWING_HOLE:
     case constants.MODE_DRAWING_ITEM:
-      return <Viewer2D state={state} width={width} height={height} />;
+    case constants.MODE_DRAGGING_HOLE:
+      return <Viewer2D state={state} width={width} height={height}/>;
 
     default:
-      if(customContents.hasOwnProperty(mode)){
+      if (customContents.hasOwnProperty(mode)) {
         let CustomContent = customContents[mode];
         return <CustomContent width={width} height={height} state={state}/>
-      }else{
+      } else {
         throw new Error(`Mode ${mode} doesn't have a mapped content`);
       }
   }

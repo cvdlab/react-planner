@@ -57,6 +57,9 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_DRAWING_HOLE:
     case constants.UPDATE_DRAWING_HOLE:
     case constants.END_DRAWING_HOLE:
+    case constants.BEGIN_DRAGGING_HOLE:
+    case constants.UPDATE_DRAGGING_HOLE:
+    case constants.END_DRAGGING_HOLE:
       return holesReducer(state, action);
 
     case constants.ADD_LAYER:

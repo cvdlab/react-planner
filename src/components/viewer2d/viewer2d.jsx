@@ -14,7 +14,8 @@ import {
   MODE_DRAWING_ITEM,
   MODE_DRAGGING_LINE,
   MODE_DRAGGING_VERTEX,
-  MODE_DRAGGING_ITEM
+  MODE_DRAGGING_ITEM,
+  MODE_DRAGGING_HOLE
 } from '../../constants';
 import Scene from './scene.jsx';
 import Snap from './snap.jsx';
@@ -124,6 +125,10 @@ export default function Viewer2D({state, width, height},
         itemsActions.updateDrawingItem(layerID, x, y);
         break;
 
+      case MODE_DRAGGING_HOLE:
+        holesActions.updateDraggingHole(x, y);
+        break;
+
       case MODE_DRAGGING_LINE:
         linesActions.updateDraggingLine(x, y);
         break;
@@ -159,6 +164,10 @@ export default function Viewer2D({state, width, height},
           case 'items':
             itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
             break;
+
+          case 'holes':
+            holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
+            break;
         }
     }
   };
@@ -177,6 +186,10 @@ export default function Viewer2D({state, width, height},
 
       case MODE_DRAGGING_ITEM:
         itemsActions.endDraggingItem(x, y);
+        break;
+
+      case MODE_DRAGGING_HOLE:
+        holesActions.endDraggingHole(x, y);
         break;
     }
   };
