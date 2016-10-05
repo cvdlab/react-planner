@@ -1,4 +1,4 @@
-import {List, Seq, Map} from 'immutable';
+import {List, Seq, Map, fromJS} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
@@ -377,20 +377,20 @@ export function loadLayerFromJSON(json, catalog) {
     .set('type', catalog.getElement(line.type).name)
     .set('vertices', new List(line.vertices))
     .set('holes', new List(line.holes))
-    .set('properties', new Map(line.properties || {}));
+    .set('properties', new fromJS(line.properties || {}));
 
   let loadHole = hole => new Hole(hole)
     .set('type', catalog.getElement(hole.type).name)
-    .set('properties', new Map(hole.properties || {}));
+    .set('properties', new fromJS(hole.properties || {}));
 
   let loadArea = area => new Area(area)
     .set('type', catalog.getElement(area.type).name)
     .set('vertices', new List(area.vertices))
-    .set('properties', new Map(area.properties || {}));
+    .set('properties', new fromJS(area.properties || {}));
 
 
   let loadItem = item => new Item(item)
-    .set('properties', new Map(item.properties || {}));
+    .set('properties', new fromJS(item.properties || {}));
 
   let loadElementsSet = (elementsSet => {
     return new ElementsSet({
