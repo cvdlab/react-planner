@@ -104,13 +104,3 @@ export const State = Record({
   drawingSupport: Map(),
   draggingSupport: Map()
 }, 'State');
-
-export const ElementVolume = Record({
-  id: "",
-  elementID: "",
-  layerID: "",
-  type: "",
-  prototype: "",
-  volume: "",
-  composition: ""
-}, 'ElementVolume');
