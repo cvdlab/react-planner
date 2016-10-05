@@ -2,7 +2,6 @@ import React from 'react';
 import Viewer2D from './viewer2d/viewer2d.jsx';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
-import VolumesTable from './volumes-summary/volumes-table.jsx';
 import ImageEditor from './image-editor/image-editor.jsx';
 import CatalogList from './catalog-view/catalog-list.jsx';
 import * as constants from '../constants';
@@ -20,9 +19,6 @@ export default function Content({width, height, state, customContents}) {
 
     case constants.MODE_3D_FIRST_PERSON:
       return <Viewer3DFirstPerson scene={scene} mode={mode} width={width} height={height}/>;
-
-    case constants.MODE_VOLUMES_SUMMARY:
-      return <VolumesTable scene={scene} mode={mode} width={width} height={height}/>;
 
     case constants.MODE_UPLOADING_IMAGE:
     case constants.MODE_FITTING_IMAGE:

@@ -1,10 +1,8 @@
 import * as constants from '../constants';
-import {Map, fromJS} from 'immutable';
 import viewer2DReducer from './viewer2d-reducer';
 import editingReducer from './editing-reducer';
 import projectReducer from './project-reducer';
 import viewer3DReducer from './viewer3d-reducer';
-import volumesReducer from './volumes-reducer';
 import holesReducer from './holes-reducer';
 import linesReducer from './lines-reducer';
 import sceneReducer from './scene-reducer';
@@ -54,9 +52,6 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_3D_VIEW:
     case constants.SELECT_TOOL_3D_FIRST_PERSON:
       return viewer3DReducer(state, action);
-
-    case constants.SELECT_TOOL_VOLUMES_SUMMARY:
-      return volumesReducer(state, action);
 
     case constants.SELECT_TOOL_DRAWING_LINE:
     case constants.BEGIN_DRAWING_LINE:

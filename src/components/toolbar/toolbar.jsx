@@ -8,7 +8,6 @@ import IconPan from 'react-icons/lib/fa/hand-paper-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import Icon3D from 'react-icons/lib/fa/cube';
 import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
-import IconSummary from 'react-icons/lib/fa/table';
 import IconAddImage from 'react-icons/lib/fa/image';
 import IconCatalog from 'react-icons/lib/fa/plus-circle';
 
@@ -20,7 +19,6 @@ import {
   MODE_2D_ZOOM_OUT,
   MODE_3D_VIEW,
   MODE_3D_FIRST_PERSON,
-  MODE_VOLUMES_SUMMARY,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
   MODE_DRAWING_HOLE,
@@ -38,7 +36,6 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
   viewer2DActions,
   editingActions,
   viewer3DActions,
-  volumesActions,
   linesActions,
   holesActions,
   imagesActions,
@@ -69,11 +66,6 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
       <ToolbarButton active={[MODE_3D_FIRST_PERSON].includes(mode)} tooltip="3D First Person"
                      onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
         <Icon3DFirstPerson />
-      </ToolbarButton>
-
-      <ToolbarButton active={[MODE_VOLUMES_SUMMARY].includes(mode)} tooltip="Volumes summary"
-                     onClick={event => volumesActions.selectToolVolumesSummary()}>
-        <IconSummary />
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip="Select elements"
@@ -123,7 +115,6 @@ Toolbar.contextTypes = {
   viewer2DActions: PropTypes.object.isRequired,
   editingActions: PropTypes.object.isRequired,
   viewer3DActions: PropTypes.object.isRequired,
-  volumesActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
   imagesActions: PropTypes.object.isRequired,
