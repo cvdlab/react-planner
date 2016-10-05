@@ -33,8 +33,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let {editingActions, catalog} = this.context;
 
-    let {width, height} = this.props;
-    let data = this.props.scene;
+    let {width, height, state} = this.props;
+    let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
     let scene = new Three.Scene();
@@ -297,12 +297,12 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     camera.updateProjectionMatrix();
 
-    if (nextProps.scene !== this.props.scene) {
+    if (nextProps.scene !== this.props.state.scene) {
 
-      let changedValues = diff(this.props.scene, nextProps.scene);
+      let changedValues = diff(this.props.state.scene, nextProps.state.scene);
 
       this.scene.remove(this.planData.plan);
-      this.planData = parseData(nextProps.scene, this.context.editingActions);
+      this.planData = parseData(nextProps.state.scene, this.context.editingActions);
       this.scene.add(this.planData.plan);
 
       //updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS());
@@ -326,8 +326,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 }
 
 Viewer3DFirstPerson.propTypes = {
-  mode: React.PropTypes.string.isRequired,
-  scene: React.PropTypes.object.isRequired,
+  state: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
   height: React.PropTypes.number.isRequired
 };

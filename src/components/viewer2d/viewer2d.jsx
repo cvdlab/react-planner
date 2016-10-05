@@ -45,8 +45,11 @@ function extractElementData(node) {
   }
 }
 
-export default function Viewer2D({scene, width, height, viewer2D, mode, activeSnapElement, snapElements},
+export default function Viewer2D({state, width, height},
   {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions}) {
+
+
+  let {viewer2D, mode, activeSnapElement, snapElements, scene} = state;
 
   let layerID = scene.selectedLayer;
 
@@ -199,12 +202,9 @@ export default function Viewer2D({scene, width, height, viewer2D, mode, activeSn
 
 
 Viewer2D.propTypes = {
-  mode: PropTypes.string.isRequired,
-  scene: PropTypes.object.isRequired,
+  state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  viewer2D: PropTypes.object.isRequired,
-  activeDrawingHelper: PropTypes.object
 };
 
 Viewer2D.contextTypes = {

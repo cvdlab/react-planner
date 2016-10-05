@@ -6,21 +6,17 @@ import CatalogList from './catalog-view/catalog-list.jsx';
 import * as constants from '../constants';
 
 export default function Content({width, height, state, customContents}) {
-  let scene = state.get('scene');
   let mode = state.get('mode');
-  let viewer2D = state.get('viewer2D');
-  let activeSnapElement = state.get('activeSnapElement');
-  let snapElements = state.get('snapElements');
 
   switch (mode) {
     case constants.MODE_3D_VIEW:
-      return <Viewer3D scene={scene} mode={mode} width={width} height={height}/>;
+      return <Viewer3D state={state} width={width} height={height}/>;
 
     case constants.MODE_3D_FIRST_PERSON:
-      return <Viewer3DFirstPerson scene={scene} mode={mode} width={width} height={height}/>;
+      return <Viewer3DFirstPerson state={state} width={width} height={height}/>;
 
     case constants.MODE_VIEWING_CATALOG:
-      return <CatalogList scene={scene} mode={mode} width={width} height={height}/>;
+      return <CatalogList state={state} width={width} height={height}/>;
 
     case constants.MODE_IDLE:
     case constants.MODE_2D_ZOOM_IN:
@@ -32,8 +28,7 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_DRAWING_LINE:
     case constants.MODE_DRAWING_HOLE:
     case constants.MODE_DRAWING_ITEM:
-      return <Viewer2D scene={scene} mode={mode} width={width} height={height} viewer2D={viewer2D}
-                       activeSnapElement={activeSnapElement} snapElement={snapElements}/>;
+      return <Viewer2D state={state} width={width} height={height} />;
 
     default:
       if(customContents.hasOwnProperty(mode)){

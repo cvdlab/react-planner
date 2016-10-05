@@ -13,8 +13,8 @@ export default class Scene3DViewer extends React.Component {
 
     let editingActions = this.context.editingActions;
 
-    let {width, height} = this.props;
-    let data = this.props.scene;
+    let {width, height, state} = this.props;
+    let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
     let scene = new Three.Scene();
@@ -39,7 +39,7 @@ export default class Scene3DViewer extends React.Component {
     let cameraPositionX = -(planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
     let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 10;
     let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
-    
+
     camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
     camera.up = new Three.Vector3(0, 1, 0);
 
@@ -222,11 +222,11 @@ export default class Scene3DViewer extends React.Component {
 
     camera.updateProjectionMatrix();
 
-    if (nextProps.scene !== this.props.scene) {
+    if (nextProps.state.scene !== this.props.state.scene) {
 
-      let changedValues = diff(this.props.scene, nextProps.scene);
+      let changedValues = diff(this.props.state.scene, nextProps.state.scene);
 
-      updateScene(this.planData, nextProps.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
+      updateScene(this.planData, nextProps.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 
     renderer.setSize(width, height);
@@ -241,8 +241,7 @@ export default class Scene3DViewer extends React.Component {
 }
 
 Scene3DViewer.propTypes = {
-  mode: React.PropTypes.string.isRequired,
-  scene: React.PropTypes.object.isRequired,
+  state: React.PropTypes.object.isRequired,
   width: React.PropTypes.number.isRequired,
   height: React.PropTypes.number.isRequired
 };

@@ -14,7 +14,7 @@ const STYLE_ITEMS = {
 };
 
 
-export default function CatalogList({width, height}, {catalog}) {
+export default function CatalogList({width, height, state}, {catalog}) {
   return (
     <div style={{width, height, ...STYLE_CONTAINER}}>
       <h2>Catalog</h2>
@@ -31,6 +31,7 @@ export default function CatalogList({width, height}, {catalog}) {
 CatalogList.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  state: PropTypes.object.isRequired,
 };
 
 CatalogList.contextTypes = {
