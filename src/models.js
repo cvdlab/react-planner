@@ -74,12 +74,6 @@ export const Area = Record({
   properties: new Map()
 }, 'Area');
 
-export const Image = Record({
-  id: "",
-  uri: "",
-  vertices: new List()
-}, 'Image');
-
 export const Item = Record({
   id: "",
   prototype: 'items',
