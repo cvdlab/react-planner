@@ -20,6 +20,18 @@ export default {
   },
 
   properties: {
+    width: {
+      type: "number",
+      defaultValue: 180,
+    },
+    height: {
+      type: "number",
+      defaultValue: 70
+    },
+    depth: {
+      type: "number",
+      defaultValue: 60
+    },
     composition: {
       type: "composition",
       defaultValue: {}
@@ -27,26 +39,33 @@ export default {
   },
 
   render2D: function (element, layer, scene) {
-    return gSVG({}, [
+    let width = element.properties.get('width');
+    let depth = element.properties.get('depth');
+
+    return gSVG({transform: `translate(${-width / 2},${-depth / 2})`}, [
       rectSVG({
         key: 1,
         x: 0,
         y: 0,
-        width: element.width,
-        height: element.height,
-        style: {stroke: "black", strokeWidth: "2px", fill: "#84e1ce"}
+        width: width,
+        height: depth,
+        style: {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}
       }),
       textSVG({
         key: 2,
         x: 0,
         y: 0,
-        transform: `translate(${element.width / 2}, ${element.height / 2}) scale(1,-1)`,
+        transform: `translate(${width / 2}, ${depth / 2}) scale(1,-1)`,
         style: {textAnchor: "middle", fontSize: "11px"},
       }, element.type)
     ]);
   },
 
   render3D: function (element, layer, scene) {
+
+    let width = element.properties.get('width');
+    let depth = element.properties.get('depth');
+    let height = element.properties.get('height');
 
     let onLoadItem = (object) => {
 
@@ -56,7 +75,7 @@ export default {
       let initialHeight = boundingBox.max.y - boundingBox.min.y;
       let initialThickness = boundingBox.max.z - boundingBox.min.z;
 
-      object.scale.set(element.width / initialWidth, 1, element.height / initialThickness);
+      object.scale.set(width / initialWidth, height / initialHeight, depth / initialThickness);
 
       if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);

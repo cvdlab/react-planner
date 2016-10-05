@@ -18,6 +18,7 @@ export default function PanelPropertiesEditor({scene, mode}) {
     .concat(layer.lines)
     .concat(layer.holes)
     .concat(layer.areas)
+    .concat(layer.items)
     .filter(element => element.selected)
     .map(element => componentRenderer(element, layer))
     .valueSeq();

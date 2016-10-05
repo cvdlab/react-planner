@@ -3,14 +3,7 @@ import Ruler from './ruler.jsx';
 
 export default function Item({layer, item, pixelPerUnit, unit}, {catalog}) {
 
-  let {width, height, x, y, rotation} = item;
-
-  let renderedRuler = !item.selected ? null :
-    (<g>
-      <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={width} transform={`translate(${0}, ${height + 10})`}/>
-      <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={height}
-             transform={`translate(${width + 10}, ${height}) rotate(-90)`}/>
-    </g>);
+  let {x, y, rotation} = item;
 
   let renderedItem = catalog.getElement(item.type).render2D(item, layer);
 
@@ -22,9 +15,8 @@ export default function Item({layer, item, pixelPerUnit, unit}, {catalog}) {
       data-selected={item.selected}
       data-layer={layer.id}
       style={item.selected ? {cursor: "move"} : {}}
-      transform={`translate(${x},${y}) rotate(${rotation}) translate(${-width / 2},${-height / 2})`}>
+      transform={`translate(${x},${y}) rotate(${rotation})`}>
       {renderedItem}
-      {renderedRuler}
     </g>
   )
 }

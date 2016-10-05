@@ -388,10 +388,9 @@ export function loadLayerFromJSON(json, catalog) {
     .set('vertices', new List(area.vertices))
     .set('properties', new Map(area.properties || {}));
 
-  let loadImage = image => new Image(image)
-    .set('vertices', new List(image.vertices));
 
-  let loadItem = item => new Item(item);
+  let loadItem = item => new Item(item)
+    .set('properties', new Map(item.properties || {}));
 
   let loadElementsSet = (elementsSet => {
     return new ElementsSet({

@@ -80,8 +80,6 @@ export const Item = Record({
   type: "",
   properties: new Map(),
   selected: false,
-  height: 100,
-  width: 100,
   x: 0,
   y: 0,
   rotation: 0
