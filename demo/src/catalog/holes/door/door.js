@@ -38,10 +38,6 @@ export default {
       type: "number",
       defaultValue: 30,
       min: 0
-    },
-    composition: {
-      type: "composition",
-      defaultValue: {}
     }
   },
 

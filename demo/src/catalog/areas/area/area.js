@@ -27,10 +27,6 @@ export default {
         'parquet': "Parquet",
         'tile1': "Tile 1",
       }
-    },
-    composition: {
-      type: "composition",
-      defaultValue: {}
     }
   },
 

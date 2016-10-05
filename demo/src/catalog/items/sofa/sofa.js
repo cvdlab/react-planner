@@ -31,10 +31,6 @@ export default {
     depth: {
       type: "number",
       defaultValue: 60
-    },
-    composition: {
-      type: "composition",
-      defaultValue: {}
     }
   },
 
