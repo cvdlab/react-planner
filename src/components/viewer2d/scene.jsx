@@ -1,17 +1,21 @@
 import React, {PropTypes} from 'react';
 import Layer from './layer.jsx';
 import Grid from './grid.jsx';
-import {MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE} from '../../constants';
+import * as constants from '../../constants';
 export default function Scene({scene, mode}) {
 
   let {height, layers} = scene;
   let selectedLayer = scene.layers.get(scene.selectedLayer);
 
   let style = [
-    MODE_WAITING_DRAWING_LINE,
-    MODE_DRAWING_LINE,
-    MODE_DRAWING_HOLE,
-    MODE_DRAWING_HOLE
+    constants.MODE_WAITING_DRAWING_LINE,
+    constants.MODE_DRAWING_LINE,
+    constants.MODE_DRAWING_HOLE,
+    constants.MODE_DRAWING_ITEM,
+    constants.MODE_DRAGGING_HOLE,
+    constants.MODE_DRAGGING_ITEM,
+    constants.MODE_DRAGGING_LINE,
+    constants.MODE_DRAGGING_VERTEX
   ].includes(mode) ? {pointerEvents: 'none'} : {};
 
   return (

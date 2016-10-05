@@ -112,7 +112,7 @@ function beginDraggingHole(state, layerID, holeID, x, y) {
   let v0 = layer.getIn(['vertices', line.vertices.get(0)]);
   let v1 = layer.getIn(['vertices', line.vertices.get(1)]);
 
-  let snapElements = addLineSegmentSnap(List(), v0.x, v0.y, v1.x, v1.y, 20, 1, null);
+  let snapElements = addLineSegmentSnap(List(), v0.x, v0.y, v1.x, v1.y, 9999999, 1, null);
 
   return state.merge({
     mode: MODE_DRAGGING_HOLE,
