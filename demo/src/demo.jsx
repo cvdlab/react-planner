@@ -10,11 +10,9 @@ import sashWindow from './catalog/holes/sash-window/sash-window';
 import wall from './catalog/lines/wall/wall';
 import item from './catalog/items/sofa/sofa';
 import tv from './catalog/items/tv/tv';
-import PropertyComposition from './addons/property-composition.jsx';
 
 
 let catalog = new Catalog();
-catalog.registerPropertyType('composition', PropertyComposition, PropertyComposition);
 
 catalog.registerElement(area);
 catalog.registerElement(door);

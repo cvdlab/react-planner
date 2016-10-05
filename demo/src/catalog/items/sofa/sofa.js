@@ -25,8 +25,11 @@ export default {
       defaultValue: 180,
     },
     height: {
-      type: "number",
-      defaultValue: 70
+      type: "length-measure",
+      defaultValue: {
+        length: 70,
+        unit: 'cm'
+      },
     },
     depth: {
       type: "number",

@@ -84,3 +84,12 @@ export const SAFE_SCENE_MODES = [
   MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE
 ];
+
+
+//unit
+export const UNIT_MILLIMETER = 'mm';
+export const UNIT_CENTIMETER = 'cm';
+export const UNIT_METER = 'm';
+export const UNIT_INCH = 'in';
+export const UNIT_FOOT = 'ft';
+export const UNIT_MILE = 'mi';

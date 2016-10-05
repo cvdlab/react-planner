@@ -4,7 +4,7 @@ import PropertyColor from './properties/property-color.jsx';
 import PropertyEnum from './properties/property-enum.jsx';
 import PropertyString from './properties/property-string.jsx';
 import PropertyNumber from './properties/property-number.jsx';
-
+import PropertyLengthMeasure from './properties/property-lenght-measure.jsx';
 
 export default class Catalog {
 
@@ -16,6 +16,7 @@ export default class Catalog {
     this.registerPropertyType('enum', PropertyEnum, PropertyEnum);
     this.registerPropertyType('string', PropertyString, PropertyString);
     this.registerPropertyType('number', PropertyNumber, PropertyNumber);
+    this.registerPropertyType('length-measure', PropertyLengthMeasure, PropertyLengthMeasure);
   }
 
   getElement(type) {
