@@ -5,8 +5,9 @@ import Vertex from './vertex.jsx';
 import Image from './image.jsx';
 import Item from './item.jsx';
 
-export default function Layer({layer, mode, pixelPerUnit, unit}) {
+export default function Layer({layer, mode, scene}) {
 
+  let {pixelPerUnit, unit} = scene;
   let {lines, areas, vertices, holes, id: layerID, items} = layer;
 
   return (
@@ -14,7 +15,7 @@ export default function Layer({layer, mode, pixelPerUnit, unit}) {
       {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} layer={layer} area={area} mode={mode}
                                                       pixelPerUnit={pixelPerUnit} unit={unit}/>)}
       {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} layer={layer} line={line} mode={mode}
-                                                      pixelPerUnit={pixelPerUnit} unit={unit}/>)}
+                                                      scene={scene}/>)}
       {items.entrySeq().map(([itemID, item]) => <Item key={itemID} layer={layer} item={item} mode={mode}
                                                       pixelPerUnit={pixelPerUnit} unit={unit}/>)}
       {vertices.entrySeq()
@@ -28,6 +29,5 @@ export default function Layer({layer, mode, pixelPerUnit, unit}) {
 Layer.propTypes = {
   layer: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
-  pixelPerUnit: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
+  scene: PropTypes.object.isRequired,
 };

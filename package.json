@@ -31,6 +31,7 @@
     "babel-plugin-transform-object-rest-spread": "6.16.0",
     "babel-preset-es2015": "6.16.0",
     "babel-preset-react": "6.16.0",
+    "convert-units": "^1.2.0",
     "image-webpack-loader": "2.0.0",
     "immutable": "3.8.1",
     "immutablediff": "^0.4.3",
