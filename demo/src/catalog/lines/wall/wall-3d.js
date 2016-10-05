@@ -71,7 +71,6 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
 
   holes.forEach(({holeData, holeInteractFunction}) => {
 
-
     console.log(holeData.toJS());
     let holeWidth = convert(holeData.properties.get('width').get('length'))
         .from(holeData.properties.get('width').get('unit'))

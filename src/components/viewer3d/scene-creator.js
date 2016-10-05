@@ -1,5 +1,6 @@
 import Three from 'three';
 import createGrid from './grid-creator';
+import convert from 'convert-units';
 
 export function parseData(sceneData, editingActions, catalog) {
 
@@ -119,7 +120,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
 
             oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
             newLineData = layer.lines.get(lineID);
-            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog);
+            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
             planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
 
             break;
@@ -127,7 +128,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
             // Now I can replace the wall
             oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
             newLineData = layer.lines.get(modifiedPath[4]);
-            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog);
+            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
             planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]] = newLineObject;
             break;
           case "areas":
@@ -179,38 +180,44 @@ function createWall(layer, line, editingActions, catalog, scene) {
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
   let bevelRadius = line.properties.get('thickness');
 
-  // line.holes.forEach(holeID => {
-  //
-  //   let holeData = layer.holes.get(holeID);
-  //
-  //   // Create the hole object:
-  //   let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined);
-  //
-  //   holePromise.then(object => {
-  //     let boundingBox = new Three.Box3().setFromObject(object);
-  //     let center = [
-  //       (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-  //       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-  //       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-  //
-  //     let coordinates = [
-  //       (distance - bevelRadius) * holeData.offset,
-  //       holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-  //       0];
-  //
-  //     object.position.x += coordinates[0] - center[0];
-  //     // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
-  //     object.position.y += coordinates[1] - center[1];
-  //     object.position.z += coordinates[2] - center[2];
-  //     wall.add(object);
-  //
-  //     applyInteract(object, () => {
-  //       return line.editingActions.selectHole(layer.id, holeData.id)
-  //     });
-  //   });
+  line.holes.forEach(holeID => {
 
-  // });
+    let holeData = layer.holes.get(holeID);
 
+    // Create the hole object:
+    let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined, scene);
+
+    holePromise.then(object => {
+      let boundingBox = new Three.Box3().setFromObject(object);
+      let center = [
+        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+      let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
+          .from(holeData.properties.get('altitude').get('unit'))
+          .to(scene.unit) * scene.pixelPerUnit;
+
+      let holeHeight = convert(holeData.properties.get('height').get('length'))
+          .from(holeData.properties.get('height').get('unit'))
+          .to(scene.unit) * scene.pixelPerUnit;
+
+      let coordinates = [
+        (distance - bevelRadius) * holeData.offset,
+        holeAltitude + holeHeight / 2,
+        0];
+
+      object.position.x += coordinates[0] - center[0];
+      // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+      object.position.y += coordinates[1] - center[1];
+      object.position.z += coordinates[2] - center[2];
+      wall.add(object);
+
+      applyInteract(object, () => {
+        return line.editingActions.selectHole(layer.id, holeData.id)
+      });
+    });
+  });
 
   wall.position.x += vertex0.x;
   wall.position.y += layer.altitude;
@@ -221,9 +228,9 @@ function createWall(layer, line, editingActions, catalog, scene) {
   return wall;
 }
 
-function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog) {
+function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog, scene) {
 
-  let newLineObject = createWall(layer, newLineData, editingActions, catalog);
+  let newLineObject = createWall(layer, newLineData, editingActions, catalog, scene);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;
