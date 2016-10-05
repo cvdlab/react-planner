@@ -72,6 +72,9 @@ export default function appReducers(state, action) {
     case constants.SELECT_TOOL_DRAWING_ITEM:
     case constants.UPDATE_DRAWING_ITEM:
     case constants.END_DRAWING_ITEM:
+    case constants.BEGIN_DRAGGING_ITEM:
+    case constants.UPDATE_DRAGGING_ITEM:
+    case constants.END_DRAGGING_ITEM:
       return itemsReducer(state, action);
 
     default:

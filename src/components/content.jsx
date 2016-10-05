@@ -25,6 +25,7 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_WAITING_DRAWING_LINE:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
+    case constants.MODE_DRAGGING_ITEM:
     case constants.MODE_DRAWING_LINE:
     case constants.MODE_DRAWING_HOLE:
     case constants.MODE_DRAWING_ITEM:

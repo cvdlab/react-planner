@@ -4,9 +4,13 @@ import {
   SELECT_TOOL_DRAWING_ITEM,
   UPDATE_DRAWING_ITEM,
   END_DRAWING_ITEM,
+  BEGIN_DRAGGING_ITEM,
+  UPDATE_DRAGGING_ITEM,
+  END_DRAGGING_ITEM,
 
   MODE_IDLE,
   MODE_DRAWING_ITEM,
+  MODE_DRAGGING_ITEM,
 } from '../constants';
 
 import {addItem, removeItem, unselect, select, unselectAll} from '../utils/layer-operations';
@@ -21,6 +25,15 @@ export default function (state, action) {
 
     case END_DRAWING_ITEM:
       return endDrawingItem(state, action.layerID, action.x, action.y, action.catalog);
+
+    case BEGIN_DRAGGING_ITEM:
+      return beginDraggingItem(state, action.layerID, action.itemID, action.x, action.y);
+
+    case UPDATE_DRAGGING_ITEM:
+      return updateDraggingItem(state, action.x, action.y);
+
+    case END_DRAGGING_ITEM:
+      return endDraggingItem(state, action.x, action.y);
 
     default:
       return state;
@@ -65,4 +78,52 @@ function endDrawingItem(state, layerID, x, y, catalog) {
     drawingSupport: null,
   });
 
+}
+
+function beginDraggingItem(state, layerID, itemID, x, y) {
+
+  let item = state.getIn(['scene', 'layers', layerID, 'items', itemID]);
+
+  return state.merge({
+    mode: MODE_DRAGGING_ITEM,
+    draggingSupport: Map({
+      layerID,
+      itemID,
+      startPointX: x,
+      startPointY: y,
+      originalX: item.x,
+      originalY: item.y
+    })
+  });
+}
+
+function updateDraggingItem(state, x, y) {
+  let {draggingSupport, scene} = state;
+
+  let layerID = draggingSupport.get('layerID');
+  let itemID = draggingSupport.get('itemID');
+  let startPointX = draggingSupport.get('startPointX');
+  let startPointY = draggingSupport.get('startPointY');
+  let originalX = draggingSupport.get('originalX');
+  let originalY = draggingSupport.get('originalY');
+
+  let diffX = startPointX - x;
+  let diffY = startPointY - y;
+
+  let item = scene.getIn(['layers', layerID, 'items', itemID]);
+  item = item.merge({
+    x: originalX - diffX,
+    y: originalY - diffY
+  });
+
+  return state.merge({
+    scene: scene.mergeIn(['layers', layerID, 'items', itemID], item)
+  });
+}
+
+function endDraggingItem(state, x, y) {
+  state = updateDraggingItem(state, x, y);
+  return state.merge({
+    mode: MODE_IDLE,
+  });
 }

@@ -13,7 +13,8 @@ import {
   MODE_DRAWING_HOLE,
   MODE_DRAWING_ITEM,
   MODE_DRAGGING_LINE,
-  MODE_DRAGGING_VERTEX
+  MODE_DRAGGING_VERTEX,
+  MODE_DRAGGING_ITEM
 } from '../../constants';
 import Scene from './scene.jsx';
 import Snap from './snap.jsx';
@@ -130,6 +131,10 @@ export default function Viewer2D({state, width, height},
       case MODE_DRAGGING_VERTEX:
         verticesActions.updateDraggingVertex(x, y);
         break;
+
+      case MODE_DRAGGING_ITEM:
+        itemsActions.updateDraggingItem(x, y);
+        break;
     }
   };
 
@@ -150,6 +155,10 @@ export default function Viewer2D({state, width, height},
           case 'vertices':
             verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y);
             break;
+
+          case 'items':
+            itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
+            break;
         }
     }
   };
@@ -164,6 +173,10 @@ export default function Viewer2D({state, width, height},
 
       case MODE_DRAGGING_VERTEX:
         verticesActions.endDraggingVertex(x, y);
+        break;
+
+      case MODE_DRAGGING_ITEM:
+        itemsActions.endDraggingItem(x, y);
         break;
     }
   };
@@ -186,7 +199,8 @@ export default function Viewer2D({state, width, height},
   snapElements = null; //only for debug purpose
 
   return (
-    <Viewer value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height} detectAutoPan={detectAutoPan}
+    <Viewer value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
+            detectAutoPan={detectAutoPan}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}>
       <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
