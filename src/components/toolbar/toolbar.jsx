@@ -8,7 +8,6 @@ import IconPan from 'react-icons/lib/fa/hand-paper-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import Icon3D from 'react-icons/lib/fa/cube';
 import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
-import IconAddImage from 'react-icons/lib/fa/image';
 import IconCatalog from 'react-icons/lib/fa/plus-circle';
 
 
@@ -38,7 +37,6 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
   viewer3DActions,
   linesActions,
   holesActions,
-  imagesActions,
   itemsActions,
 }) {
 
@@ -88,11 +86,6 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
         <IconPan />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE].includes(mode)} tooltip="Upload image"
-                     onClick={event => imagesActions.selectToolUploadImage()}>
-        <IconAddImage />
-      </ToolbarButton>
-
       <ToolbarButton
         active={[MODE_VIEWING_CATALOG].includes(mode)}
         tooltip="Open catalog"
@@ -117,6 +110,5 @@ Toolbar.contextTypes = {
   viewer3DActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
-  imagesActions: PropTypes.object.isRequired,
   itemsActions: PropTypes.object.isRequired
 };

@@ -17,7 +17,6 @@ export const Layer = Record({
   lines: new Map(),
   holes: new Map(),
   areas: new Map(),
-  images: new Map(),
   items: new Map(),
   selected: new ElementsSet(),
   visible: true
@@ -44,7 +43,6 @@ export const Vertex = Record({
   selected: false,
   lines: new List(),
   areas: new List(),
-  images: new List()
 }, 'Vertex');
 
 export const Line = Record({

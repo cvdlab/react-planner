@@ -334,29 +334,6 @@ export function removeHole(layer, holeID) {
   return {layer, hole};
 }
 
-/** images features **/
-export function addImage(layer, uri, x0, y0, x1, y1) {
-  let image;
-
-  layer = layer.withMutations(layer => {
-    let imageID = IDBroker.acquireID();
-
-    let v0, v1;
-    ({layer, vertex: v0} = addVertex(layer, x0, y0, 'images', imageID));
-    ({layer, vertex: v1} = addVertex(layer, x1, y1, 'images', imageID));
-
-    image = new Image({
-      id: imageID,
-      vertices: new List([v0.id, v1.id]),
-      uri
-    });
-
-    layer.setIn(['images', imageID], image);
-  });
-
-  return {layer, image};
-}
-
 /** items features **/
 export function addItem(layer, type, x, y, width, height, rotation, catalog) {
   let item;
@@ -431,7 +408,6 @@ export function loadLayerFromJSON(json, catalog) {
     .set('lines', new Seq(layer.lines).map(line => loadLine(line)).toMap())
     .set('holes', new Seq(layer.holes).map(hole => loadHole(hole)).toMap())
     .set('areas', new Seq(layer.areas).map(area => loadArea(area)).toMap())
-    .set('images', new Seq(layer.images).map(image => loadImage(image)).toMap())
     .set('items', new Seq(layer.items).map(item => loadItem(item)).toMap())
     .set('selected', layer.selected ? loadElementsSet(layer.selected) : new ElementsSet());
 
