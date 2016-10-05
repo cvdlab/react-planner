@@ -27,7 +27,7 @@ export function parseData(sceneData, editingActions, catalog) {
     // Import lines
     layer.lines.forEach(line => {
 
-      let wall = createWall(layer, line, editingActions, catalog);
+      let wall = createWall(layer, line, editingActions, catalog, sceneData);
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
@@ -161,7 +161,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
   return planData;
 }
 
-function createWall(layer, line, editingActions, catalog) {
+function createWall(layer, line, editingActions, catalog, scene) {
 
   line.editingActions = editingActions;
 
@@ -174,42 +174,42 @@ function createWall(layer, line, editingActions, catalog) {
     vertex1 = app;
   }
 
-  let wall = catalog.getElement(line.type).render3D(line, layer);
+  let wall = catalog.getElement(line.type).render3D(line, layer, scene);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
   let bevelRadius = line.properties.get('thickness');
 
-  line.holes.forEach(holeID => {
+  // line.holes.forEach(holeID => {
+  //
+  //   let holeData = layer.holes.get(holeID);
+  //
+  //   // Create the hole object:
+  //   let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined);
+  //
+  //   holePromise.then(object => {
+  //     let boundingBox = new Three.Box3().setFromObject(object);
+  //     let center = [
+  //       (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+  //       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+  //       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+  //
+  //     let coordinates = [
+  //       (distance - bevelRadius) * holeData.offset,
+  //       holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
+  //       0];
+  //
+  //     object.position.x += coordinates[0] - center[0];
+  //     // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+  //     object.position.y += coordinates[1] - center[1];
+  //     object.position.z += coordinates[2] - center[2];
+  //     wall.add(object);
+  //
+  //     applyInteract(object, () => {
+  //       return line.editingActions.selectHole(layer.id, holeData.id)
+  //     });
+  //   });
 
-    let holeData = layer.holes.get(holeID);
-
-    // Create the hole object:
-    let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined);
-
-    holePromise.then(object => {
-      let boundingBox = new Three.Box3().setFromObject(object);
-      let center = [
-        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-
-      let coordinates = [
-        (distance - bevelRadius) * holeData.offset,
-        holeData.properties.get('altitude') + holeData.properties.get('height') / 2,
-        0];
-      
-      object.position.x += coordinates[0] - center[0];
-      // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
-      object.position.y += coordinates[1] - center[1];
-      object.position.z += coordinates[2] - center[2];
-      wall.add(object);
-
-      applyInteract(object, () => {
-        return line.editingActions.selectHole(layer.id, holeData.id)
-      });
-    });
-
-  });
+  // });
 
 
   wall.position.x += vertex0.x;

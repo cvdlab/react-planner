@@ -32,19 +32,21 @@ export default {
       defaultValue: {
         length: 215,
         unit: 'cm'
-      },
+      }
     },
     altitude: {
       type: "length-measure",
       defaultValue: {
         length: 0,
         unit: 'cm'
-      },
+      }
     },
     thickness: {
-      type: "number",
-      defaultValue: 30,
-      min: 0
+      type: "length-measure",
+      defaultValue: {
+        length: 30,
+        unit: 'cm'
+      }
     }
   },
 
