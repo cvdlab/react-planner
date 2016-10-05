@@ -2,6 +2,7 @@ import React from 'react';
 import Three from 'three';
 import {loadObjWithMaterial} from '../../../utils/load-obj';
 import path from 'path';
+import convert from 'convert-units';
 
 let pathSVG = React.createFactory('path');
 let lineSVG = React.createFactory('line');
@@ -20,24 +21,32 @@ export default {
 
   properties: {
     width: {
-      type: "number",
-      defaultValue: 90,
-      min: 0
+      type: "length-measure",
+      defaultValue: {
+        length: 90,
+        unit: 'cm'
+      }
     },
     height: {
-      type: "number",
-      defaultValue: 100,
-      min: 0
+      type: "length-measure",
+      defaultValue: {
+        length: 100,
+        unit: 'cm'
+      }
     },
     altitude: {
-      type: "number",
-      defaultValue: 90,
-      min: 0
+      type: "length-measure",
+      defaultValue: {
+        length: 90,
+        unit: 'cm'
+      }
     },
     thickness: {
-      type: "number",
-      defaultValue: 10,
-      min: 0
+      type: "length-measure",
+      defaultValue: {
+        length: 10,
+        unit: 'cm'
+      }
     }
   },
 
@@ -49,7 +58,9 @@ export default {
 
     let epsilon = 3;
 
-    let holeWidth = element.properties.get('width');
+    let holeWidth = convert(element.properties.get('width').get('length'))
+        .from(element.properties.get('width').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
     let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
 
@@ -86,8 +97,20 @@ export default {
         object.add(box);
       }
 
-      object.scale.set(element.properties.get('width') / initialWidth, element.properties.get('height') / initialHeight,
-        element.properties.get('thickness') / initialThickness);
+      let width = convert(element.properties.get('width').get('length'))
+          .from(element.properties.get('width').get('unit'))
+          .to(scene.unit) * scene.pixelPerUnit;
+
+      let height = convert(element.properties.get('height').get('length'))
+          .from(element.properties.get('height').get('unit'))
+          .to(scene.unit) * scene.pixelPerUnit;
+
+      let thickness = convert(element.properties.get('thickness').get('length'))
+          .from(element.properties.get('thickness').get('unit'))
+          .to(scene.unit) * scene.pixelPerUnit;
+
+      object.scale.set(width / initialWidth, height / initialHeight,
+        thickness / initialThickness);
 
       return object;
     };

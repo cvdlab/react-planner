@@ -1,4 +1,5 @@
 import Three from 'three';
+import convert from 'convert-units';
 
 export default function (element, layer, scene) {
 
@@ -40,12 +41,13 @@ export default function (element, layer, scene) {
     element.selected,
     element.properties.get('textureA'),
     element.properties.get('textureB'),
-    lineInteractFunction
+    lineInteractFunction,
+    scene
   );
 }
 
 function createShapeWall(vertex0, vertex1, height, thickness, holes,
-                         bevelRadius, isSelected, textureA, textureB, interactFunction) {
+                         bevelRadius, isSelected, textureA, textureB, interactFunction, scene) {
 
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
@@ -68,12 +70,28 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   let rectShape = createShape(wallCoord);
 
   holes.forEach(({holeData, holeInteractFunction}) => {
+
+    console.log(holeData.toJS());
+    let holeWidth = convert(holeData.properties.get('width').get('length'))
+        .from(holeData.properties.get('width').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
+
+    let holeHeight = convert(holeData.properties.get('height').get('length'))
+        .from(holeData.properties.get('height').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
+
+    let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
+        .from(holeData.properties.get('altitude').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
+
+    console.log(holeWidth, holeHeight, scene.toJS());
+
     let holeCoords = createHoleShape(vertex0,
       vertex1,
-      holeData.properties.get('width'),
-      holeData.properties.get('height'),
+      holeWidth,
+      holeHeight,
       holeData.offset,
-      holeData.properties.get('altitude') + 0.00001,
+      holeAltitude + 0.00001,
       bevelRadius);
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
@@ -194,10 +212,18 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   // Build closures for holes
   holes.forEach(({holeData}) => {
 
+    let holeWidth = convert(holeData.properties.get('width').get('length'))
+        .from(holeData.properties.get('width').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
+
+    let holeHeight = convert(holeData.properties.get('height').get('length'))
+        .from(holeData.properties.get('height').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
+
     let holeClosures = buildShapeClosures(
       {x: 0, y: 0},
-      {x: holeData.properties.get('width'), y: 0},
-      holeData.properties.get('height'),
+      {x: holeWidth, y: 0},
+      holeHeight,
       thickness
     );
 
@@ -229,28 +255,32 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
       + Math.pow((vertex1.y - vertex0.y), 2));
 
-    let startAt = (length - bevelRadius) * holeData.offset - holeData.properties.get('width') / 2;
+    let startAt = (length - bevelRadius) * holeData.offset - holeWidth / 2;
+
+    let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
+        .from(holeData.properties.get('altitude').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
 
     topHoleClosure.rotation.x += Math.PI / 2;
     topHoleClosure.position.z -= thickness / 2;
-    topHoleClosure.position.y += holeData.properties.get('height') + holeData.properties.get('altitude');
+    topHoleClosure.position.y += holeHeight + holeAltitude;
     topHoleClosure.position.x += startAt;
 
     leftHoleClosure.rotation.y -= Math.PI / 2;
     leftHoleClosure.position.z -= thickness / 2;
-    leftHoleClosure.position.y += holeData.properties.get('altitude');
+    leftHoleClosure.position.y += holeAltitude;
     leftHoleClosure.position.x += startAt;
 
     rightHoleClosure.rotation.y -= Math.PI / 2;
     rightHoleClosure.position.z -= thickness / 2;
-    rightHoleClosure.position.y += holeData.properties.get('altitude');
-    rightHoleClosure.position.x += startAt + holeData.properties.get('width');
+    rightHoleClosure.position.y += holeAltitude;
+    rightHoleClosure.position.x += startAt + holeWidth;
 
     pivot.add(topHoleClosure);
     pivot.add(leftHoleClosure);
     pivot.add(rightHoleClosure);
 
-    if (holeData.properties.get('altitude') !== 0) {
+    if (holeAltitude !== 0) {
 
       let bottomHoleClosure = new Three.Mesh(topHoleClosureGeometry, new Three.MeshLambertMaterial({
         side: Three.DoubleSide,
@@ -259,7 +289,7 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
 
       bottomHoleClosure.rotation.x += Math.PI / 2;
       bottomHoleClosure.position.z -= thickness / 2;
-      bottomHoleClosure.position.y += holeData.properties.get('altitude');
+      bottomHoleClosure.position.y += holeAltitude;
       bottomHoleClosure.position.x += startAt;
 
       pivot.add(bottomHoleClosure);

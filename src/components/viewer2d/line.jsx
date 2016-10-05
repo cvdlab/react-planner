@@ -3,7 +3,9 @@ import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils
 import {MODE_IDLE} from '../../constants';
 import Ruler from './ruler.jsx';
 
-export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingActions, catalog}) {
+export default function Line({line, layer, mode, scene}, {editingActions, catalog}) {
+  
+  let {pixelPerUnit, unit} = scene;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -24,8 +26,8 @@ export default function Line({line, layer, mode, pixelPerUnit, unit}, {editingAc
 
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
-    let startAt = length * hole.offset - hole.properties.get('width') / 2;
-    let renderedHole = catalog.getElement(hole.type).render2D(hole, layer);
+    let startAt = length * hole.offset - hole.properties.get('width').get('length') / 2;
+    let renderedHole = catalog.getElement(hole.type).render2D(hole, layer, scene);
 
     return <g
       key={holeID}
@@ -63,8 +65,7 @@ Line.propTypes = {
   line: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
-  pixelPerUnit: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
+  scene: PropTypes.object.isRequired,
 };
 
 Line.contextTypes = {
