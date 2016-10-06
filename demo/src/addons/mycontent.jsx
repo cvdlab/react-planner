@@ -16,5 +16,5 @@ ContentX.propTypes = {
 
 
 export default {
-  'MODE_MY_MODE': ContentX
+  'MY_CUSTOM_MODE': ContentX
 };

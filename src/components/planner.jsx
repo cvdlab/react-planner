@@ -1,4 +1,5 @@
 import React, {PropTypes, Component} from 'react';
+import {bindActionCreators} from 'redux';
 
 import App from './app.jsx';
 import initStore from '../reducers/store';
@@ -19,10 +20,17 @@ export default class Planner extends Component {
 
   render() {
     let {store} = this;
-    let {catalog, toolbarButtons, customContents} = this.props;
+    let {catalog, toolbarButtons, customContents, customActions} = this.props;
+
+    customActions = bindActionCreators(customActions, store.dispatch);
 
     return (
-      <App store={store} catalog={catalog} toolbarButtons={toolbarButtons} customContents={customContents}/>
+      <App
+        store={store}
+        catalog={catalog}
+        toolbarButtons={toolbarButtons}
+        customContents={customContents}
+        customActions={customActions}/>
     )
   }
 }
@@ -32,6 +40,7 @@ Planner.propTypes = {
   toolbarButtons: PropTypes.array,
   customContents: PropTypes.object,
   customReducer: PropTypes.func,
+  customActions: PropTypes.object,
   onReady: PropTypes.func,
 };
 
@@ -39,6 +48,7 @@ Planner.defaultProps = {
   catalog: new Catalog(),
   toolbarButtons: [],
   customContents: {},
+  customActions: {},
   onReady: () => {
   },
   customReducer: (state) => {

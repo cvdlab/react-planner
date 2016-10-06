@@ -18,7 +18,8 @@
         catalog={MyCatalog}
         toolbarButtons={MyToolbarButtons}
         customContents={MyContent}
-        customReducer={MyReducer} />
+        customReducer={MyReducer}
+        customActions={MyActions} />
 `
 
 ## Contributing

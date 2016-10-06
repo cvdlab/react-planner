@@ -14,7 +14,8 @@ class App extends React.Component {
 
   getChildContext() {
     let ctx = {
-      catalog: this.props.catalog
+      catalog: this.props.catalog,
+      customActions: this.props.customActions,
     };
 
     for(let actionGroupName in actions){
@@ -33,7 +34,8 @@ class App extends React.Component {
     window.ReactPlanner = {
       store: this.props.store,
       getState: () => this.props.store.getState().toJS(),
-      ...dispachableActions
+      ...dispachableActions,
+      customActions: this.props.customActions
     };
     console.groupCollapsed("ReactPlanner");
     console.info("ReactPlanner is ready");
@@ -50,7 +52,8 @@ class App extends React.Component {
 
 
 App.childContextTypes={
-  catalog: React.PropTypes.object,
+  catalog: PropTypes.object,
+  customActions: PropTypes.object,
 };
 for(let actionName in actions){
   App.childContextTypes[actionName] = PropTypes.object
