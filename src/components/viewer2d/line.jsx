@@ -4,7 +4,7 @@ import {MODE_IDLE} from '../../constants';
 import Ruler from './ruler.jsx';
 
 export default function Line({line, layer, mode, scene}, {editingActions, catalog}) {
-  
+
   let {pixelPerUnit, unit} = scene;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -26,7 +26,7 @@ export default function Line({line, layer, mode, scene}, {editingActions, catalo
 
   let renderedHoles = line.holes.map(holeID => {
     let hole = layer.holes.get(holeID);
-    let startAt = length * hole.offset - hole.properties.get('width').get('length') / 2;
+    let startAt = length * hole.offset;
     let renderedHole = catalog.getElement(hole.type).render2D(hole, layer, scene);
 
     return <g

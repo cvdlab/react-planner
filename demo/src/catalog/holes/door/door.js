@@ -65,7 +65,7 @@ export default {
     let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
 
-    return gSVG({}, [
+    return gSVG({transform: `translate(${-element.properties.get('width').get('length') / 2}, 0)`}, [
       pathSVG({
         key: 1,
         d: holePath,
