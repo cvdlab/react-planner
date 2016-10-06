@@ -12,7 +12,7 @@ module.exports = {
     new OpenBrowserPlugin({url: 'http://localhost:8080'})
   ],
   devServer: {
-    contentBase: path.resolve(__dirname)
+    contentBase: path.resolve(path.join(__dirname, 'build'))
   },
   devtool: "eval",
   module: {
@@ -24,15 +24,15 @@ module.exports = {
       },
       {
         test: /\.(jpe?g|png|gif|mtl|obj)$/i,
-        include: /src\/catalog/,
+        include: /demo\/src\/catalog/,
         loaders: [
-          'file?hash=sha512&digest=hex&name=[path][name].[ext]?[hash]&context=src',
+          'file?hash=sha512&digest=hex&name=[path][name].[ext]?[hash]&context=demo/src',
           'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       },
       {
         test: /\.(jpe?g|png|gif|svg)$/i,
-        exclude: /src\/catalog/,
+        exclude: /demo\/src\/catalog/,
         loaders: [
           'file?hash=sha512&digest=hex&name=[hash].[ext]',
           'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'

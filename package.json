@@ -6,8 +6,11 @@
   "scripts": {
     "start": "webpack-dev-server --inline --config demo/webpack.config.js",
     "build:lib": "babel src --out-dir lib",
-    "version": "npm run build:lib && git add -A lib",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build:demo": "webpack --config demo/webpack.config.js",
+    "build": "npm run build:lib && npm run build:demo",
+    "version": "npm run build && git add -A lib && npm run website:deploy",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "website:deploy": "git push origin :gh-pages && git subtree push --prefix demo/build origin gh-pages"
   },
   "repository": {
     "type": "git",
@@ -62,6 +65,7 @@
     "three": "0.79.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.16.0",
     "babel-core": "6.16.0",
     "babel-loader": "6.2.5",
     "babel-plugin-transform-object-rest-spread": "6.16.0",
