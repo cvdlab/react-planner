@@ -24,6 +24,24 @@ class App extends React.Component {
     return ctx;
   }
 
+  componentDidMount(){
+    let dispachableActions = {};
+    for(let actionGroupName in actions){
+      dispachableActions[actionGroupName] = this.props[actionGroupName];
+    }
+
+    window.ReactPlanner = {
+      store: this.props.store,
+      getState: () => this.props.store.getState().toJS(),
+      ...dispachableActions
+    };
+    console.groupCollapsed("ReactPlanner");
+    console.info("ReactPlanner is ready");
+    console.info("console.log(ReactPlanner)");
+    console.log(window.ReactPlanner);
+    console.groupEnd();
+  }
+
   render() {
     let {containerWidth, containerHeight, ...props} = this.props;
     return <Layout width={containerWidth} height={containerHeight} {...props} />;
