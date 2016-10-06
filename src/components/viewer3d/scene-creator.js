@@ -28,7 +28,7 @@ export function parseData(sceneData, editingActions, catalog) {
     // Import lines
     layer.lines.forEach(line => {
 
-      let wall = createWall(layer, line, editingActions, catalog, sceneData);
+      let wall = createLine(layer, line, editingActions, catalog, sceneData);
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
@@ -49,7 +49,7 @@ export function parseData(sceneData, editingActions, catalog) {
 
     // Import items
     layer.items.forEach(item => {
-      createItem(layer, item, editingActions, sceneGraph, catalog, plan);
+      createItem(layer, item, editingActions, sceneGraph, catalog, plan, sceneData);
     });
 
   });
@@ -141,7 +141,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
           case "items":
             oldItemObject = planData.sceneGraph.layers[layer.id].items[modifiedPath[4]];
             newItemData = layer.items.get(modifiedPath[4]);
-            replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog);
+            replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, sceneData);
             break;
 
           case "visible":
@@ -162,7 +162,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
   return planData;
 }
 
-function createWall(layer, line, editingActions, catalog, scene) {
+function createLine(layer, line, editingActions, catalog, scene) {
 
   line.editingActions = editingActions;
 
@@ -178,7 +178,12 @@ function createWall(layer, line, editingActions, catalog, scene) {
   let wall = catalog.getElement(line.type).render3D(line, layer, scene);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
-  let bevelRadius = line.properties.get('thickness');
+
+  let thickness = convert(line.properties.get('thickness').get('length'))
+      .from(line.properties.get('thickness').get('unit'))
+      .to(scene.unit) * scene.pixelPerUnit;
+
+  let bevelRadius = thickness;
 
   line.holes.forEach(holeID => {
 
@@ -230,7 +235,7 @@ function createWall(layer, line, editingActions, catalog, scene) {
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog, scene) {
 
-  let newLineObject = createWall(layer, newLineData, editingActions, catalog, scene);
+  let newLineObject = createLine(layer, newLineData, editingActions, catalog, scene);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;
@@ -318,8 +323,8 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
 
 }
 
-function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
-  let item3DPromise = catalog.getElement(item.type).render3D(item, layer);
+function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scene) {
+  let item3DPromise = catalog.getElement(item.type).render3D(item, layer, scene);
 
   item3DPromise.then(item3D => {
 
@@ -353,11 +358,11 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
 }
 
 
-function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog) {
+function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, scene) {
 
   planData.plan.remove(oldItemObject);
 
-  let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer);
+  let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer, scene);
 
   item3DPromise.then(item3D => {
 
@@ -371,7 +376,6 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
     item3D.position.x -= center[0];
     item3D.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
     item3D.position.z -= center[2];
-
 
     let pivot = new Three.Object3D();
     pivot.add(item3D);

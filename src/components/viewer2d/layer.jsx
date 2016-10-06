@@ -16,7 +16,7 @@ export default function Layer({layer, mode, scene}) {
       {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} layer={layer} line={line} mode={mode}
                                                       scene={scene}/>)}
       {items.entrySeq().map(([itemID, item]) => <Item key={itemID} layer={layer} item={item} mode={mode}
-                                                      pixelPerUnit={pixelPerUnit} unit={unit}/>)}
+                                                      scene={scene}/>)}
       {vertices.entrySeq()
         .filter(([vertexID, vertex]) => vertex.selected)
         .map(([vertexID, vertex]) => <Vertex key={vertexID} layer={layer} vertex={vertex} mode={mode}/>)}
