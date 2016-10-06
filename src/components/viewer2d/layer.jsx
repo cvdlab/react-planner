@@ -2,7 +2,6 @@ import React, {PropTypes} from 'react';
 import Line from './line.jsx';
 import Area from './area.jsx';
 import Vertex from './vertex.jsx';
-import Image from './image.jsx';
 import Item from './item.jsx';
 
 export default function Layer({layer, mode, scene}) {
