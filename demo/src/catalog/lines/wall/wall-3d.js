@@ -80,7 +80,6 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
 
   holes.forEach(({holeData, holeInteractFunction}) => {
 
-    console.log(holeData.toJS());
     let holeWidth = convert(holeData.properties.get('width').get('length'))
         .from(holeData.properties.get('width').get('unit'))
         .to(scene.unit) * scene.pixelPerUnit;
@@ -92,9 +91,7 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
         .from(holeData.properties.get('altitude').get('unit'))
         .to(scene.unit) * scene.pixelPerUnit;
-
-    console.log(holeWidth, holeHeight, scene.toJS());
-
+    
     let holeCoords = createHoleShape(vertex0,
       vertex1,
       holeWidth,

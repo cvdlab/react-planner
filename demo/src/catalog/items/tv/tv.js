@@ -81,10 +81,6 @@ export default {
       }
 
       object.scale.set(newWidth / width.length, newHeight / height.length, newDepth / depth.length);
-
-      console.log(newWidth / width.length, newHeight / height.length, newDepth / depth.length);
-
-
       return object;
     };
 
