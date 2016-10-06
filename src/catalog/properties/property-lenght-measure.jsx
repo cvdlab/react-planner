@@ -20,7 +20,7 @@ export default function PropertyLengthMeasure({propertyName, value, onUpdate, co
         <input type="number" style={{width: "65%"}} value={length} onChange={event => updateLength(event.target.value)}
                min={configs.min} max={configs.max}/>
 
-        <select style={{width: "25%"}} value={value} onChange={event => updateUnit(event.target.value)}>
+        <select style={{width: "25%"}} value={unit} onChange={event => updateUnit(event.target.value)}>
           <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
           <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
           <option key={UNIT_MILLIMETER} value={UNIT_MILLIMETER}>{UNIT_MILLIMETER}</option>
