@@ -52,7 +52,7 @@ export default {
 
   render2D: function (element, layer, scene) {
     const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
-    const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "3px", fill: "#0096fd"};
+    const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "3px", fill: "#0096fd", cursor: "move"};
 
     //let line = layer.lines.get(hole.line);
     //let epsilon = line.properties.get('thickness') / 2;
