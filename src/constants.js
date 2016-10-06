@@ -84,7 +84,7 @@ export const MODE_FITTING_IMAGE = 'MODE_FITTING_IMAGE';
 export const MODE_VIEWING_CATALOG = 'MODE_VIEWING_CATALOG';
 
 //additional
-export const STORAGE_KEY = 'metior_scene_autosave_v1';
+export const STORAGE_KEY = 'react_planner_autosave_v0.1';
 export const SAFE_SCENE_MODES = [
   MODE_IDLE,
   MODE_3D_VIEW,

@@ -1,7 +1,7 @@
 {
   "name": "react-planner",
   "version": "0.0.1",
-  "description": "An online plan designer",
+  "description": "react-planner is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --config demo/webpack.config.js",
@@ -11,34 +11,46 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cvdlab/metior.git"
+    "url": "git+https://github.com/cvdlab/react-planner.git"
   },
   "keywords": [
-    "metior",
+    "floorplanner",
     "plan",
     "svg",
-    "3d"
+    "3d",
+    "home design",
+    "interior design"
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/cvdlab/metior/issues"
+    "url": "https://github.com/cvdlab/react-planner/issues"
   },
-  "homepage": "https://github.com/cvdlab/metior#readme",
+  "maintainers": [
+    {
+      "url": "https://github.com/chrvadala",
+      "name": "chrvadala"
+    },
+    {
+      "url": "https://github.com/danilosalvati",
+      "name": "danilosalvati"
+    },
+    {
+      "url": "https://github.com/enricomarino",
+      "name": "enricomarino"
+    },
+    {
+      "url": "https://github.com/federicospini",
+      "name": "federicospini"
+    }
+  ],
+  "homepage": "https://github.com/cvdlab/react-planner#readme",
   "dependencies": {
     "area-polygon": "^1.0.1",
-    "babel-core": "6.16.0",
-    "babel-loader": "6.2.5",
-    "babel-plugin-transform-object-rest-spread": "6.16.0",
-    "babel-preset-es2015": "6.16.0",
-    "babel-preset-react": "6.16.0",
     "convert-units": "^1.2.0",
-    "image-webpack-loader": "2.0.0",
     "immutable": "3.8.1",
     "immutablediff": "^0.4.3",
-    "open-browser-webpack-plugin": "0.0.2",
     "polylabel": "^1.0.1",
     "react": "15.3.2",
-    "react-addons-perf": "15.3.2",
     "react-dimensions": "1.3.0",
     "react-dom": "15.3.2",
     "react-icons": "2.2.1",
@@ -47,7 +59,18 @@
     "redux": "3.6.0",
     "redux-thunk": "2.1.0",
     "shortid": "^2.2.6",
-    "three": "0.79.0",
+    "three": "0.79.0"
+  },
+  "devDependencies": {
+    "babel-core": "6.16.0",
+    "babel-loader": "6.2.5",
+    "babel-plugin-transform-object-rest-spread": "6.16.0",
+    "babel-preset-es2015": "6.16.0",
+    "babel-preset-react": "6.16.0",
+    "image-webpack-loader": "2.0.0",
+    "open-browser-webpack-plugin": "0.0.2",
+    "react": "15.3.2",
+    "react-dimensions": "1.3.0",
     "webpack": "1.13.2",
     "webpack-dev-server": "1.16.1"
   }
