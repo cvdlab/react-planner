@@ -49,7 +49,7 @@ export function parseData(sceneData, editingActions, catalog) {
 
     // Import items
     layer.items.forEach(item => {
-      createItem(layer, item, editingActions, sceneGraph, catalog, plan);
+      createItem(layer, item, editingActions, sceneGraph, catalog, plan, sceneData);
     });
 
   });
@@ -141,7 +141,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
           case "items":
             oldItemObject = planData.sceneGraph.layers[layer.id].items[modifiedPath[4]];
             newItemData = layer.items.get(modifiedPath[4]);
-            replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog);
+            replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, sceneData);
             break;
 
           case "visible":
@@ -323,8 +323,8 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
 
 }
 
-function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
-  let item3DPromise = catalog.getElement(item.type).render3D(item, layer);
+function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scene) {
+  let item3DPromise = catalog.getElement(item.type).render3D(item, layer, scene);
 
   item3DPromise.then(item3D => {
 
@@ -358,11 +358,11 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan) {
 }
 
 
-function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog) {
+function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, scene) {
 
   planData.plan.remove(oldItemObject);
 
-  let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer);
+  let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer, scene);
 
   item3DPromise.then(item3D => {
 
@@ -376,7 +376,6 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
     item3D.position.x -= center[0];
     item3D.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
     item3D.position.z -= center[2];
-
 
     let pivot = new Three.Object3D();
     pivot.add(item3D);

@@ -1,6 +1,7 @@
 import Three from 'three';
 import {loadObjWithMaterial} from '../../../utils/load-obj';
 import path from 'path';
+import convert from 'convert-units';
 
 import React from 'react';
 
@@ -19,42 +20,35 @@ export default {
     image: require('./sofa.png')
   },
 
-  properties: {
-    width: {
-      type: "number",
-      defaultValue: 180,
-    },
-    height: {
-      type: "length-measure",
-      defaultValue: {
-        length: 70,
-        unit: 'cm'
-      },
-    },
-    depth: {
-      type: "number",
-      defaultValue: 60
-    }
-  },
+  properties: {},
 
   render2D: function (element, layer, scene) {
-    let width = element.properties.get('width');
-    let depth = element.properties.get('depth');
+    let width = {length: 180, unit: 'cm'};
+    let depth = {length: 60, unit: 'cm'};
 
-    return gSVG({transform: `translate(${-width / 2},${-depth / 2})`}, [
+    let newWidth = convert(width.length)
+        .from(width.unit)
+        .to(scene.unit) * scene.pixelPerUnit;
+
+    let newDepth = convert(depth.length)
+        .from(depth.unit)
+        .to(scene.unit) * scene.pixelPerUnit;
+
+
+    return gSVG({transform: `translate(${-newWidth / 2},${-newDepth / 2})`}, [
       rectSVG({
         key: 1,
         x: 0,
         y: 0,
-        width: width,
-        height: depth,
+        width: newWidth,
+        height: newDepth,
         style: {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}
       }),
       textSVG({
         key: 2,
         x: 0,
         y: 0,
-        transform: `translate(${width / 2}, ${depth / 2}) scale(1,-1)`,
+        transform: `translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1)`,
         style: {textAnchor: "middle", fontSize: "11px"},
       }, element.type)
     ]);
@@ -62,19 +56,25 @@ export default {
 
   render3D: function (element, layer, scene) {
 
-    let width = element.properties.get('width');
-    let depth = element.properties.get('depth');
-    let height = element.properties.get('height');
+    let width = {length: 180, unit: 'cm'};
+    let depth = {length: 60, unit: 'cm'};
+    let height = {length: 70, unit: 'cm'};
 
     let onLoadItem = (object) => {
 
-      let boundingBox = new Three.Box3().setFromObject(object);
+      let newWidth = convert(width.length)
+          .from(width.unit)
+          .to(scene.unit) * scene.pixelPerUnit;
 
-      let initialWidth = boundingBox.max.x - boundingBox.min.x;
-      let initialHeight = boundingBox.max.y - boundingBox.min.y;
-      let initialThickness = boundingBox.max.z - boundingBox.min.z;
+      let newHeight = convert(height.length)
+          .from(height.unit)
+          .to(scene.unit) * scene.pixelPerUnit;
 
-      object.scale.set(width / initialWidth, height / initialHeight, depth / initialThickness);
+      let newDepth = convert(depth.length)
+          .from(depth.unit)
+          .to(scene.unit) * scene.pixelPerUnit;
+
+      object.scale.set(newWidth / width.length, newHeight / height.length, newDepth / depth.length);
 
       if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);
