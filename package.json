@@ -8,7 +8,7 @@
     "build:lib": "babel src --out-dir lib",
     "build:demo": "webpack --config demo/webpack.config.js",
     "build": "npm run build:lib && npm run build:demo",
-    "version": "npm run build && git add -A lib && npm run website:deploy",
+    "version": "npm run build && git add -A lib && git add -A demo/build && npm run website:deploy",
     "test": "echo \"Error: no test specified\" && exit 1",
     "website:deploy": "git push origin :gh-pages && git subtree push --prefix demo/build origin gh-pages"
   },
