@@ -46,7 +46,7 @@ function mode2Cursor(mode) {
       return {cursor: 'move'};
 
     default:
-      return {};
+      return {cursor: 'crosshair'};
   }
 }
 
@@ -93,6 +93,8 @@ export default function Viewer2D({state, width, height},
   };
 
   let onClick = event => {
+    event.originalEvent.preventDefault();
+
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
@@ -143,6 +145,7 @@ export default function Viewer2D({state, width, height},
   };
 
   let onMouseMove = event => {
+    event.originalEvent.preventDefault();
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
@@ -177,6 +180,7 @@ export default function Viewer2D({state, width, height},
   };
 
   let onMouseDown = event => {
+    event.originalEvent.preventDefault();
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
@@ -206,6 +210,7 @@ export default function Viewer2D({state, width, height},
   };
 
   let onMouseUp = event => {
+    event.originalEvent.preventDefault();
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
@@ -234,8 +239,6 @@ export default function Viewer2D({state, width, height},
   // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
   snapElements = null; //only for debug purpose
 
-  let style = Object.assign({}, mode2PointerEvents(mode), mode2Cursor(mode));
-
   return (
     <Viewer value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
             detectAutoPan={mode2DetectAutopan(mode)}
@@ -243,10 +246,13 @@ export default function Viewer2D({state, width, height},
             onMouseUp={onMouseUp}>
 
       <svg width={scene.width} height={scene.height}>
-        <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={style}>
-          <Scene scene={scene} mode={mode}/>
-          {activeSnapElement}
-          {snapElements}
+        <g style={mode2Cursor(mode)}>
+          <rect x="0" y="0" width={width} height={height} fill="#fff" />
+          <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={mode2PointerEvents(mode)}>
+            <Scene scene={scene} mode={mode}/>
+            {activeSnapElement}
+            {snapElements}
+          </g>
         </g>
       </svg>
 
