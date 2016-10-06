@@ -1,46 +1,12 @@
 import React, {PropTypes, Component} from 'react';
-import {Planner, Catalog} from '../../src/index';
+import {Planner} from '../../src/index';
 import actions from '../../src/actions/actions';
 
-//INIT CATALOG
-import area from './catalog/areas/area/area';
-import door from './catalog/holes/door/door';
-import windowCat from './catalog/holes/window/window';
-import sashWindow from './catalog/holes/sash-window/sash-window';
-import wall from './catalog/lines/wall/wall';
-import item from './catalog/items/sofa/sofa';
-import tv from './catalog/items/tv/tv';
+import MyCatalog from './catalog/mycatalog';
+import MyToolbarButtons from './addons/mytoolbar-buttons.jsx';
+import MyContent from './addons/mycontent.jsx';
+import MyReducer from './addons/myreducer.js';
 
-
-let catalog = new Catalog();
-
-catalog.registerElement(area);
-catalog.registerElement(door);
-catalog.registerElement(windowCat);
-catalog.registerElement(sashWindow);
-catalog.registerElement(wall);
-catalog.registerElement(item);
-catalog.registerElement(tv);
-//END CATALOG
-
-
-//INIT TOOLBAR BUTTONS
-import ButtonX from './addons/buttonX.jsx';
-let toolbarButtons = [
-  ButtonX
-];
-
-//INIT CUSTOM CONTENT
-import ContentX from './addons/contentX.jsx';
-let customContents = {
-  'MODE_MY_MODE': ContentX
-};
-
-//INIT CUSTOM REDUCER
-let customReducer = (state, action) => {
-  // console.log(action);
-  return state;
-};
 
 
 let onReady = (store) => {
@@ -62,16 +28,12 @@ export default class Demo extends Component {
   render() {
     return (
       <Planner onReady={onReady}
-               catalog={catalog}
-               toolbarButtons={toolbarButtons}
-               customContents={customContents}
-               customReducer={customReducer}/>
+               catalog={MyCatalog}
+               toolbarButtons={MyToolbarButtons}
+               customContents={MyContent}
+               customReducer={MyReducer}/>
 
     )
   }
 
 }
-
-Demo.propTypes = {};
-
-Demo.contextTypes = {};
