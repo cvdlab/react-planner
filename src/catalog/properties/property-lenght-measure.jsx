@@ -1,17 +1,15 @@
 import React, {PropTypes} from 'react';
 import {UNIT_CENTIMETER, UNIT_FOOT, UNIT_INCH, UNIT_METER, UNIT_MILE, UNIT_MILLIMETER} from './../../constants';
-import {Map} from 'immutable';
 
 export default function PropertyLengthMeasure({propertyName, value, onUpdate, configs}) {
-  let length = value.get('length');
-  let unit = value.get('unit');
+  let {length, unit} = value;
 
   let updateLength = (length) => {
-    onUpdate(value.set('length', parseFloat(length)));
+    onUpdate(Object.assign({}, value, {length: parseFloat(length)}));
   };
 
   let updateUnit = (unit) => {
-    onUpdate(value.set('unit', unit));
+    onUpdate(Object.assign({}, value, {unit}));
   };
 
   return (

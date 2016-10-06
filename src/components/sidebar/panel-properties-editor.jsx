@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import Panel from './panel.jsx';
-import {Map, Seq} from 'immutable';
+import {Map, Seq, Iterable} from 'immutable';
 import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../constants';
 
 export default function PanelPropertiesEditor({scene, mode}) {
@@ -54,13 +54,13 @@ class PropertiesEditor extends Component {
   calculateDefaultState() {
     let {element} = this.props;
     let {catalog} = this.context;
-
     let catalogElement = catalog.getElement(element.type);
 
     return Seq(catalogElement.properties).map((configs, propertyName) => {
 
-      let currentValue = element.properties.has(propertyName) ? element.properties.get(propertyName) : configs.defaultValue;
-      currentValue = currentValue instanceof Object ? new Map(currentValue) : currentValue;
+      let currentValue = element.properties.has(propertyName)
+        ? (v => Iterable.isIterable(v) ? v.toJS() : v)(element.properties.get(propertyName))
+        : configs.defaultValue;
 
       return {
         currentValue,
@@ -89,7 +89,7 @@ class PropertiesEditor extends Component {
     let {element, layer} = this.props;
     let {editingActions, catalog} = this.context;
 
-    let properties = Seq(state).map(configs => configs.currentValue).toMap().toJS();
+    let properties = Seq(state).map(data => data.currentValue).toMap().toJS();
     editingActions.setProperties(properties);
   }
 
@@ -99,7 +99,7 @@ class PropertiesEditor extends Component {
     let renderInputElement = (inputElement, propertyName, value, configs)=> {
       let {Viewer, Editor} = catalog.propertyTypes[inputElement];
 
-      return React.createElement(Viewer, {
+      return React.createElement(Editor, {
         key: propertyName,
         propertyName,
         value,

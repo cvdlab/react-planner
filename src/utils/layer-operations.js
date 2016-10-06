@@ -186,7 +186,7 @@ export function unselect(layer, prototype, ID) {
 }
 
 export function setProperties(layer, prototype, ID, properties) {
-  properties = Map(properties);
+  properties = fromJS(properties);
   return layer.setIn([prototype, ID, 'properties'], properties);
 }
 
