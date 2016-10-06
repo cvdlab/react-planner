@@ -3,30 +3,17 @@
 import React, {PropTypes} from 'react';
 
 import {Viewer, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
-import {
-  MODE_IDLE,
-  MODE_2D_PAN,
-  MODE_2D_ZOOM_IN,
-  MODE_2D_ZOOM_OUT,
-  MODE_WAITING_DRAWING_LINE,
-  MODE_DRAWING_LINE,
-  MODE_DRAWING_HOLE,
-  MODE_DRAWING_ITEM,
-  MODE_DRAGGING_LINE,
-  MODE_DRAGGING_VERTEX,
-  MODE_DRAGGING_ITEM,
-  MODE_DRAGGING_HOLE
-} from '../../constants';
+import * as constants from '../../constants';
 import Scene from './scene.jsx';
 import Snap from './snap.jsx';
 
 function mode2Tool(mode) {
   switch (mode) {
-    case MODE_2D_PAN:
+    case constants.MODE_2D_PAN:
       return TOOL_PAN;
-    case MODE_2D_ZOOM_IN:
+    case constants.MODE_2D_ZOOM_IN:
       return TOOL_ZOOM_IN;
-    case MODE_2D_ZOOM_OUT:
+    case constants.MODE_2D_ZOOM_OUT:
       return TOOL_ZOOM_OUT;
     default:
       return TOOL_NONE;
@@ -63,7 +50,7 @@ export default function Viewer2D({state, width, height},
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
-      case MODE_IDLE:
+      case constants.MODE_IDLE:
         let elementData = extractElementData(event.originalEvent.target);
 
         if (elementData && elementData.selected) return;
@@ -91,19 +78,19 @@ export default function Viewer2D({state, width, height},
         }
         break;
 
-      case MODE_WAITING_DRAWING_LINE:
+      case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y);
         break;
 
-      case MODE_DRAWING_LINE:
+      case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y);
         break;
 
-      case MODE_DRAWING_HOLE:
+      case constants.MODE_DRAWING_HOLE:
         holesActions.endDrawingHole(layerID, x, y);
         break;
 
-      case MODE_DRAWING_ITEM:
+      case constants.MODE_DRAWING_ITEM:
         itemsActions.endDrawingItem(layerID, x, y);
         break;
     }
@@ -113,31 +100,31 @@ export default function Viewer2D({state, width, height},
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
-      case MODE_DRAWING_LINE:
+      case constants.MODE_DRAWING_LINE:
         linesActions.updateDrawingLine(x, y);
         break;
 
-      case MODE_DRAWING_HOLE:
+      case constants.MODE_DRAWING_HOLE:
         holesActions.updateDrawingHole(layerID, x, y);
         break;
 
-      case MODE_DRAWING_ITEM:
+      case constants.MODE_DRAWING_ITEM:
         itemsActions.updateDrawingItem(layerID, x, y);
         break;
 
-      case MODE_DRAGGING_HOLE:
+      case constants.MODE_DRAGGING_HOLE:
         holesActions.updateDraggingHole(x, y);
         break;
 
-      case MODE_DRAGGING_LINE:
+      case constants.MODE_DRAGGING_LINE:
         linesActions.updateDraggingLine(x, y);
         break;
 
-      case MODE_DRAGGING_VERTEX:
+      case constants.MODE_DRAGGING_VERTEX:
         verticesActions.updateDraggingVertex(x, y);
         break;
 
-      case MODE_DRAGGING_ITEM:
+      case constants.MODE_DRAGGING_ITEM:
         itemsActions.updateDraggingItem(x, y);
         break;
     }
@@ -147,7 +134,7 @@ export default function Viewer2D({state, width, height},
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
-      case MODE_IDLE:
+      case constants.MODE_IDLE:
 
         let elementData = extractElementData(event.originalEvent.target);
         if (!(elementData && elementData.selected)) return;
@@ -176,19 +163,19 @@ export default function Viewer2D({state, width, height},
     let {x, y} = mapCursorPosition(event);
 
     switch (mode) {
-      case MODE_DRAGGING_LINE:
+      case constants.MODE_DRAGGING_LINE:
         linesActions.endDraggingLine(x, y);
         break;
 
-      case MODE_DRAGGING_VERTEX:
+      case constants.MODE_DRAGGING_VERTEX:
         verticesActions.endDraggingVertex(x, y);
         break;
 
-      case MODE_DRAGGING_ITEM:
+      case constants.MODE_DRAGGING_ITEM:
         itemsActions.endDraggingItem(x, y);
         break;
 
-      case MODE_DRAGGING_HOLE:
+      case constants.MODE_DRAGGING_HOLE:
         holesActions.endDraggingHole(x, y);
         break;
     }
@@ -196,12 +183,12 @@ export default function Viewer2D({state, width, height},
 
 
   let detectAutoPan = [
-    MODE_DRAWING_LINE,
-    MODE_DRAGGING_LINE,
-    MODE_DRAGGING_VERTEX,
-    MODE_DRAWING_LINE,
-    MODE_DRAWING_HOLE,
-    MODE_DRAWING_ITEM,
+    constants.MODE_DRAWING_LINE,
+    constants.MODE_DRAGGING_LINE,
+    constants.MODE_DRAGGING_VERTEX,
+    constants.MODE_DRAWING_LINE,
+    constants.MODE_DRAWING_HOLE,
+    constants.MODE_DRAWING_ITEM,
   ].includes(mode);
 
   let onChange = event => viewer2DActions.updateCameraView(event.value);
