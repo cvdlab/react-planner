@@ -23,12 +23,18 @@ export default {
 
   properties: {
     height: {
-      type: "number",
-      defaultValue: 300
+      type: "length-measure",
+      defaultValue: {
+        length: 3,
+        unit: 'm'
+      }
     },
     thickness: {
-      type: "number",
-      defaultValue: 20
+      type: "length-measure",
+      defaultValue: {
+        length: 20,
+        unit: 'cm'
+      }
     },
     textureA: {
       type: "enum",

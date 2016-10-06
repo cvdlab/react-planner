@@ -28,7 +28,7 @@ export function parseData(sceneData, editingActions, catalog) {
     // Import lines
     layer.lines.forEach(line => {
 
-      let wall = createWall(layer, line, editingActions, catalog, sceneData);
+      let wall = createLine(layer, line, editingActions, catalog, sceneData);
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
@@ -162,7 +162,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
   return planData;
 }
 
-function createWall(layer, line, editingActions, catalog, scene) {
+function createLine(layer, line, editingActions, catalog, scene) {
 
   line.editingActions = editingActions;
 
@@ -178,7 +178,12 @@ function createWall(layer, line, editingActions, catalog, scene) {
   let wall = catalog.getElement(line.type).render3D(line, layer, scene);
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
-  let bevelRadius = line.properties.get('thickness');
+
+  let thickness = convert(line.properties.get('thickness').get('length'))
+      .from(line.properties.get('thickness').get('unit'))
+      .to(scene.unit) * scene.pixelPerUnit;
+
+  let bevelRadius = thickness;
 
   line.holes.forEach(holeID => {
 
@@ -230,7 +235,7 @@ function createWall(layer, line, editingActions, catalog, scene) {
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog, scene) {
 
-  let newLineObject = createWall(layer, newLineData, editingActions, catalog, scene);
+  let newLineObject = createLine(layer, newLineData, editingActions, catalog, scene);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;

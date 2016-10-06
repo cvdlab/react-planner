@@ -30,12 +30,21 @@ export default function (element, layer, scene) {
     vertex1 = app;
   }
 
-  let bevelRadius = element.properties.get('thickness');
+  let height = convert(element.properties.get('height').get('length'))
+      .from(element.properties.get('height').get('unit'))
+      .to(scene.unit) * scene.pixelPerUnit;
+
+  let thickness = convert(element.properties.get('thickness').get('length'))
+      .from(element.properties.get('thickness').get('unit'))
+      .to(scene.unit) * scene.pixelPerUnit;
+
+
+  let bevelRadius = thickness;
 
   return createShapeWall(vertex0,
     vertex1,
-    element.properties.get('height'),
-    element.properties.get('thickness'),
+    height,
+    thickness,
     holes,
     bevelRadius,
     element.selected,
