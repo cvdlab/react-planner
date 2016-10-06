@@ -25,7 +25,7 @@ export default function Scene({scene, mode}) {
       <g style={{opacity: 0.3, pointerEvents: "none"}}>
         {layers.entrySeq()
           .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
-          .map(([layerID, layer]) => <Layer key={layerID} layer={layer} mode={mode}/>)}
+          .map(([layerID, layer]) => <Layer key={layerID} layer={layer} mode={mode} scene={scene}/>)}
       </g>
 
       <Layer key={selectedLayer.id} layer={selectedLayer} mode={mode} scene={scene}/>
