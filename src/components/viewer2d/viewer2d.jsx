@@ -20,6 +20,52 @@ function mode2Tool(mode) {
   }
 }
 
+function mode2PointerEvents(mode) {
+  switch (mode) {
+    case constants.MODE_WAITING_DRAWING_LINE:
+    case constants.MODE_DRAWING_LINE:
+    case constants.MODE_DRAWING_HOLE:
+    case constants.MODE_DRAWING_ITEM:
+    case constants.MODE_DRAGGING_HOLE:
+    case constants.MODE_DRAGGING_ITEM:
+    case constants.MODE_DRAGGING_LINE:
+    case constants.MODE_DRAGGING_VERTEX:
+      return {pointerEvents: 'none'};
+
+    default:
+      return {};
+  }
+}
+
+function mode2Cursor(mode) {
+  switch (mode) {
+    case constants.MODE_DRAGGING_HOLE:
+    case constants.MODE_DRAGGING_LINE:
+    case constants.MODE_DRAGGING_VERTEX:
+    case constants.MODE_DRAGGING_ITEM:
+      return {cursor: 'move'};
+
+    default:
+      return {};
+  }
+}
+
+function mode2DetectAutopan(mode) {
+  switch (mode) {
+    case constants.MODE_DRAWING_LINE:
+    case constants.MODE_DRAGGING_LINE:
+    case constants.MODE_DRAGGING_VERTEX:
+    case constants.MODE_DRAGGING_HOLE:
+    case constants.MODE_DRAGGING_ITEM:
+    case constants.MODE_DRAWING_HOLE:
+    case constants.MODE_DRAWING_ITEM:
+      return true;
+
+    default:
+      return false;
+  }
+}
+
 function extractElementData(node) {
   while (!node.attributes.getNamedItem('data-element-root') && node.tagName !== 'svg') {
     node = node.parentNode;
@@ -181,16 +227,6 @@ export default function Viewer2D({state, width, height},
     }
   };
 
-
-  let detectAutoPan = [
-    constants.MODE_DRAWING_LINE,
-    constants.MODE_DRAGGING_LINE,
-    constants.MODE_DRAGGING_VERTEX,
-    constants.MODE_DRAWING_LINE,
-    constants.MODE_DRAWING_HOLE,
-    constants.MODE_DRAWING_ITEM,
-  ].includes(mode);
-
   let onChange = event => viewer2DActions.updateCameraView(event.value);
 
   activeSnapElement = activeSnapElement ?
@@ -198,18 +234,22 @@ export default function Viewer2D({state, width, height},
   // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
   snapElements = null; //only for debug purpose
 
+  let style = Object.assign({}, mode2PointerEvents(mode), mode2Cursor(mode));
+
   return (
     <Viewer value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
-            detectAutoPan={detectAutoPan}
+            detectAutoPan={mode2DetectAutopan(mode)}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}>
-      <svg width={scene.width} height={scene.height} style={{cursor: "crosshair"}}>
-        <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
+
+      <svg width={scene.width} height={scene.height}>
+        <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={style}>
           <Scene scene={scene} mode={mode}/>
           {activeSnapElement}
           {snapElements}
         </g>
       </svg>
+
     </Viewer>
   );
 }

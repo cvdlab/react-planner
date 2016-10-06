@@ -1,25 +1,13 @@
 import React, {PropTypes} from 'react';
 import Layer from './layer.jsx';
 import Grid from './grid.jsx';
-import * as constants from '../../constants';
 export default function Scene({scene, mode}) {
 
   let {height, layers} = scene;
   let selectedLayer = scene.layers.get(scene.selectedLayer);
 
-  let style = [
-    constants.MODE_WAITING_DRAWING_LINE,
-    constants.MODE_DRAWING_LINE,
-    constants.MODE_DRAWING_HOLE,
-    constants.MODE_DRAWING_ITEM,
-    constants.MODE_DRAGGING_HOLE,
-    constants.MODE_DRAGGING_ITEM,
-    constants.MODE_DRAGGING_LINE,
-    constants.MODE_DRAGGING_VERTEX
-  ].includes(mode) ? {pointerEvents: 'none'} : {};
-
   return (
-    <g style={style}>
+    <g>
       <Grid scene={scene}/>
 
       <g style={{opacity: 0.3, pointerEvents: "none"}}>
