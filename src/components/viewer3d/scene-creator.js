@@ -69,7 +69,6 @@ export function parseData(sceneData, editingActions, catalog) {
     console.log(boundingBox);
   }
 
-
   let center = [
     (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
     (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
@@ -208,7 +207,7 @@ function createLine(layer, line, editingActions, catalog, scene) {
           .to(scene.unit) * scene.pixelPerUnit;
 
       let coordinates = [
-        (distance - bevelRadius) * holeData.offset,
+        (distance - bevelRadius) * holeData.offset + bevelRadius/2,
         holeAltitude + holeHeight / 2,
         0];
 
