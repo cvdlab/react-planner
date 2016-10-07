@@ -32,27 +32,9 @@ export default function (element, layer, scene) {
     holes.push(hole);
   });
 
-  let lineInteractFunction = () => {
+  let interactFunction = () => {
     return element.editingActions.selectLine(layer.id, element.id)
   };
-
-  return createShapeWall(vertex0,
-    vertex1,
-    height,
-    thickness,
-    holes,
-    bevelRadius,
-    element.selected,
-    element.properties.get('textureA'),
-    element.properties.get('textureB'),
-    lineInteractFunction,
-    scene
-  );
-}
-
-function createShapeWall(vertex0, vertex1, height, thickness, holes,
-                         bevelRadius, isSelected, textureA, textureB, interactFunction, scene) {
-
 
   /*
    * First of all I need to build the wall shape. We can build it drawing a rectangle
@@ -156,8 +138,6 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
       thickness
     );
 
-    console.log(holeClosures.leftShape);
-
     let topHoleClosureCoords = holeClosures.topShape;
     let topHoleShape = createShape(topHoleClosureCoords);
 
@@ -189,8 +169,6 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     leftHoleClosure.position.y += holeAltitude;
     leftHoleClosure.position.x = startAt - bevelRadius / 2;
 
-    console.log(startAt, leftHoleClosure.position.x);
-
     rightHoleClosure.rotation.y -= Math.PI / 2;
     rightHoleClosure.position.z -= thickness / 2;
     rightHoleClosure.position.y += holeAltitude;
@@ -218,8 +196,8 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   });
 
   // Now I can create the geometry of a single face of the wall
-  let WallGeometry = new Three.ShapeGeometry(rectShape);
-  WallGeometry.computeVertexNormals();
+  let wallGeometry = new Three.ShapeGeometry(rectShape);
+  wallGeometry.computeVertexNormals();
 
   // I define two materials (one for every face of the wall)
   let wallMaterial1 = new Three.MeshPhongMaterial({
@@ -232,18 +210,18 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
 
   // I can choose the correct texture observing the angle of the wall
   if (alpha < 0) {
-    applyTexture(wallMaterial1, textureB, distance, height);
-    applyTexture(wallMaterial2, textureA, distance, height);
+    applyTexture(wallMaterial1, element.properties.get('textureB'), distance, height);
+    applyTexture(wallMaterial2, element.properties.get('textureA'), distance, height);
   } else {
-    applyTexture(wallMaterial1, textureA, distance, height);
-    applyTexture(wallMaterial2, textureB, distance, height);
+    applyTexture(wallMaterial1, element.properties.get('textureA'), distance, height);
+    applyTexture(wallMaterial2, element.properties.get('textureB'), distance, height);
   }
 
   // Assign the correct UV coordinates
-  assignUVs(WallGeometry);
+  assignUVs(wallGeometry);
 
-  let wall1 = new Three.Mesh(WallGeometry, wallMaterial1);
-  let wall2 = new Three.Mesh(WallGeometry, wallMaterial2);
+  let wall1 = new Three.Mesh(wallGeometry, wallMaterial1);
+  let wall2 = new Three.Mesh(wallGeometry, wallMaterial2);
 
   // Expand the wall at the center
   wall1.position.z -= thickness / 2;
@@ -315,7 +293,7 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   rightClosure.interact = interactFunction;
 
   // If the wall is selected show a bounding box around it
-  if (isSelected) {
+  if (element.selected) {
     let box1 = new Three.BoxHelper(wall1, 0x99c3fb);
     box1.material.depthTest = false;
     box1.material.linewidth = 2;
