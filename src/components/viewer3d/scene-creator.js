@@ -58,7 +58,6 @@ export function parseData(sceneData, editingActions, catalog) {
   let boundingBox = new Three.Box3().setFromObject(plan);
 
   // Add a grid to the plan
-
   let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
 
   // Set center of plan in the origin
@@ -207,12 +206,12 @@ function createLine(layer, line, editingActions, catalog, scene) {
           .to(scene.unit) * scene.pixelPerUnit;
 
       let coordinates = [
-        (distance - bevelRadius) * holeData.offset + bevelRadius/2,
+        (distance - bevelRadius) * holeData.offset + bevelRadius / 2,
         holeAltitude + holeHeight / 2,
         0];
 
       object.position.x += coordinates[0] - center[0];
-      // //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+      //coordinates[1] - center[1] put the center of the door at the beginning of the hole
       object.position.y += coordinates[1] - center[1];
       object.position.z += coordinates[2] - center[2];
       wall.add(object);

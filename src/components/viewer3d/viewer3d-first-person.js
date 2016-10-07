@@ -7,6 +7,7 @@ import {parseData, updateScene} from './scene-creator';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
+import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 
 export default class Viewer3DFirstPerson extends React.Component {
 
@@ -21,11 +22,11 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     var controlsEnabled = true;
 
-    var moveForward = false;
-    var moveBackward = false;
-    var moveLeft = false;
-    var moveRight = false;
-    var canJump = false;
+    let moveForward = false;
+    let moveBackward = false;
+    let moveLeft = false;
+    let moveRight = false;
+    // let canJump = false;
 
 
     /********************************/
@@ -96,78 +97,24 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.controls.getObject().position.set(-50, 0, -100);
     scene.add(this.controls.getObject());
 
+    // Add move controls on the page
+    document.addEventListener('keydown', (event) => {
+      let moveResult = firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight);
+      moveForward = moveResult.moveForward;
+      moveLeft = moveResult.moveLeft;
+      moveBackward = moveResult.moveBackward;
+      moveRight = moveResult.moveRight;
+    }, false);
 
-    /**********************************************/
-
-    var onKeyDown = function (event) {
-
-      switch (event.keyCode) {
-
-        case 38: // up
-        case 87: // w
-          moveForward = true;
-          break;
-
-        case 37: // left
-        case 65: // a
-          moveLeft = true;
-          break;
-
-        case 40: // down
-        case 83: // s
-          moveBackward = true;
-          break;
-
-        case 39: // right
-        case 68: // d
-          moveRight = true;
-          break;
-
-        /*case 32: // space
-         if (canJump === true) velocity.y += 350;
-         canJump = false;
-         break;*/
-
-      }
-
-    };
-
-    var onKeyUp = function (event) {
-
-      switch (event.keyCode) {
-
-        case 38: // up
-        case 87: // w
-          moveForward = false;
-          break;
-
-        case 37: // left
-        case 65: // a
-          moveLeft = false;
-          break;
-
-        case 40: // down
-        case 83: // s
-          moveBackward = false;
-          break;
-
-        case 39: // right
-        case 68: // d
-          moveRight = false;
-          break;
-
-      }
-
-    };
-
-    document.addEventListener('keydown', onKeyDown, false);
-    document.addEventListener('keyup', onKeyUp, false);
+    document.addEventListener('keyup', (event) => {
+      let moveResult = firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight);
+      moveForward = moveResult.moveForward;
+      moveLeft = moveResult.moveLeft;
+      moveBackward = moveResult.moveBackward;
+      moveRight = moveResult.moveRight;
+    }, false);
 
     let raycaster = new Three.Raycaster(new Three.Vector3(), new Three.Vector3(0, -1, 0), 0, 10);
-
-
-    /**********************************************/
-
 
     // Pointer
 
@@ -184,6 +131,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
 
     pointer.add(new Three.Line());
+
+    // scene.add(pointer);
 
     // // OBJECT PICKING
     // let toIntersect = [planData.plan];
