@@ -5,7 +5,7 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --config demo/webpack.config.js",
-    "build:lib": "babel src --out-dir lib",
+    "build:lib": "rm -R lib && babel src --out-dir lib",
     "build:demo": "webpack --config demo/webpack.config.js",
     "build": "npm run build:lib && npm run build:demo",
     "version": "npm run build && git add -A lib && git add -A demo/build && npm run website:deploy",
