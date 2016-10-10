@@ -20,7 +20,7 @@ Draw a 2D floorplan and navigate it in 3D mode.
 ## Usage
 ```
  import React, {Component} from 'react';
- import {Planner} from '../../src/index'; //react-planner
+ import {Planner} from 'react-planner';
 
  import MyCatalog from './catalog/mycatalog';
  import MyPlugin from './plugins/myplugin/myplugin';
