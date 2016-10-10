@@ -15,6 +15,9 @@ module.exports = {
     contentBase: path.resolve(path.join(__dirname, 'build'))
   },
   devtool: "eval",
+  resolve: {
+    extensions: ['', '.js', '.jsx']
+  },
   module: {
     loaders: [
       {
