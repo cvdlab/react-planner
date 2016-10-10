@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Ruler from './ruler.jsx';
+import Ruler from './ruler';
 
 export default function Item({layer, item, scene}, {catalog}) {
 

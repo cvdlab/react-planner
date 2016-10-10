@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import {bindActionCreators} from 'redux';
 
-import App from './app.jsx';
+import App from './app';
 import initStore from '../reducers/store';
 import autosave from '../autosave';
 import keyboard from '../keyboard';

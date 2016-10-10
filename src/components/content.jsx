@@ -1,8 +1,8 @@
 import React from 'react';
-import Viewer2D from './viewer2d/viewer2d.jsx';
+import Viewer2D from './viewer2d/viewer2d';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
-import CatalogList from './catalog-view/catalog-list.jsx';
+import CatalogList from './catalog-view/catalog-list';
 import * as constants from '../constants';
 
 export default function Content({width, height, state, customContents}) {

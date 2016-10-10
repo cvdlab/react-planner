@@ -1,7 +1,7 @@
 import React from 'react';
-import Toolbar from './toolbar/toolbar.jsx';
-import Content from './content.jsx';
-import Sidebar from './sidebar/sidebar.jsx';
+import Toolbar from './toolbar/toolbar';
+import Content from './content';
+import Sidebar from './sidebar/sidebar';
 
 export default function ({width, height, ...rest}) {
 

@@ -1,5 +1,5 @@
 import React, {PropTypes, Component} from 'react';
-import Panel from './panel.jsx';
+import Panel from './panel';
 import {Map, Seq, Iterable} from 'immutable';
 import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../constants';
 

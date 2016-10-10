@@ -27,7 +27,7 @@ import {
   MODE_VIEWING_CATALOG
 } from '../../constants';
 
-import ToolbarButton from './toolbar-button.jsx';
+import ToolbarButton from './toolbar-button';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
 export default function Toolbar({state, width, height, toolbarButtons}, {

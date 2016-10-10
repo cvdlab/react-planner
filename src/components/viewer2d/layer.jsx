@@ -1,8 +1,8 @@
 import React, {PropTypes} from 'react';
-import Line from './line.jsx';
-import Area from './area.jsx';
-import Vertex from './vertex.jsx';
-import Item from './item.jsx';
+import Line from './line';
+import Area from './area';
+import Vertex from './vertex';
+import Item from './item';
 
 export default function Layer({layer, mode, scene}) {
 

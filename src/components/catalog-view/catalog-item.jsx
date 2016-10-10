@@ -1,6 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import IconAdd from 'react-icons/lib/fa/plus-circle';
-import If from '../../utils/react-if.jsx';
+import If from '../../utils/react-if';
 import {Seq} from 'immutable';
 
 const STYLE_BOX = {

@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import Panel from './panel.jsx';
+import Panel from './panel';
 import IconVisible from 'react-icons/lib/fa/eye';
 import IconHide from 'react-icons/lib/fa/eye-slash';
 import IconAdd from 'react-icons/lib/ti/plus';

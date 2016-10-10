@@ -1,6 +1,6 @@
 import React from 'react';
-import Line from './line.jsx';
-import Area from './area.jsx';
+import Line from './line';
+import Area from './area';
 import {Range} from 'immutable';
 
 export default function Grid({scene}) {

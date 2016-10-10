@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import PanelPropertiesEditor from './panel-properties-editor.jsx';
-import PanelLayers from './panel-layers.jsx';
+import PanelPropertiesEditor from './panel-properties-editor';
+import PanelLayers from './panel-layers';
 
 export default function Sidebar({width, height, state}) {
   return (

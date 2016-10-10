@@ -7,7 +7,7 @@ import ReactDimensions from 'react-dimensions';
 
 import actions from '../actions/actions';
 
-import Layout from './layout.jsx';
+import Layout from './layout';
 
 
 class App extends React.Component {

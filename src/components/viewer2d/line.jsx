@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
 import {MODE_IDLE} from '../../constants';
-import Ruler from './ruler.jsx';
+import Ruler from './ruler';
 
 export default function Line({line, layer, mode, scene}, {editingActions, catalog}) {
 

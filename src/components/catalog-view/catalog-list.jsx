@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import CatalogItem from './catalog-item.jsx';
+import CatalogItem from './catalog-item';
 import {Seq} from 'immutable'
 
 

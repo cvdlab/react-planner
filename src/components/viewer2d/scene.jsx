@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
-import Layer from './layer.jsx';
-import Grid from './grid.jsx';
+import Layer from './layer';
+import Grid from './grid';
 export default function Scene({scene, mode}) {
 
   let {height, layers} = scene;

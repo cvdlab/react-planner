@@ -4,8 +4,8 @@ import React, {PropTypes} from 'react';
 
 import {Viewer, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
-import Scene from './scene.jsx';
-import Snap from './snap.jsx';
+import Scene from './scene';
+import Snap from './snap';
 
 function mode2Tool(mode) {
   switch (mode) {

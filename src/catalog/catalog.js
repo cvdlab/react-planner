@@ -1,10 +1,10 @@
 import {Seq, fromJS} from 'immutable';
 import {Line, Area, Hole, Item} from '../models';
-import PropertyColor from './properties/property-color.jsx';
-import PropertyEnum from './properties/property-enum.jsx';
-import PropertyString from './properties/property-string.jsx';
-import PropertyNumber from './properties/property-number.jsx';
-import PropertyLengthMeasure from './properties/property-lenght-measure.jsx';
+import PropertyColor from './properties/property-color';
+import PropertyEnum from './properties/property-enum';
+import PropertyString from './properties/property-string';
+import PropertyNumber from './properties/property-number';
+import PropertyLengthMeasure from './properties/property-lenght-measure';
 
 export default class Catalog {
 
