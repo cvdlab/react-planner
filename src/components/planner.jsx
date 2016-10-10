@@ -6,11 +6,21 @@ import initStore from '../reducers/store';
 import autosave from '../autosave';
 import keyboard from '../keyboard';
 import Catalog from './../catalog/catalog';
+import mergePlugins from '../utils/merge-plugins';
+
 
 export default class Planner extends Component {
 
+  constructor(props) {
+    super(props);
+    let {plugins} = props;
+    this.state = {... mergePlugins(plugins)};
+  }
+
   componentWillMount() {
-    let {catalog, onReady, customReducer} = this.props;
+    let {catalog} = this.props;
+    let {customReducer, onReady} = this.state;
+
     let store = initStore({catalog}, customReducer);
     autosave(store);
     keyboard(store);
@@ -20,7 +30,8 @@ export default class Planner extends Component {
 
   render() {
     let {store} = this;
-    let {catalog, toolbarButtons, customContents, customActions} = this.props;
+    let {catalog} = this.props;
+    let {toolbarButtons, customContents, customActions} = this.state;
 
     customActions = bindActionCreators(customActions, store.dispatch);
 
@@ -37,21 +48,10 @@ export default class Planner extends Component {
 
 Planner.propTypes = {
   catalog: PropTypes.instanceOf(Catalog),
-  toolbarButtons: PropTypes.array,
-  customContents: PropTypes.object,
-  customReducer: PropTypes.func,
-  customActions: PropTypes.object,
-  onReady: PropTypes.func,
+  plugins: PropTypes.arrayOf(PropTypes.object)
 };
 
 Planner.defaultProps = {
   catalog: new Catalog(),
-  toolbarButtons: [],
-  customContents: {},
-  customActions: {},
-  onReady: () => {
-  },
-  customReducer: (state) => {
-    return state;
-  }
+  plugins: []
 };
