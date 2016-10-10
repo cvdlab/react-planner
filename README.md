@@ -1,5 +1,5 @@
 # react-planner [WIP]
-*react-planner* is a React Component for plans design.  
+*react-planner* is a React Component for plans design.
 Draw a 2D floorplan and navigate it in 3D mode.
 
 [![npm](https://img.shields.io/npm/v/react-planner.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/react-planner)
@@ -19,13 +19,19 @@ Draw a 2D floorplan and navigate it in 3D mode.
 
 ## Usage
 ```
- <Planner 
-   onReady={onReady}
-   catalog={MyCatalog}
-   toolbarButtons={MyToolbarButtons}
-   customContents={MyContent}
-   customReducer={MyReducer}
-   customActions={MyActions} />
+ import React, {Component} from 'react';
+ import {Planner} from '../../src/index'; //react-planner
+
+ import MyCatalog from './catalog/mycatalog';
+ import MyPlugin from './plugins/myplugin/myplugin';
+
+ export default class Demo extends Component {
+   render() {
+     return (
+       <Planner catalog={MyCatalog} plugins={[MyPlugin]}/>
+     )
+   }
+ }
 ```
 
 ## Docs
