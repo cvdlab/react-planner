@@ -63,8 +63,8 @@ export default class Scene3DViewer extends React.Component {
     let raycaster = new Three.Raycaster();
 
     renderer.domElement.addEventListener('mousedown', (event) => {
-      this.lastMousePosition.x = event.offsetX / width * 2 - 1;
-      this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
+      this.lastMousePosition.x = event.offsetX / this.width * 2 - 1;
+      this.lastMousePosition.y = -event.offsetY / this.height * 2 + 1;
     }, false);
 
     renderer.domElement.addEventListener('mouseup', (event) => {
@@ -74,6 +74,7 @@ export default class Scene3DViewer extends React.Component {
       mouse.y = -(event.offsetY / this.height) * 2 + 1;
 
       if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
+
         raycaster.setFromCamera(mouse, camera);
         let intersects = raycaster.intersectObjects(toIntersect, true);
 
