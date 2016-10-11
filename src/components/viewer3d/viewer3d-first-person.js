@@ -266,11 +266,11 @@ export default class Viewer3DFirstPerson extends React.Component {
     let {width, height} = nextProps;
     let {camera, renderer, scene3D, sceneOnTop} = this;
 
-    let viewSize = 900;
-    let aspectRatio = width / height;
+    this.width = width;
+    this.height = height;
 
-    camera.left = -aspectRatio * viewSize / 2;
-    camera.right = aspectRatio * viewSize / 2;
+    let aspectRatio = width / height;
+    camera.aspect = aspectRatio;
 
     camera.updateProjectionMatrix();
 
@@ -280,11 +280,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     }
 
     renderer.setSize(width, height);
-    // renderer.render(scene3D, camera);
-    renderer.clear();                     // clear buffers
-    renderer.render(scene3D, camera);     // render scene 1
-    renderer.clearDepth();                // clear depth buffer
-    renderer.render(sceneOnTop, camera);    // render scene 2
+    renderer.render(scene3D, camera);
   }
 
   render() {
