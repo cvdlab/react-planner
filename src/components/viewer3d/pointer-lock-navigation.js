@@ -13,8 +13,8 @@ export function initPointerLock(camera, rendererElement) {
     document.addEventListener('pointerlockchange', pointerlockchange, false);
     document.addEventListener('mozpointerlockchange', pointerlockchange, false);
     document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-
-    rendererElement.addEventListener('mousedown', event => {
+    
+    rendererElement.addEventListener('click', event => {
         document.body.requestPointerLock = document.body.requestPointerLock ||
           document.body.mozRequestPointerLock ||
           document.body.webkitRequestPointerLock;

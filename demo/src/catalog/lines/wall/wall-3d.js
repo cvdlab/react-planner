@@ -3,33 +3,18 @@ import convert from 'convert-units';
 
 export default function (element, layer, scene) {
 
-  let holes = [];
-
-  let lineInteractFunction = () => {
-    return element.editingActions.selectLine(layer.id, element.id)
-  };
-
-  element.holes.forEach(holeID => {
-
-    let hole = layer.holes.get(holeID);
-
-    let holeInteractFunction = () => {
-      return element.editingActions.selectHole(layer.id, hole.id)
-    };
-
-    holes.push({holeData: hole, holeInteractFunction});
-  });
-
-
+  // Get the two vertices of the wall
   let vertex0 = layer.vertices.get(element.vertices.get(0));
   let vertex1 = layer.vertices.get(element.vertices.get(1));
 
+  // The first vertex is the smaller one
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
     vertex0 = vertex1;
     vertex1 = app;
   }
 
+  // Get height and thickness of the wall converting them into the current scene units
   let height = convert(element.properties.get('height').get('length'))
       .from(element.properties.get('height').get('unit'))
       .to(scene.unit) * scene.pixelPerUnit;
@@ -38,48 +23,67 @@ export default function (element, layer, scene) {
       .from(element.properties.get('thickness').get('unit'))
       .to(scene.unit) * scene.pixelPerUnit;
 
+  let bevelRadius = thickness; // This is useful for linking two walls together
 
-  let bevelRadius = thickness;
+  // Get holes data for this wall
+  let holes = [];
+  element.holes.forEach(holeID => {
+    let hole = layer.holes.get(holeID);
+    holes.push(hole);
+  });
 
-  return createShapeWall(vertex0,
-    vertex1,
-    height,
-    thickness,
-    holes,
-    bevelRadius,
-    element.selected,
-    element.properties.get('textureA'),
-    element.properties.get('textureB'),
-    lineInteractFunction,
-    scene
-  );
-}
+  let interactFunction = () => {
+    return element.editingActions.selectLine(layer.id, element.id)
+  };
 
-function createShapeWall(vertex0, vertex1, height, thickness, holes,
-                         bevelRadius, isSelected, textureA, textureB, interactFunction, scene) {
+  /*
+   * First of all I need to build the wall shape. We can build it drawing a rectangle
+   * with the left bottom vertex in the origin and where the length is given by the distance between the
+   * two vertices and the height is the height of the wall
+   */
 
-  if (vertex0.x > vertex1.x) {
-    let app = vertex0;
-    vertex0 = vertex1;
-    vertex1 = app;
-  }
-
+  // Compute the distance between the two vertices
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
 
-  //TODO: REMOVE WORKAROUND BEVELING
-  distance += bevelRadius;
+  // I use this workaround to link two adjacent walls together
+  distance += bevelRadius; //TODO: REMOVE WORKAROUND BEVELING
 
-  let wallCoord = buildShapeCoordinates({x: 0, y: 0}, {x: distance, y: 0}, height); // TODO: Clean Code!!
+  // Now I can build the coordinates of the wall shape:
 
-  // let alpha = Math.asin((vertex1.y - vertex0.y) / distance);
+  /**
+   *
+   *  (bevelRadius/2,height)     (distance,height)
+   *      x------------------x
+   *      |                  |            ^ y
+   *      |                  |            |
+   *      |                  |          --|-----> x
+   *      |                  |
+   *      |                  |
+   *      x------------------x
+   *    (bevelRadius/2,0)            (distance,0)
+   *
+   */
+
+  let wallCoords = [
+    [0, 0],
+    [distance, 0],
+    [distance, height],
+    [0, height]
+  ];
+
+  // Now I compute the rotation angle of the wall (see the bevel radius trick)
   let alpha = Math.asin((vertex1.y - vertex0.y) / (distance - bevelRadius)); //TODO: REMOVE WORKAROUND BEVELING
 
+  // We will rotate on the bottom-left vertex, so we need a pivot in the origin
   let pivot = new Three.Object3D();
 
-  let rectShape = createShape(wallCoord);
+  // Create a Three.Shape from the coordinates
+  let rectShape = createShape(wallCoords);
 
-  holes.forEach(({holeData, holeInteractFunction}) => {
+  // Now we have to create the holes for the wall
+  holes.forEach(holeData => {
 
+    // Get the sizes of the holes converting them to the scene units
     let holeWidth = convert(holeData.properties.get('width').get('length'))
         .from(holeData.properties.get('width').get('unit'))
         .to(scene.unit) * scene.pixelPerUnit;
@@ -91,140 +95,41 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
         .from(holeData.properties.get('altitude').get('unit'))
         .to(scene.unit) * scene.pixelPerUnit;
-    
-    let holeCoords = createHoleShape(vertex0,
-      vertex1,
-      holeWidth,
-      holeHeight,
-      holeData.offset,
-      holeAltitude + 0.00001,
-      bevelRadius);
+
+
+    // Now I can build the coordinates of the hole shape:
+
+    // The starting point is at (distance - bevelRadius) * offset + bevelRadius / 2 - width / 2 and is called startAt
+
+    /**
+     *
+     *  (startAt,holeAltitude + holeHeight)     (holeWidth + startAt,holeAltitude + holeHeight)
+     *                x-------------------------------------------x
+     *                |                                           |
+     *                |                                           |
+     *                |                                           |
+     *                |                                           |
+     *                |                                           |
+     *                x-------------------------------------------x
+     *      (startAt,holeAltitude)                (holeWidth + startAt,holeAltitude)
+     *
+     */
+
+    let startAt = (distance - bevelRadius) * holeData.offset - holeWidth / 2 + bevelRadius / 2;
+
+    // I add 0.00001 to the holeAltitude to avoid a warning with the Three triangulation algorithm
+    let holeCoords = [
+      [startAt, holeAltitude + 0.00001],
+      [holeWidth + startAt, holeAltitude + 0.00001],
+      [holeWidth + startAt, holeHeight + holeAltitude],
+      [startAt, holeHeight + holeAltitude]
+    ];
+
+    // Now I can create the Three.shape of the hole and, push it into the wall shape holes
     let holeShape = createShape(holeCoords);
     rectShape.holes.push(holeShape);
 
-    // Apply interact function to children of an Object3D
-    let applyInteract = (object, interactFunction) => {
-      object.traverse(function (child) {
-        if (child instanceof Three.Mesh) {
-          child.interact = interactFunction;
-        }
-      });
-    };
-  });
-
-  let lineGeometry = new Three.ShapeGeometry(rectShape);
-  lineGeometry.computeVertexNormals();
-
-  let wallColor = 0xffffff;
-
-  let wallMaterial1 = new Three.MeshPhongMaterial({
-    side: Three.BackSide,
-    color: wallColor
-  });
-
-  let wallMaterial2 = new Three.MeshPhongMaterial({
-    side: Three.FrontSide,
-    color: wallColor
-  });
-
-
-  if (alpha < 0) {
-    applyTexture(wallMaterial1, textureB, distance, height);
-    applyTexture(wallMaterial2, textureA, distance, height);
-  } else {
-    applyTexture(wallMaterial1, textureA, distance, height);
-    applyTexture(wallMaterial2, textureB, distance, height);
-  }
-
-  assignUVs(lineGeometry);
-
-  let wall1 = new Three.Mesh(lineGeometry, wallMaterial1);
-  let wall2 = new Three.Mesh(lineGeometry, wallMaterial2);
-
-  wall1.position.z -= thickness / 2;
-  wall2.position.z += thickness / 2;
-
-  wall1.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-  wall2.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
-  pivot.rotation.y = alpha;
-  // pivot.position.x += vertex0.x;
-  // pivot.position.z -= vertex0.y;
-
-  // pivot.position.x -= thickness;
-
-  pivot.add(wall1);
-  pivot.add(wall2);
-
-  // Build closures for wall
-
-  // buildShapeCoordinates({x: 0, y: 0}, {x: distance, y: 0}, height);
-  let closures = buildShapeClosures({x: 0, y: 0}, {x: distance, y: 0}, height, thickness);
-
-  let topClosureCoords = closures.topShape;
-  let topShape = createShape(topClosureCoords);
-
-  let leftClosureCoords = closures.leftShape;
-  let leftShape = createShape(leftClosureCoords);
-
-  let topClosureGeometry = new Three.ShapeGeometry(topShape);
-  let leftClosureGeometry = new Three.ShapeGeometry(leftShape);
-
-  let topClosure = new Three.Mesh(topClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.BackSide,
-    color: wallColor
-  }));
-
-  // let bottomClosure = new THREE.Mesh(topClosureGeometry, new THREE.MeshLambertMaterial({
-  //   side: THREE.DoubleSide,
-  //   color: wallColor
-  // }));
-
-  let leftClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.FrontSide,
-    color: wallColor
-  }));
-
-  let rightClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
-    side: Three.BackSide,
-    color: wallColor
-  }));
-
-  // bottomClosure.rotation.x += Math.PI / 2;
-  // bottomClosure.position.z -= thickness / 2;
-
-  topClosure.rotation.x += Math.PI / 2;
-  topClosure.position.z -= thickness / 2;
-  topClosure.position.y += height;
-
-  topClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
-  leftClosure.rotation.y -= Math.PI / 2;
-  leftClosure.position.z -= bevelRadius / 2;
-
-  leftClosure.position.x -= bevelRadius / 2 - 1; //TODO: REMOVE WORKAROUND BEVELING
-
-  rightClosure.rotation.y -= Math.PI / 2;
-  rightClosure.position.z -= thickness / 2;
-  rightClosure.position.x += distance - 1;
-
-  rightClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
-
-  // pivot.add(bottomClosure);
-  pivot.add(topClosure);
-  pivot.add(leftClosure);
-  pivot.add(rightClosure);
-
-  // Build closures for holes
-  holes.forEach(({holeData}) => {
-
-    let holeWidth = convert(holeData.properties.get('width').get('length'))
-        .from(holeData.properties.get('width').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
-
-    let holeHeight = convert(holeData.properties.get('height').get('length'))
-        .from(holeData.properties.get('height').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
+    // At this point I can create a set of rectangles which surrounds the hole
 
     let holeClosures = buildShapeClosures(
       {x: 0, y: 0},
@@ -243,44 +148,31 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     let leftHoleClosureGeometry = new Three.ShapeGeometry(leftHoleShape);
 
     let topHoleClosure = new Three.Mesh(topHoleClosureGeometry, new Three.MeshLambertMaterial({
-      side: Three.DoubleSide,
-      color: wallColor
+      side: Three.DoubleSide
     }));
 
     let leftHoleClosure = new Three.Mesh(leftHoleClosureGeometry, new Three.MeshLambertMaterial({
-      side: Three.DoubleSide,
-      color: wallColor
+      side: Three.DoubleSide
     }));
 
     let rightHoleClosure = new Three.Mesh(leftHoleClosureGeometry, new Three.MeshLambertMaterial({
-      side: Three.DoubleSide,
-      color: wallColor
+      side: Three.DoubleSide
     }));
-
-
-    let length = Math.sqrt(Math.pow((vertex1.x - vertex0.x), 2)
-      + Math.pow((vertex1.y - vertex0.y), 2));
-
-    let startAt = (length - bevelRadius) * holeData.offset - holeWidth / 2;
-
-    let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
-        .from(holeData.properties.get('altitude').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
 
     topHoleClosure.rotation.x += Math.PI / 2;
     topHoleClosure.position.z -= thickness / 2;
     topHoleClosure.position.y += holeHeight + holeAltitude;
-    topHoleClosure.position.x += startAt;
+    topHoleClosure.position.x = startAt - bevelRadius / 2;
 
     leftHoleClosure.rotation.y -= Math.PI / 2;
     leftHoleClosure.position.z -= thickness / 2;
     leftHoleClosure.position.y += holeAltitude;
-    leftHoleClosure.position.x += startAt;
+    leftHoleClosure.position.x = startAt - bevelRadius / 2;
 
     rightHoleClosure.rotation.y -= Math.PI / 2;
     rightHoleClosure.position.z -= thickness / 2;
     rightHoleClosure.position.y += holeAltitude;
-    rightHoleClosure.position.x += startAt + holeWidth;
+    rightHoleClosure.position.x = startAt + holeWidth - bevelRadius / 2;
 
     pivot.add(topHoleClosure);
     pivot.add(leftHoleClosure);
@@ -289,20 +181,109 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
     if (holeAltitude !== 0) {
 
       let bottomHoleClosure = new Three.Mesh(topHoleClosureGeometry, new Three.MeshLambertMaterial({
-        side: Three.DoubleSide,
-        color: wallColor
+        side: Three.DoubleSide
       }));
 
       bottomHoleClosure.rotation.x += Math.PI / 2;
       bottomHoleClosure.position.z -= thickness / 2;
       bottomHoleClosure.position.y += holeAltitude;
-      bottomHoleClosure.position.x += startAt;
+      bottomHoleClosure.position.x = startAt - bevelRadius / 2;
 
       pivot.add(bottomHoleClosure);
 
     }
 
   });
+
+  // Now I can create the geometry of a single face of the wall
+  let wallGeometry = new Three.ShapeGeometry(rectShape);
+  wallGeometry.computeVertexNormals();
+
+  // I define two materials (one for every face of the wall)
+  let wallMaterial1 = new Three.MeshPhongMaterial({
+    side: Three.BackSide
+  });
+
+  let wallMaterial2 = new Three.MeshPhongMaterial({
+    side: Three.FrontSide
+  });
+
+  // I can choose the correct texture observing the angle of the wall
+  if (alpha < 0) {
+    applyTexture(wallMaterial1, element.properties.get('textureB'), distance, height);
+    applyTexture(wallMaterial2, element.properties.get('textureA'), distance, height);
+  } else {
+    applyTexture(wallMaterial1, element.properties.get('textureA'), distance, height);
+    applyTexture(wallMaterial2, element.properties.get('textureB'), distance, height);
+  }
+
+  // Assign the correct UV coordinates
+  assignUVs(wallGeometry);
+
+  let wall1 = new Three.Mesh(wallGeometry, wallMaterial1);
+  let wall2 = new Three.Mesh(wallGeometry, wallMaterial2);
+
+  // Expand the wall at the center
+  wall1.position.z -= thickness / 2;
+  wall2.position.z += thickness / 2;
+
+  // Change walls x position to link two adjacent walls
+  wall1.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
+  wall2.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
+
+  // Rotate the wall around the bottom-left vertex
+  pivot.rotation.y = alpha;
+
+  // Add the two wall faces to the pivot
+  pivot.add(wall1);
+  pivot.add(wall2);
+
+  // Build closures for wall
+
+  let closures = buildShapeClosures({x: 0, y: 0}, {x: distance, y: 0}, height, thickness);
+
+  let topClosureCoords = closures.topShape;
+  let topShape = createShape(topClosureCoords);
+
+  let leftClosureCoords = closures.leftShape;
+  let leftShape = createShape(leftClosureCoords);
+
+  let topClosureGeometry = new Three.ShapeGeometry(topShape);
+  let leftClosureGeometry = new Three.ShapeGeometry(leftShape);
+
+  let topClosure = new Three.Mesh(topClosureGeometry, new Three.MeshLambertMaterial({
+    side: Three.BackSide
+  }));
+
+  let leftClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
+    side: Three.FrontSide
+  }));
+
+  let rightClosure = new Three.Mesh(leftClosureGeometry, new Three.MeshLambertMaterial({
+    side: Three.BackSide
+  }));
+
+  // Move the wall closures
+  topClosure.rotation.x += Math.PI / 2;
+  topClosure.position.z -= thickness / 2;
+  topClosure.position.y += height;
+
+  topClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
+
+  leftClosure.rotation.y -= Math.PI / 2;
+  leftClosure.position.z -= bevelRadius / 2;
+
+  leftClosure.position.x -= bevelRadius / 2 - 1; //TODO: REMOVE WORKAROUND BEVELING
+
+  rightClosure.rotation.y -= Math.PI / 2;
+  rightClosure.position.z -= thickness / 2;
+  rightClosure.position.x += distance - 1;
+
+  rightClosure.position.x -= bevelRadius / 2; //TODO: REMOVE WORKAROUND BEVELING
+
+  pivot.add(topClosure);
+  pivot.add(leftClosure);
+  pivot.add(rightClosure);
 
   // Add interaction with walls
   wall1.interact = interactFunction;
@@ -311,7 +292,8 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   leftClosure.interact = interactFunction;
   rightClosure.interact = interactFunction;
 
-  if (isSelected) {
+  // If the wall is selected show a bounding box around it
+  if (element.selected) {
     let box1 = new Three.BoxHelper(wall1, 0x99c3fb);
     box1.material.depthTest = false;
     box1.material.linewidth = 2;
@@ -342,18 +324,14 @@ function createShapeWall(vertex0, vertex1, height, thickness, holes,
   return pivot;
 }
 
-function buildShapeCoordinates(vertex0, vertex1, height) {
-
-  let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
-
-  return [
-    [vertex0.x, vertex0.y],
-    [vertex0.x + distance, vertex0.y],
-    [vertex0.x + distance, vertex0.y + height],
-    [vertex0.x, vertex0.y + height]
-  ];
-}
-
+/**
+ * This function build the closures around the holes and the walls
+ * @param vertex0: Start vertex
+ * @param vertex1: End vertex
+ * @param height: Height of the shape
+ * @param thickness: Thickness of the closure
+ * @returns {{topShape: *[], leftShape: *[]}}: The left and top shape (the others can be computed fron these two)
+ */
 function buildShapeClosures(vertex0, vertex1, height, thickness) {
 
   let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
@@ -372,36 +350,30 @@ function buildShapeClosures(vertex0, vertex1, height, thickness) {
   ];
 
   return {topShape: topShape, leftShape: leftShape};
-};
+}
 
-
-function createShape(wallCoord) {
-
-  let rectShape = new Three.Shape();
-  rectShape.moveTo(wallCoord[0][0], wallCoord[0][1]);
-  for (let i = 1; i < wallCoord.length; i++) {
-    rectShape.lineTo(wallCoord[i][0], wallCoord[i][1]);
+/**
+ * This function will create a shape given a list of coordinates
+ * @param shapeCoords
+ * @returns {THREE.Shape}
+ */
+function createShape(shapeCoords) {
+  let shape = new Three.Shape();
+  shape.moveTo(shapeCoords[0][0], shapeCoords[0][1]);
+  for (let i = 1; i < shapeCoords.length; i++) {
+    shape.lineTo(shapeCoords[i][0], shapeCoords[i][1]);
   }
-  return rectShape;
+  return shape;
 }
 
-function createHoleShape(lineVertex0, lineVertex1, width, height, offset, altitude, bevelRadius) {
-
-  let length = Math.sqrt(Math.pow((lineVertex1.x - lineVertex0.x), 2)
-    + Math.pow((lineVertex1.y - lineVertex0.y), 2));
-
-  let startAt = (length - bevelRadius) * offset - width / 2 + bevelRadius / 2;
-  let wallCoordinates = [
-    [startAt, altitude],
-    [width + startAt, altitude],
-    [width + startAt, height + altitude],
-    [startAt, height + altitude]
-  ];
-
-  return wallCoordinates;
-}
-
-function applyTexture(material, textureName, distance, height) {
+/**
+ * Apply a texture to a wall face
+ * @param material: The material of the face
+ * @param textureName: The name of the texture to load
+ * @param length: The lenght of the face
+ * @param height: The height of the face
+ */
+function applyTexture(material, textureName, length, height) {
 
   let loader = new Three.TextureLoader();
 
@@ -411,31 +383,34 @@ function applyTexture(material, textureName, distance, height) {
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(distance / 100, height / 100);
+      material.map.repeat.set(length / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(distance / 100, height / 100);
+      material.normalMap.repeat.set(length / 100, height / 100);
       break;
     case 'painted':
       material.map = loader.load(require('./textures/painted.jpg'));
       material.needsUpdate = true;
       material.map.wrapS = Three.RepeatWrapping;
       material.map.wrapT = Three.RepeatWrapping;
-      material.map.repeat.set(distance / 100, height / 100);
+      material.map.repeat.set(length / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/painted-normal.png"));
       material.normalScale = new Three.Vector2(0.4, 0.4);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
-      material.normalMap.repeat.set(distance / 100, height / 100);
-
+      material.normalMap.repeat.set(length / 100, height / 100);
       break;
   }
 }
 
+/**
+ * Function that assign UV coordinates to a geometry
+ * @param geometry
+ */
 function assignUVs(geometry) {
   geometry.computeBoundingBox();
 

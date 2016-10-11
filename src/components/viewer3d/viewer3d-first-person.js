@@ -7,6 +7,7 @@ import {parseData, updateScene} from './scene-creator';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
+import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 
 export default class Viewer3DFirstPerson extends React.Component {
 
@@ -21,11 +22,11 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     var controlsEnabled = true;
 
-    var moveForward = false;
-    var moveBackward = false;
-    var moveLeft = false;
-    var moveRight = false;
-    var canJump = false;
+    let moveForward = false;
+    let moveBackward = false;
+    let moveLeft = false;
+    let moveRight = false;
+    // let canJump = false;
 
 
     /********************************/
@@ -37,7 +38,10 @@ export default class Viewer3DFirstPerson extends React.Component {
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
-    let scene = new Three.Scene();
+    let scene3D = new Three.Scene();
+
+    // As I need to show the pointer above all scene objects, I use this workaround http://stackoverflow.com/a/13309722
+    let sceneOnTop = new Three.Scene();
 
     //RENDERER
     let renderer = new Three.WebGLRenderer();
@@ -47,40 +51,35 @@ export default class Viewer3DFirstPerson extends React.Component {
     // LOAD DATA
     let planData = parseData(data, editingActions, catalog);
 
-    scene.add(planData.plan);
+    scene3D.add(planData.plan);
 
     // CAMERA
     let viewSize = 900;
     let aspectRatio = width / height;
     let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
 
-    scene.add(camera);
+    sceneOnTop.add(camera); // The pointer is on the camera so I show it above all
 
     // Set position for the camera
     let cameraPositionX = (planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
     let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 3;
     let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
-    camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
+    camera.position.set(0, 0, 0);
     camera.up = new Three.Vector3(0, 1, 0);
 
     // HELPER AXIS
     let axisHelper = new Three.AxisHelper(100);
-    scene.add(axisHelper);
+    scene3D.add(axisHelper);
 
     // LIGHT
     let light = new Three.AmbientLight(0xafafaf); // soft white light
-    scene.add(light);
+    scene3D.add(light);
 
     // Add another light
 
     let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
     spotLight1.position.set(1000, 0, -1000);
-
     camera.add(spotLight1);
-
-    var spotLightHelper = new Three.SpotLightHelper(spotLight1);
-    camera.add(spotLightHelper);
-
 
     // POINTER LOCK
 
@@ -90,126 +89,97 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     document.body.requestPointerLock();
 
-    camera.position.set(0, 0, 0);
-
     this.controls = initPointerLock(camera, renderer.domElement);
     this.controls.getObject().position.set(-50, 0, -100);
-    scene.add(this.controls.getObject());
+    sceneOnTop.add(this.controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
 
+    // Add move controls on the page
+    document.addEventListener('keydown', (event) => {
+      let moveResult = firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight);
+      moveForward = moveResult.moveForward;
+      moveLeft = moveResult.moveLeft;
+      moveBackward = moveResult.moveBackward;
+      moveRight = moveResult.moveRight;
+    }, false);
 
-    /**********************************************/
+    document.addEventListener('keyup', (event) => {
+      let moveResult = firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight);
+      moveForward = moveResult.moveForward;
+      moveLeft = moveResult.moveLeft;
+      moveBackward = moveResult.moveBackward;
+      moveRight = moveResult.moveRight;
+    }, false);
 
-    var onKeyDown = function (event) {
-
-      switch (event.keyCode) {
-
-        case 38: // up
-        case 87: // w
-          moveForward = true;
-          break;
-
-        case 37: // left
-        case 65: // a
-          moveLeft = true;
-          break;
-
-        case 40: // down
-        case 83: // s
-          moveBackward = true;
-          break;
-
-        case 39: // right
-        case 68: // d
-          moveRight = true;
-          break;
-
-        /*case 32: // space
-         if (canJump === true) velocity.y += 350;
-         canJump = false;
-         break;*/
-
-      }
-
-    };
-
-    var onKeyUp = function (event) {
-
-      switch (event.keyCode) {
-
-        case 38: // up
-        case 87: // w
-          moveForward = false;
-          break;
-
-        case 37: // left
-        case 65: // a
-          moveLeft = false;
-          break;
-
-        case 40: // down
-        case 83: // s
-          moveBackward = false;
-          break;
-
-        case 39: // right
-        case 68: // d
-          moveRight = false;
-          break;
-
-      }
-
-    };
-
-    document.addEventListener('keydown', onKeyDown, false);
-    document.addEventListener('keyup', onKeyUp, false);
-
-    let raycaster = new Three.Raycaster(new Three.Vector3(), new Three.Vector3(0, -1, 0), 0, 10);
-
-
-    /**********************************************/
-
-
-    // Pointer
+    // Add a pointer to the scene
 
     let pointer = new Three.Object3D();
 
-    let pointerGeometry = new Three.Geometry();
-    pointerGeometry.vertices.push(new Three.Vector3(-10, 0, 0));
-    pointerGeometry.vertices.push(new Three.Vector3(0, 10, 0));
-    pointerGeometry.vertices.push(new Three.Vector3(10, 0, 0));
-    pointerGeometry.vertices.push(new Three.Vector3(10, 0, 0));
+    let pointerMaterial = new Three.MeshBasicMaterial({depthTest: false, depthWrite: false, color: 0x000000});
+    let pointerGeometry1 = new Three.Geometry();
+    pointerGeometry1.vertices.push(new Three.Vector3(-10, 0, 0));
+    pointerGeometry1.vertices.push(new Three.Vector3(10, 0, 0));
 
-    let yRotation = this.controls.getObject().rotation.y;
-    let xRotation = this.controls.getObject().children[0].rotation.x;
+    let linePointer1 = new Three.Line(pointerGeometry1, pointerMaterial);
+    linePointer1.position.z -= 100;
+
+    let pointerGeometry2 = new Three.Geometry();
+    pointerGeometry2.vertices.push(new Three.Vector3(0, 10, 0));
+    pointerGeometry2.vertices.push(new Three.Vector3(0, -10, 0));
+
+    let linePointer2 = new Three.Line(pointerGeometry2, pointerMaterial);
+    linePointer2.renderDepth = 1e20;
+    linePointer2.position.z -= 100;
+
+    let pointerGeometry3 = new Three.Geometry();
+    pointerGeometry3.vertices.push(new Three.Vector3(-1, 1, 0));
+    pointerGeometry3.vertices.push(new Three.Vector3(1, 1, 0));
+    pointerGeometry3.vertices.push(new Three.Vector3(1, -1, 0));
+    pointerGeometry3.vertices.push(new Three.Vector3(-1, -1, 0));
+    pointerGeometry3.vertices.push(new Three.Vector3(-1, 1, 0));
+
+    let linePointer3 = new Three.Line(pointerGeometry3, pointerMaterial);
+    linePointer3.position.z -= 100;
 
 
-    pointer.add(new Three.Line());
+    pointer.add(linePointer1);
+    pointer.add(linePointer2);
+    pointer.add(linePointer3);
 
-    // // OBJECT PICKING
-    // let toIntersect = [planData.plan];
-    // let mouse = new THREE.Vector2();
-    // let raycaster = new THREE.Raycaster();
-    //
-    // renderer.domElement.addEventListener('mousedown', (event) => {
-    //   this.lastMousePosition.x = event.offsetX / width * 2 - 1;
-    //   this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
-    // }, false);
-    //
-    // renderer.domElement.addEventListener('mouseup', (event) => {
-    //   event.preventDefault();
-    //
-    //   mouse.x = (event.offsetX / width) * 2 - 1;
-    //   mouse.y = -(event.offsetY / height) * 2 + 1;
-    //
-    //
-    //   if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
-    //     raycaster.setFromCamera(mouse, camera);
-    //     let intersects = raycaster.intersectObjects(toIntersect, true);
-    //     if (intersects.length > 0) {
-    //       intersects[0].object.interact && intersects[0].object.interact();
-    //     }
-    //   }
-    // }, false);
+    camera.add(pointer); // Add the pointer to the camera
+
+
+    // OBJECT PICKING
+    let toIntersect = [planData.plan];
+
+    let mouseVector = new Three.Vector2(0, 0)
+    let raycaster = new Three.Raycaster();
+
+    document.addEventListener('mousedown', (event) => {
+
+      // First of all I check if controls are enabled
+
+      if (this.controls.enabled) {
+
+        event.preventDefault();
+
+        /* Per avere la direzione da assegnare al raycaster, chiamo il metodo getDirection di PointerLockControls,
+         * che restituisce una funzione che a sua volta prende un vettore, vi scrive i valori degli oggetti
+         * pitch e yaw e lo restituisce */
+
+        raycaster.setFromCamera(mouseVector, camera);
+
+        var intersects = raycaster.intersectObjects(toIntersect, true);
+        if (intersects.length > 0) {
+          intersects[0].object.interact && intersects[0].object.interact();
+        } else {
+          editingActions.unselectAll();
+        }
+      }
+
+    }, false);
+
+    console.log(window);
+
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
@@ -218,6 +188,8 @@ export default class Viewer3DFirstPerson extends React.Component {
     // let orbitController = new OrbitControls(camera, renderer.domElement);
 
     let controls = this.controls;
+
+    renderer.autoClear = false;
 
     render();
     function render() {
@@ -268,18 +240,23 @@ export default class Viewer3DFirstPerson extends React.Component {
       prevTime = time;
 
       /*********************************************/
+      renderer.clear();                     // clear buffers
+      renderer.render(scene3D, camera);     // render scene 1
+      renderer.clearDepth();                // clear depth buffer
+      renderer.render(sceneOnTop, camera);    // render scene 2
 
-
-      renderer.render(scene, camera);
+      // renderer.render(scene3D, camera);
       requestAnimationFrame(render);
     }
 
-    this.lastMousePosition = {};
-    // this.orbitControls = orbitController;
     this.renderer = renderer;
     this.camera = camera;
-    this.scene = scene;
+    this.scene3D = scene3D;
+    this.sceneOnTop = sceneOnTop
     this.planData = planData;
+    this.width = width;
+    this.height = height;
+
   }
 
   componentWillUnmount() {
@@ -287,35 +264,23 @@ export default class Viewer3DFirstPerson extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let {width, height} = nextProps;
-    let {camera, renderer, scene} = this;
+    let {camera, renderer, scene3D, sceneOnTop} = this;
 
-    let viewSize = 900;
+    this.width = width;
+    this.height = height;
+
     let aspectRatio = width / height;
-
-    camera.left = -aspectRatio * viewSize / 2;
-    camera.right = aspectRatio * viewSize / 2;
+    camera.aspect = aspectRatio;
 
     camera.updateProjectionMatrix();
 
     if (nextProps.scene !== this.props.state.scene) {
-
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-
-      this.scene.remove(this.planData.plan);
-      this.planData = parseData(nextProps.state.scene, this.context.editingActions);
-      this.scene.add(this.planData.plan);
-
-      //updateScene(this.planData.sceneGraph, nextProps.scene, scene, changedValues.toJS());
-
-
-      // OBJECT PICKING
-      let toIntersect = [this.planData.plan];
-      let mouse = new Three.Vector2();
-      let raycaster = new Three.Raycaster();
+      updateScene(this.planData, nextProps.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 
     renderer.setSize(width, height);
-    renderer.render(scene, camera);
+    renderer.render(scene3D, camera);
   }
 
   render() {

@@ -17,7 +17,7 @@ export default class Scene3DViewer extends React.Component {
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
-    let scene = new Three.Scene();
+    let scene3D = new Three.Scene();
 
     //RENDERER
     let renderer = new Three.WebGLRenderer();
@@ -27,13 +27,13 @@ export default class Scene3DViewer extends React.Component {
     // LOAD DATA
     let planData = parseData(data, editingActions, this.context.catalog);
 
-    scene.add(planData.plan);
-    scene.add(planData.grid);
+    scene3D.add(planData.plan);
+    scene3D.add(planData.grid);
 
     let aspectRatio = width / height;
     let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
 
-    scene.add(camera);
+    scene3D.add(camera);
 
     // Set position for the camera
     let cameraPositionX = -(planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
@@ -45,17 +45,17 @@ export default class Scene3DViewer extends React.Component {
 
     // HELPER AXIS
     let axisHelper = new Three.AxisHelper(100);
-    scene.add(axisHelper);
+    scene3D.add(axisHelper);
 
     // LIGHT
     let light = new Three.AmbientLight(0xafafaf); // soft white light
-    scene.add(light);
+    scene3D.add(light);
 
     // Add another light
 
     let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
     spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
-    scene.add(spotLight1);
+    scene3D.add(spotLight1);
 
     // OBJECT PICKING
     let toIntersect = [planData.plan];
@@ -63,8 +63,8 @@ export default class Scene3DViewer extends React.Component {
     let raycaster = new Three.Raycaster();
 
     renderer.domElement.addEventListener('mousedown', (event) => {
-      this.lastMousePosition.x = event.offsetX / width * 2 - 1;
-      this.lastMousePosition.y = -event.offsetY / height * 2 + 1;
+      this.lastMousePosition.x = event.offsetX / this.width * 2 - 1;
+      this.lastMousePosition.y = -event.offsetY / this.height * 2 + 1;
     }, false);
 
     renderer.domElement.addEventListener('mouseup', (event) => {
@@ -74,6 +74,7 @@ export default class Scene3DViewer extends React.Component {
       mouse.y = -(event.offsetY / this.height) * 2 + 1;
 
       if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
+
         raycaster.setFromCamera(mouse, camera);
         let intersects = raycaster.intersectObjects(toIntersect, true);
 
@@ -104,15 +105,15 @@ export default class Scene3DViewer extends React.Component {
         return bufferGeometry;
       };
 
-      scene.remove(planData.grid);
+      scene3D.remove(planData.grid);
 
-      scene.traverse((child) => {
+      scene3D.traverse((child) => {
         console.log(child);
         if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
           child.geometry = convertToBufferGeometry(child.geometry);
       });
 
-      let output = scene.toJSON();
+      let output = scene3D.toJSON();
 
       output = JSON.stringify(output, null, '\t');
       output = output.replace(/[\n\t]+([\d\.e\-\[\]]+)/g, '$1');
@@ -129,7 +130,7 @@ export default class Scene3DViewer extends React.Component {
       fileOutputLink.click();
       document.body.removeChild(fileOutputLink);
 
-      scene.add(planData.grid);
+      scene3D.add(planData.grid);
 
     };
 
@@ -175,7 +176,7 @@ export default class Scene3DViewer extends React.Component {
       fileOutputLink.click();
       document.body.removeChild(fileOutputLink);
 
-      scene.add(planData.grid);
+      scene3D.add(planData.grid);
 
     };
 
@@ -192,7 +193,7 @@ export default class Scene3DViewer extends React.Component {
       camera.updateMatrix();
       camera.updateMatrixWorld();
 
-      renderer.render(scene, camera);
+      renderer.render(scene3D, camera);
       requestAnimationFrame(render);
     }
 
@@ -200,7 +201,7 @@ export default class Scene3DViewer extends React.Component {
     this.orbitControls = orbitController;
     this.renderer = renderer;
     this.camera = camera;
-    this.scene = scene;
+    this.scene3D = scene3D;
     this.planData = planData;
     this.width = width;
     this.height = height;
@@ -212,7 +213,7 @@ export default class Scene3DViewer extends React.Component {
 
   componentWillReceiveProps(nextProps) {
     let {width, height} = nextProps;
-    let {camera, renderer, scene} = this;
+    let {camera, renderer, scene3D} = this;
 
     this.width = width;
     this.height = height;
@@ -230,7 +231,7 @@ export default class Scene3DViewer extends React.Component {
     }
 
     renderer.setSize(width, height);
-    renderer.render(scene, camera);
+    renderer.render(scene3D, camera);
   }
 
   render() {
