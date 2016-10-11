@@ -151,24 +151,29 @@ export default class Viewer3DFirstPerson extends React.Component {
     // OBJECT PICKING
     let toIntersect = [planData.plan];
 
-    let mouseVector = new Three.Vector2(0,0)
+    let mouseVector = new Three.Vector2(0, 0)
     let raycaster = new Three.Raycaster();
 
     document.addEventListener('mousedown', (event) => {
 
-      event.preventDefault();
+      // First of all I check if controls are enabled
 
-      /* Per avere la direzione da assegnare al raycaster, chiamo il metodo getDirection di PointerLockControls,
-       * che restituisce una funzione che a sua volta prende un vettore, vi scrive i valori degli oggetti
-       * pitch e yaw e lo restituisce */
-      
-      raycaster.setFromCamera(mouseVector, camera);
+      if (this.controls.enabled) {
 
-      var intersects = raycaster.intersectObjects(toIntersect, true);
-      if (intersects.length > 0) {
-        intersects[0].object.interact && intersects[0].object.interact();
-      } else {
-        editingActions.unselectAll();
+        event.preventDefault();
+
+        /* Per avere la direzione da assegnare al raycaster, chiamo il metodo getDirection di PointerLockControls,
+         * che restituisce una funzione che a sua volta prende un vettore, vi scrive i valori degli oggetti
+         * pitch e yaw e lo restituisce */
+
+        raycaster.setFromCamera(mouseVector, camera);
+
+        var intersects = raycaster.intersectObjects(toIntersect, true);
+        if (intersects.length > 0) {
+          intersects[0].object.interact && intersects[0].object.interact();
+        } else {
+          editingActions.unselectAll();
+        }
       }
 
     }, false);
@@ -270,11 +275,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     camera.updateProjectionMatrix();
 
     if (nextProps.scene !== this.props.state.scene) {
-
-      console.log("Something is changed but I will not control");
-
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-
       updateScene(this.planData, nextProps.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 
