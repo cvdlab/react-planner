@@ -1,4 +1,3 @@
-
 function funcChain(functions) {
   return function (...args) {
     let i = 0;
@@ -19,10 +18,12 @@ export default function mergePlugins(plugins) {
   let toolbarButtons = [];
   let customContents = {};
   let customReducer = [];
+  let actionsExtraArgument = {};
   let onReady = [];
 
   plugins.forEach(plugin => {
     if (plugin.hasOwnProperty('actions')) Object.assign(customActions, plugin.actions);
+    if (plugin.hasOwnProperty('actionsExtraArgument')) Object.assign(actionsExtraArgument, plugin.actionsExtraArgument);
     if (plugin.hasOwnProperty('toolbarButtons')) plugin.toolbarButtons.forEach(button => toolbarButtons.push(button));
     if (plugin.hasOwnProperty('contents')) Object.assign(customContents, plugin.contents);
     if (plugin.hasOwnProperty('reducer')) customReducer.push(plugin.reducer);
@@ -32,5 +33,5 @@ export default function mergePlugins(plugins) {
   customReducer.length > 0 ? customReducer = funcChain(customReducer) : store => store;
   onReady = onReady.length > 0 ? funcChain(onReady) : () => null;
 
-  return {customActions, toolbarButtons, customContents, customReducer, onReady};
+  return {customActions, toolbarButtons, customContents, customReducer, actionsExtraArgument, onReady};
 }

@@ -19,9 +19,9 @@ export default class Planner extends Component {
 
   componentWillMount() {
     let {catalog} = this.props;
-    let {customReducer, onReady} = this.state;
+    let {customReducer, actionsExtraArgument, onReady} = this.state;
 
-    let store = initStore({catalog}, customReducer);
+    let store = initStore({...actionsExtraArgument, catalog}, customReducer);
     autosave(store);
     keyboard(store);
     onReady(store);

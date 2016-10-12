@@ -3,9 +3,9 @@ import thunk from 'redux-thunk';
 
 import reducers from './reducer';
 
-export default function initStore(dependencies = {}, customReducer) {
+export default function initStore(extraArgument = {}, customReducer) {
   let middlewares = compose(
-    applyMiddleware(thunk.withExtraArgument(dependencies)),
+    applyMiddleware(thunk.withExtraArgument(extraArgument)),
     window.devToolsExtension ? window.devToolsExtension() : f => f
   );
 

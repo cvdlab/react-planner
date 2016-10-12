@@ -6,6 +6,10 @@ import {ButtonX} from './buttonX.jsx'
 export default {
   actions: actions,
 
+  actionsExtraArgument: {
+    myCustomData: 100,
+  },
+
   contents: {
     'MY_CUSTOM_MODE': ContentX,
   },
@@ -16,5 +20,5 @@ export default {
 
   onReady: function(state){
     console.log('myplugin ready')
-  },
+  }
 }
