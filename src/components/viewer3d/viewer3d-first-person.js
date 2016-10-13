@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
 import {parseData, updateScene} from './scene-creator';
-import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
@@ -13,24 +12,14 @@ export default class Viewer3DFirstPerson extends React.Component {
 
   componentDidMount() {
 
-    /********************************/
-    var canJump = false;
-
+    /** Variables for movement control **/
     var prevTime = performance.now();
     var velocity = new Three.Vector3();
-
-
-    var controlsEnabled = true;
-
     let moveForward = false;
     let moveBackward = false;
     let moveLeft = false;
     let moveRight = false;
-    // let canJump = false;
-
-
-    /********************************/
-
+    let canJump = false;
 
     let {editingActions, catalog} = this.context;
 
@@ -178,9 +167,6 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     }, false);
 
-    console.log(window);
-
-
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
 
@@ -193,24 +179,13 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     render();
     function render() {
-      // orbitController.update();
 
-      /*********************/
-      //raycaster.ray.origin.copy( controls.getObject().position );
-      //raycaster.ray.origin.y -= 10;
-
-      //var intersections = raycaster.intersectObjects( objects );
-
-      //var isOnObject = intersections.length > 0;
-      var isOnObject = true;
-
-      var time = performance.now();
-      var delta = ( time - prevTime ) / 200;
+      let time = performance.now();
+      let delta = ( time - prevTime ) / 200;
 
       velocity.x -= velocity.x * 10.0 * delta;
       velocity.z -= velocity.z * 10.0 * delta;
-
-      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
+      velocity.y = 0;
 
       if (moveForward) velocity.z -= 400.0 * delta;
       if (moveBackward) velocity.z += 400.0 * delta;
@@ -218,32 +193,15 @@ export default class Viewer3DFirstPerson extends React.Component {
       if (moveLeft) velocity.x -= 400.0 * delta;
       if (moveRight) velocity.x += 400.0 * delta;
 
-      if (isOnObject === true) {
-        velocity.y = Math.max(0, velocity.y);
-
-        canJump = true;
-      }
-
       controls.getObject().translateX(velocity.x * delta);
-      controls.getObject().translateY(velocity.y * delta);
       controls.getObject().translateZ(velocity.z * delta);
-
-      if (controls.getObject().position.y < 10) {
-
-        velocity.y = 0;
-        controls.getObject().position.y = 10;
-
-        canJump = true;
-
-      }
 
       prevTime = time;
 
-      /*********************************************/
       renderer.clear();                     // clear buffers
       renderer.render(scene3D, camera);     // render scene 1
       renderer.clearDepth();                // clear depth buffer
-      renderer.render(sceneOnTop, camera);    // render scene 2
+      renderer.render(sceneOnTop, camera);  // render scene 2
 
       // renderer.render(scene3D, camera);
       requestAnimationFrame(render);
