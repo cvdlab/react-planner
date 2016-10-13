@@ -169,48 +169,43 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
-
-    // create orbit controls
-    // let orbitController = new OrbitControls(camera, renderer.domElement);
+    renderer.autoClear = false;
 
     let controls = this.controls;
-
-    renderer.autoClear = false;
 
     render();
     function render() {
 
-      let time = performance.now();
-      let delta = ( time - prevTime ) / 200;
+        let time = performance.now();
+        let delta = ( time - prevTime ) / 200;
 
-      velocity.x -= velocity.x * 10.0 * delta;
-      velocity.z -= velocity.z * 10.0 * delta;
-      velocity.y = 0;
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
+        velocity.y = 0;
 
-      if (moveForward) velocity.z -= 400.0 * delta;
-      if (moveBackward) velocity.z += 400.0 * delta;
+        if (moveForward) velocity.z -= 400.0 * delta;
+        if (moveBackward) velocity.z += 400.0 * delta;
 
-      if (moveLeft) velocity.x -= 400.0 * delta;
-      if (moveRight) velocity.x += 400.0 * delta;
+        if (moveLeft) velocity.x -= 400.0 * delta;
+        if (moveRight) velocity.x += 400.0 * delta;
 
-      controls.getObject().translateX(velocity.x * delta);
-      controls.getObject().translateZ(velocity.z * delta);
+        controls.getObject().translateX(velocity.x * delta);
+        controls.getObject().translateZ(velocity.z * delta);
 
-      prevTime = time;
+        prevTime = time;
 
       renderer.clear();                     // clear buffers
       renderer.render(scene3D, camera);     // render scene 1
       renderer.clearDepth();                // clear depth buffer
       renderer.render(sceneOnTop, camera);  // render scene 2
 
-      // renderer.render(scene3D, camera);
       requestAnimationFrame(render);
     }
 
     this.renderer = renderer;
     this.camera = camera;
     this.scene3D = scene3D;
-    this.sceneOnTop = sceneOnTop
+    this.sceneOnTop = sceneOnTop;
     this.planData = planData;
     this.width = width;
     this.height = height;
@@ -238,7 +233,11 @@ export default class Viewer3DFirstPerson extends React.Component {
     }
 
     renderer.setSize(width, height);
-    renderer.render(scene3D, camera);
+    renderer.clear();                     // clear buffers
+    renderer.render(scene3D, camera);     // render scene 1
+    renderer.clearDepth();                // clear depth buffer
+    renderer.render(sceneOnTop, camera);  // render scene 2
+
   }
 
   render() {
