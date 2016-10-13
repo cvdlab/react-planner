@@ -65,7 +65,6 @@ export function parseData(sceneData, editingActions, catalog) {
   if (!isFinite(boundingBox.max.x) || !isFinite(boundingBox.min.x) || !isFinite(boundingBox.max.y) || !isFinite(boundingBox.min.y) || !isFinite(boundingBox.max.z) || !isFinite(boundingBox.min.z)) {
     // The plan is Empty
     boundingBox = new Three.Box3().setFromObject(grid);
-    console.log(boundingBox);
   }
 
   let center = [
@@ -162,73 +161,78 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
 
 function createLine(layer, line, editingActions, catalog, scene) {
 
-  line.editingActions = editingActions;
+  if (line != undefined) {
+    // line could be undefined if I removed it
 
-  let vertex0 = layer.vertices.get(line.vertices.get(0));
-  let vertex1 = layer.vertices.get(line.vertices.get(1));
+    line.editingActions = editingActions;
 
-  if (vertex0.x > vertex1.x) {
-    let app = vertex0;
-    vertex0 = vertex1;
-    vertex1 = app;
-  }
+    let vertex0 = layer.vertices.get(line.vertices.get(0));
+    let vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  let wall = catalog.getElement(line.type).render3D(line, layer, scene);
+    if (vertex0.x > vertex1.x) {
+      let app = vertex0;
+      vertex0 = vertex1;
+      vertex1 = app;
+    }
 
-  let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
+    let wall = catalog.getElement(line.type).render3D(line, layer, scene);
 
-  let thickness = convert(line.properties.get('thickness').get('length'))
-      .from(line.properties.get('thickness').get('unit'))
-      .to(scene.unit) * scene.pixelPerUnit;
+    let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
 
-  let bevelRadius = thickness;
+    let thickness = convert(line.properties.get('thickness').get('length'))
+        .from(line.properties.get('thickness').get('unit'))
+        .to(scene.unit) * scene.pixelPerUnit;
 
-  line.holes.forEach(holeID => {
+    let bevelRadius = thickness;
 
-    let holeData = layer.holes.get(holeID);
+    line.holes.forEach(holeID => {
 
-    // Create the hole object:
-    let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined, scene);
+      let holeData = layer.holes.get(holeID);
 
-    holePromise.then(object => {
-      let boundingBox = new Three.Box3().setFromObject(object);
-      let center = [
-        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+      // Create the hole object:
+      let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined, scene);
 
-      let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
-          .from(holeData.properties.get('altitude').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
+      holePromise.then(object => {
+        let boundingBox = new Three.Box3().setFromObject(object);
+        let center = [
+          (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+          (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+          (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-      let holeHeight = convert(holeData.properties.get('height').get('length'))
-          .from(holeData.properties.get('height').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
+        let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
+            .from(holeData.properties.get('altitude').get('unit'))
+            .to(scene.unit) * scene.pixelPerUnit;
 
-      let coordinates = [
-        (distance - bevelRadius) * holeData.offset + bevelRadius / 2,
-        holeAltitude + holeHeight / 2,
-        0];
+        let holeHeight = convert(holeData.properties.get('height').get('length'))
+            .from(holeData.properties.get('height').get('unit'))
+            .to(scene.unit) * scene.pixelPerUnit;
 
-      object.position.x += coordinates[0] - center[0];
-      //coordinates[1] - center[1] put the center of the door at the beginning of the hole
-      object.position.y += coordinates[1] - center[1];
-      object.position.z += coordinates[2] - center[2];
-      wall.add(object);
+        let coordinates = [
+          distance * holeData.offset,
+          holeAltitude + holeHeight / 2,
+          0];
 
-      applyInteract(object, () => {
-        return line.editingActions.selectHole(layer.id, holeData.id)
+        object.position.x = coordinates[0] - center[0];
+        //coordinates[1] - center[1] put the center of the door at the beginning of the hole
+        object.position.y = coordinates[1] - center[1];
+        object.position.z = coordinates[2] - center[2];
+        wall.add(object);
+
+        applyInteract(object, () => {
+          return line.editingActions.selectHole(layer.id, holeData.id)
+        });
       });
     });
-  });
 
-  wall.position.x += vertex0.x;
-  wall.position.y += layer.altitude;
-  wall.position.z -= vertex0.y;
+    wall.position.x += vertex0.x;
+    wall.position.y += layer.altitude;
+    wall.position.z -= vertex0.y;
 
-  wall.visible = layer.visible;
+    wall.visible = layer.visible;
 
-  return wall;
+    return wall;
+  }
+  return new Three.Object3D();
 }
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog, scene) {
@@ -274,50 +278,58 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
 
 function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, isVisible, catalog) {
 
-  newAreaData.interactFunction = () => {
-    editingActions.selectArea(layer.id, newAreaData.id);
-  };
+  if (newAreaData != undefined) {
 
-  let newAreaObject = catalog.getElement(newAreaData.type).render3D(newAreaData, layer);
+    // newAreaData could be undefined if I removed the area
 
-  newAreaObject.position.y += layer.altitude;
+    newAreaData.interactFunction = () => {
+      editingActions.selectArea(layer.id, newAreaData.id);
+    };
 
-  // Now I need to translate object to the original coordinates
-  let oldBoundingBox = planData.boundingBox;
+    let newAreaObject = catalog.getElement(newAreaData.type).render3D(newAreaData, layer);
 
-  let oldCenter = [
-    (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
-    (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
-    (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
+    newAreaObject.position.y += layer.altitude;
 
-  planData.plan.position.x += oldCenter[0];
-  planData.plan.position.y += oldCenter[1];
-  planData.plan.position.z += oldCenter[2];
+    // Now I need to translate object to the original coordinates
+    let oldBoundingBox = planData.boundingBox;
 
-  planData.grid.position.x += oldCenter[0];
-  planData.grid.position.y += oldCenter[1];
-  planData.grid.position.z += oldCenter[2];
+    let oldCenter = [
+      (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
+      (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
+      (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
+
+    planData.plan.position.x += oldCenter[0];
+    planData.plan.position.y += oldCenter[1];
+    planData.plan.position.z += oldCenter[2];
+
+    planData.grid.position.x += oldCenter[0];
+    planData.grid.position.y += oldCenter[1];
+    planData.grid.position.z += oldCenter[2];
+
+    planData.plan.remove(oldAreaObject);
+    planData.plan.add(newAreaObject);
+
+    let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
+    let newCenter = [
+      (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
+      (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
+      (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+
+    planData.plan.position.x -= newCenter[0];
+    planData.plan.position.y -= newCenter[1];
+    planData.plan.position.z -= newCenter[2];
+
+    planData.grid.position.x -= newCenter[0];
+    planData.grid.position.y -= newCenter[1];
+    planData.grid.position.z -= newCenter[2];
+
+    newAreaObject.visible = isVisible;
+
+    return newAreaObject;
+  }
 
   planData.plan.remove(oldAreaObject);
-  planData.plan.add(newAreaObject);
-
-  let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-  let newCenter = [
-    (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-    (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-    (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
-
-  planData.plan.position.x -= newCenter[0];
-  planData.plan.position.y -= newCenter[1];
-  planData.plan.position.z -= newCenter[2];
-
-  planData.grid.position.x -= newCenter[0];
-  planData.grid.position.y -= newCenter[1];
-  planData.grid.position.z -= newCenter[2];
-
-  newAreaObject.visible = isVisible;
-
-  return newAreaObject;
+  return new Three.Object3D();
 
 }
 

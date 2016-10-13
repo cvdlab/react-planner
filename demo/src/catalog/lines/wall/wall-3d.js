@@ -386,7 +386,7 @@ function applyTexture(material, textureName, length, height) {
       material.map.repeat.set(length / 100, height / 100);
 
       material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
-      material.normalScale = new Three.Vector2(0.4, 0.4);
+      material.normalScale = new Three.Vector2(0.8, 0.8);
       material.normalMap.wrapS = Three.RepeatWrapping;
       material.normalMap.wrapT = Three.RepeatWrapping;
       material.normalMap.repeat.set(length / 100, height / 100);

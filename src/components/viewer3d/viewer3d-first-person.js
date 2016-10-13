@@ -4,7 +4,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
 import {parseData, updateScene} from './scene-creator';
-import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
@@ -13,24 +12,14 @@ export default class Viewer3DFirstPerson extends React.Component {
 
   componentDidMount() {
 
-    /********************************/
-    var canJump = false;
-
+    /** Variables for movement control **/
     var prevTime = performance.now();
     var velocity = new Three.Vector3();
-
-
-    var controlsEnabled = true;
-
     let moveForward = false;
     let moveBackward = false;
     let moveLeft = false;
     let moveRight = false;
-    // let canJump = false;
-
-
-    /********************************/
-
+    let canJump = false;
 
     let {editingActions, catalog} = this.context;
 
@@ -178,81 +167,45 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     }, false);
 
-    console.log(window);
-
-
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
-
-    // create orbit controls
-    // let orbitController = new OrbitControls(camera, renderer.domElement);
+    renderer.autoClear = false;
 
     let controls = this.controls;
 
-    renderer.autoClear = false;
-
     render();
     function render() {
-      // orbitController.update();
 
-      /*********************/
-      //raycaster.ray.origin.copy( controls.getObject().position );
-      //raycaster.ray.origin.y -= 10;
+        let time = performance.now();
+        let delta = ( time - prevTime ) / 200;
 
-      //var intersections = raycaster.intersectObjects( objects );
-
-      //var isOnObject = intersections.length > 0;
-      var isOnObject = true;
-
-      var time = performance.now();
-      var delta = ( time - prevTime ) / 200;
-
-      velocity.x -= velocity.x * 10.0 * delta;
-      velocity.z -= velocity.z * 10.0 * delta;
-
-      velocity.y -= 9.8 * 100.0 * delta; // 100.0 = mass
-
-      if (moveForward) velocity.z -= 400.0 * delta;
-      if (moveBackward) velocity.z += 400.0 * delta;
-
-      if (moveLeft) velocity.x -= 400.0 * delta;
-      if (moveRight) velocity.x += 400.0 * delta;
-
-      if (isOnObject === true) {
-        velocity.y = Math.max(0, velocity.y);
-
-        canJump = true;
-      }
-
-      controls.getObject().translateX(velocity.x * delta);
-      controls.getObject().translateY(velocity.y * delta);
-      controls.getObject().translateZ(velocity.z * delta);
-
-      if (controls.getObject().position.y < 10) {
-
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
         velocity.y = 0;
-        controls.getObject().position.y = 10;
 
-        canJump = true;
+        if (moveForward) velocity.z -= 400.0 * delta;
+        if (moveBackward) velocity.z += 400.0 * delta;
 
-      }
+        if (moveLeft) velocity.x -= 400.0 * delta;
+        if (moveRight) velocity.x += 400.0 * delta;
 
-      prevTime = time;
+        controls.getObject().translateX(velocity.x * delta);
+        controls.getObject().translateZ(velocity.z * delta);
 
-      /*********************************************/
+        prevTime = time;
+
       renderer.clear();                     // clear buffers
       renderer.render(scene3D, camera);     // render scene 1
       renderer.clearDepth();                // clear depth buffer
-      renderer.render(sceneOnTop, camera);    // render scene 2
+      renderer.render(sceneOnTop, camera);  // render scene 2
 
-      // renderer.render(scene3D, camera);
       requestAnimationFrame(render);
     }
 
     this.renderer = renderer;
     this.camera = camera;
     this.scene3D = scene3D;
-    this.sceneOnTop = sceneOnTop
+    this.sceneOnTop = sceneOnTop;
     this.planData = planData;
     this.width = width;
     this.height = height;
@@ -280,7 +233,11 @@ export default class Viewer3DFirstPerson extends React.Component {
     }
 
     renderer.setSize(width, height);
-    renderer.render(scene3D, camera);
+    renderer.clear();                     // clear buffers
+    renderer.render(scene3D, camera);     // render scene 1
+    renderer.clearDepth();                // clear depth buffer
+    renderer.render(sceneOnTop, camera);  // render scene 2
+
   }
 
   render() {
