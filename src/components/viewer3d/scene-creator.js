@@ -204,16 +204,16 @@ function createLine(layer, line, editingActions, catalog, scene) {
       let holeHeight = convert(holeData.properties.get('height').get('length'))
           .from(holeData.properties.get('height').get('unit'))
           .to(scene.unit) * scene.pixelPerUnit;
-
+      
       let coordinates = [
-        (distance - bevelRadius) * holeData.offset + bevelRadius / 2,
+        distance * holeData.offset,
         holeAltitude + holeHeight / 2,
         0];
 
-      object.position.x += coordinates[0] - center[0];
+      object.position.x = coordinates[0] - center[0];
       //coordinates[1] - center[1] put the center of the door at the beginning of the hole
-      object.position.y += coordinates[1] - center[1];
-      object.position.z += coordinates[2] - center[2];
+      object.position.y = coordinates[1] - center[1];
+      object.position.z = coordinates[2] - center[2];
       wall.add(object);
 
       applyInteract(object, () => {
