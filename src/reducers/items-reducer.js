@@ -7,13 +7,18 @@ import {
   BEGIN_DRAGGING_ITEM,
   UPDATE_DRAGGING_ITEM,
   END_DRAGGING_ITEM,
+  BEGIN_ROTATING_ITEM,
+  UPDATE_ROTATING_ITEM,
+  END_ROTATING_ITEM,
 
   MODE_IDLE,
   MODE_DRAWING_ITEM,
   MODE_DRAGGING_ITEM,
+  MODE_ROTATING_ITEM
 } from '../constants';
 
 import {addItem, removeItem, unselect, select, unselectAll} from '../utils/layer-operations';
+import * as Geometry from '../utils/geometry';
 
 export default function (state, action) {
   switch (action.type) {
@@ -34,6 +39,15 @@ export default function (state, action) {
 
     case END_DRAGGING_ITEM:
       return endDraggingItem(state, action.x, action.y);
+
+    case BEGIN_ROTATING_ITEM:
+      return beginRotatingItem(state, action.layerID, action.itemID, action.x, action.y);
+
+    case UPDATE_ROTATING_ITEM:
+      return updateRotatingItem(state, action.x, action.y);
+
+    case END_ROTATING_ITEM:
+      return endRotatingItem(state, action.x, action.y);
 
     default:
       return state;
@@ -123,6 +137,46 @@ function updateDraggingItem(state, x, y) {
 
 function endDraggingItem(state, x, y) {
   state = updateDraggingItem(state, x, y);
+  return state.merge({
+    mode: MODE_IDLE,
+  });
+}
+
+function beginRotatingItem(state, layerID, itemID, x, y) {
+
+  let item = state.getIn(['scene', 'layers', layerID, 'items', itemID]);
+
+  return state.merge({
+    mode: MODE_ROTATING_ITEM,
+    rotatingSupport: Map({
+      layerID,
+      itemID
+    })
+  });
+}
+
+function updateRotatingItem(state, x, y) {
+  let {rotatingSupport, scene} = state;
+
+  let layerID = rotatingSupport.get('layerID');
+  let itemID = rotatingSupport.get('itemID');
+  let item = state.getIn(['scene', 'layers', layerID, 'items', itemID]);
+
+  let deltaX = x - item.x;
+  let deltaY = y - item.y;
+  let rotation = Math.atan2(deltaY, deltaX) * 180 / Math.PI - 90;
+
+  item = item.merge({
+    rotation,
+  });
+
+  return state.merge({
+    scene: scene.mergeIn(['layers', layerID, 'items', itemID], item)
+  });
+}
+
+function endRotatingItem(state, x, y) {
+  state = updateRotatingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
   });

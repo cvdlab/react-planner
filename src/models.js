@@ -94,5 +94,6 @@ export const State = Record({
   activeSnapElement: null,
 
   drawingSupport: Map(),
-  draggingSupport: Map()
+  draggingSupport: Map(),
+  rotatingSupport: Map()
 }, 'State');

@@ -30,6 +30,7 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_DRAWING_HOLE:
     case constants.MODE_DRAWING_ITEM:
     case constants.MODE_DRAGGING_HOLE:
+    case constants.MODE_ROTATING_ITEM:
       return <Viewer2D state={state} width={width} height={height}/>;
 
     default:

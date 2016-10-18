@@ -45,6 +45,9 @@ function mode2Cursor(mode) {
     case constants.MODE_DRAGGING_ITEM:
       return {cursor: 'move'};
 
+    case constants.MODE_ROTATING_ITEM:
+      return {cursor: 'ew-resize'};
+
     default:
       return {cursor: 'crosshair'};
   }
@@ -73,6 +76,7 @@ function extractElementData(node) {
   if (node.tagName === 'svg') return null;
 
   return {
+    part: node.attributes.getNamedItem('data-part') ? node.attributes.getNamedItem('data-part').value : undefined,
     layer: node.attributes.getNamedItem('data-layer').value,
     prototype: node.attributes.getNamedItem('data-prototype').value,
     selected: node.attributes.getNamedItem('data-selected').value === 'true',
@@ -176,6 +180,9 @@ export default function Viewer2D({state, width, height},
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.updateDraggingItem(x, y);
         break;
+
+      case constants.MODE_ROTATING_ITEM:
+        itemsActions.updateRotatingItem(x, y);
     }
   };
 
@@ -199,7 +206,10 @@ export default function Viewer2D({state, width, height},
             break;
 
           case 'items':
-            itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
+            if (elementData.part === 'rotation-anchor')
+              itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);
+            else
+              itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
             break;
 
           case 'holes':
@@ -229,6 +239,10 @@ export default function Viewer2D({state, width, height},
       case constants.MODE_DRAGGING_HOLE:
         holesActions.endDraggingHole(x, y);
         break;
+
+      case constants.MODE_ROTATING_ITEM:
+        itemsActions.endRotatingItem(x, y);
+        break;
     }
   };
 
@@ -247,7 +261,7 @@ export default function Viewer2D({state, width, height},
 
       <svg width={scene.width} height={scene.height}>
         <g style={mode2Cursor(mode)}>
-          <rect x="0" y="0" width={width} height={height} fill="#fff" />
+          <rect x="0" y="0" width={width} height={height} fill="#fff"/>
           <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={mode2PointerEvents(mode)}>
             <Scene scene={scene} mode={mode}/>
             {activeSnapElement}
