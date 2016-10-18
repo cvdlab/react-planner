@@ -79,12 +79,13 @@ export default function createGrid(sizeX, sizeY, step) {
       } else if (counter % (step / 5) == 0) {
         material = new Three.LineBasicMaterial({color: 0xaaaaaa});
       }
-      
+
       grid.add(new Three.LineSegments(geometry, material));
     }
 
     counter++;
 
   }
+  grid.position.y = -1;
   return grid;
 }
