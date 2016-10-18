@@ -14,9 +14,9 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'pelle'],
+    tag: ['furnishings', 'leather'],
     group: "Items",
-    description: "Divano in pelle",
+    description: "Leather sofa",
     image: require('./sofa.png')
   },
 

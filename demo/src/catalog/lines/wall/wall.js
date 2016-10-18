@@ -15,9 +15,9 @@ export default {
   prototype: "lines",
 
   info: {
-    tag: ['muro'],
-    group: "Comunicazione orizzontale",
-    description: "Muro in mattoni o pittura",
+    tag: ['wall'],
+    group: "Vertical closure",
+    description: "Wall with bricks or painted",
     image: require('./wall.png')
   },
 
@@ -41,8 +41,8 @@ export default {
       defaultValue: 'none',
       values: {
         'none': "Nessuna",
-        'bricks': "Mattoni",
-        'painted': "Pittura"
+        'bricks': "Bricks",
+        'painted': "Painting"
       }
     },
     textureB: {

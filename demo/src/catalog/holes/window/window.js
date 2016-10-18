@@ -13,9 +13,9 @@ export default {
   prototype: "holes",
 
   info: {
-    tag: ['finestra'],
-    group: "Comunicazione orizzontale",
-    description: "Finestra",
+    tag: ['window'],
+    group: "Vertical Closing",
+    description: "Window",
     image: require('./window.png')
   },
 

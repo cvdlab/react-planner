@@ -9,8 +9,8 @@ export default {
 
   info: {
     tag: ['area'],
-    group: "Chiusura orizzontale",
-    description: "Stanza generica",
+    group: "Horizontal Closure",
+    description: "Generic Room",
     image: ""
   },
 
