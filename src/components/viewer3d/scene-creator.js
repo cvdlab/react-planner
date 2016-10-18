@@ -112,13 +112,15 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
           case "vertices":
             break;
           case "holes":
-            let newHoleData = layer.holes.get(modifiedPath[4]);
-            let lineID = newHoleData.line;
+            if (diff.op !== "remove") {
+              let newHoleData = layer.holes.get(modifiedPath[4]);
+              let lineID = newHoleData.line;
 
-            oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
-            newLineData = layer.lines.get(lineID);
-            newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
-            planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
+              oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
+              newLineData = layer.lines.get(lineID);
+              newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
+              planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
+            }
 
             break;
           case "lines":
