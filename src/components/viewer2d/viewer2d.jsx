@@ -45,6 +45,9 @@ function mode2Cursor(mode) {
     case constants.MODE_DRAGGING_ITEM:
       return {cursor: 'move'};
 
+    case constants.MODE_ROTATING_ITEM:
+      return {cursor: 'ew-resize'};
+
     default:
       return {cursor: 'crosshair'};
   }

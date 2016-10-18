@@ -9,13 +9,13 @@ const STYLE_LINE = {
 const STYLE_CIRCLE = {
   fill: "#0096fd",
   stroke: "#0096fd",
-  cursor: "all-scroll"
+  cursor: "ew-resize"
 };
 
 const STYLE_CIRCLE2 = {
   fill: "none",
   stroke: "#0096fd",
-  cursor: "all-scroll"
+  cursor: "ew-resize"
 };
 
 export default function Item({layer, item, scene}, {catalog}) {
