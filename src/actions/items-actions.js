@@ -4,7 +4,10 @@ import {
   END_DRAWING_ITEM,
   BEGIN_DRAGGING_ITEM,
   UPDATE_DRAGGING_ITEM,
-  END_DRAGGING_ITEM
+  END_DRAGGING_ITEM,
+  BEGIN_ROTATING_ITEM,
+  UPDATE_ROTATING_ITEM,
+  END_ROTATING_ITEM
 } from '../constants';
 
 
@@ -55,6 +58,33 @@ export function endDraggingItem(x, y) {
   return (dispatch, getState, {catalog}) => {
     dispatch({
       type: END_DRAGGING_ITEM,
+      x, y, catalog
+    });
+  }
+}
+
+export function beginRotatingItem(layerID, itemID, x, y) {
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: BEGIN_ROTATING_ITEM,
+      layerID, itemID, x, y, catalog
+    })
+  };
+}
+
+export function updateRotatingItem(x, y) {
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: UPDATE_ROTATING_ITEM,
+      x, y, catalog
+    });
+  }
+}
+
+export function endRotatingItem(x, y) {
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: END_ROTATING_ITEM,
       x, y, catalog
     });
   }

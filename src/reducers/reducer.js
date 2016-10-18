@@ -78,6 +78,9 @@ export default function appReducers(state, action) {
     case constants.BEGIN_DRAGGING_ITEM:
     case constants.UPDATE_DRAGGING_ITEM:
     case constants.END_DRAGGING_ITEM:
+    case constants.BEGIN_ROTATING_ITEM:
+    case constants.UPDATE_ROTATING_ITEM:
+    case constants.END_ROTATING_ITEM:
       return itemsReducer(state, action);
 
     default:
