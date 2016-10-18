@@ -7,6 +7,7 @@ import {parseData, updateScene} from './scene-creator';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
+import convert from 'convert-units';
 
 export default class Viewer3DFirstPerson extends React.Component {
 
@@ -19,7 +20,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     let moveBackward = false;
     let moveLeft = false;
     let moveRight = false;
-    let canJump = false;
 
     let {editingActions, catalog} = this.context;
 
@@ -65,7 +65,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     scene3D.add(light);
 
     // Add another light
-
     let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
     spotLight1.position.set(1000, 0, -1000);
     camera.add(spotLight1);
@@ -79,7 +78,15 @@ export default class Viewer3DFirstPerson extends React.Component {
     document.body.requestPointerLock();
 
     this.controls = initPointerLock(camera, renderer.domElement);
-    this.controls.getObject().position.set(-50, 0, -100);
+
+    /* Set user initial position */
+    let humanHeight = {length: 1.70, unit: 'm'};
+    let humanHeightPixels = convert(humanHeight.length)
+        .from(humanHeight.unit)
+        .to(state.scene.unit) * state.scene.pixelPerUnit;
+
+    let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeightPixels;
+    this.controls.getObject().position.set(-50, yInitialPosition, -100);
     sceneOnTop.add(this.controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
 
     // Add move controls on the page
@@ -176,23 +183,22 @@ export default class Viewer3DFirstPerson extends React.Component {
     render();
     function render() {
 
-        let time = performance.now();
-        let delta = ( time - prevTime ) / 200;
+      let time = performance.now();
+      let delta = ( time - prevTime ) / 200;
 
-        velocity.x -= velocity.x * 10.0 * delta;
-        velocity.z -= velocity.z * 10.0 * delta;
-        velocity.y = 0;
+      velocity.x -= velocity.x * 10.0 * delta;
+      velocity.z -= velocity.z * 10.0 * delta;
 
-        if (moveForward) velocity.z -= 400.0 * delta;
-        if (moveBackward) velocity.z += 400.0 * delta;
+      if (moveForward) velocity.z -= 400.0 * delta;
+      if (moveBackward) velocity.z += 400.0 * delta;
 
-        if (moveLeft) velocity.x -= 400.0 * delta;
-        if (moveRight) velocity.x += 400.0 * delta;
+      if (moveLeft) velocity.x -= 400.0 * delta;
+      if (moveRight) velocity.x += 400.0 * delta;
 
-        controls.getObject().translateX(velocity.x * delta);
-        controls.getObject().translateZ(velocity.z * delta);
+      controls.getObject().translateX(velocity.x * delta);
+      controls.getObject().translateZ(velocity.z * delta);
 
-        prevTime = time;
+      prevTime = time;
 
       renderer.clear();                     // clear buffers
       renderer.render(scene3D, camera);     // render scene 1
@@ -216,8 +222,8 @@ export default class Viewer3DFirstPerson extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let {width, height} = nextProps;
-    let {camera, renderer, scene3D, sceneOnTop} = this;
+    let {width, height, state} = nextProps;
+    let {camera, renderer, scene3D, sceneOnTop, planData} = this;
 
     this.width = width;
     this.height = height;
@@ -231,6 +237,15 @@ export default class Viewer3DFirstPerson extends React.Component {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
       updateScene(this.planData, nextProps.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
+
+    /** Update controls position **/
+    let humanHeight = {length: 1.70, unit: 'm'};
+    let humanHeightPixels = convert(humanHeight.length)
+        .from(humanHeight.unit)
+        .to(state.scene.unit) * state.scene.pixelPerUnit;
+
+    let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeightPixels;
+    this.controls.getObject().position.y = yInitialPosition;
 
     renderer.setSize(width, height);
     renderer.clear();                     // clear buffers

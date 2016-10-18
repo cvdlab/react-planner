@@ -272,6 +272,8 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
   planData.grid.position.y -= newCenter[1];
   planData.grid.position.z -= newCenter[2];
 
+  planData.boundingBox = newBoundingBox;
+
   return newLineObject;
 
 }
