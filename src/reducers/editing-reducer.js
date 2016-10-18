@@ -63,7 +63,7 @@ function setProperties(scene, properties) {
     layer.selected.holes.forEach(holeID => setPropertiesOp(layer, 'holes', holeID, properties));
     layer.selected.areas.forEach(areaID => setPropertiesOp(layer, 'areas', areaID, properties));
     layer.selected.items.forEach(itemID => setPropertiesOp(layer, 'items', itemID, properties));
-    unselectAllOp(layer);
+    // unselectAllOp(layer);
   }));
 }
 
