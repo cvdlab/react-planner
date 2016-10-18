@@ -13,9 +13,9 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'elettronica'],
+    tag: ['furnishing', 'electronics'],
     group: "Items",
-    description: "Televisore LCD",
+    description: "LCD TV",
     image: require('./tv.png')
   },
 
