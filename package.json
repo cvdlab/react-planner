@@ -1,6 +1,6 @@
 {
   "name": "react-planner",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "react-planner is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
   "main": "lib/index.js",
   "scripts": {
