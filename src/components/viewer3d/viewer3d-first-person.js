@@ -155,7 +155,9 @@ export default class Viewer3DFirstPerson extends React.Component {
     let mouseVector = new Three.Vector2(0, 0);
     let raycaster = new Three.Raycaster();
 
-    document.addEventListener('mousedown', (event) => {
+    this.firstPersonMouseDown = (event) => {
+
+      console.log("I clicked in first person view!")
 
       // First of all I check if controls are enabled
 
@@ -177,7 +179,9 @@ export default class Viewer3DFirstPerson extends React.Component {
         }
       }
 
-    }, false);
+    };
+
+    document.addEventListener('mousedown', this.firstPersonMouseDown, false);
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(renderer.domElement);
@@ -186,7 +190,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     let controls = this.controls;
 
     let render = () => {
-      
+
       let time = performance.now();
       let delta = ( time - prevTime ) / 200;
 
@@ -225,6 +229,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
   componentWillUnmount() {
     this.stopRendering = true;
+    document.removeEventListener('mousedown', this.firstPersonMouseDown);
   }
 
   componentWillReceiveProps(nextProps) {
