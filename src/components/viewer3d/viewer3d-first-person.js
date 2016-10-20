@@ -11,6 +11,15 @@ import convert from 'convert-units';
 
 export default class Viewer3DFirstPerson extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.width = props.width;
+    this.height = props.height;
+    this.stopRendering = false;
+  }
+
+
   componentDidMount() {
 
     /** Variables for movement control **/
@@ -23,7 +32,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let {editingActions, catalog} = this.context;
 
-    let {width, height, state} = this.props;
+    let {state} = this.props;
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
@@ -35,7 +44,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     //RENDERER
     let renderer = new Three.WebGLRenderer();
     renderer.setClearColor(new Three.Color(0xffffff));
-    renderer.setSize(width, height);
+    renderer.setSize(this.width, this.height);
 
     // LOAD DATA
     let planData = parseData(data, editingActions, catalog);
@@ -43,16 +52,12 @@ export default class Viewer3DFirstPerson extends React.Component {
     scene3D.add(planData.plan);
 
     // CAMERA
-    let viewSize = 900;
-    let aspectRatio = width / height;
+    let aspectRatio = this.width / this.height;
     let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
 
     sceneOnTop.add(camera); // The pointer is on the camera so I show it above all
 
     // Set position for the camera
-    let cameraPositionX = (planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
-    let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 3;
-    let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
     camera.position.set(0, 0, 0);
     camera.up = new Three.Vector3(0, 1, 0);
 
@@ -147,7 +152,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     // OBJECT PICKING
     let toIntersect = [planData.plan];
 
-    let mouseVector = new Three.Vector2(0, 0)
+    let mouseVector = new Three.Vector2(0, 0);
     let raycaster = new Three.Raycaster();
 
     document.addEventListener('mousedown', (event) => {
@@ -180,9 +185,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let controls = this.controls;
 
-    render();
-    function render() {
-
+    let render = () => {
+      
       let time = performance.now();
       let delta = ( time - prevTime ) / 200;
 
@@ -205,20 +209,22 @@ export default class Viewer3DFirstPerson extends React.Component {
       renderer.clearDepth();                // clear depth buffer
       renderer.render(sceneOnTop, camera);  // render scene 2
 
-      requestAnimationFrame(render);
-    }
+      if (!this.stopRendering) {
+        requestAnimationFrame(render);
+      }
+    };
+
+    render();
 
     this.renderer = renderer;
     this.camera = camera;
     this.scene3D = scene3D;
     this.sceneOnTop = sceneOnTop;
     this.planData = planData;
-    this.width = width;
-    this.height = height;
-
   }
 
   componentWillUnmount() {
+    this.stopRendering = true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -228,8 +234,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.width = width;
     this.height = height;
 
-    let aspectRatio = width / height;
-    camera.aspect = aspectRatio;
+    camera.aspect = width / height;
 
     camera.updateProjectionMatrix();
 
