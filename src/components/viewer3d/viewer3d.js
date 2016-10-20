@@ -9,11 +9,19 @@ import diff from 'immutablediff';
 
 export default class Scene3DViewer extends React.Component {
 
+  constructor(props) {
+    super(props);
+
+    this.lastMousePosition = {};
+    this.width = props.width;
+    this.height = props.height;
+    this.stopRendering = false;
+  }
+
   componentDidMount() {
 
     let editingActions = this.context.editingActions;
-
-    let {width, height, state} = this.props;
+    let {state} = this.props;
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
@@ -22,7 +30,7 @@ export default class Scene3DViewer extends React.Component {
     //RENDERER
     let renderer = new Three.WebGLRenderer();
     renderer.setClearColor(new Three.Color(0xffffff));
-    renderer.setSize(width, height);
+    renderer.setSize(this.width, this.height);
 
     // LOAD DATA
     let planData = parseData(data, editingActions, this.context.catalog);
@@ -30,7 +38,7 @@ export default class Scene3DViewer extends React.Component {
     scene3D.add(planData.plan);
     scene3D.add(planData.grid);
 
-    let aspectRatio = width / height;
+    let aspectRatio = this.width / this.height;
     let camera = new Three.PerspectiveCamera(45, aspectRatio, 1, 300000);
 
     scene3D.add(camera);
@@ -149,8 +157,7 @@ export default class Scene3DViewer extends React.Component {
 
       let convertToBufferGeometry = (geometry) => {
         console.log("geometry = ", geometry);
-        let bufferGeometry = new Three.BufferGeometry().fromGeometry(geometry);
-        return bufferGeometry;
+        return new Three.BufferGeometry().fromGeometry(geometry);
       };
 
       planData.plan.traverse((child) => {
@@ -185,30 +192,30 @@ export default class Scene3DViewer extends React.Component {
     /************************************/
 
 
-    render();
-    function render() {
+    let render = () => {
       orbitController.update();
-
       spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
       camera.updateMatrix();
       camera.updateMatrixWorld();
 
       renderer.render(scene3D, camera);
-      requestAnimationFrame(render);
-    }
+      if (!this.stopRendering) {
+        requestAnimationFrame(render);
+      }
+    };
 
-    this.lastMousePosition = {};
+    render();
+
     this.orbitControls = orbitController;
     this.renderer = renderer;
     this.camera = camera;
     this.scene3D = scene3D;
     this.planData = planData;
-    this.width = width;
-    this.height = height;
   }
 
   componentWillUnmount() {
     this.orbitControls.dispose();
+    this.stopRendering = true;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -218,8 +225,7 @@ export default class Scene3DViewer extends React.Component {
     this.width = width;
     this.height = height;
 
-    let aspectRatio = width / height;
-    camera.aspect = aspectRatio;
+    camera.aspect = width / height;
 
     camera.updateProjectionMatrix();
 
