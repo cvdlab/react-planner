@@ -40,7 +40,7 @@ export default {
       type: "enum",
       defaultValue: 'none',
       values: {
-        'none': "Nessuna",
+        'none': "None",
         'bricks': "Bricks",
         'painted': "Painting"
       }
@@ -49,9 +49,9 @@ export default {
       type: "enum",
       defaultValue: 'none',
       values: {
-        'none': "Nessuna",
-        'bricks': "Mattoni",
-        'painted': "Pittura"
+        'none': "None",
+        'bricks': "Bricks",
+        'painted': "Paintings"
       }
     }
   },
