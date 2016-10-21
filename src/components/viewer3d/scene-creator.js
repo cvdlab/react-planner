@@ -257,7 +257,39 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
   planData.grid.position.y += oldCenter[1];
   planData.grid.position.z += oldCenter[2];
 
+  // I need to remove the old object
+
   planData.plan.remove(oldLineObject);
+
+  oldLineObject.traverse(function (child) {
+    if (child instanceof Three.Mesh || child instanceof Three.BoxHelper) {
+
+      child.geometry.dispose();
+
+      let material = child.material;
+
+      if (material instanceof Three.MultiMaterial) {
+        material.materials.forEach(childMaterial => {
+          let childTexture = childMaterial.map;
+          if (childTexture) {
+            childTexture.dispose();
+          }
+
+          childMaterial.dispose();
+        });
+      } else {
+        let texture = child.material.map;
+        // Save memory for the renderer
+        if (texture) {
+          texture.dispose();
+        }
+        material.dispose();
+      }
+    }
+  });
+
+  oldLineObject = null;
+
   planData.plan.add(newLineObject);
 
   let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
@@ -311,6 +343,34 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
     planData.grid.position.z += oldCenter[2];
 
     planData.plan.remove(oldAreaObject);
+
+    oldAreaObject.traverse(function (child) {
+      if (child instanceof Three.Mesh || child instanceof Three.BoxHelper) {
+
+        child.geometry.dispose();
+
+        let material = child.material;
+
+        if (material instanceof Three.MultiMaterial) {
+          material.materials.forEach(childMaterial => {
+            let childTexture = childMaterial.map;
+            if (childTexture) {
+              childTexture.dispose();
+            }
+
+            childMaterial.dispose();
+          });
+        } else {
+          let texture = child.material.map;
+          // Save memory for the renderer
+          if (texture) {
+            texture.dispose();
+          }
+          material.dispose();
+        }
+      }
+    });
+
     planData.plan.add(newAreaObject);
 
     let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
@@ -375,6 +435,33 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scen
 function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, scene) {
 
   planData.plan.remove(oldItemObject);
+
+  oldItemObject.traverse(function (child) {
+    if (child instanceof Three.Mesh || child instanceof Three.BoxHelper) {
+
+      child.geometry.dispose();
+
+      let material = child.material;
+
+      if (material instanceof Three.MultiMaterial) {
+        material.materials.forEach(childMaterial => {
+          let childTexture = childMaterial.map;
+          if (childTexture) {
+            childTexture.dispose();
+          }
+
+          childMaterial.dispose();
+        });
+      } else {
+        let texture = child.material.map;
+        // Save memory for the renderer
+        if (texture) {
+          texture.dispose();
+        }
+        material.dispose();
+      }
+    }
+  });
 
   let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer, scene);
 
