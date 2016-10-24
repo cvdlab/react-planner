@@ -233,6 +233,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     disposeScene(this.scene3D);
 
+    this.scene3D.remove(this.planData.plan);
+
     this.scene3D = null;
     this.planData = null;
   }
