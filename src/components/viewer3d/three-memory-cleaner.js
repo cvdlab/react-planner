@@ -1,3 +1,5 @@
+import Three from 'three';
+
 function disposeGeometry(geometry) {
   geometry.dispose();
 }
@@ -28,11 +30,10 @@ function disposeMaterial(material) {
   material.dispose();
 }
 
-function disposeMesh(scene3D, mesh) {
+function disposeMesh(mesh) {
   if (!(mesh instanceof Three.Mesh || mesh instanceof Three.BoxHelper)) {
     return;
   }
-  scene3D.remove(mesh);
   disposeGeometry(mesh.geometry);
   disposeMultimaterial(mesh.material);
   disposeMaterial(mesh.material);
@@ -40,12 +41,12 @@ function disposeMesh(scene3D, mesh) {
 
 export function disposeScene(scene3D) {
   scene3D.traverse(child => {
-    disposeMesh(scene3D, child);
+    disposeMesh(child);
   });
 }
 
-export function disposeObject(scene3D, object) {
+export function disposeObject(object) {
   object.traverse(child => {
-    disposeMesh(scene3D, child);
+    disposeMesh(child);
   });
 }

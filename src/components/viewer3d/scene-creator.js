@@ -1,6 +1,7 @@
 import Three from 'three';
 import createGrid from './grid-creator';
 import convert from 'convert-units';
+import {disposeObject} from './three-memory-cleaner';
 
 export function parseData(sceneData, editingActions, catalog) {
 
@@ -261,33 +262,7 @@ function replaceLine(layer, oldLineObject, newLineData, editingActions, planData
 
   planData.plan.remove(oldLineObject);
 
-  oldLineObject.traverse(function (child) {
-    if (child instanceof Three.Mesh || child instanceof Three.BoxHelper) {
-
-      child.geometry.dispose();
-
-      let material = child.material;
-
-      if (material instanceof Three.MultiMaterial) {
-        material.materials.forEach(childMaterial => {
-          let childTexture = childMaterial.map;
-          if (childTexture) {
-            childTexture.dispose();
-          }
-
-          childMaterial.dispose();
-        });
-      } else {
-        let texture = child.material.map;
-        // Save memory for the renderer
-        if (texture) {
-          texture.dispose();
-        }
-        material.dispose();
-      }
-    }
-  });
-
+  disposeObject(oldLineObject);
   oldLineObject = null;
 
   planData.plan.add(newLineObject);
@@ -343,33 +318,7 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
     planData.grid.position.z += oldCenter[2];
 
     planData.plan.remove(oldAreaObject);
-
-    oldAreaObject.traverse(function (child) {
-      if (child instanceof Three.Mesh || child instanceof Three.BoxHelper) {
-
-        child.geometry.dispose();
-
-        let material = child.material;
-
-        if (material instanceof Three.MultiMaterial) {
-          material.materials.forEach(childMaterial => {
-            let childTexture = childMaterial.map;
-            if (childTexture) {
-              childTexture.dispose();
-            }
-
-            childMaterial.dispose();
-          });
-        } else {
-          let texture = child.material.map;
-          // Save memory for the renderer
-          if (texture) {
-            texture.dispose();
-          }
-          material.dispose();
-        }
-      }
-    });
+    disposeObject(oldAreaObject);
 
     planData.plan.add(newAreaObject);
 
@@ -392,7 +341,6 @@ function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData
     return newAreaObject;
   }
 
-  planData.plan.remove(oldAreaObject);
   return new Three.Object3D();
 
 }
@@ -435,33 +383,7 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scen
 function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, scene) {
 
   planData.plan.remove(oldItemObject);
-
-  oldItemObject.traverse(function (child) {
-    if (child instanceof Three.Mesh || child instanceof Three.BoxHelper) {
-
-      child.geometry.dispose();
-
-      let material = child.material;
-
-      if (material instanceof Three.MultiMaterial) {
-        material.materials.forEach(childMaterial => {
-          let childTexture = childMaterial.map;
-          if (childTexture) {
-            childTexture.dispose();
-          }
-
-          childMaterial.dispose();
-        });
-      } else {
-        let texture = child.material.map;
-        // Save memory for the renderer
-        if (texture) {
-          texture.dispose();
-        }
-        material.dispose();
-      }
-    }
-  });
+  disposeObject(oldItemObject);
 
   let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer, scene);
 
