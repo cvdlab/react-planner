@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
 import {parseData, updateScene} from './scene-creator';
+import {disposeScene} from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 
@@ -16,6 +17,9 @@ export default class Scene3DViewer extends React.Component {
     this.width = props.width;
     this.height = props.height;
     this.stopRendering = false;
+
+    this.renderer = window.__threeRenderer || new Three.WebGLRenderer();
+    window.__threeRenderer = this.renderer;
   }
 
   componentDidMount() {
@@ -28,9 +32,8 @@ export default class Scene3DViewer extends React.Component {
     let scene3D = new Three.Scene();
 
     //RENDERER
-    let renderer = new Three.WebGLRenderer();
-    renderer.setClearColor(new Three.Color(0xffffff));
-    renderer.setSize(this.width, this.height);
+    this.renderer.setClearColor(new Three.Color(0xffffff));
+    this.renderer.setSize(this.width, this.height);
 
     // LOAD DATA
     let planData = parseData(data, editingActions, this.context.catalog);
@@ -70,12 +73,12 @@ export default class Scene3DViewer extends React.Component {
     let mouse = new Three.Vector2();
     let raycaster = new Three.Raycaster();
 
-    renderer.domElement.addEventListener('mousedown', (event) => {
+    this.renderer.domElement.addEventListener('mousedown', (event) => {
       this.lastMousePosition.x = event.offsetX / this.width * 2 - 1;
       this.lastMousePosition.y = -event.offsetY / this.height * 2 + 1;
     }, false);
 
-    renderer.domElement.addEventListener('mouseup', (event) => {
+    this.renderer.domElement.addEventListener('mouseup', (event) => {
       event.preventDefault();
 
       mouse.x = (event.offsetX / this.width) * 2 - 1;
@@ -95,10 +98,10 @@ export default class Scene3DViewer extends React.Component {
     }, false);
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(renderer.domElement);
+    canvasWrapper.appendChild(this.renderer.domElement);
 
     // create orbit controls
-    let orbitController = new OrbitControls(camera, renderer.domElement);
+    let orbitController = new OrbitControls(camera, this.renderer.domElement);
 
 
     /************************************/
@@ -198,7 +201,7 @@ export default class Scene3DViewer extends React.Component {
       camera.updateMatrix();
       camera.updateMatrixWorld();
 
-      renderer.render(scene3D, camera);
+      this.renderer.render(scene3D, camera);
       if (!this.stopRendering) {
         requestAnimationFrame(render);
       }
@@ -207,7 +210,6 @@ export default class Scene3DViewer extends React.Component {
     render();
 
     this.orbitControls = orbitController;
-    this.renderer = renderer;
     this.camera = camera;
     this.scene3D = scene3D;
     this.planData = planData;
@@ -216,6 +218,14 @@ export default class Scene3DViewer extends React.Component {
   componentWillUnmount() {
     this.orbitControls.dispose();
     this.stopRendering = true;
+
+    disposeScene(this.scene3D);
+    this.scene3D.remove(this.planData.plan);
+    this.scene3D.remove(this.planData.grid);
+
+    this.scene3D = null;
+    this.planData = null;
+
   }
 
   componentWillReceiveProps(nextProps) {

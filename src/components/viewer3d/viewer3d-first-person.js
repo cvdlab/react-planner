@@ -161,9 +161,6 @@ export default class Viewer3DFirstPerson extends React.Component {
       // First of all I check if controls are enabled
 
       if (this.controls.enabled) {
-
-        console.log(this.renderer.info.memory.geometries, this.renderer.info.memory.textures, this.renderer.info.render);
-
         event.preventDefault();
 
         /* Per avere la direzione da assegnare al raycaster, chiamo il metodo getDirection di PointerLockControls,

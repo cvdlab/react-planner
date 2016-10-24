@@ -31,7 +31,7 @@ function disposeMaterial(material) {
 }
 
 function disposeMesh(mesh) {
-  if (!(mesh instanceof Three.Mesh || mesh instanceof Three.BoxHelper)) {
+  if (!(mesh instanceof Three.Mesh || mesh instanceof Three.BoxHelper || mesh instanceof Three.LineSegments)) {
     return;
   }
   disposeGeometry(mesh.geometry);
