@@ -4,6 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import Three from 'three';
 import {parseData, updateScene} from './scene-creator';
+import {disposeScene} from './three-memory-cleaner';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
@@ -17,8 +18,9 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.width = props.width;
     this.height = props.height;
     this.stopRendering = false;
+    this.renderer = window.__threeRenderer || new Three.WebGLRenderer();
+    window.__threeRenderer = this.renderer;
   }
-
 
   componentDidMount() {
 
@@ -42,9 +44,8 @@ export default class Viewer3DFirstPerson extends React.Component {
     let sceneOnTop = new Three.Scene();
 
     //RENDERER
-    let renderer = new Three.WebGLRenderer();
-    renderer.setClearColor(new Three.Color(0xffffff));
-    renderer.setSize(this.width, this.height);
+    this.renderer.setClearColor(new Three.Color(0xffffff));
+    this.renderer.setSize(this.width, this.height);
 
     // LOAD DATA
     let planData = parseData(data, editingActions, catalog);
@@ -82,7 +83,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     document.body.requestPointerLock();
 
-    this.controls = initPointerLock(camera, renderer.domElement);
+    this.controls = initPointerLock(camera, this.renderer.domElement);
 
     /* Set user initial position */
     let humanHeight = {length: 1.70, unit: 'm'};
@@ -157,11 +158,11 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     this.firstPersonMouseDown = (event) => {
 
-      console.log("I clicked in first person view!")
-
       // First of all I check if controls are enabled
 
       if (this.controls.enabled) {
+
+        console.log(this.renderer.info.memory.geometries, this.renderer.info.memory.textures, this.renderer.info.render);
 
         event.preventDefault();
 
@@ -184,8 +185,8 @@ export default class Viewer3DFirstPerson extends React.Component {
     document.addEventListener('mousedown', this.firstPersonMouseDown, false);
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(renderer.domElement);
-    renderer.autoClear = false;
+    canvasWrapper.appendChild(this.renderer.domElement);
+    this.renderer.autoClear = false;
 
     let controls = this.controls;
 
@@ -208,10 +209,10 @@ export default class Viewer3DFirstPerson extends React.Component {
 
       prevTime = time;
 
-      renderer.clear();                     // clear buffers
-      renderer.render(scene3D, camera);     // render scene 1
-      renderer.clearDepth();                // clear depth buffer
-      renderer.render(sceneOnTop, camera);  // render scene 2
+      this.renderer.clear();                     // clear buffers
+      this.renderer.render(scene3D, camera);     // render scene 1
+      this.renderer.clearDepth();                // clear depth buffer
+      this.renderer.render(sceneOnTop, camera);  // render scene 2
 
       if (!this.stopRendering) {
         requestAnimationFrame(render);
@@ -220,7 +221,6 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     render();
 
-    this.renderer = renderer;
     this.camera = camera;
     this.scene3D = scene3D;
     this.sceneOnTop = sceneOnTop;
@@ -230,6 +230,11 @@ export default class Viewer3DFirstPerson extends React.Component {
   componentWillUnmount() {
     this.stopRendering = true;
     document.removeEventListener('mousedown', this.firstPersonMouseDown);
+
+    disposeScene(this.scene3D);
+
+    this.scene3D = null;
+    this.planData = null;
   }
 
   componentWillReceiveProps(nextProps) {
