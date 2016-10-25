@@ -142,8 +142,6 @@ export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
 }
 
 export function samePoints({x:x1, y:y1}, {x:x2, y:y2}) {
-  console.log(x1, y1, x2, y2);
-
   let EPSILON = 10e-6;
   return Math.abs(x1 - x2) <= EPSILON && Math.abs(y1 - y2) <= EPSILON;
 }
