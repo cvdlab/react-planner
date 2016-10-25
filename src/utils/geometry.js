@@ -49,8 +49,13 @@ export function intersectionFromTwoLines(a, b, c, j, k, l) {
   return {x, y};
 }
 
-export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {x: x3, y: y3}, {x: x4, y:y4}) {
+export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
   //https://github.com/psalaets/line-intersect/blob/master/lib/check-intersection.js
+
+  let {x: x1, y: y1} = p1;
+  let {x: x2, y: y2} = p2;
+  let {x: x3, y: y3} = p3;
+  let {x: x4, y:y4} = p4;
 
   let EPSILON = 10e-6;
 
@@ -60,7 +65,18 @@ export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {
 
   if (denom == 0) {
     if (numA == 0 && numB == 0) {
-      return {type: "colinear"};
+
+      let comparator = (pa, pb) => pa.x === pb.x ? pa.y - pb.y : pa.x - pb.x;
+      let line0 = [p1, p2].sort(comparator);
+      let line1 = [p3.toJS(), p4.toJS()].sort(comparator);
+
+      let [lineSX, lineDX] = [line0, line1].sort((lineA, lineB) => comparator(lineA[0], lineB[0]));
+
+      if (lineSX[1].x === lineDX[0].x) {
+        return {type: (lineDX[0].y <= lineSX[1].y) ? "colinear" : "none"};
+      } else {
+        return {type: (lineDX[0].x <= lineSX[1].x) ? "colinear" : "none"};
+      }
     }
     return {type: "parallel"};
   }
