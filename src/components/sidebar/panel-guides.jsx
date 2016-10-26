@@ -1,38 +1,12 @@
 import React, {PropTypes} from 'react';
 import Panel from './panel';
-import IconVisible from 'react-icons/lib/fa/eye';
-import IconHide from 'react-icons/lib/fa/eye-slash';
 import IconAdd from 'react-icons/lib/ti/plus';
 
-const STYLE_LAYER_WRAPPER = {
-  display: "flex",
-  flexFlow: "row nowrap",
-  alignItems: "center",
-  background: "#3A3A3E",
-  borderBottom: "1px solid #000",
-  height: "30px",
-  padding: "5px 15px 5px 15px"
-};
-
-const STYLE_LAYER_ACTIVE = {
-  ...STYLE_LAYER_WRAPPER,
-  background: "#415375"
-};
-
-const STYLE_ICON = {
-  width: "10%",
-  fontSize: "18px",
-};
-
-const STYLE_NAME = {
-  width: "90%",
-  verticalAlign: "center",
-  padding: "0 5px"
-};
 
 const STYLE_ADD_WRAPPER = {
   fontSize: "15px",
-  marginLeft: "15px"
+  padding: "0px 15px",
+  borderTop: "1px solid black"
 };
 
 const STYLE_ADD_LABEL = {
@@ -43,7 +17,7 @@ const STYLE_ADD_LABEL = {
 export default function PanelGuides({scene, mode}) {
   return (
     <Panel name="Guides">
-      <div style={{padding: "5px 15px 5px 15px"}}>
+      <div key={1} style={{background: "#3a3a3e", padding: "5px 15px 5px 15px"}}>
         {scene.guides.entrySeq().map(([guideID, guide]) => {
           return (
             <div key={guideID}>
@@ -53,6 +27,11 @@ export default function PanelGuides({scene, mode}) {
             </div>
           )
         })}
+      </div>
+
+      <div style={STYLE_ADD_WRAPPER} key="add" onClick={() => alert('Sorry, but this feature is not supported yet')}>
+        <IconAdd />
+        <span style={STYLE_ADD_LABEL}>New Guide</span>
       </div>
     </Panel>
   )
