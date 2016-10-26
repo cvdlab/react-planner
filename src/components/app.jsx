@@ -18,24 +18,31 @@ class App extends React.Component {
       customActions: this.props.customActions,
     };
 
-    for(let actionGroupName in actions){
+    for (let actionGroupName in actions) {
       ctx[actionGroupName] = this.props[actionGroupName];
     }
 
     return ctx;
   }
 
-  componentDidMount(){
-    let dispachableActions = {};
-    for(let actionGroupName in actions){
-      dispachableActions[actionGroupName] = this.props[actionGroupName];
-    }
-
+  componentDidMount() {
     window.ReactPlanner = {
       store: this.props.store,
       getState: () => this.props.store.getState().toJS(),
-      ...dispachableActions,
-      customActions: this.props.customActions
+      ...actions,
+      customActions: this.props.customActions,
+      do: (actions, delay = 300) => {
+        actions = actions.reverse();
+        let dispatch = this.props.store.dispatch;
+        let dispatchAction = () => {
+          console.info(`There are other ${actions.length} actions on stack`);
+          if (actions.length === 0) return;
+          dispatch(actions.pop());
+          if (actions.length === 0) return;
+          setTimeout(dispatchAction, delay);
+        };
+        setTimeout(dispatchAction, 0);
+      }
     };
     console.groupCollapsed("ReactPlanner");
     console.info("ReactPlanner is ready");
@@ -51,11 +58,11 @@ class App extends React.Component {
 }
 
 
-App.childContextTypes={
+App.childContextTypes = {
   catalog: PropTypes.object,
   customActions: PropTypes.object,
 };
-for(let actionName in actions){
+for (let actionName in actions) {
   App.childContextTypes[actionName] = PropTypes.object
 }
 
@@ -66,7 +73,7 @@ function mapStateToProps(state) {
 
 function mapDispatchToProps(dispatch) {
   let dispatchableActions = {};
-  for(let actionGroupName in actions){
+  for (let actionGroupName in actions) {
     dispatchableActions[actionGroupName] = bindActionCreators(actions[actionGroupName], dispatch);
   }
   return dispatchableActions;

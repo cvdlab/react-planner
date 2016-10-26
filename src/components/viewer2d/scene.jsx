@@ -1,6 +1,6 @@
 import React, {PropTypes} from 'react';
 import Layer from './layer';
-import Grid from './grid';
+import Guides from './guides/guides';
 export default function Scene({scene, mode}) {
 
   let {height, layers} = scene;
@@ -8,7 +8,7 @@ export default function Scene({scene, mode}) {
 
   return (
     <g>
-      <Grid scene={scene}/>
+      <Guides scene={scene}/>
 
       <g style={{opacity: 0.3, pointerEvents: "none"}}>
         {layers.entrySeq()

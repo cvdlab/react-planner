@@ -1,6 +1,48 @@
 import {Record, List, Map} from 'immutable';
 import {MODE_IDLE} from './constants';
 
+
+export const Guide = Record({
+  id: "",
+  type: "",
+  properties: Map()
+}, 'Guide');
+
+export const DefaultGuides = new Map({
+  'h1': new Guide({
+    id: 'h1',
+    type: 'horizontal-streak',
+    properties: new Map({
+      step: 20,
+      color: '#ddd'
+    })
+  }),
+  'h2': new Guide({
+    id: 'h2',
+    type: 'horizontal-streak',
+    properties: new Map({
+      step: 100,
+      color: '#808080'
+    })
+  }),
+  'v1': new Guide({
+    id: 'v1',
+    type: 'vertical-streak',
+    properties: new Map({
+      step: 20,
+      color: '#ddd'
+    })
+  }),
+  'v2': new Guide({
+    id: 'v2',
+    type: 'vertical-streak',
+    properties: new Map({
+      step: 100,
+      color: '#808080'
+    })
+  })
+});
+
 export const ElementsSet = Record({
   vertices: new List(),
   lines: new List(),
@@ -29,6 +71,7 @@ export const Scene = Record({
   layers: new Map({
     'layer-1': new Layer({id: 'layer-1'})
   }),
+  guides: DefaultGuides,
   selectedLayer: 'layer-1',
   width: 3000,
   height: 2000
@@ -97,3 +140,4 @@ export const State = Record({
   draggingSupport: Map(),
   rotatingSupport: Map()
 }, 'State');
+

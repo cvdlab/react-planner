@@ -31,8 +31,11 @@ const STYLE_NAME = {
 };
 
 const STYLE_ADD_WRAPPER = {
+  display: "block",
+  color: "#fff",
+  textDecoration: "none",
   fontSize: "15px",
-  marginLeft: "15px"
+  padding: "0px 15px"
 };
 
 const STYLE_ADD_LABEL = {
@@ -76,10 +79,10 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
         )
       })}
 
-      <div style={STYLE_ADD_WRAPPER} key="add" onClick={addClick}>
+      <a href="javascript:;" style={STYLE_ADD_WRAPPER} key="add" onClick={addClick}>
         <IconAdd />
         <span style={STYLE_ADD_LABEL}>New Layer</span>
-      </div>
+      </a>
     </Panel>
   )
 
