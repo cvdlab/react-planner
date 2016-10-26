@@ -4,6 +4,9 @@ import IconAdd from 'react-icons/lib/ti/plus';
 
 
 const STYLE_ADD_WRAPPER = {
+  display: "block",
+  color: "#fff",
+  textDecoration: "none",
   fontSize: "15px",
   padding: "0px 15px",
   borderTop: "1px solid black"
@@ -29,10 +32,10 @@ export default function PanelGuides({scene, mode}) {
         })}
       </div>
 
-      <div style={STYLE_ADD_WRAPPER} key="add" onClick={() => alert('Sorry, but this feature is not supported yet')}>
+      <a href="javascript:;" style={STYLE_ADD_WRAPPER} key="add" onClick={() => alert('Sorry, but this feature is not supported yet')}>
         <IconAdd />
         <span style={STYLE_ADD_LABEL}>New Guide</span>
-      </div>
+      </a>
     </Panel>
   )
 
