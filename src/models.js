@@ -69,7 +69,7 @@ export const Scene = Record({
   pixelPerUnit: 100,
   unit: "m",
   layers: new Map({
-    'layer-1': new Layer({id: 'layer-1'})
+    'layer-1': new Layer({id: 'layer-1', name: 'default layer'})
   }),
   guides: DefaultGuides,
   selectedLayer: 'layer-1',
