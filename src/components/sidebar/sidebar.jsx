@@ -11,10 +11,10 @@ export default function Sidebar({width, height, state}) {
       onKeyDown={event => event.stopPropagation()}
       onKeyUp={event => event.stopPropagation()}
     >
-      <PanelPropertiesEditor scene={state.scene} mode={state.mode}/>
       <PanelLayers scene={state.scene} mode={state.mode}/>
-      <PanelGuides scene={state.scene} mode={state.mode}/>
       <PanelLayerElements scene={state.scene} mode={state.mode}/>
+      <PanelPropertiesEditor scene={state.scene} mode={state.mode}/>
+      <PanelGuides scene={state.scene} mode={state.mode}/>
     </aside>
   );
 }
