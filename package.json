@@ -8,7 +8,7 @@
     "build:lib": "rm -R lib && babel src --out-dir lib && git add -A lib",
     "build:demo": "webpack --config demo/webpack.config.js && git add -A demo/build",
     "build": "npm run build:lib && npm run build:demo",
-    "website:update": "gh-pages -m 'Update gh-pages' -s ./demo/build/",
+    "website:update": "gh-pages -m 'Update gh-pages' -d ./demo/build/",
     "version": "npm run build",
     "postpublish": "npm run website:update",
     "test": "echo \"Error: no test specified\" && exit 1"
