@@ -107,10 +107,10 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
       if (
-        !(Geometry.samePoints(v0, {x0, y0})
-        || Geometry.samePoints(v0, {x1, y1})
-        || Geometry.samePoints(v1, {x0, y0})
-        || Geometry.samePoints(v1, {x1, y1}))) {
+        !(Geometry.samePoints(v0, {x:x0, y:y0})
+        || Geometry.samePoints(v0, {x:x1, y:y1})
+        || Geometry.samePoints(v1, {x:x0, y:y0})
+        || Geometry.samePoints(v1, {x:x1, y:y1}))) {
 
         let intersection = Geometry.intersectionFromTwoLineSegment(
           {x: x0, y: y0}, {x: x1, y: y1},
