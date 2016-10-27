@@ -5,12 +5,12 @@
   "main": "lib/index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --config demo/webpack.config.js",
-    "build:lib": "rm -R lib && babel src --out-dir lib",
-    "build:demo": "webpack --config demo/webpack.config.js",
+    "build:lib": "rm -R lib && babel src --out-dir lib && git add -A lib",
+    "build:demo": "webpack --config demo/webpack.config.js && git add -A demo/build",
     "build": "npm run build:lib && npm run build:demo",
-    "version": "npm run build && git add -A lib && git add -A demo/build && npm run website:deploy",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "website:deploy": "git push origin :gh-pages && git subtree push --prefix demo/build origin gh-pages"
+    "version": "npm run build",
+    "postpublish": "gh-pages -m 'Update gh-pages' -s ./demo/build/",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
@@ -71,6 +71,7 @@
     "three": "0.79.0"
   },
   "devDependencies": {
+    "gh-pages": "^0.11.0",
     "babel-cli": "^6.16.0",
     "babel-core": "6.16.0",
     "babel-loader": "6.2.5",
