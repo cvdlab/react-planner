@@ -79,7 +79,6 @@ export default class Scene3DViewer extends React.Component {
     };
 
     this.mouseUpEvent = (event) => {
-      console.log("CLICK");
       event.preventDefault();
 
       mouse.x = (event.offsetX / this.width) * 2 - 1;

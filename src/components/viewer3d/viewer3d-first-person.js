@@ -83,7 +83,10 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     document.body.requestPointerLock();
 
-    this.controls = initPointerLock(camera, this.renderer.domElement);
+    let {controls, pointerlockChangeEvent, requestPointerLockEvent} = initPointerLock(camera, this.renderer.domElement);
+    this.controls = controls;
+    this.pointerlockChangeListener = pointerlockChangeEvent;
+    this.requestPointerLockEvent = requestPointerLockEvent;
 
     /* Set user initial position */
     let humanHeight = {length: 1.70, unit: 'm'};
@@ -187,8 +190,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     canvasWrapper.appendChild(this.renderer.domElement);
     this.renderer.autoClear = false;
 
-    let controls = this.controls;
-
     let render = () => {
 
       let time = performance.now();
@@ -203,8 +204,8 @@ export default class Viewer3DFirstPerson extends React.Component {
       if (moveLeft) velocity.x -= 400.0 * delta;
       if (moveRight) velocity.x += 400.0 * delta;
 
-      controls.getObject().translateX(velocity.x * delta);
-      controls.getObject().translateZ(velocity.z * delta);
+      this.controls.getObject().translateX(velocity.x * delta);
+      this.controls.getObject().translateZ(velocity.z * delta);
 
       prevTime = time;
 
@@ -232,6 +233,10 @@ export default class Viewer3DFirstPerson extends React.Component {
     document.removeEventListener('mousedown', this.firstPersonMouseDown);
     document.removeEventListener('keydown', this.keyDownEvent);
     document.removeEventListener('keyup', this.keyUpEvent);
+    document.removeEventListener('pointerlockchange', this.pointerlockChangeEvent);
+    document.removeEventListener('mozpointerlockchange', this.pointerlockChangeEvent);
+    document.removeEventListener('webkitpointerlockchange', this.pointerlockChangeEvent);
+    this.renderer.domElement.removeEventListener('click', this.requestPointerLockEvent);
 
     disposeScene(this.scene3D);
 

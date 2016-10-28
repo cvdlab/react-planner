@@ -4,31 +4,30 @@ export function initPointerLock(camera, rendererElement) {
 
   let havePointerLock = 'pointerLockElement' in document || 'mozPointerLockElement' in document || 'webkitPointerLockElement' in document;
 
-  if (havePointerLock) {
+  let pointerlockchange = event => {
+    controls.enabled = !controls.enabled;
+  };
 
-    let pointerlockchange = event => {
-      controls.enabled = !controls.enabled;
-    };
+  let requestPointerLockEvent = event => {
+    document.body.requestPointerLock = document.body.requestPointerLock ||
+      document.body.mozRequestPointerLock ||
+      document.body.webkitRequestPointerLock;
+    document.body.requestPointerLock();
+  };
+
+  if (havePointerLock) {
 
     document.addEventListener('pointerlockchange', pointerlockchange, false);
     document.addEventListener('mozpointerlockchange', pointerlockchange, false);
     document.addEventListener('webkitpointerlockchange', pointerlockchange, false);
-    
-    rendererElement.addEventListener('click', event => {
-        document.body.requestPointerLock = document.body.requestPointerLock ||
-          document.body.mozRequestPointerLock ||
-          document.body.webkitRequestPointerLock;
-        document.body.requestPointerLock();
-      }
-    );
+    rendererElement.addEventListener('click', requestPointerLockEvent);
 
   } else {
     console.log('Your browser doesn\'t seem to support Pointer Lock API');
   }
 
   let controls = new PointerLockControls(camera);
-//controls.enabled = true;
-  return controls;
+  return {controls, pointerlockChangeEvent: pointerlockchange, requestPointerLockEvent};
 }
 
 
