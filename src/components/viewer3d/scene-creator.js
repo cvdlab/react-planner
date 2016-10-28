@@ -350,17 +350,6 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scen
 
   item3DPromise.then(item3D => {
 
-    let boundingBox = new Three.Box3().setFromObject(item3D);
-
-    let center = [
-      (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-      (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-      (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-
-    item3D.position.x -= center[0];
-    item3D.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
-    item3D.position.z -= center[2];
-
     let pivot = new Three.Object3D();
     pivot.add(item3D);
 
@@ -388,17 +377,6 @@ function replaceItem(layer, oldItemObject, newItemData, editingActions, planData
   let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer, scene);
 
   item3DPromise.then(item3D => {
-
-    let boundingBox = new Three.Box3().setFromObject(item3D);
-
-    let center = [
-      (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-      (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-      (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-
-    item3D.position.x -= center[0];
-    item3D.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
-    item3D.position.z -= center[2];
 
     let pivot = new Three.Object3D();
     pivot.add(item3D);

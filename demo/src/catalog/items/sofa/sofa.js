@@ -82,6 +82,20 @@ export default {
         box.material.depthTest = false;
         object.add(box);
       }
+
+      // Normalize the origin of this item
+      let boundingBox = new Three.Box3().setFromObject(object);
+
+      let center = [
+        (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+        (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+        (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+      object.position.x -= center[0];
+      object.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
+      object.position.z -= center[2];
+
+
       return object;
     };
 
