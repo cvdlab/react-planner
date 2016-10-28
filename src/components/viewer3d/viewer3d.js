@@ -197,7 +197,6 @@ export default class Scene3DViewer extends React.Component {
 
     /************************************/
 
-
     let render = () => {
       orbitController.update();
       spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);

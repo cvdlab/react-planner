@@ -59,7 +59,7 @@ export function parseData(sceneData, editingActions, catalog) {
   let boundingBox = new Three.Box3().setFromObject(plan);
 
   // Add a grid to the plan
-  let grid = createGrid(sceneData.width, sceneData.height, sceneData.pixelPerUnit);
+  let grid = createGrid(sceneData, sceneData.width, sceneData.height, sceneData.pixelPerUnit);
 
   // Set center of plan in the origin
 
