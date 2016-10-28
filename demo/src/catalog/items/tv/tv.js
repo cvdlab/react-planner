@@ -19,7 +19,15 @@ export default {
     image: require('./tv.png')
   },
 
-  properties: {},
+  properties: {
+    altitude: {
+      type: "length-measure",
+      defaultValue: {
+        length: 0,
+        unit: 'cm'
+      }
+    }
+  },
 
   render2D: function (element, layer, scene) {
     let width = {length: 1.60, unit: 'ft'};
@@ -73,6 +81,10 @@ export default {
           .from(depth.unit)
           .to(scene.unit) * scene.pixelPerUnit;
 
+      let newAltitude = convert(element.properties.get('altitude').get('length'))
+          .from(element.properties.get('altitude').get('unit'))
+          .to(scene.unit) * scene.pixelPerUnit;
+
       if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);
         box.material.linewidth = 2;
@@ -93,6 +105,8 @@ export default {
       object.position.x -= center[0];
       object.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
       object.position.z -= center[2];
+
+      object.position.y += newAltitude;
 
       return object;
     };
