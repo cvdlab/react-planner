@@ -3,12 +3,18 @@ import {HELVETIKER} from '../libs/helvetiker_regular.typeface.js';
 
 export default function (width, height, guide) {
   let step = guide.properties.get('step');
-  let color = guide.properties.get('color');
+  let colors;
+
+  if(guide.properties.has('color')) {
+    colors = [guide.properties.get('color')];
+  } else {
+    colors = guide.properties.get('colors');
+  }
 
   let fontLoader = new Three.FontLoader();
   let font = fontLoader.parse(HELVETIKER); // For measures
   let streak = new Three.Object3D();
-  
+
   let counter = 0;
 
   for (let i = 0; i <= width; i += step) {
@@ -17,7 +23,7 @@ export default function (width, height, guide) {
     geometry.vertices.push(new Three.Vector3(i, 0, 0));
     geometry.vertices.push(new Three.Vector3(i, 0, -height));
 
-    let material = new Three.LineBasicMaterial({color: color});
+    let material = new Three.LineBasicMaterial({color: colors[counter%colors.length]});
 
     if (counter % 5 == 0) {
       let shape = new Three.TextGeometry(counter * step, {

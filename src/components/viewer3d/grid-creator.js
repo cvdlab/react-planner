@@ -7,7 +7,6 @@ export default function createGrid(scene) {
   let grid = new Three.Object3D();
 
   scene.guides.forEach(guide => {
-    console.log(scene.guides, guide.toJS());
     switch (guide.type) {
       case "horizontal-streak":
         grid.add(guideHorizontalStreak(scene.width, scene.height, guide));
