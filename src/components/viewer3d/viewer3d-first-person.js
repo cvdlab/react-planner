@@ -96,21 +96,24 @@ export default class Viewer3DFirstPerson extends React.Component {
     sceneOnTop.add(this.controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
 
     // Add move controls on the page
-    document.addEventListener('keydown', (event) => {
+    this.keyDownEvent = (event) => {
       let moveResult = firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight);
       moveForward = moveResult.moveForward;
       moveLeft = moveResult.moveLeft;
       moveBackward = moveResult.moveBackward;
       moveRight = moveResult.moveRight;
-    }, false);
+    };
 
-    document.addEventListener('keyup', (event) => {
+    this.keyUpEvent = (event) => {
       let moveResult = firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight);
       moveForward = moveResult.moveForward;
       moveLeft = moveResult.moveLeft;
       moveBackward = moveResult.moveBackward;
       moveRight = moveResult.moveRight;
-    }, false);
+    };
+
+    document.addEventListener('keydown', this.keyDownEvent, false);
+    document.addEventListener('keyup', this.keyUpEvent, false);
 
     // Add a pointer to the scene
 
@@ -141,7 +144,6 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let linePointer3 = new Three.Line(pointerGeometry3, pointerMaterial);
     linePointer3.position.z -= 100;
-
 
     pointer.add(linePointer1);
     pointer.add(linePointer2);
@@ -226,7 +228,10 @@ export default class Viewer3DFirstPerson extends React.Component {
 
   componentWillUnmount() {
     this.stopRendering = true;
+    this.renderer.autoClear = true;
     document.removeEventListener('mousedown', this.firstPersonMouseDown);
+    document.removeEventListener('keydown', this.keyDownEvent);
+    document.removeEventListener('keyup', this.keyUpEvent);
 
     disposeScene(this.scene3D);
 
