@@ -9,7 +9,10 @@ module.exports = {
     filename: "demo.build.js"
   },
   plugins: [
-    new OpenBrowserPlugin({url: 'http://localhost:8080'})
+    new OpenBrowserPlugin({url: 'http://localhost:8080'}),
+    new webpack.DefinePlugin({
+      VERSION: JSON.stringify(require("../package.json").version)
+    })
   ],
   devServer: {
     contentBase: path.resolve(path.join(__dirname, 'build'))
@@ -41,7 +44,6 @@ module.exports = {
           'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       }
-    ],
-    plugins: [new OpenBrowserPlugin({url: 'http://localhost:8080'})]
-  },
+    ]
+  }
 };
