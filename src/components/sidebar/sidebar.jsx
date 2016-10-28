@@ -1,6 +1,8 @@
 import React, {PropTypes} from 'react';
 import PanelPropertiesEditor from './panel-properties-editor';
 import PanelLayers from './panel-layers';
+import PanelGuides from './panel-guides';
+import PanelLayerElements from './panel-layer-elements';
 
 export default function Sidebar({width, height, state}) {
   return (
@@ -9,8 +11,10 @@ export default function Sidebar({width, height, state}) {
       onKeyDown={event => event.stopPropagation()}
       onKeyUp={event => event.stopPropagation()}
     >
-      <PanelPropertiesEditor scene={state.scene} mode={state.mode}/>
       <PanelLayers scene={state.scene} mode={state.mode}/>
+      <PanelLayerElements scene={state.scene} mode={state.mode}/>
+      <PanelPropertiesEditor scene={state.scene} mode={state.mode}/>
+      <PanelGuides scene={state.scene} mode={state.mode}/>
     </aside>
   );
 }

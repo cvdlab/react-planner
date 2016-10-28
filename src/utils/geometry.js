@@ -49,8 +49,15 @@ export function intersectionFromTwoLines(a, b, c, j, k, l) {
   return {x, y};
 }
 
-export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {x: x3, y: y3}, {x: x4, y:y4}) {
+export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
   //https://github.com/psalaets/line-intersect/blob/master/lib/check-intersection.js
+
+  let {x: x1, y: y1} = p1;
+  let {x: x2, y: y2} = p2;
+  let {x: x3, y: y3} = p3;
+  let {x: x4, y:y4} = p4;
+
+  let EPSILON = 10e-6;
 
   let denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
   let numA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
@@ -58,7 +65,18 @@ export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {
 
   if (denom == 0) {
     if (numA == 0 && numB == 0) {
-      return {type: "colinear"};
+
+      let comparator = (pa, pb) => pa.x === pb.x ? pa.y - pb.y : pa.x - pb.x;
+      let line0 = [p1, p2].sort(comparator);
+      let line1 = [p3.toJS(), p4.toJS()].sort(comparator);
+
+      let [lineSX, lineDX] = [line0, line1].sort((lineA, lineB) => comparator(lineA[0], lineB[0]));
+
+      if (lineSX[1].x === lineDX[0].x) {
+        return {type: (lineDX[0].y <= lineSX[1].y) ? "colinear" : "none"};
+      } else {
+        return {type: (lineDX[0].x <= lineSX[1].x) ? "colinear" : "none"};
+      }
     }
     return {type: "parallel"};
   }
@@ -66,7 +84,7 @@ export function intersectionFromTwoLineSegment({x: x1, y: y1}, {x: x2, y: y2}, {
   var uA = numA / denom;
   var uB = numB / denom;
 
-  if (uA >= 0 && uA <= 1 && uB >= 0 && uB <= 1) {
+  if (uA >= (0 - EPSILON) && uA <= (1 + EPSILON) && uB >= (0 - EPSILON) && uB <= (1 + EPSILON)) {
     let point = {
       x: x1 + (uA * (x2 - x1)),
       y: y1 + (uA * (y2 - y1))
@@ -134,7 +152,12 @@ export function pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp) {
   return distance / length;
 }
 
-export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2){
+export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
   let length = distanceFromTwoPoints(x1, y1, x2, y2);
   return (-Math.asin((y1 - y2) / length)) * 180 / Math.PI;
+}
+
+export function samePoints({x:x1, y:y1}, {x:x2, y:y2}) {
+  let EPSILON = 10e-6;
+  return Math.abs(x1 - x2) <= EPSILON && Math.abs(y1 - y2) <= EPSILON;
 }
