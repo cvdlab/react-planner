@@ -8,13 +8,14 @@ export default function (width, height, guide) {
   let fontLoader = new Three.FontLoader();
   let font = fontLoader.parse(HELVETIKER); // For measures
   let streak = new Three.Object3D();
+  
   let counter = 0;
 
-  for (let i = 0; i <= height; i += step) {
+  for (let i = 0; i <= width; i += step) {
 
     let geometry = new Three.Geometry();
-    geometry.vertices.push(new Three.Vector3(0, 0, -i));
-    geometry.vertices.push(new Three.Vector3(width, 0, -i));
+    geometry.vertices.push(new Three.Vector3(i, 0, 0));
+    geometry.vertices.push(new Three.Vector3(i, 0, -height));
 
     let material = new Three.LineBasicMaterial({color: color});
 
@@ -29,7 +30,7 @@ export default function (width, height, guide) {
       let words = new Three.Mesh(shape, wrapper);
 
       words.rotation.x -= Math.PI / 2;
-      words.position.set(-90, 0, -i);
+      words.position.set(i - 20, 0, 50);
       streak.add(words);
     }
 
