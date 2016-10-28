@@ -73,12 +73,13 @@ export default class Scene3DViewer extends React.Component {
     let mouse = new Three.Vector2();
     let raycaster = new Three.Raycaster();
 
-    this.renderer.domElement.addEventListener('mousedown', (event) => {
+    this.mouseDownEvent = (event) => {
       this.lastMousePosition.x = event.offsetX / this.width * 2 - 1;
       this.lastMousePosition.y = -event.offsetY / this.height * 2 + 1;
-    }, false);
+    };
 
-    this.renderer.domElement.addEventListener('mouseup', (event) => {
+    this.mouseUpEvent = (event) => {
+      console.log("CLICK");
       event.preventDefault();
 
       mouse.x = (event.offsetX / this.width) * 2 - 1;
@@ -95,7 +96,10 @@ export default class Scene3DViewer extends React.Component {
           editingActions.unselectAll();
         }
       }
-    }, false);
+    };
+
+    this.renderer.domElement.addEventListener('mousedown', this.mouseDownEvent, false);
+    this.renderer.domElement.addEventListener('mouseup', this.mouseUpEvent, false);
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(this.renderer.domElement);
@@ -218,6 +222,9 @@ export default class Scene3DViewer extends React.Component {
   componentWillUnmount() {
     this.orbitControls.dispose();
     this.stopRendering = true;
+
+    this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
+    this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
 
     disposeScene(this.scene3D);
     this.scene3D.remove(this.planData.plan);
