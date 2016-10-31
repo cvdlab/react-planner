@@ -321,7 +321,7 @@ export default function (element, layer, scene) {
     pivot.add(box5);
   }
 
-  return pivot;
+  return Promise.resolve(pivot);
 }
 
 /**
@@ -330,7 +330,7 @@ export default function (element, layer, scene) {
  * @param vertex1: End vertex
  * @param height: Height of the shape
  * @param thickness: Thickness of the closure
- * @returns {{topShape: *[], leftShape: *[]}}: The left and top shape (the others can be computed fron these two)
+ * @returns {{topShape: *[], leftShape: *[]}}: The left and top shape (the others can be computed from these two)
  */
 function buildShapeClosures(vertex0, vertex1, height, thickness) {
 
