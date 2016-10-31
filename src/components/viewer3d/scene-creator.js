@@ -29,7 +29,7 @@ export function parseData(sceneData, editingActions, catalog) {
     // Import lines
     layer.lines.forEach(line => {
 
-      let wall = createLine(layer, line, editingActions, catalog, sceneData);
+      let wall = createLine(layer, line, editingActions, catalog, sceneData, {sceneGraph});
       plan.add(wall);
       sceneGraph.layers[layer.id].lines[line.id] = wall;
     });
@@ -84,7 +84,7 @@ export function parseData(sceneData, editingActions, catalog) {
   return {boundingBox: boundingBox, plan: plan, grid: grid, sceneGraph: sceneGraph};
 }
 
-export function updateScene(planData, sceneData, diffArray, editingActions, catalog) {
+export function updateScene(planData, sceneData, oldSceneData, diffArray, editingActions, catalog) {
 
   diffArray.forEach(diff => {
 
@@ -100,13 +100,13 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
 
         switch (diff.op) {
           case 'replace':
-            replaceObject(modifiedPath, layer, planData, editingActions, sceneData, catalog);
+            replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog);
             break;
           case 'add':
-            addObject(modifiedPath, layer, planData, editingActions, sceneData, catalog);
+            addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog);
             break;
           case 'remove':
-            removeObject(modifiedPath, layer, planData, editingActions, sceneData, catalog);
+            removeObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog);
             break;
         }
       }
@@ -116,7 +116,7 @@ export function updateScene(planData, sceneData, diffArray, editingActions, cata
 }
 
 
-function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, catalog) {
+function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
   let oldLineObject;
   let newLineData;
@@ -135,12 +135,12 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
     case "vertices":
       break;
     case "holes":
-        let newHoleData = layer.holes.get(modifiedPath[4]);
-        let lineID = newHoleData.line;
-        oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
-        newLineData = layer.lines.get(lineID);
-        newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
-        planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
+      let newHoleData = layer.holes.get(modifiedPath[4]);
+      let lineID = newHoleData.line;
+      oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
+      newLineData = layer.lines.get(lineID);
+      newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
+      planData.sceneGraph.layers[layer.id].lines[lineID] = newLineObject;
       break;
     case "lines":
       // Now I can replace the wall
@@ -176,15 +176,72 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
   }
 }
 
-function removeObject(modifiedPath, layer, planData, editingActions, sceneData, catalog) {
-  console.error("removeObject not defined! (", modifiedPath, ")");
+function removeObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
+
+  console.info(modifiedPath);
+  let lineID;
+  let oldLayer = oldSceneData.layers.get(layer.id);
+  switch (modifiedPath[3]) {
+    case "holes":
+      // Nothing to do
+      break;
+    case "lines":
+      // Here I remove the line with all its holes
+      lineID = modifiedPath[4];
+      oldLayer.lines.get(lineID).holes.forEach(holeID => {
+        removeHole(layer, lineID, holeID, planData);
+      });
+      removeLine(layer, lineID, planData);
+      if(modifiedPath.length >5) {
+        // I removed an hole, so I should add the new line
+        // TODO: Add Line Code
+      }
+      break;
+    case "areas":
+      break;
+    case "items":
+      break;
+  }
 }
 
-function addObject(modifiedPath, layer, planData, editingActions, sceneData, catalog) {
+function removeHole(layer, lineID, holeToRemoveID, planData) {
+  let holeToRemove = planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
+  let line3D = planData.sceneGraph.layers[layer.id].lines[lineID];
+  line3D.remove(holeToRemove);
+  disposeObject(holeToRemove);
+  delete planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
+  holeToRemove = null;
+}
+
+function removeLine(layer, lineID, planData) {
+  let line3D = planData.sceneGraph.layers[layer.id].lines[lineID];
+  planData.plan.remove(line3D);
+  disposeObject(line3D);
+  delete planData.sceneGraph.layers[layer.id].lines[lineID];
+  line3D = null;
+
+  // Update the bounding box
+  let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
+  let newCenter = [
+    (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
+    (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
+    (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+
+  planData.plan.position.x -= newCenter[0];
+  planData.plan.position.y -= newCenter[1];
+  planData.plan.position.z -= newCenter[2];
+
+  planData.grid.position.x -= newCenter[0];
+  planData.grid.position.y -= newCenter[1];
+  planData.grid.position.z -= newCenter[2];
+
+}
+
+function addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
   console.error("addObject not defined! (", modifiedPath, ")");
 }
 
-function createLine(layer, line, editingActions, catalog, scene) {
+function createLine(layer, line, editingActions, catalog, scene, planData) {
 
   if (line != undefined) {
     // line could be undefined if I removed it
@@ -207,8 +264,6 @@ function createLine(layer, line, editingActions, catalog, scene) {
     let thickness = convert(line.properties.get('thickness').get('length'))
         .from(line.properties.get('thickness').get('unit'))
         .to(scene.unit) * scene.pixelPerUnit;
-
-    let bevelRadius = thickness;
 
     line.holes.forEach(holeID => {
 
@@ -243,6 +298,8 @@ function createLine(layer, line, editingActions, catalog, scene) {
         object.position.z = coordinates[2] - center[2];
         wall.add(object);
 
+        planData.sceneGraph.layers[layer.id].holes[holeData.id] = object;
+
         applyInteract(object, () => {
           return line.editingActions.selectHole(layer.id, holeData.id)
         });
@@ -262,7 +319,7 @@ function createLine(layer, line, editingActions, catalog, scene) {
 
 function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog, scene) {
 
-  let newLineObject = createLine(layer, newLineData, editingActions, catalog, scene);
+  let newLineObject = createLine(layer, newLineData, editingActions, catalog, scene, planData);
 
   // Now I need to translate object to the original coordinates
   let oldBoundingBox = planData.boundingBox;
