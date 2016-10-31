@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 
-import {Viewer, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
+import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import Scene from './scene';
 import Snap from './snap';
@@ -246,7 +246,7 @@ export default function Viewer2D({state, width, height},
     }
   };
 
-  let onChange = event => viewer2DActions.updateCameraView(event.value);
+  let onChange = value => {};
 
   activeSnapElement = activeSnapElement ?
     <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
@@ -254,7 +254,7 @@ export default function Viewer2D({state, width, height},
   snapElements = null; //only for debug purpose
 
   return (
-    <Viewer value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
+    <ReactSVGPanZoom value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
             detectAutoPan={mode2DetectAutopan(mode)}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
             onMouseUp={onMouseUp}>
@@ -270,7 +270,7 @@ export default function Viewer2D({state, width, height},
         </g>
       </svg>
 
-    </Viewer>
+    </ReactSVGPanZoom>
   );
 }
 

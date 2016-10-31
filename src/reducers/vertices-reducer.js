@@ -8,6 +8,7 @@ import {
 import {Map, List} from 'immutable';
 import {sceneSnapElements} from '../utils/snap-scene';
 import {nearestSnap} from '../utils/snap';
+import {mergeEqualsVertices} from '../utils/layer-operations';
 
 export default function (state, action) {
   switch (action.type) {
@@ -52,7 +53,13 @@ function updateDraggingVertex(state, x, y) {
 }
 
 function endDraggingVertex(state, x, y) {
+  let {draggingSupport} = state;
+  let layerID = draggingSupport.get('layerID');
+  let vertexID = draggingSupport.get('vertexID');
+
   state = updateDraggingVertex(state, x, y);
+  state = state.updateIn(['scene', 'layers', layerID], layer => mergeEqualsVertices(layer, vertexID));
+
   return state.merge({
     mode: MODE_IDLE,
     draggingSupport: null,

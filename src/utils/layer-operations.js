@@ -107,10 +107,10 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
       if (
-        !(Geometry.samePoints(v0, {x:x0, y:y0})
-        || Geometry.samePoints(v0, {x:x1, y:y1})
-        || Geometry.samePoints(v1, {x:x0, y:y0})
-        || Geometry.samePoints(v1, {x:x1, y:y1}))) {
+        !(Geometry.samePoints(v0, {x: x0, y: y0})
+        || Geometry.samePoints(v0, {x: x1, y: y1})
+        || Geometry.samePoints(v1, {x: x0, y: y0})
+        || Geometry.samePoints(v1, {x: x1, y: y1}))) {
 
         let intersection = Geometry.intersectionFromTwoLineSegment(
           {x: x0, y: y0}, {x: x1, y: y1},
@@ -153,7 +153,7 @@ export function addVertex(layer, x, y, relatedPrototype, relatedID) {
 export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   let vertex = layer.vertices.get(vertexID);
   vertex = vertex.update(relatedPrototype, related => {
-    let index = related.findIndex(ID => relatedID !== ID);
+    let index = related.findIndex(ID => relatedID === ID);
     return related.delete(index);
   });
 
@@ -164,6 +164,53 @@ export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   }
   return {layer, vertex};
 }
+
+export function mergeEqualsVertices(layer, vertexID) {
+
+  //1. find vertices to remove
+  let vertex = layer.getIn(['vertices', vertexID]);
+
+  let doubleVertices = layer.vertices
+    .filter(v => v.id !== vertexID)
+    .filter(v => Geometry.samePoints(vertex, v));
+
+  if (doubleVertices.isEmpty()) return layer;
+
+  //2. remove double vertices
+  let vertices, lines, areas;
+  vertices = layer.vertices.withMutations(vertices => {
+    lines = layer.lines.withMutations(lines => {
+      areas = layer.areas.withMutations(areas => {
+
+        doubleVertices.forEach(doubleVertex => {
+
+          doubleVertex.lines.forEach(lineID => {
+            let line = lines.get(lineID);
+            line = line.update('vertices', vertices => vertices.map(v => v === doubleVertex.id ? vertexID : v));
+            lines.set(lineID, line);
+            vertices.updateIn([vertexID, 'lines'], l => l.push(lineID));
+          });
+
+          doubleVertex.areas.forEach(areaID => {
+            let area = areas.get(areaID);
+            area = area.update('vertices', vertices => vertices.map(v => v === doubleVertex.id ? vertexID : v));
+            areas.set(areaID, area);
+            vertices.updateIn([vertexID, 'areas'], area => area.push(areaID));
+          });
+
+          vertices.remove(doubleVertex.id);
+
+        });
+      });
+    });
+  });
+
+  //3. update layer
+  return layer.merge({
+    vertices, lines, areas
+  });
+}
+
 
 export function select(layer, prototype, ID) {
   return layer.withMutations(layer => {
