@@ -94,7 +94,7 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
 
   area.rotation.x -= Math.PI / 2;
 
-  return area;
+  return Promise.resolve(area);
 }
 
 function assignUVs(geometry) {
