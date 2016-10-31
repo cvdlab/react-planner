@@ -17,6 +17,10 @@ export function parseData(sceneData, editingActions, catalog) {
 
   planData.plan = new Three.Object3D();
 
+  // Add a grid to the plan
+  planData.grid = createGrid(sceneData);
+  planData.boundingBox = new Three.Box3().setFromObject(planData.grid);
+
   sceneData.layers.forEach(layer => {
 
     planData.sceneGraph.layers[layer.id] = {
@@ -30,55 +34,19 @@ export function parseData(sceneData, editingActions, catalog) {
 
     // Import lines
     layer.lines.forEach(line => {
-      createLine(layer, line, editingActions, catalog, sceneData, planData);
+      addLine(sceneData, planData, layer, line.id, catalog, editingActions);
     });
 
     // Import areas
     layer.areas.forEach(area => {
-
-      area.interactFunction = () => {
-        editingActions.selectArea(layer.id, area.id);
-      };
-
-      catalog.getElement(area.type).render3D(area, layer).then(area3D => {
-        area3D.position.y += layer.altitude;
-        planData.plan.add(area3D);
-        planData.sceneGraph.layers[layer.id].areas[area.id] = area3D;
-        area3D.visible = layer.visible;
-      });
+      addArea(sceneData, planData, layer, area.id, catalog, editingActions);
     });
 
     // Import items
     layer.items.forEach(item => {
-      createItem(layer, item, editingActions, planData.sceneGraph, catalog, planData.plan, sceneData);
+      addItem(sceneData, planData, layer, item.id, catalog, editingActions);
     });
   });
-
-  // Compute bounding box for the plan
-  planData.boundingBox = new Three.Box3().setFromObject(planData.plan);
-
-  // Add a grid to the plan
-  planData.grid = createGrid(sceneData);
-
-  // Set center of plan in the origin
-
-  if (!isFinite(planData.boundingBox.max.x) || !isFinite(planData.boundingBox.min.x) || !isFinite(planData.boundingBox.max.y) || !isFinite(planData.boundingBox.min.y) || !isFinite(boundingBox.max.z) || !isFinite(boundingBox.min.z)) {
-    // The plan is Empty
-    planData.boundingBox = new Three.Box3().setFromObject(planData.grid);
-  }
-
-  let center = [
-    (planData.boundingBox.max.x - planData.boundingBox.min.x) / 2 + planData.boundingBox.min.x,
-    (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 + planData.boundingBox.min.y,
-    (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2 + planData.boundingBox.min.z];
-
-  planData.plan.position.x -= center[0];
-  planData.plan.position.y -= center[1];
-  planData.plan.position.z -= center[2];
-
-  planData.grid.position.x -= center[0];
-  planData.grid.position.y -= center[1];
-  planData.grid.position.z -= center[2];
 
   return planData;
 }
@@ -117,17 +85,6 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
 
 function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
-  let oldLineObject;
-  let newLineData;
-  let newLineObject;
-
-  let oldAreaObject;
-  let newAreaData;
-  let newAreaObject;
-
-  let oldItemObject;
-  let newItemData;
-
   switch (modifiedPath[3]) {
     case "layer":
       break;
@@ -136,25 +93,28 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
     case "holes":
       let newHoleData = layer.holes.get(modifiedPath[4]);
       let lineID = newHoleData.line;
-      oldLineObject = planData.sceneGraph.layers[layer.id].lines[lineID];
-      newLineData = layer.lines.get(lineID);
-      replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
+
+      layer.lines.get(lineID).holes.forEach(holeID => {
+        removeHole(planData, layer, lineID, holeID);
+      });
+      removeLine(planData, layer, lineID);
+      addLine(sceneData, planData, layer, lineID, catalog, editingActions);
       break;
     case "lines":
       // Now I can replace the wall
-      oldLineObject = planData.sceneGraph.layers[layer.id].lines[modifiedPath[4]];
-      newLineData = layer.lines.get(modifiedPath[4]);
-      newLineObject = replaceLine(layer, oldLineObject, newLineData, editingActions, planData, layer.visible, catalog, sceneData);
+      layer.lines.get(modifiedPath[4]).holes.forEach(holeID => {
+        removeHole(planData, layer, modifiedPath[4], holeID);
+      });
+      removeLine(planData, layer, modifiedPath[4]);
+      addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
       break;
     case "areas":
-      oldAreaObject = planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]];
-      newAreaData = layer.areas.get(modifiedPath[4]);
-      newAreaObject = replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, layer.visible, catalog);
+      removeArea(planData, layer, modifiedPath[4]);
+      addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
       break;
     case "items":
-      oldItemObject = planData.sceneGraph.layers[layer.id].items[modifiedPath[4]];
-      newItemData = layer.items.get(modifiedPath[4]);
-      replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, sceneData);
+      removeItem(planData, layer, modifiedPath[4]);
+      addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
       break;
 
     case "visible":
@@ -173,41 +133,36 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
 
 function removeObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
-  console.info(modifiedPath);
-  let lineID;
-  let oldLayer = oldSceneData.layers.get(layer.id);
   switch (modifiedPath[3]) {
-    case "holes":
-      // Nothing to do
-      break;
     case "lines":
       // Here I remove the line with all its holes
-      lineID = modifiedPath[4];
+      let lineID = modifiedPath[4];
+      let oldLayer = oldSceneData.layers.get(layer.id);
       oldLayer.lines.get(lineID).holes.forEach(holeID => {
-        removeHole(layer, lineID, holeID, planData);
+        removeHole(planData, layer, lineID, holeID);
       });
-      removeLine(layer, lineID, planData);
+      removeLine(planData, layer, lineID);
       if (modifiedPath.length > 5) {
         // I removed an hole, so I should add the new line
-        // TODO: Add Line Code
+        addLine(sceneData, planData, layer, lineID, catalog, editingActions);
       }
       break;
     case "areas":
       if (modifiedPath.length === 5) {
         // I am removing an entire area
-        removeArea(layer, modifiedPath[4], planData);
+        removeArea(planData, layer, modifiedPath[4]);
       }
       break;
     case "items":
       if (modifiedPath.length === 5) {
         // I am removing an item
-        removeItem(layer, modifiedPath[4], planData);
+        removeItem(planData, layer, modifiedPath[4]);
       }
       break;
   }
 }
 
-function removeHole(layer, lineID, holeToRemoveID, planData) {
+function removeHole(planData, layer, lineID, holeToRemoveID) {
   let holeToRemove = planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
   let line3D = planData.sceneGraph.layers[layer.id].lines[lineID];
   line3D.remove(holeToRemove);
@@ -218,7 +173,7 @@ function removeHole(layer, lineID, holeToRemoveID, planData) {
   updateBoundingBox(planData);
 }
 
-function removeLine(layer, lineID, planData) {
+function removeLine(planData, layer, lineID) {
   let line3D = planData.sceneGraph.layers[layer.id].lines[lineID];
   planData.plan.remove(line3D);
   disposeObject(line3D);
@@ -228,34 +183,53 @@ function removeLine(layer, lineID, planData) {
   updateBoundingBox(planData);
 }
 
-function removeArea(layer, areaID, planData) {
+function removeArea(planData, layer, areaID) {
   let area3D = planData.sceneGraph.layers[layer.id].areas[areaID];
   planData.plan.remove(area3D);
   disposeObject(area3D);
-  delete planData.sceneGraph.layers[layer.id].areas[area3D];
+  delete planData.sceneGraph.layers[layer.id].areas[areaID];
   area3D = null;
   updateBoundingBox(planData);
 }
 
-function removeItem(layer, itemID, planData) {
+function removeItem(planData, layer, itemID) {
   let item3D = planData.sceneGraph.layers[layer.id].items[itemID];
   planData.plan.remove(item3D);
   disposeObject(item3D);
-  delete planData.sceneGraph.layers[layer.id].items[item3D];
+  delete planData.sceneGraph.layers[layer.id].items[itemID];
   item3D = null;
   updateBoundingBox(planData);
 }
 
-
 function addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
-  console.error("addObject not defined! (", modifiedPath, ")");
+
+  switch (modifiedPath[3]) {
+    case "lines":
+      if (modifiedPath.length === 5) {
+        // I have to add a line
+        addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      }
+      break;
+    case "areas":
+      if (modifiedPath.length === 5) {
+        // I have to add an area
+        addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      }
+      break;
+    case "items":
+      if (modifiedPath.length === 5) {
+        // I have to add an area
+        addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      }
+      break;
+  }
 }
 
-function createLine(layer, line, editingActions, catalog, scene, planData) {
-
-
+function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
+  let line = layer.lines.get(lineID);
   line.editingActions = editingActions;
 
+  // First of all I need to find the vertices of this line
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
@@ -265,20 +239,20 @@ function createLine(layer, line, editingActions, catalog, scene, planData) {
     vertex1 = app;
   }
 
-  let wall = catalog.getElement(line.type).render3D(line, layer, scene).then(wall => {
+  catalog.getElement(line.type).render3D(line, layer, sceneData).then(line3D => {
 
     let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
 
     let thickness = convert(line.properties.get('thickness').get('length'))
         .from(line.properties.get('thickness').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
+        .to(sceneData.unit) * sceneData.pixelPerUnit;
 
     line.holes.forEach(holeID => {
 
       let holeData = layer.holes.get(holeID);
 
-      // Create the hole object:
-      let holePromise = catalog.getElement(holeData.type).render3D(holeData, undefined, scene);
+      // Create the hole object
+      let holePromise = catalog.getElement(holeData.type).render3D(holeData, layer, sceneData);
 
       holePromise.then(object => {
         let boundingBox = new Three.Box3().setFromObject(object);
@@ -289,11 +263,11 @@ function createLine(layer, line, editingActions, catalog, scene, planData) {
 
         let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
             .from(holeData.properties.get('altitude').get('unit'))
-            .to(scene.unit) * scene.pixelPerUnit;
+            .to(sceneData.unit) * sceneData.pixelPerUnit;
 
         let holeHeight = convert(holeData.properties.get('height').get('length'))
             .from(holeData.properties.get('height').get('unit'))
-            .to(scene.unit) * scene.pixelPerUnit;
+            .to(sceneData.unit) * sceneData.pixelPerUnit;
 
         let coordinates = [
           distance * holeData.offset,
@@ -304,124 +278,51 @@ function createLine(layer, line, editingActions, catalog, scene, planData) {
         //coordinates[1] - center[1] put the center of the door at the beginning of the hole
         object.position.y = coordinates[1] - center[1];
         object.position.z = coordinates[2] - center[2];
-        wall.add(object);
+        line3D.add(object);
 
         planData.sceneGraph.layers[layer.id].holes[holeData.id] = object;
 
         applyInteract(object, () => {
-          return line.editingActions.selectHole(layer.id, holeData.id)
+          return editingActions.selectHole(layer.id, holeData.id)
         });
       });
     });
 
-    wall.position.x += vertex0.x;
-    wall.position.y += layer.altitude;
-    wall.position.z -= vertex0.y;
+    line3D.position.x += vertex0.x;
+    line3D.position.y += layer.altitude;
+    line3D.position.z -= vertex0.y;
 
-    wall.visible = layer.visible;
+    line3D.visible = layer.visible;
 
-    planData.plan.add(wall);
-    planData.sceneGraph.layers[layer.id].lines[line.id] = wall;
+    planData.plan.add(line3D);
+    planData.sceneGraph.layers[layer.id].lines[lineID] = line3D;
+
+    updateBoundingBox(planData);
   });
 }
 
-function replaceLine(layer, oldLineObject, newLineData, editingActions, planData, isVisible, catalog, scene) {
-
-  createLine(layer, newLineData, editingActions, catalog, scene, planData);
-
-  // Now I need to translate object to the original coordinates
-  let oldBoundingBox = planData.boundingBox;
-
-  let oldCenter = [
-    (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
-    (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
-    (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
-
-  planData.plan.position.x += oldCenter[0];
-  planData.plan.position.y += oldCenter[1];
-  planData.plan.position.z += oldCenter[2];
-
-  planData.grid.position.x += oldCenter[0];
-  planData.grid.position.y += oldCenter[1];
-  planData.grid.position.z += oldCenter[2];
-
-  // I need to remove the old object
-
-  planData.plan.remove(oldLineObject);
-
-  disposeObject(oldLineObject);
-  oldLineObject = null;
-
-  let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-  let newCenter = [
-    (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-    (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-    (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
-
-  planData.plan.position.x -= newCenter[0];
-  planData.plan.position.y -= newCenter[1];
-  planData.plan.position.z -= newCenter[2];
-
-  planData.grid.position.x -= newCenter[0];
-  planData.grid.position.y -= newCenter[1];
-  planData.grid.position.z -= newCenter[2];
-
-  planData.boundingBox = newBoundingBox;
-}
-
-function replaceArea(layer, oldAreaObject, newAreaData, editingActions, planData, isVisible, catalog) {
-
-  newAreaData.interactFunction = () => {
-    editingActions.selectArea(layer.id, newAreaData.id);
+function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
+  let area = layer.areas.get(areaID);
+  let interactFunction = () => {
+    editingActions.selectArea(layer.id, area.id);
   };
 
-  catalog.getElement(newAreaData.type).render3D(newAreaData, layer).then(newAreaObject => {
-    newAreaObject.position.y += layer.altitude;
+  catalog.getElement(area.type).render3D(area, layer).then(area3D => {
+    area3D.position.y += layer.altitude;
+    planData.plan.add(area3D);
+    planData.sceneGraph.layers[layer.id].areas[area.id] = area3D;
+    area3D.visible = layer.visible;
 
-    // Now I need to translate object to the original coordinates
-    let oldBoundingBox = planData.boundingBox;
+    applyInteract(area3D, interactFunction);
 
-    let oldCenter = [
-      (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
-      (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
-      (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
-
-    planData.plan.position.x += oldCenter[0];
-    planData.plan.position.y += oldCenter[1];
-    planData.plan.position.z += oldCenter[2];
-
-    planData.grid.position.x += oldCenter[0];
-    planData.grid.position.y += oldCenter[1];
-    planData.grid.position.z += oldCenter[2];
-
-    planData.plan.remove(oldAreaObject);
-    disposeObject(oldAreaObject);
-
-    planData.plan.add(newAreaObject);
-
-    let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-    let newCenter = [
-      (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-      (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-      (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
-
-    planData.plan.position.x -= newCenter[0];
-    planData.plan.position.y -= newCenter[1];
-    planData.plan.position.z -= newCenter[2];
-
-    planData.grid.position.x -= newCenter[0];
-    planData.grid.position.y -= newCenter[1];
-    planData.grid.position.z -= newCenter[2];
-
-    newAreaObject.visible = layer.visible;
-    planData.sceneGraph.layers[layer.id].areas[newAreaData.id] = newAreaObject;
+    updateBoundingBox(planData);
   });
 }
 
-function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scene) {
-  let item3DPromise = catalog.getElement(item.type).render3D(item, layer, scene);
+function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
+  let item = layer.items.get(itemID);
 
-  item3DPromise.then(item3D => {
+  catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
 
     let pivot = new Three.Object3D();
     pivot.add(item3D);
@@ -435,68 +336,11 @@ function createItem(layer, item, editingActions, sceneGraph, catalog, plan, scen
       }
     );
 
-    plan.add(pivot);
-    sceneGraph.layers[layer.id].items[item.id] = pivot;
-
-  });
-}
-
-
-function replaceItem(layer, oldItemObject, newItemData, editingActions, planData, catalog, scene) {
-
-  planData.plan.remove(oldItemObject);
-  disposeObject(oldItemObject);
-
-  let item3DPromise = catalog.getElement(newItemData.type).render3D(newItemData, layer, scene);
-
-  item3DPromise.then(item3D => {
-
-    let pivot = new Three.Object3D();
-    pivot.add(item3D);
-
-    pivot.rotation.y = newItemData.rotation * Math.PI / 180;
-    pivot.position.x = newItemData.x;
-    pivot.position.z -= newItemData.y;
-
-    applyInteract(item3D, () => {
-        editingActions.selectItem(layer.id, newItemData.id);
-      }
-    );
-
     planData.plan.add(pivot);
-    planData.sceneGraph.layers[layer.id].items[newItemData.id] = pivot;
-
-    // Now I need to translate object to the original coordinates
-    let oldBoundingBox = planData.boundingBox;
-
-    let oldCenter = [
-      (oldBoundingBox.max.x - oldBoundingBox.min.x) / 2 + oldBoundingBox.min.x,
-      (oldBoundingBox.max.y - oldBoundingBox.min.y) / 2 + oldBoundingBox.min.y,
-      (oldBoundingBox.max.z - oldBoundingBox.min.z) / 2 + oldBoundingBox.min.z];
-
-    planData.plan.position.x += oldCenter[0];
-    planData.plan.position.y += oldCenter[1];
-    planData.plan.position.z += oldCenter[2];
-
-    planData.grid.position.x += oldCenter[0];
-    planData.grid.position.y += oldCenter[1];
-    planData.grid.position.z += oldCenter[2];
-
-    let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-    let newCenter = [
-      (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-      (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-      (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
-
-    planData.plan.position.x -= newCenter[0];
-    planData.plan.position.y -= newCenter[1];
-    planData.plan.position.z -= newCenter[2];
-
-    planData.grid.position.x -= newCenter[0];
-    planData.grid.position.y -= newCenter[1];
-    planData.grid.position.z -= newCenter[2];
+    planData.sceneGraph.layers[layer.id].items[item.id] = pivot;
 
   });
+
 }
 
 // Apply interact function to children of an Object3D
@@ -510,16 +354,27 @@ function applyInteract(object, interactFunction) {
 
 function updateBoundingBox(planData) {
   let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-  let newCenter = [
-    (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-    (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-    (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
 
-  planData.plan.position.x -= newCenter[0];
-  planData.plan.position.y -= newCenter[1];
-  planData.plan.position.z -= newCenter[2];
+  if (isFinite(newBoundingBox.max.x)
+    || isFinite(newBoundingBox.min.x)
+    || isFinite(newBoundingBox.max.y)
+    || isFinite(newBoundingBox.min.y)
+    || isFinite(newBoundingBox.max.z)
+    || isFinite(newBoundingBox.min.z)) {
 
-  planData.grid.position.x -= newCenter[0];
-  planData.grid.position.y -= newCenter[1];
-  planData.grid.position.z -= newCenter[2];
+    let newCenter = [
+      (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
+      (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
+      (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+
+    planData.plan.position.x -= newCenter[0];
+    planData.plan.position.y -= newCenter[1];
+    planData.plan.position.z -= newCenter[2];
+
+    planData.grid.position.x -= newCenter[0];
+    planData.grid.position.y -= newCenter[1];
+    planData.grid.position.z -= newCenter[2];
+
+    planData.boundingBox = newBoundingBox;
+  }
 }
