@@ -153,7 +153,7 @@ export function addVertex(layer, x, y, relatedPrototype, relatedID) {
 export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   let vertex = layer.vertices.get(vertexID);
   vertex = vertex.update(relatedPrototype, related => {
-    let index = related.findIndex(ID => relatedID !== ID);
+    let index = related.findIndex(ID => relatedID === ID);
     return related.delete(index);
   });
 
