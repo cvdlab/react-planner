@@ -14,15 +14,7 @@ export const DefaultGuides = new Map({
     type: 'horizontal-streak',
     properties: new Map({
       step: 20,
-      color: '#ddd'
-    })
-  }),
-  'h2': new Guide({
-    id: 'h2',
-    type: 'horizontal-streak',
-    properties: new Map({
-      step: 100,
-      color: '#808080'
+      colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
     })
   }),
   'v1': new Guide({
@@ -30,15 +22,7 @@ export const DefaultGuides = new Map({
     type: 'vertical-streak',
     properties: new Map({
       step: 20,
-      color: '#ddd'
-    })
-  }),
-  'v2': new Guide({
-    id: 'v2',
-    type: 'vertical-streak',
-    properties: new Map({
-      step: 100,
-      color: '#808080'
+      colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
     })
   })
 });
