@@ -246,7 +246,7 @@ export default function Viewer2D({state, width, height},
     }
   };
 
-  let onChange = value => {};
+  let onChange = value => {viewer2DActions.updateCameraView(value)};
 
   activeSnapElement = activeSnapElement ?
     <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
