@@ -193,8 +193,16 @@ function removeObject(modifiedPath, layer, planData, editingActions, sceneData, 
       }
       break;
     case "areas":
+      if (modifiedPath.length === 5) {
+        // I am removing an entire area
+        removeArea(layer, modifiedPath[4], planData);
+      }
       break;
     case "items":
+      if (modifiedPath.length === 5) {
+        // I am removing an item
+        removeItem(layer, modifiedPath[4], planData);
+      }
       break;
   }
 }
@@ -219,6 +227,25 @@ function removeLine(layer, lineID, planData) {
 
   updateBoundingBox(planData);
 }
+
+function removeArea(layer, areaID, planData) {
+  let area3D = planData.sceneGraph.layers[layer.id].areas[areaID];
+  planData.plan.remove(area3D);
+  disposeObject(area3D);
+  delete planData.sceneGraph.layers[layer.id].areas[area3D];
+  area3D = null;
+  updateBoundingBox(planData);
+}
+
+function removeItem(layer, itemID, planData) {
+  let item3D = planData.sceneGraph.layers[layer.id].items[itemID];
+  planData.plan.remove(item3D);
+  disposeObject(item3D);
+  delete planData.sceneGraph.layers[layer.id].items[item3D];
+  item3D = null;
+  updateBoundingBox(planData);
+}
+
 
 function addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
   console.error("addObject not defined! (", modifiedPath, ")");
