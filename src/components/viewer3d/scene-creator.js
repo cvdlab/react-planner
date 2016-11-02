@@ -35,6 +35,9 @@ export function parseData(sceneData, editingActions, catalog) {
     // Import lines
     layer.lines.forEach(line => {
       addLine(sceneData, planData, layer, line.id, catalog, editingActions);
+      line.holes.forEach(holeID => {
+        addHole(sceneData, planData, layer, holeID, catalog, editingActions);
+      })
     });
 
     // Import areas
@@ -54,7 +57,6 @@ export function parseData(sceneData, editingActions, catalog) {
 export function updateScene(planData, sceneData, oldSceneData, diffArray, editingActions, catalog) {
 
   diffArray.forEach(diff => {
-
 
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
@@ -93,20 +95,21 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
     case "holes":
       let newHoleData = layer.holes.get(modifiedPath[4]);
       let lineID = newHoleData.line;
-
-      layer.lines.get(lineID).holes.forEach(holeID => {
-        removeHole(planData, layer, lineID, holeID);
-      });
-      removeLine(planData, layer, lineID);
-      addLine(sceneData, planData, layer, lineID, catalog, editingActions);
+      if (modifiedPath[5] === 'selected') {
+        // I remove only the hole without removing the wall
+        removeHole(planData, layer, newHoleData.id);
+        addHole(sceneData, planData, layer, newHoleData.id, catalog, editingActions);
+      } else {
+        layer.lines.get(lineID).holes.forEach(holeID => {
+          removeHole(planData, layer, holeID);
+        });
+        removeLine(planData, layer, lineID);
+        addLine(sceneData, planData, layer, lineID, catalog, editingActions);
+      }
       break;
     case "lines":
-      // Now I can replace the wall
-      layer.lines.get(modifiedPath[4]).holes.forEach(holeID => {
-        removeHole(planData, layer, modifiedPath[4], holeID);
-      });
-      removeLine(planData, layer, modifiedPath[4]);
-      addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+        removeLine(planData, layer, modifiedPath[4]);
+        addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
       break;
     case "areas":
       removeArea(planData, layer, modifiedPath[4]);
@@ -139,12 +142,15 @@ function removeObject(modifiedPath, layer, planData, editingActions, sceneData, 
       let lineID = modifiedPath[4];
       let oldLayer = oldSceneData.layers.get(layer.id);
       oldLayer.lines.get(lineID).holes.forEach(holeID => {
-        removeHole(planData, layer, lineID, holeID);
+        removeHole(planData, layer, holeID);
       });
       removeLine(planData, layer, lineID);
       if (modifiedPath.length > 5) {
         // I removed an hole, so I should add the new line
         addLine(sceneData, planData, layer, lineID, catalog, editingActions);
+        layer.lines.get(lineID).holes.forEach(holeID => {
+          addHole(sceneData, planData, layer, holeID, catalog, editingActions);
+        });
       }
       break;
     case "areas":
@@ -162,10 +168,9 @@ function removeObject(modifiedPath, layer, planData, editingActions, sceneData, 
   }
 }
 
-function removeHole(planData, layer, lineID, holeToRemoveID) {
+function removeHole(planData, layer, holeToRemoveID) {
   let holeToRemove = planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
-  let line3D = planData.sceneGraph.layers[layer.id].lines[lineID];
-  line3D.remove(holeToRemove);
+  planData.plan.remove(holeToRemove);
   disposeObject(holeToRemove);
   delete planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
   holeToRemove = null;
@@ -225,6 +230,57 @@ function addObject(modifiedPath, layer, planData, editingActions, sceneData, old
   }
 }
 
+function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
+  let holeData = layer.holes.get(holeID);
+
+  // Create the hole object
+  catalog.getElement(holeData.type).render3D(holeData, layer, sceneData).then(object => {
+
+    let line = layer.lines.get(holeData.line);
+
+    // First of all I need to find the vertices of this line
+    let vertex0 = layer.vertices.get(line.vertices.get(0));
+    let vertex1 = layer.vertices.get(line.vertices.get(1));
+
+    if (vertex0.x > vertex1.x) {
+      let app = vertex0;
+      vertex0 = vertex1;
+      vertex1 = app;
+    }
+
+    let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
+    let alpha = Math.asin((vertex1.y - vertex0.y) / distance);
+
+    let boundingBox = new Three.Box3().setFromObject(object);
+    let center = [
+      (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
+      (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
+      (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
+
+    let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
+        .from(holeData.properties.get('altitude').get('unit'))
+        .to(sceneData.unit) * sceneData.pixelPerUnit;
+
+    let holeHeight = convert(holeData.properties.get('height').get('length'))
+        .from(holeData.properties.get('height').get('unit'))
+        .to(sceneData.unit) * sceneData.pixelPerUnit;
+
+    object.rotation.y = alpha;
+    object.position.x = vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
+    object.position.y = holeAltitude + holeHeight / 2 - center[1];
+    object.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
+
+    planData.plan.add(object);
+    planData.sceneGraph.layers[layer.id].holes[holeData.id] = object;
+
+    applyInteract(object, () => {
+      return editingActions.selectHole(layer.id, holeData.id)
+    });
+
+    updateBoundingBox(planData);
+  });
+}
+
 function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
   let line = layer.lines.get(lineID);
   line.editingActions = editingActions;
@@ -240,53 +296,6 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
   }
 
   catalog.getElement(line.type).render3D(line, layer, sceneData).then(line3D => {
-
-    let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
-
-    let thickness = convert(line.properties.get('thickness').get('length'))
-        .from(line.properties.get('thickness').get('unit'))
-        .to(sceneData.unit) * sceneData.pixelPerUnit;
-
-    line.holes.forEach(holeID => {
-
-      let holeData = layer.holes.get(holeID);
-
-      // Create the hole object
-      let holePromise = catalog.getElement(holeData.type).render3D(holeData, layer, sceneData);
-
-      holePromise.then(object => {
-        let boundingBox = new Three.Box3().setFromObject(object);
-        let center = [
-          (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
-          (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
-          (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
-
-        let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
-            .from(holeData.properties.get('altitude').get('unit'))
-            .to(sceneData.unit) * sceneData.pixelPerUnit;
-
-        let holeHeight = convert(holeData.properties.get('height').get('length'))
-            .from(holeData.properties.get('height').get('unit'))
-            .to(sceneData.unit) * sceneData.pixelPerUnit;
-
-        let coordinates = [
-          distance * holeData.offset,
-          holeAltitude + holeHeight / 2,
-          0];
-
-        object.position.x = coordinates[0] - center[0];
-        //coordinates[1] - center[1] put the center of the door at the beginning of the hole
-        object.position.y = coordinates[1] - center[1];
-        object.position.z = coordinates[2] - center[2];
-        line3D.add(object);
-
-        planData.sceneGraph.layers[layer.id].holes[holeData.id] = object;
-
-        applyInteract(object, () => {
-          return editingActions.selectHole(layer.id, holeData.id)
-        });
-      });
-    });
 
     line3D.position.x += vertex0.x;
     line3D.position.y += layer.altitude;
@@ -307,7 +316,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
     editingActions.selectArea(layer.id, area.id);
   };
 
-  catalog.getElement(area.type).render3D(area, layer).then(area3D => {
+  catalog.getElement(area.type).render3D(area, layer, sceneData).then(area3D => {
     area3D.position.y += layer.altitude;
     planData.plan.add(area3D);
     planData.sceneGraph.layers[layer.id].areas[area.id] = area3D;
