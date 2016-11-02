@@ -247,7 +247,6 @@ export default class Scene3DViewer extends React.Component {
     if (nextProps.state.scene !== this.props.state.scene) {
 
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-
       updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 

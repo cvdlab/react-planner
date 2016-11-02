@@ -174,7 +174,6 @@ function removeHole(planData, layer, holeToRemoveID) {
   disposeObject(holeToRemove);
   delete planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
   holeToRemove = null;
-
   updateBoundingBox(planData);
 }
 
@@ -184,7 +183,6 @@ function removeLine(planData, layer, lineID) {
   disposeObject(line3D);
   delete planData.sceneGraph.layers[layer.id].lines[lineID];
   line3D = null;
-
   updateBoundingBox(planData);
 }
 
@@ -347,6 +345,8 @@ function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
 
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].items[item.id] = pivot;
+
+    updateBoundingBox(planData);
 
   });
 
