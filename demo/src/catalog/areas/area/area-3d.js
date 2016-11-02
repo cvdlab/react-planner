@@ -10,11 +10,10 @@ export default function (element, layer, scene) {
   return createArea(vertices,
     parseInt(element.properties.get('patternColor').substring(1), 16),
     element.properties.get('texture'),
-    element.selected,
-    element.interactFunction);
+    element.selected);
 }
 
-function createArea(vertices, color, textureName, isSelected, interactFunction) {
+function createArea(vertices, color, textureName, isSelected) {
 
   let shape = new Three.Shape();
   shape.moveTo(vertices[0].x, vertices[0].y);
@@ -85,16 +84,13 @@ function createArea(vertices, color, textureName, isSelected, interactFunction) 
 
   let areaFace1 = new Three.Mesh(shapeGeometry, areaMaterial1);
   let areaFace2 = new Three.Mesh(shapeGeometry, areaMaterial2);
-
-  areaFace1.interact = interactFunction;
-  areaFace2.interact = interactFunction;
-
+  
   area.add(areaFace1);
   area.add(areaFace2);
 
   area.rotation.x -= Math.PI / 2;
 
-  return area;
+  return Promise.resolve(area);
 }
 
 function assignUVs(geometry) {

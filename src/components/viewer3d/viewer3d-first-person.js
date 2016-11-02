@@ -192,6 +192,10 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let render = () => {
 
+      yInitialPosition = planData.boundingBox.min.y + humanHeightPixels;
+
+      this.controls.getObject().position.y = yInitialPosition;
+
       let time = performance.now();
       let delta = ( time - prevTime ) / 200;
 
@@ -259,18 +263,9 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     if (nextProps.scene !== this.props.state.scene) {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(this.planData, nextProps.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
+      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
-
-    /** Update controls position **/
-    let humanHeight = {length: 1.70, unit: 'm'};
-    let humanHeightPixels = convert(humanHeight.length)
-        .from(humanHeight.unit)
-        .to(state.scene.unit) * state.scene.pixelPerUnit;
-
-    let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeightPixels;
-    this.controls.getObject().position.y = yInitialPosition;
-
+    
     renderer.setSize(width, height);
     renderer.clear();                     // clear buffers
     renderer.render(scene3D, camera);     // render scene 1
