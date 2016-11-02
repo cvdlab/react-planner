@@ -56,7 +56,7 @@ export function parseData(sceneData, editingActions, catalog) {
 
 export function updateScene(planData, sceneData, oldSceneData, diffArray, editingActions, catalog) {
 
-  diffArray.forEach(diff => {
+  minimizeChangePropertiesDiffs(diffArray).forEach(diff => {
 
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split("/");
@@ -84,7 +84,6 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
   return planData;
 }
 
-
 function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
   switch (modifiedPath[3]) {
@@ -108,8 +107,8 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
       }
       break;
     case "lines":
-        removeLine(planData, layer, modifiedPath[4]);
-        addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      removeLine(planData, layer, modifiedPath[4]);
+      addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
       break;
     case "areas":
       removeArea(planData, layer, modifiedPath[4]);
@@ -386,4 +385,42 @@ function updateBoundingBox(planData) {
 
     planData.boundingBox = newBoundingBox;
   }
+}
+
+/**
+ * Reduces the number of change properties diffs
+ * @param diffArray the array of the diffs
+ * @returns {Array}
+ */
+function minimizeChangePropertiesDiffs(diffArray) {
+
+  let minimizedDiffs = [];
+
+  let propertiesDiffs = [];
+
+  // Find all diffs for a changed property
+  diffArray.forEach(currentDiff => {
+    let splittedDiff = currentDiff.path.split("/");
+    if (splittedDiff[5] === 'properties') {
+      propertiesDiffs.push([currentDiff, splittedDiff[4]]);
+    } else {
+      minimizedDiffs.push(currentDiff);
+    }
+
+  });
+
+  let sortedPropertiesDiffs = propertiesDiffs.sort((a, b) => {
+    return a[1] < b[1];
+  });
+
+  for (let i = 0; i < sortedPropertiesDiffs.length; i++) {
+    minimizedDiffs.push(sortedPropertiesDiffs[0][0]);
+    let futureIndex = i + 1;
+    while (futureIndex < sortedPropertiesDiffs.length && sortedPropertiesDiffs[i][1] === sortedPropertiesDiffs[futureIndex][1]) {
+      futureIndex++;
+    }
+    i = futureIndex - 1;
+  }
+
+  return minimizedDiffs;
 }
