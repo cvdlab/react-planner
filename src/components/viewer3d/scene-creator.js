@@ -104,6 +104,9 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
         });
         removeLine(planData, layer, lineID);
         addLine(sceneData, planData, layer, lineID, catalog, editingActions);
+        layer.lines.get(lineID).holes.forEach(holeID => {
+          addHole(sceneData, planData, layer, holeID, catalog, editingActions);
+        });
       }
       break;
     case "lines":
