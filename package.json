@@ -66,7 +66,7 @@
     "react-dom": "15.3.2",
     "react-icons": "2.2.1",
     "react-redux": "4.4.5",
-    "react-svg-pan-zoom": "chrvadala/react-svg-pan-zoom#220323d4e8cb422d34de00875e367cba76007678",
+    "react-svg-pan-zoom": "chrvadala/react-svg-pan-zoom#03f06f7c5e608965ff8197007613ecbf56de4802",
     "redux": "3.6.0",
     "redux-thunk": "2.1.0",
     "shortid": "^2.2.6",
