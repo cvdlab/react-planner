@@ -5,10 +5,22 @@ import IconLoad from 'react-icons/lib/fa/folder-open-o';
 import IconZoomPlus from 'react-icons/lib/ti/zoom-in';
 import IconZoomMinus from 'react-icons/lib/ti/zoom-out';
 import IconPan from 'react-icons/lib/fa/hand-paper-o';
-import IconPointer from 'react-icons/lib/fa/mouse-pointer';
-import Icon3D from 'react-icons/lib/fa/cube';
-import Icon3DFirstPerson from 'react-icons/lib/fa/eye';
-import IconCatalog from 'react-icons/lib/fa/plus-circle';
+import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
+import IconCatalog from 'react-icons/lib/fa/plus';
+
+const Icon2D = () => <p style={{
+  fontSize: "19px",
+  textDecoration: "none",
+  fontWeight: "bold",
+  margin: "0px"
+}}>2D</p>;
+
+const Icon3D = () => <p style={{
+  fontSize: "19px",
+  textDecoration: "none",
+  fontWeight: "bold",
+  margin: "0px"
+}}>3D</p>;
 
 
 import {
@@ -61,16 +73,17 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
         <Icon3D />
       </ToolbarButton>
 
+      <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip="2D View"
+                     onClick={event => editingActions.selectToolEdit()}>
+        <Icon2D/>
+      </ToolbarButton>
+
       <ToolbarButton active={[MODE_3D_FIRST_PERSON].includes(mode)} tooltip="3D First Person"
                      onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
         <Icon3DFirstPerson />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip="Select elements"
-                     onClick={event => editingActions.selectToolEdit()}>
-        <IconPointer />
-      </ToolbarButton>
-
+      {/*
       <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip="Zoom in"
                      onClick={event => viewer2DActions.selectToolZoomIn()}>
         <IconZoomPlus />
@@ -85,6 +98,7 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
                      onClick={event => viewer2DActions.selectToolPan()}>
         <IconPan />
       </ToolbarButton>
+      */}
 
       <ToolbarButton
         active={[MODE_VIEWING_CATALOG].includes(mode)}

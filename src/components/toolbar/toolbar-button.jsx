@@ -17,7 +17,7 @@ export default function ToolbarButton(props) {
 
   return (
     <div style={STYLE}>
-      <a href="javascript:;" style={{color}} onClick={props.onClick} title={props.tooltip}>
+      <a href="javascript:;" style={{color, textDecoration: "none"}} onClick={props.onClick} title={props.tooltip}>
         {props.children}
       </a>
     </div>
