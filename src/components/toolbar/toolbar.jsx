@@ -83,7 +83,7 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
         <Icon3DFirstPerson />
       </ToolbarButton>
 
-      {/*
+
       <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip="Zoom in"
                      onClick={event => viewer2DActions.selectToolZoomIn()}>
         <IconZoomPlus />
@@ -98,7 +98,7 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
                      onClick={event => viewer2DActions.selectToolPan()}>
         <IconPan />
       </ToolbarButton>
-      */}
+
 
       <ToolbarButton
         active={[MODE_VIEWING_CATALOG].includes(mode)}

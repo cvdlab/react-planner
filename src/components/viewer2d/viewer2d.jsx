@@ -257,7 +257,7 @@ export default function Viewer2D({state, width, height},
     <ReactSVGPanZoom value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
             detectAutoPan={mode2DetectAutopan(mode)}
             onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp}>
+            onMouseUp={onMouseUp} toolbarPosition="none">
 
       <svg width={scene.width} height={scene.height}>
         <g style={mode2Cursor(mode)}>

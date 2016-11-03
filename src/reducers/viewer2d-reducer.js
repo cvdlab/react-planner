@@ -22,7 +22,7 @@ export default function (state, action) {
   switch (action.type) {
     case UPDATE_2D_CAMERA:
       return state.merge({
-        mode: TOOL2MODE[action.value.tool],
+        // mode: TOOL2MODE[action.value.tool],
         viewer2D: fromJS(action.value)
       });
 
