@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import {loadObjWithMaterial} from '../../../utils/load-obj';
 
 import React from 'react';

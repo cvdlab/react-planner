@@ -70,7 +70,7 @@
     "redux": "3.6.0",
     "redux-thunk": "2.1.0",
     "shortid": "^2.2.6",
-    "three": "0.79.0"
+    "three": "0.82.1"
   },
   "devDependencies": {
     "gh-pages": "^0.11.0",
@@ -81,7 +81,7 @@
     "babel-preset-es2015": "6.16.0",
     "babel-preset-react": "6.16.0",
     "image-webpack-loader": "2.0.0",
-    "open-browser-webpack-plugin": "0.0.2",
+    "open-browser-webpack-plugin": "0.0.3",
     "react": "15.3.2",
     "react-dimensions": "1.3.0",
     "webpack": "1.13.2",

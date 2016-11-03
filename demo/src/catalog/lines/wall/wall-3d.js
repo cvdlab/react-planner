@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import convert from 'convert-units';
 
 export default function (element, layer, scene) {

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Three from 'three';
+import * as Three from 'three';
 import {parseData, updateScene} from './scene-creator';
 import {disposeScene} from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';

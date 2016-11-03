@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import guideHorizontalStreak from './guides/guide-horizontal-streak';
 import guideVerticalStreak from './guides/guide-vertical-streak';
 

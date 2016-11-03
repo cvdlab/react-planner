@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import createGrid from './grid-creator';
 import convert from 'convert-units';
 import {disposeObject} from './three-memory-cleaner';

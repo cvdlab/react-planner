@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import {HELVETIKER} from '../libs/helvetiker_regular.typeface.js';
 
 export default function (width, height, guide) {
