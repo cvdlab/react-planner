@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 
 function disposeGeometry(geometry) {
   geometry.dispose();

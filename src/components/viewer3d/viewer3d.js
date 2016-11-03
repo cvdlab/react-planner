@@ -2,7 +2,7 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Three from 'three';
+import * as Three from 'three';
 import {parseData, updateScene} from './scene-creator';
 import {disposeScene} from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
@@ -247,8 +247,7 @@ export default class Scene3DViewer extends React.Component {
     if (nextProps.state.scene !== this.props.state.scene) {
 
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-
-      updateScene(this.planData, nextProps.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
+      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 
     renderer.setSize(width, height);

@@ -56,7 +56,7 @@
   "homepage": "https://github.com/cvdlab/react-planner#readme",
   "dependencies": {
     "area-polygon": "^1.0.1",
-    "convert-units": "^1.2.0",
+    "convert-units": "^2.0.0",
     "immutable": "3.8.1",
     "immutablediff": "^0.4.3",
     "polylabel": "^1.0.1",
@@ -66,25 +66,25 @@
     "react-dom": "15.3.2",
     "react-icons": "2.2.1",
     "react-redux": "4.4.5",
-    "react-svg-pan-zoom": "chrvadala/react-svg-pan-zoom#220323d4e8cb422d34de00875e367cba76007678",
+    "react-svg-pan-zoom": "chrvadala/react-svg-pan-zoom#03f06f7c5e608965ff8197007613ecbf56de4802",
     "redux": "3.6.0",
     "redux-thunk": "2.1.0",
     "shortid": "^2.2.6",
-    "three": "0.79.0"
+    "three": "0.82.1"
   },
   "devDependencies": {
     "gh-pages": "^0.11.0",
     "babel-cli": "^6.16.0",
-    "babel-core": "6.16.0",
-    "babel-loader": "6.2.5",
+    "babel-core": "6.18.2",
+    "babel-loader": "6.2.7",
     "babel-plugin-transform-object-rest-spread": "6.16.0",
-    "babel-preset-es2015": "6.16.0",
+    "babel-preset-es2015": "6.18.0",
     "babel-preset-react": "6.16.0",
-    "image-webpack-loader": "2.0.0",
-    "open-browser-webpack-plugin": "0.0.2",
+    "image-webpack-loader": "3.0.0",
+    "open-browser-webpack-plugin": "0.0.3",
     "react": "15.3.2",
     "react-dimensions": "1.3.0",
-    "webpack": "1.13.2",
-    "webpack-dev-server": "1.16.1"
+    "webpack": "1.13.3",
+    "webpack-dev-server": "1.16.2"
   }
 }

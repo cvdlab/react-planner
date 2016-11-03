@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import {loadObjWithMaterial} from '../../../utils/load-obj';
 import path from 'path';
 import convert from 'convert-units';
@@ -80,6 +80,7 @@ export default {
         let box = new Three.BoxHelper(object, 0x99c3fb);
         box.material.linewidth = 2;
         box.material.depthTest = false;
+        box.renderOrder = 1000;
         object.add(box);
       }
 

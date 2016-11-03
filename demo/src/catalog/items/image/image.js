@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 
 import React from 'react';
 import convert from 'convert-units';

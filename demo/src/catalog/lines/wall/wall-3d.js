@@ -1,4 +1,4 @@
-import Three from 'three';
+import * as Three from 'three';
 import convert from 'convert-units';
 
 export default function (element, layer, scene) {
@@ -298,30 +298,35 @@ export default function (element, layer, scene) {
     box1.material.depthTest = false;
     box1.material.linewidth = 2;
     box1.material.vertexColor = Three.VertexColors;
+    box1.renderOrder = 1000;
     pivot.add(box1);
 
     let box2 = new Three.BoxHelper(wall2, 0x99c3fb);
     box2.material.depthTest = false;
     box2.material.linewidth = 2;
+    box2.renderOrder = 1000;
     pivot.add(box2);
 
     let box3 = new Three.BoxHelper(topClosure, 0x99c3fb);
     box3.material.depthTest = false;
     box3.material.linewidth = 2;
+    box3.renderOrder = 1000;
     pivot.add(box3);
 
     let box4 = new Three.BoxHelper(leftClosure, 0x99c3fb);
     box4.material.depthTest = false;
     box4.material.linewidth = 2;
+    box4.renderOrder = 1000;
     pivot.add(box4);
 
     let box5 = new Three.BoxHelper(rightClosure, 0x99c3fb);
     box5.material.depthTest = false;
     box5.material.linewidth = 2;
+    box5.renderOrder = 1000;
     pivot.add(box5);
   }
 
-  return pivot;
+  return Promise.resolve(pivot);
 }
 
 /**
@@ -330,7 +335,7 @@ export default function (element, layer, scene) {
  * @param vertex1: End vertex
  * @param height: Height of the shape
  * @param thickness: Thickness of the closure
- * @returns {{topShape: *[], leftShape: *[]}}: The left and top shape (the others can be computed fron these two)
+ * @returns {{topShape: *[], leftShape: *[]}}: The left and top shape (the others can be computed from these two)
  */
 function buildShapeClosures(vertex0, vertex1, height, thickness) {
 
