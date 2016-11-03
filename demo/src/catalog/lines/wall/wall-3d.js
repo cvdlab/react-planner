@@ -32,10 +32,6 @@ export default function (element, layer, scene) {
     holes.push(hole);
   });
 
-  let interactFunction = () => {
-    return element.editingActions.selectLine(layer.id, element.id)
-  };
-
   /*
    * First of all I need to build the wall shape. We can build it drawing a rectangle
    * with the left bottom vertex in the origin and where the length is given by the distance between the
@@ -284,13 +280,6 @@ export default function (element, layer, scene) {
   pivot.add(topClosure);
   pivot.add(leftClosure);
   pivot.add(rightClosure);
-
-  // Add interaction with walls
-  wall1.interact = interactFunction;
-  wall2.interact = interactFunction;
-  topClosure.interact = interactFunction;
-  leftClosure.interact = interactFunction;
-  rightClosure.interact = interactFunction;
 
   // If the wall is selected show a bounding box around it
   if (element.selected) {

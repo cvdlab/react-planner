@@ -283,7 +283,6 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
 
 function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
   let line = layer.lines.get(lineID);
-  line.editingActions = editingActions;
 
   // First of all I need to find the vertices of this line
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -305,6 +304,10 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
 
     planData.plan.add(line3D);
     planData.sceneGraph.layers[layer.id].lines[lineID] = line3D;
+
+    applyInteract(line3D, () => {
+      return editingActions.selectLine(layer.id, line.id);
+    });
 
     updateBoundingBox(planData);
   });
