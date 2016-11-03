@@ -2,11 +2,14 @@ import React, {PropTypes} from 'react';
 import IconNewFile from 'react-icons/lib/fa/file-o';
 import IconSave from 'react-icons/lib/fa/floppy-o';
 import IconLoad from 'react-icons/lib/fa/folder-open-o';
+import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import IconZoomPlus from 'react-icons/lib/ti/zoom-in';
 import IconZoomMinus from 'react-icons/lib/ti/zoom-out';
 import IconPan from 'react-icons/lib/fa/hand-paper-o';
 import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
 import IconCatalog from 'react-icons/lib/fa/plus';
+
+import If from "../../utils/react-if";
 
 const Icon2D = () => <p style={{
   fontSize: "19px",
@@ -75,7 +78,7 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
 
       <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip="2D View"
                      onClick={event => editingActions.selectToolEdit()}>
-        <Icon2D/>
+        {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_3D_FIRST_PERSON].includes(mode)} tooltip="3D First Person"
@@ -83,21 +86,24 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
         <Icon3DFirstPerson />
       </ToolbarButton>
 
+      <If condition={![MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)}>
+        <div>
+          <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip="Zoom in"
+                         onClick={event => viewer2DActions.selectToolZoomIn()}>
+            <IconZoomPlus />
+          </ToolbarButton>
 
-      <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip="Zoom in"
-                     onClick={event => viewer2DActions.selectToolZoomIn()}>
-        <IconZoomPlus />
-      </ToolbarButton>
+          <ToolbarButton active={[MODE_2D_ZOOM_OUT].includes(mode)} tooltip="Zoom out"
+                         onClick={event => viewer2DActions.selectToolZoomOut()}>
+            <IconZoomMinus />
+          </ToolbarButton>
 
-      <ToolbarButton active={[MODE_2D_ZOOM_OUT].includes(mode)} tooltip="Zoom out"
-                     onClick={event => viewer2DActions.selectToolZoomOut()}>
-        <IconZoomMinus />
-      </ToolbarButton>
-
-      <ToolbarButton active={[MODE_2D_PAN].includes(mode)} tooltip="Pan"
-                     onClick={event => viewer2DActions.selectToolPan()}>
-        <IconPan />
-      </ToolbarButton>
+          <ToolbarButton active={[MODE_2D_PAN].includes(mode)} tooltip="Pan"
+                         onClick={event => viewer2DActions.selectToolPan()}>
+            <IconPan />
+          </ToolbarButton>
+        </div>
+      </If>
 
 
       <ToolbarButton
