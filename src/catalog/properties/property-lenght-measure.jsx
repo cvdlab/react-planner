@@ -7,7 +7,7 @@ export default function PropertyLengthMeasure({propertyName, value, onUpdate, co
 
   let updateLength = (lengthInput) => {
     let _length = parseFloat(lengthInput);
-    let length = convert(_length).from(_unit).to(UNIT_CENTIMETER);
+    let length = convert(_length).from(_unit).to(UNIT_CENTIMETER); //TODO change UNIT_CENTIMETER with scene.unit
     onUpdate(Object.assign({}, value, {length, _length}));
   };
 
