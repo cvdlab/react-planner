@@ -8,6 +8,7 @@ import wall from './lines/wall/wall';
 import item from './items/sofa/sofa';
 import tv from './items/tv/tv';
 import image from './items/image/image';
+import cube from './items/cube/cube';
 
 let catalog = new Catalog();
 
@@ -19,5 +20,6 @@ catalog.registerElement(wall);
 catalog.registerElement(item);
 catalog.registerElement(tv);
 catalog.registerElement(image);
+catalog.registerElement(cube);
 
 export default catalog;
