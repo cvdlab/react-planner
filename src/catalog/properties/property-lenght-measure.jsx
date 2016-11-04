@@ -1,15 +1,18 @@
 import React, {PropTypes} from 'react';
 import {UNIT_CENTIMETER, UNIT_FOOT, UNIT_INCH, UNIT_METER, UNIT_MILE, UNIT_MILLIMETER} from './../../constants';
+import convert from 'convert-units';
 
 export default function PropertyLengthMeasure({propertyName, value, onUpdate, configs}) {
-  let {length, unit} = value;
+  let {_length, _unit, length} = value;
 
-  let updateLength = (length) => {
-    onUpdate(Object.assign({}, value, {length: parseFloat(length)}));
+  let updateLength = (lengthInput) => {
+    let _length = parseFloat(lengthInput);
+    let length = convert(_length).from(_unit).to(UNIT_CENTIMETER);
+    onUpdate(Object.assign({}, value, {length, _length}));
   };
 
-  let updateUnit = (unit) => {
-    onUpdate(Object.assign({}, value, {unit}));
+  let updateUnit = (unitInput) => {
+    onUpdate(Object.assign({}, value, {_unit: unitInput}));
   };
 
   return (
@@ -17,10 +20,10 @@ export default function PropertyLengthMeasure({propertyName, value, onUpdate, co
       <label style={{width: "30%", display: "inline-block"}}>{propertyName}</label>
       <div style={{display: "inline-block", width: "70%"}}>
 
-        <input type="number" style={{width: "55%"}} value={length} onChange={event => updateLength(event.target.value)}
+        <input type="number" style={{width: "55%"}} value={_length} onChange={event => updateLength(event.target.value)}
                min={configs.min} max={configs.max}/>
 
-        <select style={{width: "30%"}} value={unit} onChange={event => updateUnit(event.target.value)}>
+        <select style={{width: "30%"}} value={_unit} onChange={event => updateUnit(event.target.value)}>
           <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
           <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
           <option key={UNIT_MILLIMETER} value={UNIT_MILLIMETER}>{UNIT_MILLIMETER}</option>
