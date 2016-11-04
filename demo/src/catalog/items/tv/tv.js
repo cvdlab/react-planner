@@ -23,8 +23,7 @@ export default {
     altitude: {
       type: "length-measure",
       defaultValue: {
-        length: 0,
-        unit: 'cm'
+        length: 0
       }
     }
   },
@@ -33,14 +32,8 @@ export default {
     let width = {length: 1.60, unit: 'ft'};
     let depth = {length: 0.59, unit: 'ft'};
 
-    let newWidth = convert(width.length)
-        .from(width.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
-
-    let newDepth = convert(depth.length)
-        .from(depth.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
-
+    let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+    let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
     return gSVG({transform: `translate(${-newWidth / 2},${-newDepth / 2})`}, [
       rectSVG({
@@ -69,21 +62,11 @@ export default {
 
     let onLoadItem = (object) => {
 
-      let newWidth = convert(width.length)
-          .from(width.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
+      let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+      let newHeight = convert(height.length).from(height.unit).to(scene.unit);
+      let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
-      let newHeight = convert(height.length)
-          .from(height.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newDepth = convert(depth.length)
-          .from(depth.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newAltitude = convert(element.properties.get('altitude').get('length'))
-          .from(element.properties.get('altitude').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
+      let newAltitude = element.properties.get('altitude').get('length');
 
       if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);

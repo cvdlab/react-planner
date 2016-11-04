@@ -8,7 +8,6 @@ export function parseData(sceneData, editingActions, catalog) {
   let planData = {};
 
   planData.sceneGraph = {
-    pixelPerUnit: sceneData.pixelPerUnit,
     unit: sceneData.unit,
     layers: {},
     width: sceneData.width,
@@ -257,13 +256,9 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-    let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
-        .from(holeData.properties.get('altitude').get('unit'))
-        .to(sceneData.unit) * sceneData.pixelPerUnit;
+    let holeAltitude = holeData.properties.get('altitude').get('length');
 
-    let holeHeight = convert(holeData.properties.get('height').get('length'))
-        .from(holeData.properties.get('height').get('unit'))
-        .to(sceneData.unit) * sceneData.pixelPerUnit;
+    let holeHeight = holeData.properties.get('height').get('length');
 
     object.rotation.y = alpha;
     object.position.x = vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);

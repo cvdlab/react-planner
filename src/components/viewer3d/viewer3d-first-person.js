@@ -92,7 +92,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     let humanHeight = {length: 1.70, unit: 'm'};
     let humanHeightPixels = convert(humanHeight.length)
         .from(humanHeight.unit)
-        .to(state.scene.unit) * state.scene.pixelPerUnit;
+        .to(state.scene.unit);
 
     let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeightPixels;
     this.controls.getObject().position.set(-50, yInitialPosition, -100);

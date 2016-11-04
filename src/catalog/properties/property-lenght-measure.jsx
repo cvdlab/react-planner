@@ -5,6 +5,9 @@ import convert from 'convert-units';
 export default function PropertyLengthMeasure({propertyName, value, onUpdate, configs}) {
   let {_length, _unit, length} = value;
 
+  _unit = _unit || UNIT_CENTIMETER;
+  _length = _length || length || 0;
+
   let updateLength = (lengthInput) => {
     let _length = parseFloat(lengthInput);
     let length = convert(_length).from(_unit).to(UNIT_CENTIMETER); //TODO change UNIT_CENTIMETER with scene.unit

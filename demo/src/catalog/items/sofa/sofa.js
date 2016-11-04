@@ -26,14 +26,8 @@ export default {
     let width = {length: 180, unit: 'cm'};
     let depth = {length: 60, unit: 'cm'};
 
-    let newWidth = convert(width.length)
-        .from(width.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
-
-    let newDepth = convert(depth.length)
-        .from(depth.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
-
+    let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+    let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
     return gSVG({transform: `translate(${-newWidth / 2},${-newDepth / 2})`}, [
       rectSVG({
@@ -62,17 +56,9 @@ export default {
 
     let onLoadItem = (object) => {
 
-      let newWidth = convert(width.length)
-          .from(width.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newHeight = convert(height.length)
-          .from(height.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newDepth = convert(depth.length)
-          .from(depth.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
+      let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+      let newHeight = convert(height.length).from(height.unit).to(scene.unit);
+      let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
       object.scale.set(newWidth / width.length, newHeight / height.length, newDepth / depth.length);
 

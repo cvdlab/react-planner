@@ -25,15 +25,13 @@ export default {
     height: {
       type: "length-measure",
       defaultValue: {
-        length: 3,
-        unit: 'm'
+        length: 300,
       }
     },
     thickness: {
       type: "length-measure",
       defaultValue: {
-        length: 20,
-        unit: 'cm'
+        length: 20
       }
     },
     textureA: {

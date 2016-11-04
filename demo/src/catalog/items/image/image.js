@@ -44,8 +44,7 @@ export default {
     distance: {
       type: "length-measure",
       defaultValue: {
-        length: 100,
-        unit: 'cm'
+        length: 100
       }
     },
     width: {
@@ -64,9 +63,7 @@ export default {
 
     let pointsDistance = Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 
-    let distanceNormalized = convert(distance.length)
-        .from(distance.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
+    let distanceNormalized = convert(distance.length).from(distance.unit).to(scene.unit);
 
     let scale = distanceNormalized / pointsDistance;
 
