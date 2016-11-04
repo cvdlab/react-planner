@@ -246,18 +246,50 @@ export default function Viewer2D({state, width, height},
     }
   };
 
-  let onChange = value => {viewer2DActions.updateCameraView(value)};
 
   activeSnapElement = activeSnapElement ?
     <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
   // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
   snapElements = null; //only for debug purpose
 
+  let onChangeValue = (value) => viewer2DActions.updateCameraView(value);
+  let onChangeTool = (tool) => {
+    switch (tool) {
+      case TOOL_NONE:
+        editingActions.selectToolEdit();
+        break;
+
+      case TOOL_PAN:
+        viewer2DActions.selectToolPan();
+        break;
+
+      case TOOL_ZOOM_IN:
+        viewer2DActions.selectToolZoomIn();
+        break;
+
+      case TOOL_ZOOM_OUT:
+        viewer2DActions.selectToolZoomOut();
+        break;
+    }
+  };
+
   return (
-    <ReactSVGPanZoom value={viewer2D.isEmpty() ? null : viewer2D.toJS()} tool={mode2Tool(mode)} width={width} height={height}
-            detectAutoPan={mode2DetectAutopan(mode)}
-            onMouseMove={onMouseMove} onChange={onChange} onClick={onClick} onMouseDown={onMouseDown}
-            onMouseUp={onMouseUp} toolbarPosition="none">
+    <ReactSVGPanZoom
+      width={width} height={height}
+
+      value={viewer2D.isEmpty() ? null : viewer2D.toJS()}
+      onChangeValue={onChangeValue}
+
+      tool={mode2Tool(mode)}
+      onChangeTool={onChangeTool}
+
+      detectAutoPan={mode2DetectAutopan(mode)}
+
+      onClick={onClick}
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      toolbarPosition="right">
 
       <svg width={scene.width} height={scene.height}>
         <g style={mode2Cursor(mode)}>
