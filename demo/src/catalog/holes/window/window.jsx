@@ -3,44 +3,40 @@ import * as Three from 'three';
 import {loadObjWithMaterial} from '../../../utils/load-obj';
 import path from 'path';
 
-let pathSVG = React.createFactory('path');
-let lineSVG = React.createFactory('line');
-let gSVG = React.createFactory('g');
-
 export default {
-  name: "door",
+  name: "window",
   prototype: "holes",
 
   info: {
-    tag: ['door'],
-    group: "Horizontal communication",
-    description: "Wooden door",
-    image: require('./door.png')
+    tag: ['window'],
+    group: "Vertical Closing",
+    description: "Window",
+    image: require('./window.png')
   },
 
   properties: {
     width: {
       type: "length-measure",
       defaultValue: {
-        length: 80
+        length: 90
       }
     },
     height: {
       type: "length-measure",
       defaultValue: {
-        length: 215
+        length: 100
       }
     },
     altitude: {
       type: "length-measure",
       defaultValue: {
-        length: 0
+        length: 90
       }
     },
     thickness: {
       type: "length-measure",
       defaultValue: {
-        length: 30
+        length: 10
       }
     }
   },
@@ -48,7 +44,6 @@ export default {
   render2D: function (element, layer, scene) {
     const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
     const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "3px", fill: "#0096fd", cursor: "move"};
-
     //let line = layer.lines.get(hole.line);
     //let epsilon = line.properties.get('thickness') / 2;
 
@@ -57,30 +52,13 @@ export default {
     let holeWidth = element.properties.get('width').get('length');
     let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
-
-    return gSVG({transform: `translate(${-element.properties.get('width').get('length') / 2}, 0)`}, [
-      pathSVG({
-        key: 1,
-        d: holePath,
-        style: holeStyle
-      }),
-      lineSVG({
-        key: 2,
-        x1: holeWidth / 2 - 5,
-        y1: -10 - epsilon,
-        x2: holeWidth / 2 - 5,
-        y2: 10 + epsilon,
-        style: holeStyle
-      }),
-      lineSVG({
-        key: 3,
-        x1: holeWidth / 2 + 5,
-        y1: -10 - epsilon,
-        x2: holeWidth / 2 + 5,
-        y2: 10 + epsilon,
-        style: holeStyle
-      }),
-    ]);
+    let length = element.properties.get('width').get('length');
+    return (
+      <g transform={`translate(${-length / 2}, 0)`}>
+        <path key="1" d={holePath} style={holeStyle}/>
+        <line key="2" x1={holeWidth / 2} y1={-10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
+      </g>
+    );
   },
 
   render3D: function (element, layer, scene) {
@@ -109,12 +87,11 @@ export default {
       return object;
     };
 
-    let mtl = require('./door.mtl');
-    let obj = require('./door.obj');
+    let mtl = require('./window.mtl');
+    let obj = require('./window.obj');
     let img = require('./texture.png');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
       .then(object => onLoadItem(object))
-
   }
 };
