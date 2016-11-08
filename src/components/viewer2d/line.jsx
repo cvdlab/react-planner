@@ -5,7 +5,7 @@ import Ruler from './ruler';
 
 export default function Line({line, layer, mode, scene}, {editingActions, catalog}) {
 
-  let {pixelPerUnit, unit} = scene;
+  let {unit} = scene;
 
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
@@ -41,7 +41,7 @@ export default function Line({line, layer, mode, scene}, {editingActions, catalo
   });
 
   let renderedLine = catalog.getElement(line.type).render2D(line, layer);
-  let renderedRuler = line.selected ? <Ruler pixelPerUnit={pixelPerUnit} unit={unit} length={length} transform="translate(0, 15)"/> : null;
+  let renderedRuler = line.selected ? <Ruler unit={unit} length={length} transform="translate(0, 15)"/> : null;
 
   return (
     <g

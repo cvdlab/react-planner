@@ -21,9 +21,9 @@ const STYLE_TEXT = {
 };
 
 
-export default function Ruler({length, pixelPerUnit, unit, transform}) {
+export default function Ruler({length, unit, transform}) {
 
-  let distanceText = `${(length / pixelPerUnit).toFixed(2)} ${unit}`;
+  let distanceText = `${length.toFixed(2)} ${unit}`;
 
   return (
     <g transform={transform}>
@@ -38,7 +38,6 @@ export default function Ruler({length, pixelPerUnit, unit, transform}) {
 
 Ruler.propTypes = {
   length: PropTypes.number.isRequired,
-  pixelPerUnit: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired,
   transform: PropTypes.string.isRequired
 };

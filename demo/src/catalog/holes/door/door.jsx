@@ -2,50 +2,41 @@ import React from 'react';
 import * as Three from 'three';
 import {loadObjWithMaterial} from '../../../utils/load-obj';
 import path from 'path';
-import convert from 'convert-units';
-
-let pathSVG = React.createFactory('path');
-let lineSVG = React.createFactory('line');
-let gSVG = React.createFactory('g');
 
 export default {
-  name: "sash window",
+  name: "door",
   prototype: "holes",
 
   info: {
-    tag: ['window'],
-    group: "Vertical closure",
-    description: "Sash window",
-    image: require('./window.png')
+    tag: ['door'],
+    group: "Horizontal communication",
+    description: "Wooden door",
+    image: require('./door.png')
   },
 
   properties: {
     width: {
       type: "length-measure",
       defaultValue: {
-        length: 90,
-        unit: 'cm'
+        length: 80
       }
     },
     height: {
       type: "length-measure",
       defaultValue: {
-        length: 100,
-        unit: 'cm'
+        length: 215
       }
     },
     altitude: {
       type: "length-measure",
       defaultValue: {
-        length: 90,
-        unit: 'cm'
+        length: 0
       }
     },
     thickness: {
       type: "length-measure",
       defaultValue: {
-        length: 10,
-        unit: 'cm'
+        length: 30
       }
     }
   },
@@ -58,28 +49,16 @@ export default {
 
     let epsilon = 3;
 
-    let holeWidth = convert(element.properties.get('width').get('length'))
-        .from(element.properties.get('width').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
+    let holeWidth = element.properties.get('width').get('length');
     let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
-
-    return gSVG({transform: `translate(${-element.properties.get('width').get('length') / 2}, 0)`}, [
-      pathSVG({
-        key: 1,
-        d: holePath,
-        style: holeStyle
-      }),
-      lineSVG({
-        key: 2,
-        x1: holeWidth / 2,
-        y1: -10 - epsilon,
-        x2: holeWidth / 2,
-        y2: 10 + epsilon,
-        style: holeStyle
-      }),
-    ]);
-
+    let length = element.properties.get('width').get('length');
+    return (
+      <g transform={`translate(${-length / 2}, 0)`}>
+        <path key="1" d={holePath} style={holeStyle}/>
+        <line key="2" x1={holeWidth / 2} y1={-10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
+      </g>
+    );
   },
 
   render3D: function (element, layer, scene) {
@@ -98,17 +77,9 @@ export default {
         object.add(box);
       }
 
-      let width = convert(element.properties.get('width').get('length'))
-          .from(element.properties.get('width').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let height = convert(element.properties.get('height').get('length'))
-          .from(element.properties.get('height').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let thickness = convert(element.properties.get('thickness').get('length'))
-          .from(element.properties.get('thickness').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
+      let width = element.properties.get('width').get('length');
+      let height = element.properties.get('height').get('length');
+      let thickness = element.properties.get('thickness').get('length');
 
       object.scale.set(width / initialWidth, height / initialHeight,
         thickness / initialThickness);
@@ -116,11 +87,12 @@ export default {
       return object;
     };
 
-    let mtl = require('./sash-window.mtl');
-    let obj = require('./sash-window.obj');
+    let mtl = require('./door.mtl');
+    let obj = require('./door.obj');
     let img = require('./texture.png');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
       .then(object => onLoadItem(object))
+
   }
 };

@@ -50,8 +50,7 @@ export const Layer = Record({
 
 
 export const Scene = Record({
-  pixelPerUnit: 100,
-  unit: "m",
+  unit: "cm",
   layers: new Map({
     'layer-1': new Layer({id: 'layer-1', name: 'default layer'})
   }),

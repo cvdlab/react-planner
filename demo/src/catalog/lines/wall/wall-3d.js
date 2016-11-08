@@ -15,13 +15,8 @@ export default function (element, layer, scene) {
   }
 
   // Get height and thickness of the wall converting them into the current scene units
-  let height = convert(element.properties.get('height').get('length'))
-      .from(element.properties.get('height').get('unit'))
-      .to(scene.unit) * scene.pixelPerUnit;
-
-  let thickness = convert(element.properties.get('thickness').get('length'))
-      .from(element.properties.get('thickness').get('unit'))
-      .to(scene.unit) * scene.pixelPerUnit;
+  let height = element.properties.get('height').get('length');
+  let thickness = element.properties.get('thickness').get('length');
 
   let bevelRadius = thickness; // This is useful for linking two walls together
 
@@ -80,17 +75,9 @@ export default function (element, layer, scene) {
   holes.forEach(holeData => {
 
     // Get the sizes of the holes converting them to the scene units
-    let holeWidth = convert(holeData.properties.get('width').get('length'))
-        .from(holeData.properties.get('width').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
-
-    let holeHeight = convert(holeData.properties.get('height').get('length'))
-        .from(holeData.properties.get('height').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
-
-    let holeAltitude = convert(holeData.properties.get('altitude').get('length'))
-        .from(holeData.properties.get('altitude').get('unit'))
-        .to(scene.unit) * scene.pixelPerUnit;
+    let holeWidth = holeData.properties.get('width').get('length');
+    let holeHeight = holeData.properties.get('height').get('length');
+    let holeAltitude = holeData.properties.get('altitude').get('length');
 
 
     // Now I can build the coordinates of the hole shape:

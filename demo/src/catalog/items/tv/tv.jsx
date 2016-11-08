@@ -4,10 +4,6 @@ import {loadObjWithMaterial} from '../../../utils/load-obj';
 import React from 'react';
 import convert from 'convert-units';
 
-let rectSVG = React.createFactory('rect');
-let gSVG = React.createFactory('g');
-let textSVG = React.createFactory('text');
-
 export default {
   name: "tv",
   prototype: "items",
@@ -23,8 +19,7 @@ export default {
     altitude: {
       type: "length-measure",
       defaultValue: {
-        length: 0,
-        unit: 'cm'
+        length: 0
       }
     }
   },
@@ -33,57 +28,34 @@ export default {
     let width = {length: 1.60, unit: 'ft'};
     let depth = {length: 0.59, unit: 'ft'};
 
-    let newWidth = convert(width.length)
-        .from(width.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
+    let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+    let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
-    let newDepth = convert(depth.length)
-        .from(depth.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
+    let style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
 
-
-    return gSVG({transform: `translate(${-newWidth / 2},${-newDepth / 2})`}, [
-      rectSVG({
-        key: 1,
-        x: 0,
-        y: 0,
-        width: newWidth,
-        height: newDepth,
-        style: {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}
-      }),
-      textSVG({
-        key: 2,
-        x: 0,
-        y: 0,
-        transform: `translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1)`,
-        style: {textAnchor: "middle", fontSize: "11px"},
-      }, element.type)
-    ]);
+    return (
+      <g transform={`translate(${-newWidth / 2},${-newDepth / 2})`}>
+        <rect key="1" x="0" y="0" width={newWidth} height={newDepth} style={style}/>
+        <text key="2" x="0" y="0" transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1)`}
+              style={{textAnchor: "middle", fontSize: "11px"}}>
+          {element.type}
+        </text>
+      </g>
+    );
   },
 
   render3D: function (element, layer, scene) {
-
     let width = {length: 1.60, unit: 'ft'};
     let depth = {length: 0.59, unit: 'ft'};
     let height = {length: 1.05, unit: 'ft'};
 
     let onLoadItem = (object) => {
 
-      let newWidth = convert(width.length)
-          .from(width.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
+      let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+      let newHeight = convert(height.length).from(height.unit).to(scene.unit);
+      let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
-      let newHeight = convert(height.length)
-          .from(height.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newDepth = convert(depth.length)
-          .from(depth.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newAltitude = convert(element.properties.get('altitude').get('length'))
-          .from(element.properties.get('altitude').get('unit'))
-          .to(scene.unit) * scene.pixelPerUnit;
+      let newAltitude = element.properties.get('altitude').get('length');
 
       if (element.selected) {
         let box = new Three.BoxHelper(object, 0x99c3fb);

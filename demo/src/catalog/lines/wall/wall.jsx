@@ -1,11 +1,6 @@
 import render3D from './wall-3d.js';
 import React from 'react';
 
-let pathSVG = React.createFactory('path');
-let gSVG = React.createFactory('g');
-let textSVG = React.createFactory('text');
-let lineSVG = React.createFactory('line');
-
 function distanceFromTwoPoints(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow((x1 - x0), 2) + Math.pow((y1 - y0), 2));
 }
@@ -25,15 +20,13 @@ export default {
     height: {
       type: "length-measure",
       defaultValue: {
-        length: 3,
-        unit: 'm'
+        length: 300,
       }
     },
     thickness: {
       type: "length-measure",
       defaultValue: {
-        length: 20,
-        unit: 'cm'
+        length: 20
       }
     },
     textureA: {
@@ -74,13 +67,13 @@ export default {
     let path = `M${0} ${ -epsilon}  L${length} ${-epsilon}  L${length} ${epsilon}  L${0} ${epsilon}  z`;
 
     return (element.selected) ?
-      gSVG({}, [
-        pathSVG({key: 3, d: path, style: element.selected ? STYLE_SELECTED : STYLE_BASE}),
-        lineSVG({key: 2, x1: length / 5, y1: -39, x2: length / 5, y2: 38, style: STYLE_LINE}),
-        textSVG({key: 1, x: length / 5, y: 50, style: STYLE_TEXT}, "A"),
-        textSVG({key: 4, x: length / 5, y: -40, style: STYLE_TEXT}, "B"),
-      ]) :
-      pathSVG({key: 3, d: path, style: element.selected ? STYLE_SELECTED : STYLE_BASE})
+      <g>
+        <path key="3" d={path} style={element.selected ? STYLE_SELECTED : STYLE_BASE} />
+        <line key="2" x1={length / 5} y1={-39} x2={length / 5} y2={38} style={STYLE_LINE} />
+        <text key="1" x={length / 5} y={50} style={STYLE_TEXT}>A</text>,
+        <text key="4" x={length / 5} y={-40} style={STYLE_TEXT}>B</text>
+      </g> :
+      <path key={3} d={path} style={element.selected ? STYLE_SELECTED : STYLE_BASE} />
   },
 
   render3D,
