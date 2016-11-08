@@ -118,7 +118,7 @@ export default class Scene3DViewer extends React.Component {
           selectedObjects.items.forEach(item => {
             editingActions.remove(item);
           });
-          
+
           break;
       }
     };
@@ -132,6 +132,10 @@ export default class Scene3DViewer extends React.Component {
 
     // create orbit controls
     let orbitController = new OrbitControls(camera, this.renderer.domElement);
+    let spotLightTarget = new Three.Object3D();
+    spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
+    scene3D.add(spotLightTarget);
+    spotLight1.target = spotLightTarget;
 
 
     /************************************/
@@ -225,8 +229,10 @@ export default class Scene3DViewer extends React.Component {
     /************************************/
 
     let render = () => {
+
       orbitController.update();
       spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
+      spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
       camera.updateMatrix();
       camera.updateMatrixWorld();
 
