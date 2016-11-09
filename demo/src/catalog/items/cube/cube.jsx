@@ -13,13 +13,18 @@ export default {
     image: require('./cube.png')
   },
 
-  properties: {},
+  properties: {
+    color: {
+      type: "color",
+      defaultValue: "#f48342"
+    },
+  },
 
   render2D: (element, layer, scene) => {
     let style = {
       stroke: "#000",
       strokeWidth: element.selected ? "2px" : "0px",
-      fill: "#f48342"
+      fill: element.properties.get('color')
     };
 
     return (
@@ -32,7 +37,7 @@ export default {
   render3D: (element, layer, scene) => {
     let geometry = new BoxGeometry(100, 100, 100);
     let material = new MeshBasicMaterial({
-      color: "#f48342"
+      color: element.properties.get('color')
     });
 
     let mesh = new Mesh(geometry, material);
