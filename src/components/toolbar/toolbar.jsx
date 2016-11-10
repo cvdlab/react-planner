@@ -78,7 +78,7 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
       </ToolbarButton>
 
       <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip="2D View"
-                     onClick={event => editingActions.selectToolEdit()}>
+                     onClick={event => editingActions.rollback()}>
         {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
       </ToolbarButton>
 

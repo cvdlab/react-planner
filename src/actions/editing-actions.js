@@ -7,7 +7,8 @@ import {
   UNSELECT_ALL,
   SET_PROPERTIES,
   REMOVE,
-  UNDO
+  UNDO,
+  ROLLBACK
 } from '../constants';
 
 export function selectToolEdit() {
@@ -73,5 +74,11 @@ export function remove() {
 export function undo() {
   return {
     type: UNDO
+  }
+}
+
+export function rollback() {
+  return {
+    type: ROLLBACK
   }
 }

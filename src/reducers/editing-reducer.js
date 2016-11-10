@@ -8,7 +8,8 @@ import {
   UNSELECT_ALL,
   SET_PROPERTIES,
   REMOVE,
-  UNDO
+  UNDO,
+  ROLLBACK
 } from '../constants';
 
 import {ElementsSet} from '../models';
@@ -54,6 +55,9 @@ export default function (state, action) {
 
     case UNDO:
       return undo(state);
+
+    case ROLLBACK:
+      return rollback(state);
 
     default:
       return state;
@@ -146,4 +150,15 @@ function undo(state) {
         sceneHistory: sceneHistory.pop()
       });
   }
+}
+
+function rollback(state) {
+  let sceneHistory = state.sceneHistory;
+
+  if (sceneHistory.isEmpty()) return state;
+
+  return state.merge({
+    mode: MODE_IDLE,
+    scene: sceneHistory.last(),
+  });
 }
