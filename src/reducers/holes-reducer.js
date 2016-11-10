@@ -101,8 +101,11 @@ function updateDrawingHole(state, layerID, x, y, catalog) {
 
 function endDrawingHole(state, layerID, x, y, catalog) {
   state = updateDrawingHole(state, layerID, x, y, catalog);
-  return state.updateIn(['scene', 'layers', layerID], layer => unselectAll(layer));
-
+  let scene = state.scene.updateIn(['layers', layerID], layer => unselectAll(layer));
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
 }
 
 function beginDraggingHole(state, layerID, holeID, x, y) {

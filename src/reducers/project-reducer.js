@@ -2,6 +2,7 @@ import {Seq, Map} from "immutable";
 import {LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG} from '../constants';
 import {State, Scene, Guide} from "../models";
 import {loadLayerFromJSON} from '../utils/layer-operations';
+import {List} from 'immutable';
 
 export default function (state, action) {
 
@@ -36,6 +37,9 @@ function loadProject(state, data, catalog) {
     .set('selectedLayer', Object.keys(scene.layers)[0]);
   let scene = readScene(data);
 
-  return new State({scene});
+  return new State({
+    scene,
+    sceneHistory: new List([scene])
+  });
 }
 

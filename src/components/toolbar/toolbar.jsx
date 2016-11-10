@@ -8,6 +8,7 @@ import IconZoomMinus from 'react-icons/lib/ti/zoom-out';
 import IconPan from 'react-icons/lib/fa/hand-paper-o';
 import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
 import IconCatalog from 'react-icons/lib/fa/plus';
+import IconUndo from 'react-icons/lib/md/undo'
 
 import If from "../../utils/react-if";
 
@@ -111,6 +112,11 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
         tooltip="Open catalog"
         onClick={event => projectActions.openCatalog()}>
         <IconCatalog />
+      </ToolbarButton>
+
+      <ToolbarButton active={false} tooltip="Undo"
+                     onClick={event => editingActions.undo()}>
+        <IconUndo />
       </ToolbarButton>
 
       {toolbarButtons.map((Component, index) => <Component mode={mode} key={index}/>)}

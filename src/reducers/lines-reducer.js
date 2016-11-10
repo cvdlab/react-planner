@@ -145,6 +145,7 @@ function endDrawingLine(state, x, y, catalog) {
     scene,
     snapElements: new List(),
     activeSnapElement: null,
+    sceneHistory: state.sceneHistory.push(scene)
   });
 }
 

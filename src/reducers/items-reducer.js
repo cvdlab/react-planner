@@ -86,10 +86,12 @@ function updateDrawingItem(state, layerID, x, y, catalog) {
 
 function endDrawingItem(state, layerID, x, y, catalog) {
   state = updateDrawingItem(state, layerID, x, y, catalog);
+  let scene = state.scene.updateIn(['layers', layerID], layer => unselectAll(layer));
   return state.merge({
     mode: MODE_IDLE,
-    scene: state.scene.updateIn(['layers', layerID], layer => unselectAll(layer)),
+    scene,
     drawingSupport: null,
+    sceneHistory: state.sceneHistory.push(scene)
   });
 
 }

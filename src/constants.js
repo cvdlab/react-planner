@@ -15,6 +15,7 @@ export const SELECT_ITEM = 'SELECT_ITEM';
 export const UNSELECT_ALL = 'UNSELECT_ALL';
 export const SET_PROPERTIES = 'SET_PROPERTIES';
 export const REMOVE = 'REMOVE';
+export const UNDO = 'UNDO';
 
 // ACTIONS viewer2D
 export const SELECT_TOOL_ZOOM_IN = 'SELECT_TOOL_ZOOM_IN';

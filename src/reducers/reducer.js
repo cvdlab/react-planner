@@ -39,6 +39,7 @@ export default function appReducers(state, action) {
     case constants.UNSELECT_ALL:
     case constants.SET_PROPERTIES:
     case constants.REMOVE:
+    case constants.UNDO:
       return editingReducer(state, action);
 
     case constants.SELECT_TOOL_3D_VIEW:

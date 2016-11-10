@@ -6,7 +6,8 @@ import {
   SELECT_ITEM,
   UNSELECT_ALL,
   SET_PROPERTIES,
-  REMOVE
+  REMOVE,
+  UNDO
 } from '../constants';
 
 export function selectToolEdit() {
@@ -66,5 +67,11 @@ export function remove() {
       type: REMOVE,
       catalog
     })
+  }
+}
+
+export function undo() {
+  return {
+    type: UNDO
   }
 }

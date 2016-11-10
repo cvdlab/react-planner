@@ -7,7 +7,8 @@ import {
   SELECT_ITEM,
   UNSELECT_ALL,
   SET_PROPERTIES,
-  REMOVE
+  REMOVE,
+  UNDO
 } from '../constants';
 
 import {ElementsSet} from '../models';
@@ -50,6 +51,9 @@ export default function (state, action) {
 
     case REMOVE:
       return state.set('scene', remove(scene, action.catalog));
+
+    case UNDO:
+      return undo(state);
 
     default:
       return state;
@@ -117,4 +121,29 @@ function remove(scene, catalog) {
     selectedItems.forEach(itemID => removeItem(layer, itemID));
     detectAndUpdateAreas(layer, catalog);
   }));
+}
+
+function undo(state) {
+  let sceneHistory = state.sceneHistory;
+
+  if (state.scene === sceneHistory.last() && !sceneHistory.size > 1)
+    sceneHistory = sceneHistory.pop();
+
+  switch (sceneHistory.size) {
+    case 0:
+      return state;
+
+    case 1:
+      return state.merge({
+        mode: MODE_IDLE,
+        scene: sceneHistory.last(),
+      });
+
+    default:
+      return state.merge({
+        mode: MODE_IDLE,
+        scene: sceneHistory.last(),
+        sceneHistory: sceneHistory.pop()
+      });
+  }
 }
