@@ -1,6 +1,5 @@
 import React from 'react';
 
-let pathSVG = React.createFactory('path');
 import render3D from './area-3d';
 
 export default {
@@ -43,7 +42,7 @@ export default {
 
     let fill = element.selected ? "#99c3fb" : element.properties.get('patternColor');
 
-    return pathSVG({d: path, fill});
+    return (<path d={path} fill={fill}/>);
   },
 
   render3D,

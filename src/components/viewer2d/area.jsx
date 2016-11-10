@@ -19,7 +19,7 @@ const STYLE_TEXT = {
 };
 
 
-export default function Area({layer, area, mode, pixelPerUnit, unit}, {editingActions, catalog}) {
+export default function Area({layer, area, mode, unit}, {editingActions, catalog}) {
 
   let rendered = catalog.getElement(area.type).render2D(area, layer);
 
@@ -33,10 +33,10 @@ export default function Area({layer, area, mode, pixelPerUnit, unit}, {editingAc
       .toArray();
 
     var center = polylabel([polygon], 1.0);
-    let areaSize = (areapolygon(polygon, false) / Math.pow(pixelPerUnit, 2)).toFixed(2);
+    let areaSize = (areapolygon(polygon, false) / 10000).toFixed(2);
     renderedAreaSize = (
       <text x="0" y="0" transform={`translate(${center[0]} ${center[1]}) scale(1, -1)`} style={STYLE_TEXT}>
-        {areaSize} {unit}{String.fromCharCode(0xb2)}
+        {areaSize} m{String.fromCharCode(0xb2)}
       </text>
     )
   }
@@ -60,7 +60,6 @@ Area.propTypes = {
   area: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
-  pixelPerUnit: PropTypes.number.isRequired,
   unit: PropTypes.string.isRequired
 };
 

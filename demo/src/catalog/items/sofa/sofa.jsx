@@ -26,32 +26,20 @@ export default {
     let width = {length: 180, unit: 'cm'};
     let depth = {length: 60, unit: 'cm'};
 
-    let newWidth = convert(width.length)
-        .from(width.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
+    let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+    let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
-    let newDepth = convert(depth.length)
-        .from(depth.unit)
-        .to(scene.unit) * scene.pixelPerUnit;
+    let style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
 
-
-    return gSVG({transform: `translate(${-newWidth / 2},${-newDepth / 2})`}, [
-      rectSVG({
-        key: 1,
-        x: 0,
-        y: 0,
-        width: newWidth,
-        height: newDepth,
-        style: {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}
-      }),
-      textSVG({
-        key: 2,
-        x: 0,
-        y: 0,
-        transform: `translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1)`,
-        style: {textAnchor: "middle", fontSize: "11px"},
-      }, element.type)
-    ]);
+    return (
+      <g transform={`translate(${-newWidth / 2},${-newDepth / 2})`}>
+        <rect key="1" x="0" y="0" width={newWidth} height={newDepth} style={style}/>
+        <text key="2" x="0" y="0" transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1)`}
+              style={{textAnchor: "middle", fontSize: "11px"}}>
+          {element.type}
+        </text>
+      </g>
+    );
   },
 
   render3D: function (element, layer, scene) {
@@ -62,17 +50,9 @@ export default {
 
     let onLoadItem = (object) => {
 
-      let newWidth = convert(width.length)
-          .from(width.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newHeight = convert(height.length)
-          .from(height.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
-
-      let newDepth = convert(depth.length)
-          .from(depth.unit)
-          .to(scene.unit) * scene.pixelPerUnit;
+      let newWidth = convert(width.length).from(width.unit).to(scene.unit);
+      let newHeight = convert(height.length).from(height.unit).to(scene.unit);
+      let newDepth = convert(depth.length).from(depth.unit).to(scene.unit);
 
       object.scale.set(newWidth / width.length, newHeight / height.length, newDepth / depth.length);
 
