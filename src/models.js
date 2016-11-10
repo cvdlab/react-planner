@@ -121,6 +121,7 @@ export const State = Record({
 
   drawingSupport: Map(),
   draggingSupport: Map(),
-  rotatingSupport: Map()
+  rotatingSupport: Map(),
+  sceneHistory: new List()
 }, 'State');
 
