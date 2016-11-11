@@ -141,6 +141,7 @@ function endDraggingItem(state, x, y) {
   state = updateDraggingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
+    sceneHistory: state.sceneHistory.push(state.scene)
   });
 }
 
@@ -181,5 +182,6 @@ function endRotatingItem(state, x, y) {
   state = updateRotatingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
+    sceneHistory: state.sceneHistory.push(state.scene)
   });
 }

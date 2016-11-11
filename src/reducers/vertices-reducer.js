@@ -58,13 +58,15 @@ function endDraggingVertex(state, x, y) {
   let vertexID = draggingSupport.get('vertexID');
 
   state = updateDraggingVertex(state, x, y);
-  state = state.updateIn(['scene', 'layers', layerID], layer => mergeEqualsVertices(layer, vertexID));
+  let scene = state.scene.updateIn(['layers', layerID], layer => mergeEqualsVertices(layer, vertexID));
 
   return state.merge({
     mode: MODE_IDLE,
     draggingSupport: null,
+    scene,
 
     activeSnapElement: null,
-    snapElements: new List()
+    snapElements: new List(),
+    sceneHistory: state.sceneHistory.push(scene)
   });
 }

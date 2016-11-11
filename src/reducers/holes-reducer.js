@@ -163,5 +163,6 @@ function endDraggingHole(state, x, y) {
   state = updateDraggingHole(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
+    sceneHistory: state.sceneHistory.push(state.scene)
   });
 }

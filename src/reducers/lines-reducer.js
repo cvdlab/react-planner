@@ -239,7 +239,8 @@ function endDraggingLine(state, x, y, catalog) {
       mode: MODE_IDLE,
       draggingSupport: null,
       activeSnapElement: null,
-      snapElements: new List()
+      snapElements: new List(),
+      sceneHistory: state.sceneHistory.push(state.scene)
     });
   });
 }
