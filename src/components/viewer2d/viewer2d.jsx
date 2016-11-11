@@ -96,113 +96,136 @@ export default function Viewer2D({state, width, height},
     return {x, y: -y + scene.height}
   };
 
-  let onClick = event => {
-    event.originalEvent.preventDefault();
+  let onClick = viewerEvent => {
+    let event = viewerEvent.originalEvent;
 
-    let {x, y} = mapCursorPosition(event);
+    event.preventDefault();
+
+    let {x, y} = mapCursorPosition(viewerEvent);
 
     switch (mode) {
       case constants.MODE_IDLE:
-        let elementData = extractElementData(event.originalEvent.target);
+        let elementData = extractElementData(event.target);
 
         if (elementData && elementData.selected) return;
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
             areaActions.selectArea(elementData.layer, elementData.id);
+            event.stopPropagation();
             break;
 
           case 'lines':
             linesActions.selectLine(elementData.layer, elementData.id);
+            event.stopPropagation();
             break;
 
           case 'holes':
             holesActions.selectHole(elementData.layer, elementData.id);
+            event.stopPropagation();
             break;
 
           case 'items':
             itemsActions.selectItem(elementData.layer, elementData.id);
+            event.stopPropagation();
             break;
 
           case 'none':
             projectActions.unselectAll();
+            event.stopPropagation();
             break;
         }
         break;
 
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_HOLE:
         holesActions.endDrawingHole(layerID, x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_ITEM:
         itemsActions.endDrawingItem(layerID, x, y);
+        event.stopPropagation();
         break;
     }
   };
 
-  let onMouseMove = event => {
-    event.originalEvent.preventDefault();
-    let {x, y} = mapCursorPosition(event);
+  let onMouseMove = viewerEvent => {
+    let event = viewerEvent.originalEvent;
+    event.preventDefault();
+    let {x, y} = mapCursorPosition(viewerEvent);
 
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
         linesActions.updateDrawingLine(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_HOLE:
         holesActions.updateDrawingHole(layerID, x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_ITEM:
         itemsActions.updateDrawingItem(layerID, x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_HOLE:
         holesActions.updateDraggingHole(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_LINE:
         linesActions.updateDraggingLine(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
         verticesActions.updateDraggingVertex(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.updateDraggingItem(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_ROTATING_ITEM:
         itemsActions.updateRotatingItem(x, y);
+        event.stopPropagation();
     }
   };
 
-  let onMouseDown = event => {
-    event.originalEvent.preventDefault();
-    let {x, y} = mapCursorPosition(event);
+  let onMouseDown = viewerEvent => {
+    let event = viewerEvent.originalEvent;
+    event.preventDefault();
+    let {x, y} = mapCursorPosition(viewerEvent);
 
     switch (mode) {
       case constants.MODE_IDLE:
 
-        let elementData = extractElementData(event.originalEvent.target);
+        let elementData = extractElementData(event.target);
         if (!(elementData && elementData.selected)) return;
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'lines':
             linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y);
+            event.stopPropagation();
             break;
 
           case 'vertices':
             verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y);
+            event.stopPropagation();
             break;
 
           case 'items':
@@ -210,38 +233,46 @@ export default function Viewer2D({state, width, height},
               itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);
             else
               itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
+            event.stopPropagation();
             break;
 
           case 'holes':
             holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
+            event.stopPropagation();
             break;
         }
     }
   };
 
-  let onMouseUp = event => {
-    event.originalEvent.preventDefault();
-    let {x, y} = mapCursorPosition(event);
+  let onMouseUp = viewerEvent => {
+    let event = viewerEvent.originalEvent;
+    event.preventDefault();
+    let {x, y} = mapCursorPosition(viewerEvent);
 
     switch (mode) {
       case constants.MODE_DRAGGING_LINE:
         linesActions.endDraggingLine(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
         verticesActions.endDraggingVertex(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.endDraggingItem(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_HOLE:
         holesActions.endDraggingHole(x, y);
+        event.stopPropagation();
         break;
 
       case constants.MODE_ROTATING_ITEM:
         itemsActions.endRotatingItem(x, y);
+        event.stopPropagation();
         break;
     }
   };
