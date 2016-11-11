@@ -30,8 +30,15 @@ export default function mergePlugins(plugins) {
     if (plugin.hasOwnProperty('onReady')) onReady.push(plugin.onReady);
   });
 
-  customReducer.length > 0 ? customReducer = funcChain(customReducer) : store => store;
-  onReady = onReady.length > 0 ? funcChain(onReady) : () => null;
+  let customReducerFunc = customReducer.length > 0 ? funcChain(customReducer) : store => store;
+  let onReadyFunc = onReady.length > 0 ? funcChain(onReady) : () => null;
 
-  return {customActions, toolbarButtons, customContents, customReducer, actionsExtraArgument, onReady};
+  return {
+    customActions,
+    toolbarButtons,
+    customContents,
+    customReducer: customReducerFunc,
+    actionsExtraArgument,
+    onReady: onReadyFunc
+  };
 }
