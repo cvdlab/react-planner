@@ -39,7 +39,7 @@ export default function (state, action) {
       return loadProject(state, action.data, action.catalog);
 
     case OPEN_CATALOG:
-      return state.set('mode', MODE_VIEWING_CATALOG);
+      return openCatalog(state);
 
     case SELECT_TOOL_EDIT:
       return state.set('mode', MODE_IDLE);
@@ -65,6 +65,10 @@ export default function (state, action) {
   }
 }
 
+function openCatalog(state){
+  return rollback(state)
+    .set('mode', MODE_VIEWING_CATALOG);
+}
 
 function loadProject(state, data, catalog) {
 
@@ -149,7 +153,7 @@ function undo(state) {
   }
 }
 
-function rollback(state) {
+export function rollback(state) {
   let sceneHistory = state.sceneHistory;
 
   if (sceneHistory.isEmpty()) return state;
