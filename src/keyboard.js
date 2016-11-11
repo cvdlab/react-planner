@@ -1,6 +1,5 @@
-import {remove} from './actions/editing-actions';
 import {MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW, STORAGE_KEY} from './constants';
-import {rollback, undo} from './actions/project-actions';
+import {rollback, undo, remove} from './actions/project-actions';
 
 const KEY_DELETE = 46;
 const KEY_BACKSPACE = 8;
