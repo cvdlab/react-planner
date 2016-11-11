@@ -114,7 +114,7 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
         <IconCatalog />
       </ToolbarButton>
 
-      <ToolbarButton active={false} tooltip="Undo"
+      <ToolbarButton active={false} tooltip="Undo (CTRL-Z)"
                      onClick={event => projectActions.undo()}>
         <IconUndo />
       </ToolbarButton>
