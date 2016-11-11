@@ -113,7 +113,10 @@ export const Item = Record({
 
 export const State = Record({
   mode: MODE_IDLE,
+
   scene: new Scene(),
+  sceneHistory: new List([new Scene()]),
+
   viewer2D: new Map(),
 
   snapElements: new List(),
@@ -122,6 +125,7 @@ export const State = Record({
   drawingSupport: Map(),
   draggingSupport: Map(),
   rotatingSupport: Map(),
-  sceneHistory: new List([new Scene()])
+
+  misc: new Map()
 }, 'State');
 
