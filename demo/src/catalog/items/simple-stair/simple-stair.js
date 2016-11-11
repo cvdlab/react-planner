@@ -81,6 +81,9 @@ export default {
 
   render3D: function (element, layer, scene) {
 
+    let loader = new Three.TextureLoader();
+    let whitePaintTextureRepeatFactor = 1 / 20; // In a 100x100 area i want to repeat this texture 5x5 times
+
     let newWidth = convert(element.properties.get('width').get('length'))
       .from(element.properties.get('width').get('unit'))
       .to(scene.unit);
@@ -112,12 +115,11 @@ export default {
     let stepPlaneGeometry = new Three.PlaneGeometry(stepWidth, stepHeight);
     assignUVs(stepPlaneGeometry);
     let stepPlaneMaterial = new Three.MeshBasicMaterial({side: Three.FrontSide});
-
-    let loader = new Three.TextureLoader();
     stepPlaneMaterial.map = loader.load(require('./textures/white-paint.jpg'));
     stepPlaneMaterial.needsUpdate = true;
     stepPlaneMaterial.map.wrapS = Three.RepeatWrapping;
     stepPlaneMaterial.map.wrapT = Three.RepeatWrapping;
+    stepPlaneMaterial.map.repeat.set(stepWidth * whitePaintTextureRepeatFactor, stepHeight * whitePaintTextureRepeatFactor);
 
     // Build stair profile shape
     let starProfileShapePoints = [];
@@ -157,7 +159,8 @@ export default {
     stairProfileMaterial.needsUpdate = true;
     stairProfileMaterial.map.wrapS = Three.RepeatWrapping;
     stairProfileMaterial.map.wrapT = Three.RepeatWrapping;
-    stairProfileMaterial.map.repeat.set(10,10);
+    stairProfileMaterial.map.repeat.set(numberOfSteps * stepDepth * whitePaintTextureRepeatFactor,
+      numberOfSteps * stepHeight * whitePaintTextureRepeatFactor);
 
     let stairProfile = new Three.Mesh(stairShapeProfileGeometry, stairProfileMaterial);
 
@@ -171,7 +174,8 @@ export default {
     stairProfileMaterial2.needsUpdate = true;
     stairProfileMaterial2.map.wrapS = Three.RepeatWrapping;
     stairProfileMaterial2.map.wrapT = Three.RepeatWrapping;
-    stairProfileMaterial2.map.repeat.set(10,10);
+    stairProfileMaterial2.map.repeat.set(numberOfSteps * stepDepth * whitePaintTextureRepeatFactor,
+      numberOfSteps * stepHeight * whitePaintTextureRepeatFactor);
 
     let stairProfile2 = new Three.Mesh(stairShapeProfileGeometry, stairProfileMaterial2);
 
@@ -181,13 +185,23 @@ export default {
     stair.add(stairProfile2);
 
     // Build closures for the stair
-    let closure1Slope = -Math.atan(stepHeight / stepDepth);
-    let stairClosure1Geometry = new Three.PlaneGeometry(newWidth, (numberOfSteps - 1) * stepDepth / Math.cos(closure1Slope));
-    let stairClosure1 = new Three.Mesh(stairClosure1Geometry, stairProfileMaterial2);
 
+    /*** CLOSURE 1 ***/
+    let closure1Slope = -Math.atan(stepHeight / stepDepth);
+    let stairClosure1Width = newWidth;
+    let stairClosure1Height = (numberOfSteps - 1) * stepDepth / Math.cos(closure1Slope);
+    let stairClosure1Geometry = new Three.PlaneGeometry(stairClosure1Width, stairClosure1Height);
+
+    let closure1Material = new Three.MeshPhongMaterial({side: Three.BackSide});
+    closure1Material.map = loader.load(require('./textures/white-paint.jpg'));
+    closure1Material.needsUpdate = true;
+    closure1Material.map.wrapS = Three.RepeatWrapping;
+    closure1Material.map.wrapT = Three.RepeatWrapping;
+    closure1Material.map.repeat.set(stairClosure1Width * whitePaintTextureRepeatFactor,
+      stairClosure1Height * whitePaintTextureRepeatFactor);
+    let stairClosure1 = new Three.Mesh(stairClosure1Geometry, closure1Material);
     let pivotClosure1 = new Three.Object3D();
-    pivotClosure1.add(new Three.Mesh(new Three.SphereGeometry(10), new Three.MeshBasicMaterial({color: 0xff0000})));
-    stairClosure1.position.y += (numberOfSteps - 1) * stepDepth / Math.cos(closure1Slope) / 2;
+    stairClosure1.position.y += stairClosure1Height / 2;
     pivotClosure1.add(stairClosure1);
 
     pivotClosure1.position.x = newWidth / 2;
@@ -197,18 +211,19 @@ export default {
 
     stair.add(pivotClosure1);
 
+    /*** CLOSURE 2 ***/
     let closure2 = new Three.Mesh(stepPlaneGeometry, stepPlaneMaterial);
     closure2.rotation.y = Math.PI;
     closure2.position.x = stepWidth / 2;
     closure2.position.y = numberOfSteps * stepHeight - stepHeight / 2;
     stair.add(closure2);
 
+    /*** CLOSURE 2 ***/
     let closure3 = new Three.Mesh(stepPlaneGeometry, stepPlaneMaterial);
     closure3.rotation.x = Math.PI / 2;
-    closure3.position.x = stepWidth/2;
-    closure3.position.z = (numberOfSteps - 1) * stepDepth + stepDepth/2;
+    closure3.position.x = stepWidth / 2;
+    closure3.position.z = (numberOfSteps - 1) * stepDepth + stepDepth / 2;
 
-    // closure3.position.y = numberOfSteps * stepHeight - stepHeight/2;
     stair.add(closure3);
 
     if (element.selected) {
@@ -227,9 +242,14 @@ export default {
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-    // stair.position.x -= center[0];
-    // stair.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
-    // stair.position.z -= center[2];
+    stair.position.x -= center[0];
+    stair.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
+    stair.position.z -= center[2];
+
+    // I re-scale the stair following the initial attributes
+    stair.scale.set(newWidth / (boundingBox.max.x - boundingBox.min.x),
+      newHeight / (boundingBox.max.y - boundingBox.min.y),
+      newDepth / (boundingBox.max.z - boundingBox.min.z));
 
     stair.position.y += newAltitude;
 
