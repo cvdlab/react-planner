@@ -10,6 +10,7 @@ import {
   BEGIN_ROTATING_ITEM,
   UPDATE_ROTATING_ITEM,
   END_ROTATING_ITEM,
+  SELECT_ITEM,
 
   MODE_IDLE,
   MODE_DRAWING_ITEM,
@@ -22,6 +23,9 @@ import * as Geometry from '../utils/geometry';
 
 export default function (state, action) {
   switch (action.type) {
+    case SELECT_ITEM:
+      return selectItem(state, action.layerID, action.itemID);
+
     case SELECT_TOOL_DRAWING_ITEM:
       return selectToolDrawingItem(state, action.sceneComponentType);
 
@@ -184,4 +188,20 @@ function endRotatingItem(state, x, y) {
     mode: MODE_IDLE,
     sceneHistory: state.sceneHistory.push(state.scene)
   });
+}
+
+function selectItem(state, layerID, itemID) {
+  let scene = state.scene;
+
+  scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+      let item = layer.getIn(['items', itemID]);
+      unselectAll(layer);
+      select(layer, 'items', itemID);
+    })
+  );
+
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
 }

@@ -8,6 +8,7 @@ import {
   BEGIN_DRAGGING_LINE,
   UPDATE_DRAGGING_LINE,
   END_DRAGGING_LINE,
+  SELECT_LINE,
 
   MODE_IDLE,
   MODE_WAITING_DRAWING_LINE,
@@ -51,6 +52,9 @@ export default function (state, action) {
 
     case END_DRAGGING_LINE:
       return endDraggingLine(state, action.x, action.y, action.catalog);
+
+    case SELECT_LINE:
+      return selectLine(state, action.layerID, action.lineID);
 
     default:
       return state;
@@ -243,4 +247,22 @@ function endDraggingLine(state, x, y, catalog) {
       sceneHistory: state.sceneHistory.push(state.scene)
     });
   });
+}
+
+function selectLine(state, layerID, lineID) {
+  let scene = state.scene;
+
+  scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+      let line = layer.getIn(['lines', lineID]);
+      unselectAll(layer);
+      select(layer, 'lines', lineID);
+      select(layer, 'vertices', line.vertices.get(0));
+      select(layer, 'vertices', line.vertices.get(1));
+    })
+  );
+
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
 }

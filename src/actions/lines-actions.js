@@ -1,4 +1,5 @@
 import {
+  SELECT_LINE,
   SELECT_TOOL_DRAWING_LINE,
   BEGIN_DRAWING_LINE,
   UPDATE_DRAWING_LINE,
@@ -8,6 +9,13 @@ import {
   END_DRAGGING_LINE
 } from '../constants';
 
+export function selectLine(layerID, lineID) {
+  return {
+    type: SELECT_LINE,
+    layerID,
+    lineID
+  }
+}
 
 export function selectToolDrawingLine(sceneComponentType) {
   return {

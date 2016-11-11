@@ -1,4 +1,5 @@
 import {
+  SELECT_HOLE,
   SELECT_TOOL_DRAWING_HOLE,
   UPDATE_DRAWING_HOLE,
   END_DRAWING_HOLE,
@@ -7,6 +8,13 @@ import {
   END_DRAGGING_HOLE
 } from '../constants';
 
+export function selectHole(layerID, holeID) {
+  return {
+    type: SELECT_HOLE,
+    layerID,
+    holeID
+  }
+}
 
 export function selectToolDrawingHole(sceneComponentType) {
   return {

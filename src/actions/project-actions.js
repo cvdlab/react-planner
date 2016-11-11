@@ -5,7 +5,13 @@ import {
   SAVE_PROJECT,
   LOAD_PROJECT_FROM_FILE,
   SAVE_PROJECT_TO_FILE,
-  OPEN_CATALOG
+  OPEN_CATALOG,
+  SELECT_TOOL_EDIT,
+  UNSELECT_ALL,
+  SET_PROPERTIES,
+  REMOVE,
+  UNDO,
+  ROLLBACK
 } from '../constants';
 
 export function loadProject(data) {
@@ -60,5 +66,46 @@ export function openCatalog() {
       type: OPEN_CATALOG,
       catalog
     });
+  }
+}
+
+export function selectToolEdit() {
+  return {
+    type: SELECT_TOOL_EDIT
+  }
+}
+
+export function unselectAll() {
+  return {
+    type: UNSELECT_ALL
+  }
+}
+
+
+export function setProperties(properties) {
+  return {
+    type: SET_PROPERTIES,
+    properties
+  }
+}
+
+export function remove() {
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: REMOVE,
+      catalog
+    })
+  }
+}
+
+export function undo() {
+  return {
+    type: UNDO
+  }
+}
+
+export function rollback() {
+  return {
+    type: ROLLBACK
   }
 }

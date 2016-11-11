@@ -1,4 +1,5 @@
 import {
+  SELECT_ITEM,
   SELECT_TOOL_DRAWING_ITEM,
   UPDATE_DRAWING_ITEM,
   END_DRAWING_ITEM,
@@ -10,6 +11,13 @@ import {
   END_ROTATING_ITEM
 } from '../constants';
 
+export function selectItem(layerID, itemID) {
+  return {
+    type: SELECT_ITEM,
+    layerID,
+    itemID
+  }
+}
 
 export function selectToolDrawingItem(sceneComponentType) {
   return {

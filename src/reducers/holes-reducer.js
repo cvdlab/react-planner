@@ -7,6 +7,7 @@ import {
   BEGIN_DRAGGING_HOLE,
   UPDATE_DRAGGING_HOLE,
   END_DRAGGING_HOLE,
+  SELECT_HOLE,
 
   MODE_IDLE,
   MODE_DRAWING_HOLE,
@@ -19,7 +20,7 @@ import {
   unselect,
   unselectAll,
   addHole,
-  removeHole
+  removeHole,
 } from '../utils/layer-operations';
 import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
 
@@ -42,6 +43,9 @@ export default function (state, action) {
 
     case END_DRAGGING_HOLE:
       return endDraggingHole(state, action.x, action.y);
+
+    case SELECT_HOLE:
+      return selectHole(state, action.layerID, action.holeID);
 
     default:
       return state;
@@ -165,4 +169,18 @@ function endDraggingHole(state, x, y) {
     mode: MODE_IDLE,
     sceneHistory: state.sceneHistory.push(state.scene)
   });
+}
+
+function selectHole(state, layerID, holeID) {
+  let scene = state.scene;
+
+  scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+    unselectAll(layer);
+    select(layer, 'holes', holeID);
+  }));
+
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
 }
