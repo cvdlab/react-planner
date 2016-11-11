@@ -4,37 +4,45 @@ import IDBroker from '../utils/id-broker';
 import {unselectAll} from '../utils/layer-operations';
 
 export default function (state, action) {
-
   switch (action.type) {
     case ADD_LAYER:
-      return state.set('scene', addLayer(state.scene, action.name, action.altitude));
+      return addLayer(state, action.name, action.altitude);
 
     case SELECT_LAYER:
-      return state.merge({
-        'scene': selectLayer(state.scene, action.layerID)
-      });
-    
+      return  selectLayer(state, action.layerID);
+
     case SET_LAYER_PROPERTIES:
-      return state.set('scene', setLayerProperties(state.scene, action.layerID, action.properties));
+      return setLayerProperties(state, action.layerID, action.properties);
 
     default:
       return state;
   }
 }
 
-function addLayer(scene, name, altitude) {
+function addLayer(state, name, altitude) {
   let layerID = IDBroker.acquireID();
   let layer = new Layer({id: layerID, name, altitude});
-  return scene.setIn(['layers', layerID], layer);
+  let scene = state.scene.setIn(['layers', layerID], layer);
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
 }
 
-function selectLayer(scene, layerID) {
-  return scene.merge({
-    'selectedLayer': layerID,
-    'layers': scene.layers.map(layer => unselectAll(layer))
+function selectLayer(state, layerID) {
+  let scene = state.scene;
+  scene = scene.merge({
+    selectedLayer: layerID,
+    layers: scene.layers.map(layer => unselectAll(layer))
   });
+
+  return state.set('scene', scene);
 }
 
-function setLayerProperties(scene, layerID, properties) {
-  return scene.mergeIn(['layers', layerID], properties);
+function setLayerProperties(state, layerID, properties) {
+  let scene = state.scene.mergeIn(['layers', layerID], properties);
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
 }
