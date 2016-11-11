@@ -24,7 +24,8 @@ import {
   unselect,
   unselectAll as unselectAllOp,
   removeItem,
-  loadLayerFromJSON
+  loadLayerFromJSON,
+  setPropertiesOnSelected
 } from '../utils/layer-operations';
 
 export default function (state, action) {
@@ -87,15 +88,7 @@ function loadProject(state, data, catalog) {
 
 function setProperties(state, properties) {
   let scene = state.scene;
-
-  scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
-    layer.selected.lines.forEach(lineID => setPropertiesOp(layer, 'lines', lineID, properties));
-    layer.selected.holes.forEach(holeID => setPropertiesOp(layer, 'holes', holeID, properties));
-    layer.selected.areas.forEach(areaID => setPropertiesOp(layer, 'areas', areaID, properties));
-    layer.selected.items.forEach(itemID => setPropertiesOp(layer, 'items', itemID, properties));
-    // unselectAllOp(layer);
-  }));
-
+  scene = scene.set('layers', scene.layers.map(layer => setPropertiesOnSelected(layer, properties)));
   return state.merge({
     scene,
     sceneHistory: state.sceneHistory.push(scene)

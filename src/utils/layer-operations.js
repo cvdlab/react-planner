@@ -233,7 +233,17 @@ export function unselect(layer, prototype, ID) {
 
 export function setProperties(layer, prototype, ID, properties) {
   properties = fromJS(properties);
-  return layer.setIn([prototype, ID, 'properties'], properties);
+  return layer.mergeIn([prototype, ID, 'properties'], properties);
+}
+
+export function setPropertiesOnSelected(layer, properties){
+  return layer.withMutations(layer => {
+    let selected = layer.selected;
+    selected.lines.forEach(lineID => setProperties(layer, 'lines', lineID, properties));
+    selected.holes.forEach(holeID => setProperties(layer, 'holes', holeID, properties));
+    selected.areas.forEach(areaID => setProperties(layer, 'areas', areaID, properties));
+    selected.items.forEach(itemID => setProperties(layer, 'items', itemID, properties));
+  });
 }
 
 export function unselectAll(layer) {
