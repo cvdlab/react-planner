@@ -85,7 +85,7 @@ function extractElementData(node) {
 }
 
 export default function Viewer2D({state, width, height},
-  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions}) {
+  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions}) {
 
 
   let {viewer2D, mode, activeSnapElement, snapElements, scene} = state;
@@ -109,23 +109,23 @@ export default function Viewer2D({state, width, height},
 
         switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
-            editingActions.selectArea(elementData.layer, elementData.id);
+            areaActions.selectArea(elementData.layer, elementData.id);
             break;
 
           case 'lines':
-            editingActions.selectLine(elementData.layer, elementData.id);
+            linesActions.selectLine(elementData.layer, elementData.id);
             break;
 
           case 'holes':
-            editingActions.selectHole(elementData.layer, elementData.id);
+            holesActions.selectHole(elementData.layer, elementData.id);
             break;
 
           case 'items':
-            editingActions.selectItem(elementData.layer, elementData.id);
+            itemsActions.selectItem(elementData.layer, elementData.id);
             break;
 
           case 'none':
-            editingActions.unselectAll();
+            projectActions.unselectAll();
             break;
         }
         break;
@@ -320,4 +320,6 @@ Viewer2D.contextTypes = {
   holesActions: PropTypes.object.isRequired,
   verticesActions: PropTypes.object.isRequired,
   itemsActions: PropTypes.object.isRequired,
+  areaActions: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired,
 };
