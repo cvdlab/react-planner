@@ -43,7 +43,7 @@ const STYLE_ADD_LABEL = {
   marginLeft: "5px"
 };
 
-export default function PanelLayers({scene, mode}, {sceneActions}) {
+export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
 
   let addClick = event => {
     let name = window.prompt("layer name");
@@ -89,8 +89,7 @@ export default function PanelLayers({scene, mode}, {sceneActions}) {
 }
 
 PanelLayers.propTypes = {
-  scene: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired
+  state: PropTypes.object.isRequired,
 };
 
 PanelLayers.contextTypes = {

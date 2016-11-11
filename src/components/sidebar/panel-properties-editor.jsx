@@ -3,7 +3,7 @@ import Panel from './panel';
 import {Map, Seq, Iterable} from 'immutable';
 import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../constants';
 
-export default function PanelPropertiesEditor({scene, mode}) {
+export default function PanelPropertiesEditor({state: {scene, mode}}) {
 
   if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
 
@@ -28,8 +28,7 @@ export default function PanelPropertiesEditor({scene, mode}) {
 }
 
 PanelPropertiesEditor.propTypes = {
-  scene: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired
+  state: PropTypes.object.isRequired,
 };
 
 

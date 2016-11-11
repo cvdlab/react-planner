@@ -17,7 +17,7 @@ const STYLE_ADD_LABEL = {
   marginLeft: "5px"
 };
 
-export default function PanelGuides({scene, mode}) {
+export default function PanelGuides({state: {scene, mode}}) {
   return (
     <Panel name="Guides">
       <div key={1} style={{background: "#3a3a3e", padding: "5px 15px 5px 15px"}}>
@@ -42,8 +42,7 @@ export default function PanelGuides({scene, mode}) {
 }
 
 PanelGuides.propTypes = {
-  scene: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired
+  state: PropTypes.object.isRequired,
 };
 
 PanelGuides.contextTypes = {};

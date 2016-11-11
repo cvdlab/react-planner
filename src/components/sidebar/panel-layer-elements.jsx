@@ -4,7 +4,7 @@ import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../constants';
 import {Scrollbars} from 'react-custom-scrollbars';
 
 
-export default function PanelLayerElement({scene, mode}, {editingActions}) {
+export default function PanelLayerElement({state: {scene, mode}}, {editingActions}) {
 
   if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
 
@@ -57,8 +57,7 @@ export default function PanelLayerElement({scene, mode}, {editingActions}) {
 }
 
 PanelLayerElement.propTypes = {
-  scene: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired
+  state: PropTypes.object.isRequired,
 };
 
 PanelLayerElement.contextTypes = {
