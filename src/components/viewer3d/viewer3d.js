@@ -97,35 +97,8 @@ export default class Scene3DViewer extends React.Component {
       }
     };
 
-    this.removeObjectKeyListener = (event) => {
-      const KEY_DELETE = 46;
-      const KEY_BACKSPACE = 8;
-
-      let selectedLayer = this.props.state.scene.selectedLayer;
-      let selectedObjects = this.props.state.scene.layers.get(selectedLayer).selected;
-      switch (event.keyCode) {
-        case KEY_BACKSPACE:
-        case KEY_DELETE:
-
-          selectedObjects.lines.forEach(line => {
-            editingActions.remove(line);
-          });
-
-          selectedObjects.holes.forEach(hole => {
-            editingActions.remove(hole);
-          });
-
-          selectedObjects.items.forEach(item => {
-            editingActions.remove(item);
-          });
-
-          break;
-      }
-    };
-
-    this.renderer.domElement.addEventListener('mousedown', this.mouseDownEvent, false);
-    this.renderer.domElement.addEventListener('mouseup', this.mouseUpEvent, false);
-    document.addEventListener('keydown', this.removeObjectKeyListener, false);
+    this.renderer.domElement.addEventListener('mousedown', this.mouseDownEvent);
+    this.renderer.domElement.addEventListener('mouseup', this.mouseUpEvent);
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(this.renderer.domElement);
@@ -256,7 +229,6 @@ export default class Scene3DViewer extends React.Component {
 
     this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
     this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
-    document.removeEventListener('keydown', this.removeObjectKeyListener);
 
     disposeScene(this.scene3D);
     this.scene3D.remove(this.planData.plan);

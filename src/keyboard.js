@@ -1,5 +1,5 @@
 import {remove} from './actions/editing-actions';
-import {MODE_IDLE, STORAGE_KEY} from './constants';
+import {MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW, STORAGE_KEY} from './constants';
 import {rollback, undo} from './actions/project-actions';
 
 const KEY_DELETE = 46;
@@ -8,12 +8,11 @@ const KEY_ESC = 27;
 const KEY_Z = 90;
 
 export default function keyboard(store) {
-
   window.addEventListener('keydown', event => {
     switch (event.keyCode) {
       case KEY_BACKSPACE:
       case KEY_DELETE:
-        if (store.getState().mode === MODE_IDLE)
+        if ([MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(store.getState().mode))
           store.dispatch(remove());
         break;
 

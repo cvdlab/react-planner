@@ -115,8 +115,8 @@ export default class Viewer3DFirstPerson extends React.Component {
       moveRight = moveResult.moveRight;
     };
 
-    document.addEventListener('keydown', this.keyDownEvent, false);
-    document.addEventListener('keyup', this.keyUpEvent, false);
+    document.addEventListener('keydown', this.keyDownEvent);
+    document.addEventListener('keyup', this.keyUpEvent);
 
     // Add a pointer to the scene
 
@@ -184,34 +184,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     };
 
-    this.removeObjectKeyListener = (event) => {
-      const KEY_DELETE = 46;
-      const KEY_BACKSPACE = 8;
-
-      let selectedLayer = this.props.state.scene.selectedLayer;
-      let selectedObjects = this.props.state.scene.layers.get(selectedLayer).selected;
-      switch (event.keyCode) {
-        case KEY_BACKSPACE:
-        case KEY_DELETE:
-
-          selectedObjects.lines.forEach(line => {
-            editingActions.remove(line);
-          });
-
-          selectedObjects.holes.forEach(hole => {
-            editingActions.remove(hole);
-          });
-
-          selectedObjects.items.forEach(item => {
-            editingActions.remove(item);
-          });
-
-          break;
-      }
-    };
-
     document.addEventListener('mousedown', this.firstPersonMouseDown, false);
-    document.addEventListener('keydown', this.removeObjectKeyListener, false);
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(this.renderer.domElement);
@@ -268,7 +241,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     document.removeEventListener('mozpointerlockchange', this.pointerlockChangeEvent);
     document.removeEventListener('webkitpointerlockchange', this.pointerlockChangeEvent);
     this.renderer.domElement.removeEventListener('click', this.requestPointerLockEvent);
-    document.removeEventListener('keydown', this.removeObjectKeyListener);
 
     disposeScene(this.scene3D);
 
