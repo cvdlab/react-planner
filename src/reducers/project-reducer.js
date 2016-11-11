@@ -158,8 +158,13 @@ export function rollback(state) {
 
   if (sceneHistory.isEmpty()) return state;
 
+  let scene = sceneHistory
+    .last()
+    .update('layers', layer => layer.map(unselectAllOp));
+
   return state.merge({
     mode: MODE_IDLE,
-    scene: sceneHistory.last(),
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
   });
 }
