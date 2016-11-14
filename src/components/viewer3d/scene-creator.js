@@ -260,10 +260,10 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
 
     let holeHeight = holeData.properties.get('height').get('length');
 
-    object.rotation.y = alpha;
-    object.position.x = vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
-    object.position.y = holeAltitude + holeHeight / 2 - center[1];
-    object.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
+    object.rotation.y += alpha;
+    object.position.x += vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
+    object.position.y += holeAltitude + holeHeight / 2 - center[1];
+    object.position.z += -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
     planData.plan.add(object);
     planData.sceneGraph.layers[layer.id].holes[holeData.id] = object;
