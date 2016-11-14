@@ -36,7 +36,10 @@ function selectLayer(state, layerID) {
     layers: scene.layers.map(layer => unselectAll(layer))
   });
 
-  return state.set('scene', scene);
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
 }
 
 function setLayerProperties(state, layerID, properties) {
