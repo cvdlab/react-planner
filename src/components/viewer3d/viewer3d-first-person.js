@@ -89,12 +89,9 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.requestPointerLockEvent = requestPointerLockEvent;
 
     /* Set user initial position */
-    let humanHeight = {length: 1.70, unit: 'm'};
-    let humanHeightPixels = convert(humanHeight.length)
-        .from(humanHeight.unit)
-        .to(state.scene.unit);
+    let humanHeight = 170; // 170 cm
 
-    let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeightPixels;
+    let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeight;
     this.controls.getObject().position.set(-50, yInitialPosition, -100);
     sceneOnTop.add(this.controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
 
@@ -192,7 +189,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let render = () => {
 
-      yInitialPosition = planData.boundingBox.min.y + humanHeightPixels;
+      yInitialPosition = planData.boundingBox.min.y + humanHeight;
 
       this.controls.getObject().position.y = yInitialPosition;
 
