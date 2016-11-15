@@ -243,6 +243,9 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
   // Create the hole object
   catalog.getElement(holeData.type).render3D(holeData, layer, sceneData).then(object => {
 
+    let pivot = new Three.Object3D();
+    pivot.add(object);
+
     let line = layer.lines.get(holeData.line);
 
     // First of all I need to find the vertices of this line
@@ -258,7 +261,7 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
     let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
     let alpha = Math.asin((vertex1.y - vertex0.y) / distance);
 
-    let boundingBox = new Three.Box3().setFromObject(object);
+    let boundingBox = new Three.Box3().setFromObject(pivot);
     let center = [
       (boundingBox.max.x - boundingBox.min.x) / 2 + boundingBox.min.x,
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
@@ -268,15 +271,15 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
 
     let holeHeight = holeData.properties.get('height').get('length');
 
-    object.rotation.y += alpha;
-    object.position.x += vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
-    object.position.y += holeAltitude + holeHeight / 2 - center[1];
-    object.position.z += -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
+    pivot.rotation.y = alpha;
+    pivot.position.x = vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
+    pivot.position.y = holeAltitude + holeHeight / 2 - center[1];
+    pivot.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
-    planData.plan.add(object);
-    planData.sceneGraph.layers[layer.id].holes[holeData.id] = object;
+    planData.plan.add(pivot);
+    planData.sceneGraph.layers[layer.id].holes[holeData.id] = pivot;
 
-    applyInteract(object, () => {
+    applyInteract(pivot, () => {
       return editingActions.selectHole(layer.id, holeData.id)
     });
 
@@ -299,16 +302,19 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
 
   catalog.getElement(line.type).render3D(line, layer, sceneData).then(line3D => {
 
-    line3D.position.x += vertex0.x;
-    line3D.position.y += layer.altitude;
-    line3D.position.z -= vertex0.y;
+    let pivot = new Three.Object3D();
+    pivot.add(line3D);
 
-    line3D.visible = layer.visible;
+    pivot.position.x = vertex0.x;
+    pivot.position.y = layer.altitude;
+    pivot.position.z = -vertex0.y;
 
-    planData.plan.add(line3D);
-    planData.sceneGraph.layers[layer.id].lines[lineID] = line3D;
+    pivot.visible = layer.visible;
 
-    applyInteract(line3D, () => {
+    planData.plan.add(pivot);
+    planData.sceneGraph.layers[layer.id].lines[lineID] = pivot;
+
+    applyInteract(pivot, () => {
       return editingActions.selectLine(layer.id, line.id);
     });
 
@@ -323,12 +329,14 @@ function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
   };
 
   catalog.getElement(area.type).render3D(area, layer, sceneData).then(area3D => {
-    area3D.position.y += layer.altitude;
-    planData.plan.add(area3D);
-    planData.sceneGraph.layers[layer.id].areas[area.id] = area3D;
-    area3D.visible = layer.visible;
+    let pivot = new Three.Object3D();
+    pivot.add(area3D);
+    pivot.position.y = layer.altitude;
+    planData.plan.add(pivot);
+    planData.sceneGraph.layers[layer.id].areas[area.id] = pivot;
+    pivot.visible = layer.visible;
 
-    applyInteract(area3D, interactFunction);
+    applyInteract(pivot, interactFunction);
 
     updateBoundingBox(planData);
   });
@@ -344,7 +352,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
 
     pivot.rotation.y = item.rotation * Math.PI / 180;
     pivot.position.x = item.x;
-    pivot.position.z -= item.y;
+    pivot.position.z = -item.y;
 
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, item.id);
