@@ -131,6 +131,14 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
       for (let areaID in layerGraph.areas) {
         layerGraph.areas[areaID].visible = layer.visible;
       }
+
+      for (let itemID in layerGraph.items) {
+        layerGraph.items[itemID].visible = layer.visible;
+      }
+
+      for (let holeID in layerGraph.holes) {
+        layerGraph.holes[holeID].visible = layer.visible;
+      }
       break;
   }
 }
