@@ -57,7 +57,9 @@ export const Scene = Record({
   guides: DefaultGuides,
   selectedLayer: 'layer-1',
   width: 3000,
-  height: 2000
+  height: 2000,
+
+  meta: new Map()   //additional info
 }, 'Scene');
 
 
@@ -126,6 +128,6 @@ export const State = Record({
   draggingSupport: Map(),
   rotatingSupport: Map(),
 
-  misc: new Map()
+  misc: new Map()   //additional info
 }, 'State');
 
