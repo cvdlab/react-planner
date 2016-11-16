@@ -7,7 +7,7 @@ const STYLE_BUTTON_RESET = {backgroundColor: "gray", border: 0, color: "white", 
 const STYLE_BUTTON_SAVE = {backgroundColor: "green", border: 0, color: "white", margin: "3px"};
 const STYLE_BUTTON_REMOVE = {backgroundColor: "red", border: 0, color: "white", margin: "3px"};
 
-class PropertiesEditor extends Component {
+export default class PropertiesEditor extends Component {
 
   constructor(props, context) {
     super(props, context);
