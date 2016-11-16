@@ -61,18 +61,19 @@ class PropertiesEditor extends Component {
   }
 
   render() {
-    let {state, context: {editingActions, catalog}} = this;
+    let {state, context: {editingActions, catalog}, props:{state: appState}} = this;
 
-    let renderInputElement = (inputElement, propertyName, value, configs)=> {
+    let renderInputElement = (inputElement, propertyName, value, configs) => {
       let {Viewer, Editor} = catalog.propertyTypes[inputElement];
 
-      return React.createElement(Editor, {
-        key: propertyName,
-        propertyName,
-        value,
-        configs,
-        onUpdate: value => this.updateProperty(propertyName, value)
-      });
+      return <Editor
+        key={propertyName}
+        propertyName={propertyName}
+        value={value}
+        configs={configs}
+        onUpdate={value => this.updateProperty(propertyName, value)}
+        state={appState}
+      />
     };
 
     return (
@@ -93,6 +94,7 @@ class PropertiesEditor extends Component {
 }
 
 PropertiesEditor.propTypes = {
+  state: PropTypes.object.isRequired,
   element: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired
 };
