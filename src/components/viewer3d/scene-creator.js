@@ -276,6 +276,8 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
     pivot.position.y = holeAltitude + holeHeight / 2 - center[1];
     pivot.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
+    pivot.visible = layer.visible;
+
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].holes[holeData.id] = pivot;
 
@@ -353,6 +355,8 @@ function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
     pivot.rotation.y = item.rotation * Math.PI / 180;
     pivot.position.x = item.x;
     pivot.position.z = -item.y;
+
+    pivot.visible = layer.visible;
 
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, item.id);
