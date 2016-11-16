@@ -248,7 +248,7 @@ export default class Viewer3DFirstPerson extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let {width, height, state} = nextProps;
+    let {width, height} = nextProps;
     let {camera, renderer, scene3D, sceneOnTop, planData} = this;
 
     this.width = width;
@@ -260,7 +260,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     if (nextProps.scene !== this.props.state.scene) {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
+      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
     }
 
     renderer.setSize(width, height);
