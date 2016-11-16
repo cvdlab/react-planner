@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import PanelPropertiesEditor from './panel-properties-editor';
+import PanelPropertiesEditor from './panel-properties-editor/panel-properties-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
 import PanelLayerElements from './panel-layer-elements';
