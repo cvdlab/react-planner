@@ -192,7 +192,7 @@ export class Scene extends Record({
 
 }, 'Scene') {
   constructor(json = {}) {
-    let layers = safeLoadMapList(json.layers, Layer, DefaultLayers)
+    let layers = safeLoadMapList(json.layers, Layer, DefaultLayers);
     super({
       ...json,
       guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
