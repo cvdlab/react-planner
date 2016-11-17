@@ -2,6 +2,9 @@ import React, {PropTypes} from 'react';
 import CatalogItem from './catalog-item';
 import {Seq} from 'immutable'
 
+const STYLE_TITLE ={
+  color: "#2e2f33",
+};
 
 const STYLE_CONTAINER = {
   padding: "0 20px",
@@ -16,8 +19,8 @@ const STYLE_ITEMS = {
 
 export default function CatalogList({width, height, state}, {catalog}) {
   return (
-    <div style={{width, height, ...STYLE_CONTAINER}}>
-      <h2>Catalog</h2>
+    <div style={{width, height, ...STYLE_CONTAINER}} onWheel={event => event.stopPropagation()}>
+      <h2 style={STYLE_TITLE}>Catalog</h2>
       <div style={STYLE_ITEMS}>
         {Seq(catalog.elements)
           .entrySeq()
