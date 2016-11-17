@@ -184,7 +184,7 @@ export class Scene extends Record({
   unit: "cm",
   layers: new Map(),
   guides: new Map(),
-  selectedLayer: 'layer-1',//TODO check without default
+  selectedLayer: null,
   width: 3000,
   height: 2000,
 
@@ -192,10 +192,12 @@ export class Scene extends Record({
 
 }, 'Scene') {
   constructor(json = {}) {
+    let layers = safeLoadMapList(json.layers, Layer, DefaultLayers)
     super({
       ...json,
       guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
-      layers: safeLoadMapList(json.layers, Layer, DefaultLayers),
+      layers,
+      selectedLayer: layers.first().id
     })
   }
 }
