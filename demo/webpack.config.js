@@ -33,7 +33,6 @@ module.exports = {
         include: /demo\/src\/catalog/,
         loaders: [
           'file?hash=sha512&digest=hex&name=[path][name].[ext]?[hash]&context=demo/src',
-          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       },
       {
@@ -41,7 +40,6 @@ module.exports = {
         exclude: /demo\/src\/catalog/,
         loaders: [
           'file?hash=sha512&digest=hex&name=[hash].[ext]',
-          'image-webpack?bypassOnDebug&optimizationLevel=7&interlaced=false'
         ]
       }
     ]
