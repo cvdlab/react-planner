@@ -1,17 +1,3 @@
-function funcChain(functions) {
-  return function (...args) {
-    let i = 0;
-    let res = args;
-    while (i < functions.length) {
-      let f = functions[i];
-      res = f.call(this, ...res);
-      i++;
-    }
-    return res;
-  };
-}
-
-
 export default function mergePlugins(plugins) {
 
   let customActions = {};
@@ -30,8 +16,14 @@ export default function mergePlugins(plugins) {
     if (plugin.hasOwnProperty('onReady')) onReady.push(plugin.onReady);
   });
 
-  let customReducerFunc = customReducer.length > 0 ? funcChain(customReducer) : store => store;
-  let onReadyFunc = onReady.length > 0 ? funcChain(onReady) : () => null;
+  let onReadyFunc = store => {
+    onReady.forEach(f => f(store))
+  };
+
+  let customReducerFunc = (state, action) => {
+    customReducer.forEach(f => state = f(state, action));
+    return state;
+  };
 
   return {
     customActions,

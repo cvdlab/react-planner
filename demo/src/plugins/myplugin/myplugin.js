@@ -18,7 +18,7 @@ export default {
 
   toolbarButtons: [ButtonX],
 
-  onReady: function(state){
+  onReady: function(store){
     console.log('myplugin ready')
   }
 }
