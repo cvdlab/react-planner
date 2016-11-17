@@ -71,22 +71,7 @@ function openCatalog(state){
 }
 
 function loadProject(state, data, catalog) {
-
-  let readGuides = guides => new Seq(guides)
-    .map(guide => new Guide(guide)
-      .set('properties', new Map(guide.properties))
-    ).toMap();
-
-  let readScene = scene => new Scene(scene)
-    .set('layers', new Seq(scene.layers).map(layer => loadLayerFromJSON(layer, catalog)).toMap())
-    .set('guides', readGuides(scene.guides))
-    .set('selectedLayer', Object.keys(scene.layers)[0]);
-  let scene = readScene(data);
-
-  return new State({
-    scene,
-    sceneHistory: new List([scene])
-  });
+  return new State({scene: data});
 }
 
 

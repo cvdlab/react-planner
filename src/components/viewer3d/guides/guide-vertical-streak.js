@@ -1,12 +1,13 @@
 import * as Three from 'three';
 import {HELVETIKER} from '../libs/helvetiker_regular.typeface.js';
+import {List} from 'immutable';
 
 export default function (width, height, guide) {
   let step = guide.properties.get('step');
   let colors;
 
-  if(guide.properties.has('color')) {
-    colors = [guide.properties.get('color')];
+  if (guide.properties.has('color')) {
+    colors = new List([guide.properties.get('color')]);
   } else {
     colors = guide.properties.get('colors');
   }
@@ -22,8 +23,8 @@ export default function (width, height, guide) {
     let geometry = new Three.Geometry();
     geometry.vertices.push(new Three.Vector3(i, 0, 0));
     geometry.vertices.push(new Three.Vector3(i, 0, -height));
-
-    let material = new Three.LineBasicMaterial({color: colors[counter%colors.length]});
+    let color = colors.get(counter % colors.size);
+    let material = new Three.LineBasicMaterial({color});
 
     if (counter % 5 == 0) {
       let shape = new Three.TextGeometry(counter * step, {
