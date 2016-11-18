@@ -19,6 +19,7 @@ export function parseData(sceneData, editingActions, catalog) {
   // Add a grid to the plan
   planData.grid = createGrid(sceneData);
   planData.boundingBox = new Three.Box3().setFromObject(planData.grid);
+  let promises = [];
 
   sceneData.layers.forEach(layer => {
 
@@ -33,21 +34,25 @@ export function parseData(sceneData, editingActions, catalog) {
 
     // Import lines
     layer.lines.forEach(line => {
-      addLine(sceneData, planData, layer, line.id, catalog, editingActions);
+      promises.push(addLine(sceneData, planData, layer, line.id, catalog, editingActions));
       line.holes.forEach(holeID => {
-        addHole(sceneData, planData, layer, holeID, catalog, editingActions);
+        promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
       })
     });
 
     // Import areas
     layer.areas.forEach(area => {
-      addArea(sceneData, planData, layer, area.id, catalog, editingActions);
+      promises.push(addArea(sceneData, planData, layer, area.id, catalog, editingActions));
     });
 
     // Import items
     layer.items.forEach(item => {
-      addItem(sceneData, planData, layer, item.id, catalog, editingActions);
+      promises.push(addItem(sceneData, planData, layer, item.id, catalog, editingActions));
     });
+  });
+
+  Promise.all(promises).then(value => {
+    updateBoundingBox(planData);
   });
 
   return planData;
@@ -85,6 +90,7 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
 
 function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
+  let promises = [];
   switch (modifiedPath[3]) {
     case "layer":
       break;
@@ -96,29 +102,29 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
       if (modifiedPath[5] === 'selected') {
         // I remove only the hole without removing the wall
         removeHole(planData, layer, newHoleData.id);
-        addHole(sceneData, planData, layer, newHoleData.id, catalog, editingActions);
+        promises.push(addHole(sceneData, planData, layer, newHoleData.id, catalog, editingActions));
       } else {
         layer.lines.get(lineID).holes.forEach(holeID => {
           removeHole(planData, layer, holeID);
         });
         removeLine(planData, layer, lineID);
-        addLine(sceneData, planData, layer, lineID, catalog, editingActions);
+        promises.push(addLine(sceneData, planData, layer, lineID, catalog, editingActions));
         layer.lines.get(lineID).holes.forEach(holeID => {
-          addHole(sceneData, planData, layer, holeID, catalog, editingActions);
+          promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
         });
       }
       break;
     case "lines":
       removeLine(planData, layer, modifiedPath[4]);
-      addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
       break;
     case "areas":
       removeArea(planData, layer, modifiedPath[4]);
-      addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
       break;
     case "items":
       removeItem(planData, layer, modifiedPath[4]);
-      addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+      promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
       break;
 
     case "visible":
@@ -141,10 +147,14 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
       }
       break;
   }
+  Promise.all(promises).then(values => {
+    updateBoundingBox(planData);
+  })
 }
 
 function removeObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
+  let promises = [];
   switch (modifiedPath[3]) {
     case "lines":
       // Here I remove the line with all its holes
@@ -156,9 +166,9 @@ function removeObject(modifiedPath, layer, planData, editingActions, sceneData, 
       removeLine(planData, layer, lineID);
       if (modifiedPath.length > 5) {
         // I removed an hole, so I should add the new line
-        addLine(sceneData, planData, layer, lineID, catalog, editingActions);
+        promises.push(addLine(sceneData, planData, layer, lineID, catalog, editingActions));
         layer.lines.get(lineID).holes.forEach(holeID => {
-          addHole(sceneData, planData, layer, holeID, catalog, editingActions);
+          promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
         });
       }
       break;
@@ -175,6 +185,10 @@ function removeObject(modifiedPath, layer, planData, editingActions, sceneData, 
       }
       break;
   }
+
+  Promise.all(promises).then(values => {
+    updateBoundingBox(planData);
+  })
 }
 
 function removeHole(planData, layer, holeToRemoveID) {
@@ -215,33 +229,38 @@ function removeItem(planData, layer, itemID) {
 
 function addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
+  let promises = [];
   switch (modifiedPath[3]) {
     case "lines":
       if (modifiedPath.length === 5) {
         // I have to add a line
-        addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+        promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
       }
       break;
     case "areas":
       if (modifiedPath.length === 5) {
         // I have to add an area
-        addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+        promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
       }
       break;
     case "items":
       if (modifiedPath.length === 5) {
         // I have to add an area
-        addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions);
+        promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
       }
       break;
   }
+
+  Promise.all(promises).then(values => {
+    updateBoundingBox(planData);
+  })
 }
 
 function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
   let holeData = layer.holes.get(holeID);
 
   // Create the hole object
-  catalog.getElement(holeData.type).render3D(holeData, layer, sceneData).then(object => {
+  return catalog.getElement(holeData.type).render3D(holeData, layer, sceneData).then(object => {
 
     let pivot = new Three.Object3D();
     pivot.add(object);
@@ -285,7 +304,6 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
       return editingActions.selectHole(layer.id, holeData.id)
     });
 
-    updateBoundingBox(planData);
   });
 }
 
@@ -302,7 +320,7 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
     vertex1 = app;
   }
 
-  catalog.getElement(line.type).render3D(line, layer, sceneData).then(line3D => {
+  return catalog.getElement(line.type).render3D(line, layer, sceneData).then(line3D => {
 
     let pivot = new Three.Object3D();
     pivot.add(line3D);
@@ -320,7 +338,6 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
       return editingActions.selectLine(layer.id, line.id);
     });
 
-    updateBoundingBox(planData);
   });
 }
 
@@ -330,7 +347,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
     editingActions.selectArea(layer.id, area.id);
   };
 
-  catalog.getElement(area.type).render3D(area, layer, sceneData).then(area3D => {
+  return catalog.getElement(area.type).render3D(area, layer, sceneData).then(area3D => {
     let pivot = new Three.Object3D();
     pivot.add(area3D);
     pivot.position.y = layer.altitude;
@@ -340,14 +357,13 @@ function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
 
     applyInteract(pivot, interactFunction);
 
-    updateBoundingBox(planData);
   });
 }
 
 function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
   let item = layer.items.get(itemID);
 
-  catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
+  return catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
 
     let pivot = new Three.Object3D();
     pivot.add(item3D);
@@ -365,9 +381,6 @@ function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
 
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].items[item.id] = pivot;
-
-    updateBoundingBox(planData);
-
   });
 
 }
