@@ -8,7 +8,6 @@ import {disposeScene} from './three-memory-cleaner';
 import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
-import convert from 'convert-units';
 
 export default class Viewer3DFirstPerson extends React.Component {
 
@@ -32,7 +31,15 @@ export default class Viewer3DFirstPerson extends React.Component {
     let moveLeft = false;
     let moveRight = false;
 
-    let {editingActions, catalog} = this.context;
+    let {catalog} = this.context;
+
+    let actions = {
+      areaActions: this.context.areaActions,
+      holesActions: this.context.holesActions,
+      itemsActions: this.context.itemsActions,
+      linesActions: this.context.linesActions,
+      projectActions: this.context.projectActions
+    };
 
     let {state} = this.props;
     let data = state.scene;
@@ -48,7 +55,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.renderer.setSize(this.width, this.height);
 
     // LOAD DATA
-    let planData = parseData(data, editingActions, catalog);
+    let planData = parseData(data, actions, catalog);
 
     scene3D.add(planData.plan);
 
@@ -175,7 +182,7 @@ export default class Viewer3DFirstPerson extends React.Component {
         if (intersects.length > 0) {
           intersects[0].object.interact && intersects[0].object.interact();
         } else {
-          editingActions.unselectAll();
+          this.context.projectActions.unselectAll();
         }
       }
 
@@ -251,6 +258,14 @@ export default class Viewer3DFirstPerson extends React.Component {
     let {width, height} = nextProps;
     let {camera, renderer, scene3D, sceneOnTop, planData} = this;
 
+    let actions = {
+      areaActions: this.context.areaActions,
+      holesActions: this.context.holesActions,
+      itemsActions: this.context.itemsActions,
+      linesActions: this.context.linesActions,
+      projectActions: this.context.projectActions
+    };
+
     this.width = width;
     this.height = height;
 
@@ -260,7 +275,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     if (nextProps.scene !== this.props.state.scene) {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
+      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
     }
 
     renderer.setSize(width, height);
@@ -285,6 +300,10 @@ Viewer3DFirstPerson.propTypes = {
 };
 
 Viewer3DFirstPerson.contextTypes = {
-  editingActions: React.PropTypes.object.isRequired,
+  areaActions: React.PropTypes.object.isRequired,
+  holesActions: React.PropTypes.object.isRequired,
+  itemsActions: React.PropTypes.object.isRequired,
+  linesActions: React.PropTypes.object.isRequired,
+  projectActions: React.PropTypes.object.isRequired,
   catalog: React.PropTypes.object
 };

@@ -2,7 +2,7 @@ import * as Three from 'three';
 import createGrid from './grid-creator';
 import {disposeObject} from './three-memory-cleaner';
 
-export function parseData(sceneData, editingActions, catalog) {
+export function parseData(sceneData, actions, catalog) {
 
   let planData = {};
 
@@ -23,7 +23,7 @@ export function parseData(sceneData, editingActions, catalog) {
   sceneData.layers.forEach(layer => {
 
     if (layer.id === sceneData.selectedLayer || layer.visible) {
-      promises = promises.concat(createLayerObjects(layer, planData, sceneData, editingActions, catalog));
+      promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog));
     }
   });
 
@@ -34,7 +34,7 @@ export function parseData(sceneData, editingActions, catalog) {
   return planData;
 }
 
-function createLayerObjects(layer, planData, sceneData, editingActions, catalog) {
+function createLayerObjects(layer, planData, sceneData, actions, catalog) {
 
   let promises = [];
 
@@ -49,26 +49,26 @@ function createLayerObjects(layer, planData, sceneData, editingActions, catalog)
 
   // Import lines
   layer.lines.forEach(line => {
-    promises.push(addLine(sceneData, planData, layer, line.id, catalog, editingActions));
+    promises.push(addLine(sceneData, planData, layer, line.id, catalog, actions.linesActions));
     line.holes.forEach(holeID => {
-      promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
+      promises.push(addHole(sceneData, planData, layer, holeID, catalog, actions.holesActions));
     })
   });
 
   // Import areas
   layer.areas.forEach(area => {
-    promises.push(addArea(sceneData, planData, layer, area.id, catalog, editingActions));
+    promises.push(addArea(sceneData, planData, layer, area.id, catalog, actions.areaActions));
   });
 
   // Import items
   layer.items.forEach(item => {
-    promises.push(addItem(sceneData, planData, layer, item.id, catalog, editingActions));
+    promises.push(addItem(sceneData, planData, layer, item.id, catalog, actions.itemsActions));
   });
-
+  
   return promises;
 }
 
-export function updateScene(planData, sceneData, oldSceneData, diffArray, editingActions, catalog) {
+export function updateScene(planData, sceneData, oldSceneData, diffArray, actions, catalog) {
 
   minimizeChangePropertiesDiffs(diffArray).forEach(diff => {
 
@@ -83,13 +83,13 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
 
         switch (diff.op) {
           case 'replace':
-            replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog);
+            replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
             break;
           case 'add':
-            addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog);
+            addObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
             break;
           case 'remove':
-            removeObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog);
+            removeObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
             break;
         }
       }
@@ -98,12 +98,12 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
       // First of all I check if the new selected layer is not visible
       if (!sceneData.layers.get(layerSelectedID).visible) {
         // I need to create the objects for this layer
-        let promises = createLayerObjects(sceneData.layers.get(layerSelectedID), planData, sceneData, editingActions, catalog)
+        let promises = createLayerObjects(sceneData.layers.get(layerSelectedID), planData, sceneData, actions, catalog);
         Promise.all(promises).then(values => {
           updateBoundingBox(planData);
         })
       }
-      
+
       // Now I have to ckeck the old selectedLayer
       let oldLayerSelectedID = oldSceneData.selectedLayer;
       // First of all I check if the new selected layer is not visible
@@ -132,7 +132,7 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
   return planData;
 }
 
-function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
+function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog) {
 
   let promises = [];
 
@@ -147,29 +147,29 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
       if (modifiedPath[5] === 'selected') {
         // I remove only the hole without removing the wall
         removeHole(planData, layer, newHoleData.id);
-        promises.push(addHole(sceneData, planData, layer, newHoleData.id, catalog, editingActions));
+        promises.push(addHole(sceneData, planData, layer, newHoleData.id, catalog, actions.holesActions));
       } else {
         layer.lines.get(lineID).holes.forEach(holeID => {
           removeHole(planData, layer, holeID);
         });
         removeLine(planData, layer, lineID);
-        promises.push(addLine(sceneData, planData, layer, lineID, catalog, editingActions));
+        promises.push(addLine(sceneData, planData, layer, lineID, catalog, actions.linesActions));
         layer.lines.get(lineID).holes.forEach(holeID => {
-          promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
+          promises.push(addHole(sceneData, planData, layer, holeID, catalog, actions.holesActions));
         });
       }
       break;
     case "lines":
       removeLine(planData, layer, modifiedPath[4]);
-      promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
+      promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions));
       break;
     case "areas":
       removeArea(planData, layer, modifiedPath[4]);
-      promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
+      promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, actions.areaActions));
       break;
     case "items":
       removeItem(planData, layer, modifiedPath[4]);
-      promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
+      promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions));
       break;
 
     case "visible":
@@ -193,7 +193,7 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
         }
 
       } else {
-        promises = promises.concat(createLayerObjects(layer, planData, sceneData, editingActions, catalog))
+        promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog))
       }
 
       break;
@@ -203,7 +203,7 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
   })
 }
 
-function removeObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
+function removeObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog) {
 
   let promises = [];
   switch (modifiedPath[3]) {
@@ -217,9 +217,9 @@ function removeObject(modifiedPath, layer, planData, editingActions, sceneData, 
       removeLine(planData, layer, lineID);
       if (modifiedPath.length > 5) {
         // I removed an hole, so I should add the new line
-        promises.push(addLine(sceneData, planData, layer, lineID, catalog, editingActions));
+        promises.push(addLine(sceneData, planData, layer, lineID, catalog, actions.linesActions));
         layer.lines.get(lineID).holes.forEach(holeID => {
-          promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
+          promises.push(addHole(sceneData, planData, layer, holeID, catalog, actions.holesActions));
         });
       }
       break;
@@ -278,26 +278,26 @@ function removeItem(planData, layer, itemID) {
   updateBoundingBox(planData);
 }
 
-function addObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
+function addObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog) {
 
   let promises = [];
   switch (modifiedPath[3]) {
     case "lines":
       if (modifiedPath.length === 5) {
         // I have to add a line
-        promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
+        promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions));
       }
       break;
     case "areas":
       if (modifiedPath.length === 5) {
         // I have to add an area
-        promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
+        promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, actions.areaActions));
       }
       break;
     case "items":
       if (modifiedPath.length === 5) {
         // I have to add an area
-        promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, editingActions));
+        promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions));
       }
       break;
   }
@@ -307,7 +307,7 @@ function addObject(modifiedPath, layer, planData, editingActions, sceneData, old
   })
 }
 
-function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
+function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
   let holeData = layer.holes.get(holeID);
 
   // Create the hole object
@@ -350,13 +350,13 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
     planData.sceneGraph.layers[layer.id].holes[holeData.id] = pivot;
 
     applyInteract(pivot, () => {
-      return editingActions.selectHole(layer.id, holeData.id)
+      return holesActions.selectHole(layer.id, holeData.id)
     });
 
   });
 }
 
-function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
+function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
   let line = layer.lines.get(lineID);
 
   // First of all I need to find the vertices of this line
@@ -382,16 +382,16 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
     planData.sceneGraph.layers[layer.id].lines[lineID] = pivot;
 
     applyInteract(pivot, () => {
-      return editingActions.selectLine(layer.id, line.id);
+      return linesActions.selectLine(layer.id, line.id);
     });
 
   });
 }
 
-function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
+function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
   let area = layer.areas.get(areaID);
   let interactFunction = () => {
-    editingActions.selectArea(layer.id, area.id);
+    areaActions.selectArea(layer.id, area.id);
   };
 
   return catalog.getElement(area.type).render3D(area, layer, sceneData).then(area3D => {
@@ -406,7 +406,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
   });
 }
 
-function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
+function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
   let item = layer.items.get(itemID);
 
   return catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
@@ -419,7 +419,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
     pivot.position.z = -item.y;
 
     applyInteract(item3D, () => {
-        editingActions.selectItem(layer.id, item.id);
+        itemsActions.selectItem(layer.id, item.id);
       }
     );
 

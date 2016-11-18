@@ -24,7 +24,16 @@ export default class Scene3DViewer extends React.Component {
 
   componentDidMount() {
 
-    let editingActions = this.context.editingActions;
+    let actions = {
+      areaActions: this.context.areaActions,
+      holesActions: this.context.holesActions,
+      itemsActions: this.context.itemsActions,
+      linesActions: this.context.linesActions,
+      projectActions: this.context.projectActions
+    };
+
+    console.log(actions);
+
     let {state} = this.props;
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
@@ -36,7 +45,7 @@ export default class Scene3DViewer extends React.Component {
     this.renderer.setSize(this.width, this.height);
 
     // LOAD DATA
-    let planData = parseData(data, editingActions, this.context.catalog);
+    let planData = parseData(data, actions, this.context.catalog);
 
     scene3D.add(planData.plan);
     scene3D.add(planData.grid);
@@ -92,7 +101,7 @@ export default class Scene3DViewer extends React.Component {
         if (intersects.length > 0) {
           intersects[0].object.interact && intersects[0].object.interact();
         } else {
-          editingActions.unselectAll();
+          this.context.projectActions.unselectAll();
         }
       }
     };
@@ -243,6 +252,14 @@ export default class Scene3DViewer extends React.Component {
     let {width, height} = nextProps;
     let {camera, renderer, scene3D} = this;
 
+    let actions = {
+      areaActions: this.context.areaActions,
+      holesActions: this.context.holesActions,
+      itemsActions: this.context.itemsActions,
+      linesActions: this.context.linesActions,
+      projectActions: this.context.projectActions
+    };
+
     this.width = width;
     this.height = height;
 
@@ -253,7 +270,7 @@ export default class Scene3DViewer extends React.Component {
     if (nextProps.state.scene !== this.props.state.scene) {
 
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), this.context.editingActions, this.context.catalog);
+      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
     }
 
     renderer.setSize(width, height);
@@ -274,6 +291,10 @@ Scene3DViewer.propTypes = {
 };
 
 Scene3DViewer.contextTypes = {
-  editingActions: React.PropTypes.object.isRequired,
+  areaActions: React.PropTypes.object.isRequired,
+  holesActions: React.PropTypes.object.isRequired,
+  itemsActions: React.PropTypes.object.isRequired,
+  linesActions: React.PropTypes.object.isRequired,
+  projectActions: React.PropTypes.object.isRequired,
   catalog: React.PropTypes.object
 };
