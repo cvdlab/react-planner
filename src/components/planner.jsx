@@ -3,7 +3,6 @@ import {bindActionCreators} from 'redux';
 
 import App from './app';
 import initStore from '../reducers/store';
-import autosave from '../autosave';
 import keyboard from '../keyboard';
 import Catalog from './../catalog/catalog';
 import mergePlugins from '../utils/merge-plugins';
@@ -22,7 +21,6 @@ export default class Planner extends Component {
     let {customReducer, actionsExtraArgument, onReady} = this.state;
 
     let store = initStore({...actionsExtraArgument, catalog}, customReducer);
-    autosave(store);
     keyboard(store);
     onReady(store);
     this.store = store;

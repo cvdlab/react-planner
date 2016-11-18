@@ -87,14 +87,6 @@ export const MODE_UPLOADING_IMAGE = 'MODE_UPLOADING_IMAGE';
 export const MODE_FITTING_IMAGE = 'MODE_FITTING_IMAGE';
 export const MODE_VIEWING_CATALOG = 'MODE_VIEWING_CATALOG';
 
-//additional
-export const STORAGE_KEY = 'react_planner_autosave_v0.1';
-export const SAFE_SCENE_MODES = [
-  MODE_IDLE,
-  MODE_3D_VIEW,
-  MODE_3D_FIRST_PERSON,
-  MODE_WAITING_DRAWING_LINE
-];
 
 
 //unit
