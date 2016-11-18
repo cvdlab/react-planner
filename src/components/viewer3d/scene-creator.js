@@ -1,6 +1,5 @@
 import * as Three from 'three';
 import createGrid from './grid-creator';
-import convert from 'convert-units';
 import {disposeObject} from './three-memory-cleaner';
 
 export function parseData(sceneData, editingActions, catalog) {
@@ -23,32 +22,9 @@ export function parseData(sceneData, editingActions, catalog) {
 
   sceneData.layers.forEach(layer => {
 
-    planData.sceneGraph.layers[layer.id] = {
-      lines: {},
-      holes: {},
-      areas: {},
-      items: {},
-      visible: layer.visible,
-      altitude: layer.altitude
-    };
-
-    // Import lines
-    layer.lines.forEach(line => {
-      promises.push(addLine(sceneData, planData, layer, line.id, catalog, editingActions));
-      line.holes.forEach(holeID => {
-        promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
-      })
-    });
-
-    // Import areas
-    layer.areas.forEach(area => {
-      promises.push(addArea(sceneData, planData, layer, area.id, catalog, editingActions));
-    });
-
-    // Import items
-    layer.items.forEach(item => {
-      promises.push(addItem(sceneData, planData, layer, item.id, catalog, editingActions));
-    });
+    if (layer.id === sceneData.selectedLayer || layer.visible) {
+      promises = promises.concat(createLayerObjects(layer, planData, sceneData, editingActions, catalog));
+    }
   });
 
   Promise.all(promises).then(value => {
@@ -56,6 +32,40 @@ export function parseData(sceneData, editingActions, catalog) {
   });
 
   return planData;
+}
+
+function createLayerObjects(layer, planData, sceneData, editingActions, catalog) {
+
+  let promises = [];
+
+  planData.sceneGraph.layers[layer.id] = {
+    lines: {},
+    holes: {},
+    areas: {},
+    items: {},
+    visible: layer.visible,
+    altitude: layer.altitude
+  };
+
+  // Import lines
+  layer.lines.forEach(line => {
+    promises.push(addLine(sceneData, planData, layer, line.id, catalog, editingActions));
+    line.holes.forEach(holeID => {
+      promises.push(addHole(sceneData, planData, layer, holeID, catalog, editingActions));
+    })
+  });
+
+  // Import areas
+  layer.areas.forEach(area => {
+    promises.push(addArea(sceneData, planData, layer, area.id, catalog, editingActions));
+  });
+
+  // Import items
+  layer.items.forEach(item => {
+    promises.push(addItem(sceneData, planData, layer, item.id, catalog, editingActions));
+  });
+
+  return promises;
 }
 
 export function updateScene(planData, sceneData, oldSceneData, diffArray, editingActions, catalog) {
@@ -83,6 +93,40 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
             break;
         }
       }
+    } else if (modifiedPath[1] === 'selectedLayer') {
+      let layerSelectedID = diff.value;
+      // First of all I check if the new selected layer is not visible
+      if (!sceneData.layers.get(layerSelectedID).visible) {
+        // I need to create the objects for this layer
+        let promises = createLayerObjects(sceneData.layers.get(layerSelectedID), planData, sceneData, editingActions, catalog)
+        Promise.all(promises).then(values => {
+          updateBoundingBox(planData);
+        })
+      }
+      
+      // Now I have to ckeck the old selectedLayer
+      let oldLayerSelectedID = oldSceneData.selectedLayer;
+      // First of all I check if the new selected layer is not visible
+      if (!sceneData.layers.get(oldLayerSelectedID).visible) {
+        // I need to remove the objects for this layer
+        let layerGraph = planData.sceneGraph.layers[oldLayerSelectedID];
+
+        for (let lineID in layerGraph.lines) {
+          removeLine(planData, sceneData.layers.get(oldLayerSelectedID), lineID);
+        }
+
+        for (let areaID in layerGraph.areas) {
+          removeArea(planData, sceneData.layers.get(oldLayerSelectedID), areaID);
+        }
+
+        for (let itemID in layerGraph.items) {
+          removeItem(planData, sceneData.layers.get(oldLayerSelectedID), itemID);
+        }
+
+        for (let holeID in layerGraph.holes) {
+          removeHole(planData, sceneData.layers.get(oldLayerSelectedID), holeID);
+        }
+      }
     }
   });
   return planData;
@@ -91,6 +135,7 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, editin
 function replaceObject(modifiedPath, layer, planData, editingActions, sceneData, oldSceneData, catalog) {
 
   let promises = [];
+
   switch (modifiedPath[3]) {
     case "layer":
       break;
@@ -128,23 +173,29 @@ function replaceObject(modifiedPath, layer, planData, editingActions, sceneData,
       break;
 
     case "visible":
-      let layerGraph = planData.sceneGraph.layers[layer.id];
-      layerGraph.visible = layer.visible;
-      for (let lineID in layerGraph.lines) {
-        layerGraph.lines[lineID].visible = layer.visible;
+      if (!layer.visible) {
+        let layerGraph = planData.sceneGraph.layers[layer.id];
+
+        for (let lineID in layerGraph.lines) {
+          removeLine(planData, layer, lineID);
+        }
+
+        for (let areaID in layerGraph.areas) {
+          removeArea(planData, layer, areaID);
+        }
+
+        for (let itemID in layerGraph.items) {
+          removeItem(planData, layer, itemID);
+        }
+
+        for (let holeID in layerGraph.holes) {
+          removeHole(planData, layer, holeID);
+        }
+
+      } else {
+        promises = promises.concat(createLayerObjects(layer, planData, sceneData, editingActions, catalog))
       }
 
-      for (let areaID in layerGraph.areas) {
-        layerGraph.areas[areaID].visible = layer.visible;
-      }
-
-      for (let itemID in layerGraph.items) {
-        layerGraph.items[itemID].visible = layer.visible;
-      }
-
-      for (let holeID in layerGraph.holes) {
-        layerGraph.holes[holeID].visible = layer.visible;
-      }
       break;
   }
   Promise.all(promises).then(values => {
@@ -295,8 +346,6 @@ function addHole(sceneData, planData, layer, holeID, catalog, editingActions) {
     pivot.position.y = holeAltitude + holeHeight / 2 - center[1];
     pivot.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
-    pivot.visible = layer.visible;
-
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].holes[holeData.id] = pivot;
 
@@ -329,8 +378,6 @@ function addLine(sceneData, planData, layer, lineID, catalog, editingActions) {
     pivot.position.y = layer.altitude;
     pivot.position.z = -vertex0.y;
 
-    pivot.visible = layer.visible;
-
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].lines[lineID] = pivot;
 
@@ -353,7 +400,6 @@ function addArea(sceneData, planData, layer, areaID, catalog, editingActions) {
     pivot.position.y = layer.altitude;
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].areas[area.id] = pivot;
-    pivot.visible = layer.visible;
 
     applyInteract(pivot, interactFunction);
 
@@ -371,8 +417,6 @@ function addItem(sceneData, planData, layer, itemID, catalog, editingActions) {
     pivot.rotation.y = item.rotation * Math.PI / 180;
     pivot.position.x = item.x;
     pivot.position.z = -item.y;
-
-    pivot.visible = layer.visible;
 
     applyInteract(item3D, () => {
         editingActions.selectItem(layer.id, item.id);
