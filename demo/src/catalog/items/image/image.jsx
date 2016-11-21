@@ -79,6 +79,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Three.Object3D();
+    return Promise.resolve(new Three.Object3D());
   }
 };
