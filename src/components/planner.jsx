@@ -39,17 +39,21 @@ export default class Planner extends Component {
         catalog={catalog}
         toolbarButtons={toolbarButtons}
         customContents={customContents}
-        customActions={customActions}/>
+        customActions={customActions}
+        allowProjectFileSupport={this.props.allowProjectFileSupport}
+      />
     )
   }
 }
 
 Planner.propTypes = {
   catalog: PropTypes.instanceOf(Catalog),
-  plugins: PropTypes.arrayOf(PropTypes.object)
+  plugins: PropTypes.arrayOf(PropTypes.object),
+  allowProjectFileSupport: PropTypes.bool
 };
 
 Planner.defaultProps = {
   catalog: new Catalog(),
-  plugins: []
+  plugins: [],
+  allowProjectFileSupport: true,
 };

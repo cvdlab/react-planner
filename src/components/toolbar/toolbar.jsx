@@ -46,7 +46,7 @@ import {
 import ToolbarButton from './toolbar-button';
 const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
 
-export default function Toolbar({state, width, height, toolbarButtons}, {
+export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
   projectActions,
   viewer2DActions,
   editingActions,
@@ -60,17 +60,21 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
 
   return (
     <aside style={{...STYLE, width, height}}>
-      <ToolbarButton tooltip="New project" onClick={event => projectActions.newProject()}>
-        <IconNewFile />
-      </ToolbarButton>
+      <If condition={allowProjectFileSupport}>
+        <div>
+          <ToolbarButton tooltip="New project" onClick={event => projectActions.newProject()}>
+            <IconNewFile />
+          </ToolbarButton>
 
-      <ToolbarButton tooltip="Save project" onClick={event => projectActions.saveProjectToFile()}>
-        <IconSave />
-      </ToolbarButton>
+          <ToolbarButton tooltip="Save project" onClick={event => projectActions.saveProjectToFile()}>
+            <IconSave />
+          </ToolbarButton>
 
-      <ToolbarButton tooltip="Load project" onClick={event => projectActions.loadProjectFromFile()}>
-        <IconLoad />
-      </ToolbarButton>
+          <ToolbarButton tooltip="Load project" onClick={event => projectActions.loadProjectFromFile()}>
+            <IconLoad />
+          </ToolbarButton>
+        </div>
+      </If>
 
       <ToolbarButton active={[MODE_3D_VIEW].includes(mode)} tooltip="3D View"
                      onClick={event => viewer3DActions.selectTool3DView()}>
@@ -126,7 +130,8 @@ export default function Toolbar({state, width, height, toolbarButtons}, {
 
 
 Toolbar.propTypes = {
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+  allowProjectFileSupport: PropTypes.bool.isRequired
 };
 
 Toolbar.contextTypes = {
