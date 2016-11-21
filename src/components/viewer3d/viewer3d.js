@@ -32,8 +32,6 @@ export default class Scene3DViewer extends React.Component {
       projectActions: this.context.projectActions
     };
 
-    console.log(actions);
-
     let {state} = this.props;
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
@@ -161,8 +159,7 @@ export default class Scene3DViewer extends React.Component {
 
     };
 
-    window.exportScene = exportScene;
-
+    // window.exportScene = exportScene;
 
     /************************************/
 
@@ -206,7 +203,7 @@ export default class Scene3DViewer extends React.Component {
 
     };
 
-    window.exportPlan = exportPlan;
+    // window.exportPlan = exportPlan;
 
     /************************************/
 
@@ -244,6 +241,7 @@ export default class Scene3DViewer extends React.Component {
     this.scene3D.remove(this.planData.grid);
 
     this.scene3D = null;
+    // this.planData.sceneGraph = null;
     this.planData = null;
 
   }

@@ -2,6 +2,7 @@ import * as Three from 'three';
 
 function disposeGeometry(geometry) {
   geometry.dispose();
+  geometry = null;
 }
 
 function disposeTexture(texture) {
@@ -9,6 +10,7 @@ function disposeTexture(texture) {
     return;
   }
   texture.dispose();
+  texture = null;
 }
 
 function disposeMultimaterial(material) {
@@ -28,6 +30,7 @@ function disposeMaterial(material) {
 
   disposeTexture(material.map);
   material.dispose();
+  material = null;
 }
 
 function disposeMesh(mesh) {
@@ -37,6 +40,7 @@ function disposeMesh(mesh) {
   disposeGeometry(mesh.geometry);
   disposeMultimaterial(mesh.material);
   disposeMaterial(mesh.material);
+  mesh = null;
 }
 
 export function disposeScene(scene3D) {
