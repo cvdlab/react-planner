@@ -2,9 +2,7 @@ import {List, Seq, Map, fromJS} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
-import graphCycles from './graph-cycles';
-import Graph from './graph';
-import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
+import calculateInnerCyles from './graph-inner-cycles';
 
 const AREA_ELEMENT_TYPE = 'area';
 
@@ -295,10 +293,6 @@ export function removeArea(layer, areaID) {
 }
 
 export function detectAndUpdateAreas(layer, catalog) {
-  // console.groupCollapsed("Area detection");
-  // console.log("vertices", layer.vertices.toJS());
-  // console.log("lines", layer.lines.toJS());
-
   //generate LAR rappresentation
   let verticesArray = [];
   let id2index = {}, index2coord = {};
@@ -317,41 +311,18 @@ export function detectAndUpdateAreas(layer, catalog) {
 
 
   layer = layer.withMutations(layer => {
-
-    //remove old areas
     layer.areas.forEach(area => {
       removeArea(layer, area.id);
     });
 
-    //add new areas
-    // console.log("graphCycles call", verticesArray, linesArray);
+    let innerCycles = calculateInnerCyles(verticesArray, linesArray)
 
-    let graph = new Graph(verticesArray.length);
-    linesArray.forEach(line => {
-      graph.addEdge(line[0], line[1]);
-      graph.addEdge(line[1], line[0]);
-    });
-
-    graph.BCC();
-
-    let subgraphs = graph.subgraphs.filter(subgraph => subgraph.length >= 3);
-    let edgesArray = getEdgesOfSubgraphs(subgraphs, graph);
-
-    let edges = [];
-    edgesArray.forEach(es => {
-      es.forEach(edge => edges.push(edge))
-    });
-
-    let cycles = graphCycles(verticesArray, edges);
-    cycles.v_cycles.forEach(cycle => {
-      cycle.shift();
+    innerCycles.forEach(cycle => {
       let verticesCoords = cycle.map(index => index2coord[index]);
       addArea(layer, AREA_ELEMENT_TYPE, verticesCoords, catalog);
     });
   });
 
-  // console.log("areas", layer.areas.toJS());
-  // console.groupEnd();
   return {layer};
 }
 
