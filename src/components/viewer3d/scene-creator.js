@@ -64,7 +64,7 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
   layer.items.forEach(item => {
     promises.push(addItem(sceneData, planData, layer, item.id, catalog, actions.itemsActions));
   });
-  
+
   return promises;
 }
 
@@ -343,7 +343,7 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
 
     pivot.rotation.y = alpha;
     pivot.position.x = vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
-    pivot.position.y = holeAltitude + holeHeight / 2 - center[1];
+    pivot.position.y = holeAltitude + holeHeight / 2 - center[1] + layer.altitude;
     pivot.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
     planData.plan.add(pivot);
@@ -416,6 +416,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
 
     pivot.rotation.y = item.rotation * Math.PI / 180;
     pivot.position.x = item.x;
+    pivot.position.y = layer.altitude;
     pivot.position.z = -item.y;
 
     applyInteract(item3D, () => {
