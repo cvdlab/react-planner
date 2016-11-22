@@ -49,6 +49,7 @@ export function removeLine(layer, lineID) {
 
   layer = layer.withMutations(layer => {
     unselect(layer, 'lines', lineID);
+    line.holes.forEach(holeID => removeHole(layer, holeID));
     layer.deleteIn(['lines', line.id]);
     line.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'lines', line.id));
   });
