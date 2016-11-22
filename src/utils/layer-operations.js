@@ -234,7 +234,7 @@ export function setProperties(layer, prototype, ID, properties) {
   return layer.mergeIn([prototype, ID, 'properties'], properties);
 }
 
-export function setPropertiesOnSelected(layer, properties){
+export function setPropertiesOnSelected(layer, properties) {
   return layer.withMutations(layer => {
     let selected = layer.selected;
     selected.lines.forEach(lineID => setProperties(layer, 'lines', lineID, properties));
@@ -248,7 +248,7 @@ export function unselectAll(layer) {
   let selected = layer.get('selected');
 
   return layer.withMutations(layer => {
-    layer.selected.forEach((ids, prototype)=> {
+    layer.selected.forEach((ids, prototype) => {
       ids.forEach(id => unselect(layer, prototype, id));
     });
   });
@@ -293,33 +293,50 @@ export function removeArea(layer, areaID) {
 }
 
 export function detectAndUpdateAreas(layer, catalog) {
-  //generate LAR rappresentation
-  let verticesArray = [];
-  let id2index = {}, index2coord = {};
+
+  let verticesArray = [];           //array with vertices coords
+  let linesArray = [];              //array with edges
+
+  let vertexID_to_verticesArrayIndex = {};
+  let verticesArrayIndex_to_vertexID = {};
+
   layer.vertices.forEach(vertex => {
-    let count = verticesArray.push([vertex.x, vertex.y]);
-    let index = count - 1;
-    id2index[vertex.id] = index;
-    index2coord[index] = {x: vertex.x, y: vertex.y};
+    let verticesCount = verticesArray.push([vertex.x, vertex.y]);
+    let latestVertexIndex = verticesCount - 1;
+    vertexID_to_verticesArrayIndex[vertex.id] = latestVertexIndex;
+    verticesArrayIndex_to_vertexID[latestVertexIndex] = vertex.id;
   });
 
-  let linesArray = [];
   layer.lines.forEach(line => {
-    let vertices = line.vertices.map(vertexID => id2index[vertexID]).toArray();
+    let vertices = line.vertices.map(vertexID => vertexID_to_verticesArrayIndex[vertexID]).toArray();
     linesArray.push(vertices);
   });
 
+  let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
+
+  let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
+    .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
+
+  let sameSet = (set1, set2) => set1.isSuperset(set2) && set1.isSubset(set2) && set1.size === set2.size;
 
   layer = layer.withMutations(layer => {
+    //remove areas
     layer.areas.forEach(area => {
-      removeArea(layer, area.id);
+      let areaInUse = innerCyclesByVerticesID.some(vertices => sameSet(vertices, area.vertices));
+      if (!areaInUse) removeArea(layer, area.id);
     });
 
-    let innerCycles = calculateInnerCyles(verticesArray, linesArray)
-
-    innerCycles.forEach(cycle => {
-      let verticesCoords = cycle.map(index => index2coord[index]);
-      addArea(layer, AREA_ELEMENT_TYPE, verticesCoords, catalog);
+    //add new areas
+    let layerVertices = layer.vertices;
+    innerCyclesByVerticesID.forEach(cycle => {
+      let areaInUse = layer.areas.some(area => sameSet(area.vertices, cycle));
+      if (!areaInUse) {
+        let areaVerticesCoords = cycle.map(vertexId => {
+          let vertex = layerVertices.get(vertexId);
+          return {x: vertex.x, y: vertex.y};
+        });
+        addArea(layer, AREA_ELEMENT_TYPE, areaVerticesCoords, catalog)
+      }
     });
   });
 
