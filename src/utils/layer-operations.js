@@ -7,7 +7,7 @@ import calculateInnerCyles from './graph-inner-cycles';
 const AREA_ELEMENT_TYPE = 'area';
 
 /** lines features **/
-export function addLine(layer, type, x0, y0, x1, y1, catalog) {
+export function addLine(layer, type, x0, y0, x1, y1, catalog, properties) {
   let line;
 
   layer = layer.withMutations(layer => {
@@ -21,7 +21,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog) {
       id: lineID,
       vertices: new List([v0.id, v1.id]),
       type
-    });
+    }, properties);
 
     layer.setIn(['lines', lineID], line);
   });
@@ -65,8 +65,8 @@ export function splitLine(layer, lineID, x, y, catalog) {
     let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
     let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
 
-    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog));
-    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog));
+    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties));
+    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
 
     let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
     line.holes.forEach(holeID => {
