@@ -149,7 +149,14 @@ export function pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp) {
   let length = distanceFromTwoPoints(x1, y1, x2, y2);
   let distance = distanceFromTwoPoints(x1, y1, xp, yp);
 
-  return distance / length;
+  let offset = distance / length;
+  if (x1 > x2) offset = mapRange(offset, 0, 1, 1, 0);
+
+  return offset;
+}
+
+export function mapRange(value, low1, high1, low2, high2) {
+  return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
 export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
