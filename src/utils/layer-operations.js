@@ -65,9 +65,22 @@ export function splitLine(layer, lineID, x, y, catalog) {
     let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
     let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
 
-    removeLine(layer, lineID);
     ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog));
     ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog));
+
+    let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+    line.holes.forEach(holeID => {
+      let hole = layer.holes.get(holeID);
+      if (hole.offset < splitPointOffset) {
+        let offset = hole.offset / splitPointOffset;
+        addHole(layer, hole.type, line0.id, offset, catalog);
+      } else {
+        let offset = (hole.offset - splitPointOffset) / (1 - splitPointOffset);
+        addHole(layer, hole.type, line1.id, offset, catalog);
+      }
+    });
+
+    removeLine(layer, lineID);
   });
 
   return {layer, lines: new List([line0, line1])};
