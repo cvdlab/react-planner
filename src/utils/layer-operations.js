@@ -2,14 +2,12 @@ import {List, Seq, Map, fromJS} from 'immutable';
 import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
-import graphCycles from './graph-cycles';
-import Graph from './graph';
-import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
+import calculateInnerCyles from './graph-inner-cycles';
 
 const AREA_ELEMENT_TYPE = 'area';
 
 /** lines features **/
-export function addLine(layer, type, x0, y0, x1, y1, catalog) {
+export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
   let line;
 
   layer = layer.withMutations(layer => {
@@ -23,7 +21,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog) {
       id: lineID,
       vertices: new List([v0.id, v1.id]),
       type
-    });
+    }, properties);
 
     layer.setIn(['lines', lineID], line);
   });
@@ -51,6 +49,7 @@ export function removeLine(layer, lineID) {
 
   layer = layer.withMutations(layer => {
     unselect(layer, 'lines', lineID);
+    line.holes.forEach(holeID => removeHole(layer, holeID));
     layer.deleteIn(['lines', line.id]);
     line.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'lines', line.id));
   });
@@ -66,9 +65,22 @@ export function splitLine(layer, lineID, x, y, catalog) {
     let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
     let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
 
+    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties));
+    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
+
+    let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+    line.holes.forEach(holeID => {
+      let hole = layer.holes.get(holeID);
+      if (hole.offset < splitPointOffset) {
+        let offset = hole.offset / splitPointOffset;
+        addHole(layer, hole.type, line0.id, offset, catalog, hole.properties);
+      } else {
+        let offset = (hole.offset - splitPointOffset) / (1 - splitPointOffset);
+        addHole(layer, hole.type, line1.id, offset, catalog, hole.properties);
+      }
+    });
+
     removeLine(layer, lineID);
-    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog));
-    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog));
   });
 
   return {layer, lines: new List([line0, line1])};
@@ -236,7 +248,7 @@ export function setProperties(layer, prototype, ID, properties) {
   return layer.mergeIn([prototype, ID, 'properties'], properties);
 }
 
-export function setPropertiesOnSelected(layer, properties){
+export function setPropertiesOnSelected(layer, properties) {
   return layer.withMutations(layer => {
     let selected = layer.selected;
     selected.lines.forEach(lineID => setProperties(layer, 'lines', lineID, properties));
@@ -250,7 +262,7 @@ export function unselectAll(layer) {
   let selected = layer.get('selected');
 
   return layer.withMutations(layer => {
-    layer.selected.forEach((ids, prototype)=> {
+    layer.selected.forEach((ids, prototype) => {
       ids.forEach(id => unselect(layer, prototype, id));
     });
   });
@@ -295,68 +307,58 @@ export function removeArea(layer, areaID) {
 }
 
 export function detectAndUpdateAreas(layer, catalog) {
-  // console.groupCollapsed("Area detection");
-  // console.log("vertices", layer.vertices.toJS());
-  // console.log("lines", layer.lines.toJS());
 
-  //generate LAR rappresentation
-  let verticesArray = [];
-  let id2index = {}, index2coord = {};
+  let verticesArray = [];           //array with vertices coords
+  let linesArray = [];              //array with edges
+
+  let vertexID_to_verticesArrayIndex = {};
+  let verticesArrayIndex_to_vertexID = {};
+
   layer.vertices.forEach(vertex => {
-    let count = verticesArray.push([vertex.x, vertex.y]);
-    let index = count - 1;
-    id2index[vertex.id] = index;
-    index2coord[index] = {x: vertex.x, y: vertex.y};
+    let verticesCount = verticesArray.push([vertex.x, vertex.y]);
+    let latestVertexIndex = verticesCount - 1;
+    vertexID_to_verticesArrayIndex[vertex.id] = latestVertexIndex;
+    verticesArrayIndex_to_vertexID[latestVertexIndex] = vertex.id;
   });
 
-  let linesArray = [];
   layer.lines.forEach(line => {
-    let vertices = line.vertices.map(vertexID => id2index[vertexID]).toArray();
+    let vertices = line.vertices.map(vertexID => vertexID_to_verticesArrayIndex[vertexID]).toArray();
     linesArray.push(vertices);
   });
 
+  let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
+
+  let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
+    .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
+
+  let sameSet = (set1, set2) => set1.isSuperset(set2) && set1.isSubset(set2) && set1.size === set2.size;
 
   layer = layer.withMutations(layer => {
-
-    //remove old areas
+    //remove areas
     layer.areas.forEach(area => {
-      removeArea(layer, area.id);
+      let areaInUse = innerCyclesByVerticesID.some(vertices => sameSet(vertices, area.vertices));
+      if (!areaInUse) removeArea(layer, area.id);
     });
 
     //add new areas
-    // console.log("graphCycles call", verticesArray, linesArray);
-
-    let graph = new Graph(verticesArray.length);
-    linesArray.forEach(line => {
-      graph.addEdge(line[0], line[1]);
-      graph.addEdge(line[1], line[0]);
-    });
-
-    graph.BCC();
-
-    let subgraphs = graph.subgraphs.filter(subgraph => subgraph.length >= 3);
-    let edgesArray = getEdgesOfSubgraphs(subgraphs, graph);
-
-    let edges = [];
-    edgesArray.forEach(es => {
-      es.forEach(edge => edges.push(edge))
-    });
-
-    let cycles = graphCycles(verticesArray, edges);
-    cycles.v_cycles.forEach(cycle => {
-      cycle.shift();
-      let verticesCoords = cycle.map(index => index2coord[index]);
-      addArea(layer, AREA_ELEMENT_TYPE, verticesCoords, catalog);
+    let layerVertices = layer.vertices;
+    innerCyclesByVerticesID.forEach(cycle => {
+      let areaInUse = layer.areas.some(area => sameSet(area.vertices, cycle));
+      if (!areaInUse) {
+        let areaVerticesCoords = cycle.map(vertexId => {
+          let vertex = layerVertices.get(vertexId);
+          return {x: vertex.x, y: vertex.y};
+        });
+        addArea(layer, AREA_ELEMENT_TYPE, areaVerticesCoords, catalog)
+      }
     });
   });
 
-  // console.log("areas", layer.areas.toJS());
-  // console.groupEnd();
   return {layer};
 }
 
 /** holes features **/
-export function addHole(layer, type, lineID, offset, catalog) {
+export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
   let hole;
 
   layer = layer.withMutations(layer => {
@@ -367,7 +369,7 @@ export function addHole(layer, type, lineID, offset, catalog) {
       type,
       offset,
       line: lineID
-    });
+    }, properties);
 
     layer.setIn(['holes', holeID], hole);
     layer.updateIn(['lines', lineID, 'holes'], holes => holes.push(holeID));

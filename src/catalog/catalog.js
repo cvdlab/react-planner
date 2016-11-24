@@ -1,4 +1,4 @@
-import {Seq, fromJS} from 'immutable';
+import {Map, Seq, fromJS} from 'immutable';
 import {Line, Area, Hole, Item} from '../models';
 import PropertyColor from './properties/property-color';
 import PropertyEnum from './properties/property-enum';
@@ -8,7 +8,7 @@ import PropertyLengthMeasure from './properties/property-lenght-measure';
 
 export default class Catalog {
 
-  constructor(){
+  constructor() {
     this.elements = {};
     this.propertyTypes = {};
 
@@ -30,12 +30,12 @@ export default class Catalog {
 
   registerElement(json) {
     json.properties = json.properties || {};
-    if(this.validateElement(json)){
+    if (this.validateElement(json)) {
       this.elements[json.name] = json;
     }
   }
 
-  registerPropertyType(propertyType, propertyViewer, propertyEditor){
+  registerPropertyType(propertyType, propertyViewer, propertyEditor) {
     this.propertyTypes[propertyType] = {
       type: propertyType,
       Viewer: propertyViewer,
@@ -59,7 +59,7 @@ export default class Catalog {
     if (!json.hasOwnProperty('render3D')) throw new Error(`Element ${name} doesn't have render3D handler`);
     if (!json.hasOwnProperty('properties')) throw new Error(`Element ${name} doesn't have properties`);
 
-    for(let propertyName in json.properties){
+    for (let propertyName in json.properties) {
       let propertyConfigs = json.properties[propertyName];
       if (!propertyConfigs.hasOwnProperty('type')) throw new Error(`Element ${name}, Property ${propertyName} doesn't have type`);
       if (!propertyConfigs.hasOwnProperty('defaultValue')) throw new Error(`Element ${name}, Property ${propertyName} doesn't have defaultValue`);
@@ -68,11 +68,14 @@ export default class Catalog {
     return true;
   }
 
-  createElement(type, options){
+  createElement(type, options, initialProperties = {}) {
     let element = this.getElement(type);
+
+    initialProperties = new Map(initialProperties);
 
     let properties = new Seq(element.properties)
       .map(value => fromJS(value.defaultValue))
+      .map((value, key) => initialProperties.has(key) ? initialProperties.get(key) : value)
       .toMap();
 
     options = {...options, properties};
