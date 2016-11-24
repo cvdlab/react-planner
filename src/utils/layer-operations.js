@@ -7,7 +7,7 @@ import calculateInnerCyles from './graph-inner-cycles';
 const AREA_ELEMENT_TYPE = 'area';
 
 /** lines features **/
-export function addLine(layer, type, x0, y0, x1, y1, catalog, properties) {
+export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
   let line;
 
   layer = layer.withMutations(layer => {
@@ -73,10 +73,10 @@ export function splitLine(layer, lineID, x, y, catalog) {
       let hole = layer.holes.get(holeID);
       if (hole.offset < splitPointOffset) {
         let offset = hole.offset / splitPointOffset;
-        addHole(layer, hole.type, line0.id, offset, catalog);
+        addHole(layer, hole.type, line0.id, offset, catalog, hole.properties);
       } else {
         let offset = (hole.offset - splitPointOffset) / (1 - splitPointOffset);
-        addHole(layer, hole.type, line1.id, offset, catalog);
+        addHole(layer, hole.type, line1.id, offset, catalog, hole.properties);
       }
     });
 
@@ -358,7 +358,7 @@ export function detectAndUpdateAreas(layer, catalog) {
 }
 
 /** holes features **/
-export function addHole(layer, type, lineID, offset, catalog) {
+export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
   let hole;
 
   layer = layer.withMutations(layer => {
@@ -369,7 +369,7 @@ export function addHole(layer, type, lineID, offset, catalog) {
       type,
       offset,
       line: lineID
-    });
+    }, properties);
 
     layer.setIn(['holes', holeID], hole);
     layer.updateIn(['lines', lineID, 'holes'], holes => holes.push(holeID));
