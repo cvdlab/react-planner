@@ -13,7 +13,7 @@ import {State} from '../models';
 
 export const initialState = new State();
 
-export default function appReducers(state, action) {
+export default function appReducer(state, action) {
   state = state || initialState;
 
   switch (action.type) {
