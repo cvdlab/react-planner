@@ -316,7 +316,7 @@ export default function Viewer2D({state, width, height},
         <g style={mode2Cursor(mode)}>
           <rect x="0" y="0" width={width} height={height} fill="#fff"/>
           <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={mode2PointerEvents(mode)}>
-            <Scene scene={scene} mode={mode} catalog={catalog}/>
+            <Scene scene={scene} catalog={catalog}/>
             {activeSnapElement}
             {snapElements}
           </g>
