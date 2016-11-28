@@ -441,7 +441,6 @@ function applyInteract(object, interactFunction) {
 
 function updateBoundingBox(planData) {
   let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
-
   if (isFinite(newBoundingBox.max.x)
     || isFinite(newBoundingBox.min.x)
     || isFinite(newBoundingBox.max.y)
@@ -461,6 +460,10 @@ function updateBoundingBox(planData) {
     planData.grid.position.x -= newCenter[0];
     planData.grid.position.y -= newCenter[1];
     planData.grid.position.z -= newCenter[2];
+
+    // Update bounding box
+    newBoundingBox.min.sub(new Three.Vector3().fromArray(newCenter));
+    newBoundingBox.max.sub(new Three.Vector3().fromArray(newCenter));
 
     planData.boundingBox = newBoundingBox;
   }
