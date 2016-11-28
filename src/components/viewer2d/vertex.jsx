@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 
 const STYLE = {fill: "#0096fd", stroke: "#fff", cursor: "move"};
 
-export default function Vertex({vertex, layer, mode}) {
+export default function Vertex({vertex, layer}) {
 
   let {x, y} = vertex;
 
@@ -23,5 +23,4 @@ export default function Vertex({vertex, layer, mode}) {
 Vertex.propTypes = {
   vertex: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired
 };

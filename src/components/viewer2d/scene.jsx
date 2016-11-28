@@ -1,7 +1,7 @@
 import React, {PropTypes} from 'react';
 import Layer from './layer';
 import Guides from './guides/guides';
-export default function Scene({scene, mode, catalog}) {
+export default function Scene({scene, catalog}) {
 
   let {height, layers} = scene;
   let selectedLayer = scene.layers.get(scene.selectedLayer);
@@ -13,10 +13,10 @@ export default function Scene({scene, mode, catalog}) {
       <g style={{opacity: 0.3, pointerEvents: "none"}}>
         {layers.entrySeq()
           .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
-          .map(([layerID, layer]) => <Layer key={layerID} layer={layer} mode={mode} scene={scene} catalog={catalog}/>)}
+          .map(([layerID, layer]) => <Layer key={layerID} layer={layer} scene={scene} catalog={catalog}/>)}
       </g>
 
-      <Layer key={selectedLayer.id} layer={selectedLayer} mode={mode} scene={scene} catalog={catalog}/>
+      <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} catalog={catalog}/>
     </g>
   );
 }
@@ -24,6 +24,5 @@ export default function Scene({scene, mode, catalog}) {
 
 Scene.propTypes = {
   scene: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired,
   catalog: PropTypes.object.isRequired
 };

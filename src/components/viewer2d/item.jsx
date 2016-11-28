@@ -54,7 +54,6 @@ export default function Item({layer, item, scene, catalog}) {
 Item.propTypes = {
   item: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired,
   scene: PropTypes.object.isRequired,
   catalog: PropTypes.object.isRequired
 };

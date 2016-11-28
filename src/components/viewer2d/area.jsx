@@ -1,5 +1,4 @@
 import React, {PropTypes} from 'react';
-import {MODE_IDLE} from '../../constants';
 import polylabel from 'polylabel';
 import areapolygon from 'area-polygon';
 
@@ -19,7 +18,7 @@ const STYLE_TEXT = {
 };
 
 
-export default function Area({layer, area, mode, unit, catalog}) {
+export default function Area({layer, area, catalog}) {
 
   let rendered = catalog.getElement(area.type).render2D(area, layer);
 
@@ -59,8 +58,6 @@ export default function Area({layer, area, mode, unit, catalog}) {
 Area.propTypes = {
   area: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
-  mode: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired,
   catalog: PropTypes.object.isRequired
 };
 
