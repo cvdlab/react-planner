@@ -18,7 +18,7 @@ const STYLE_CIRCLE2 = {
   cursor: "ew-resize"
 };
 
-export default function Item({layer, item, scene}, {catalog}) {
+export default function Item({layer, item, scene, catalog}) {
 
   let {x, y, rotation} = item;
 
@@ -56,10 +56,6 @@ Item.propTypes = {
   layer: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
   scene: PropTypes.object.isRequired,
+  catalog: PropTypes.object.isRequired
 };
 
-
-Item.contextTypes = {
-  editingActions: PropTypes.object,
-  catalog: React.PropTypes.object
-};

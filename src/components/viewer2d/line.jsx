@@ -3,7 +3,7 @@ import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils
 import {MODE_IDLE} from '../../constants';
 import Ruler from './ruler';
 
-export default function Line({line, layer, mode, scene}, {editingActions, catalog}) {
+export default function Line({line, layer, mode, scene, catalog}) {
 
   let {unit} = scene;
 
@@ -66,9 +66,5 @@ Line.propTypes = {
   layer: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
   scene: PropTypes.object.isRequired,
-};
-
-Line.contextTypes = {
-  editingActions: PropTypes.object,
-  catalog: React.PropTypes.object
+  catalog: PropTypes.object.isRequired,
 };

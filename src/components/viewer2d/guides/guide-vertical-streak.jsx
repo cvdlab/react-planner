@@ -27,5 +27,3 @@ GuideVerticalStreak.propTypes = {
   height: PropTypes.number.isRequired,
   guide: PropTypes.object.isRequired
 };
-
-GuideVerticalStreak.contextTypes = {};

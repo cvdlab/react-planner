@@ -85,7 +85,7 @@ function extractElementData(node) {
 }
 
 export default function Viewer2D({state, width, height},
-  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions}) {
+  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
 
 
   let {viewer2D, mode, activeSnapElement, snapElements, scene} = state;
@@ -316,7 +316,7 @@ export default function Viewer2D({state, width, height},
         <g style={mode2Cursor(mode)}>
           <rect x="0" y="0" width={width} height={height} fill="#fff"/>
           <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={mode2PointerEvents(mode)}>
-            <Scene scene={scene} mode={mode}/>
+            <Scene scene={scene} mode={mode} catalog={catalog}/>
             {activeSnapElement}
             {snapElements}
           </g>
@@ -343,4 +343,5 @@ Viewer2D.contextTypes = {
   itemsActions: PropTypes.object.isRequired,
   areaActions: PropTypes.object.isRequired,
   projectActions: PropTypes.object.isRequired,
+  catalog: PropTypes.object.isRequired,
 };

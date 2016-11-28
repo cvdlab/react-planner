@@ -19,7 +19,7 @@ const STYLE_TEXT = {
 };
 
 
-export default function Area({layer, area, mode, unit}, {editingActions, catalog}) {
+export default function Area({layer, area, mode, unit, catalog}) {
 
   let rendered = catalog.getElement(area.type).render2D(area, layer);
 
@@ -60,11 +60,8 @@ Area.propTypes = {
   area: PropTypes.object.isRequired,
   layer: PropTypes.object.isRequired,
   mode: PropTypes.string.isRequired,
-  unit: PropTypes.string.isRequired
+  unit: PropTypes.string.isRequired,
+  catalog: PropTypes.object.isRequired
 };
 
-Area.contextTypes = {
-  editingActions: PropTypes.object,
-  catalog: PropTypes.object
-};
 
