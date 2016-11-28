@@ -4,8 +4,7 @@ import React, {PropTypes} from 'react';
 
 import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
-import Scene from './scene';
-import Snap from './snap';
+import State from './state';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -88,7 +87,7 @@ export default function Viewer2D({state, width, height},
   {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
 
 
-  let {viewer2D, mode, activeSnapElement, snapElements, scene} = state;
+  let {viewer2D, mode, scene} = state;
 
   let layerID = scene.selectedLayer;
 
@@ -268,12 +267,6 @@ export default function Viewer2D({state, width, height},
     }
   };
 
-
-  activeSnapElement = activeSnapElement ?
-    <Snap snap={activeSnapElement} width={scene.width} height={scene.height}/> : null;
-  // snapElements = snapElements.map((snap,id) => <Snap key={id} snap={snap} width={scene.width} height={scene.height}/>);
-  snapElements = null; //only for debug purpose
-
   let onChangeValue = (value) => viewer2DActions.updateCameraView(value);
   let onChangeTool = (tool) => {
     switch (tool) {
@@ -313,13 +306,8 @@ export default function Viewer2D({state, width, height},
       toolbarPosition="right">
 
       <svg width={scene.width} height={scene.height}>
-        <g style={mode2Cursor(mode)}>
-          <rect x="0" y="0" width={width} height={height} fill="#fff"/>
-          <g transform={`translate(0, ${scene.height}) scale(1, -1)`} style={mode2PointerEvents(mode)}>
-            <Scene scene={scene} catalog={catalog}/>
-            {activeSnapElement}
-            {snapElements}
-          </g>
+        <g style={Object.assign(mode2Cursor(mode), mode2PointerEvents(mode))}>
+          <State state={state} catalog={catalog}/>
         </g>
       </svg>
 
