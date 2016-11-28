@@ -342,9 +342,9 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
     let holeHeight = holeData.properties.get('height').get('length');
 
     pivot.rotation.y = alpha;
-    pivot.position.x = vertex0.x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
+    pivot.position.x = layer.vertices.get(line.vertices.get(0)).x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
     pivot.position.y = holeAltitude + holeHeight / 2 - center[1] + layer.altitude;
-    pivot.position.z = -vertex0.y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
+    pivot.position.z = -layer.vertices.get(line.vertices.get(0)).y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].holes[holeData.id] = pivot;
