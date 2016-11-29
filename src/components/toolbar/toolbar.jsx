@@ -9,6 +9,7 @@ import IconPan from 'react-icons/lib/fa/hand-paper-o';
 import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
 import IconCatalog from 'react-icons/lib/fa/plus';
 import IconUndo from 'react-icons/lib/md/undo'
+import IconConfigure from 'react-icons/lib/md/settings'
 
 import If from "../../utils/react-if";
 
@@ -40,7 +41,8 @@ import {
   MODE_DRAWING_ITEM,
   MODE_FITTING_IMAGE,
   MODE_UPLOADING_IMAGE,
-  MODE_VIEWING_CATALOG
+  MODE_VIEWING_CATALOG,
+  MODE_CONFIGURING_PROJECT
 } from '../../constants';
 
 import ToolbarButton from './toolbar-button';
@@ -121,6 +123,11 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
       <ToolbarButton active={false} tooltip="Undo (CTRL-Z)"
                      onClick={event => projectActions.undo()}>
         <IconUndo />
+      </ToolbarButton>
+
+      <ToolbarButton active={[MODE_CONFIGURING_PROJECT].includes(mode)} tooltip="Configure project"
+                     onClick={event => projectActions.openProjectConfigurator()}>
+        <IconConfigure />
       </ToolbarButton>
 
       {toolbarButtons.map((Component, index) => <Component mode={mode} key={index}/>)}
