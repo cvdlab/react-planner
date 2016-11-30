@@ -1,4 +1,4 @@
-import {SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, OPEN_LAYER_CONFIGURATOR} from '../constants';
+import {SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, OPEN_LAYER_CONFIGURATOR, REMOVE_LAYER} from '../constants';
 
 export function selectLayer(layerID) {
   return {
@@ -29,4 +29,9 @@ export function setLayerProperties(layerID, properties) {
   }
 }
 
-
+export function removeLayer(layerID) {
+  return {
+    type: REMOVE_LAYER,
+    layerID,
+  }
+}

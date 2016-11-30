@@ -4,9 +4,10 @@ import {
   SET_LAYER_PROPERTIES,
   MODE_IDLE,
   OPEN_LAYER_CONFIGURATOR,
-  MODE_CONFIGURING_LAYER
+  MODE_CONFIGURING_LAYER,
+  REMOVE_LAYER
 } from '../constants';
-import {Layer} from '../models';
+import {Layer, Scene} from '../models';
 import IDBroker from '../utils/id-broker';
 import {unselectAll} from '../utils/layer-operations';
 
@@ -23,6 +24,9 @@ export default function (state, action) {
 
     case OPEN_LAYER_CONFIGURATOR:
       return openLayerConfigurator(state, action.layerID);
+
+    case REMOVE_LAYER:
+      return removeLayer(state, action.layerID);
 
     default:
       return state;
@@ -74,5 +78,25 @@ function openLayerConfigurator(state, layerID) {
   return state.merge({
     scene: state.scene.set('selectedLayer', layerID),
     mode: MODE_CONFIGURING_LAYER
+  })
+}
+
+function removeLayer(state, layerID) {
+  let scene = state.scene;
+  let layers = scene.layers.delete(layerID);
+
+  if (layers.isEmpty()) {
+    scene = new Scene();
+  } else {
+    scene = scene.merge({
+      selectedLayer: scene.selectedLayer !== layerID ? scene.selectedLayer : layers.first().id,
+      layers,
+    });
+  }
+
+  return state.merge({
+    mode: MODE_CONFIGURING_LAYER,
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
   })
 }

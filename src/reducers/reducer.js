@@ -69,6 +69,7 @@ export default function appReducer(state, action) {
     case constants.SET_LAYER_PROPERTIES:
     case constants.SELECT_LAYER:
     case constants.OPEN_LAYER_CONFIGURATOR:
+    case constants.REMOVE_LAYER:
       return sceneReducer(state, action);
 
     case constants.BEGIN_DRAGGING_VERTEX:

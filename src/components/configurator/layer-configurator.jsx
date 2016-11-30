@@ -76,8 +76,8 @@ export default class LayerConfigurator extends Component {
 
   render() {
     let {width, height} = this.props;
-    let {dataName, dataOpacity, dataAltitude, dataOrder} = this.state;
-    let {projectActions} = this.context;
+    let {layerID, dataName, dataOpacity, dataAltitude, dataOrder} = this.state;
+    let {projectActions, sceneActions} = this.context;
 
     return (
       <ContentContainer width={width} height={height}>
@@ -110,7 +110,7 @@ export default class LayerConfigurator extends Component {
 
           <div style={{textAlign: "right"}}>
             <div style={{marginRight: "10px", display: "inline-block"}}>
-              <DeleteButton onClick={e => projectActions.rollback()}>Delete</DeleteButton>
+              <DeleteButton onClick={e => sceneActions.removeLayer(layerID)}>Delete</DeleteButton>
             </div>
 
             <div style={{marginRight: "3px", display: "inline-block"}}>
