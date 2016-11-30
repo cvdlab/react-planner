@@ -7,10 +7,10 @@ import Item from './item';
 export default function Layer({layer, scene, catalog}) {
 
   let {unit} = scene;
-  let {lines, areas, vertices, holes, id: layerID, items} = layer;
+  let {lines, areas, vertices, holes, id: layerID, items, opacity} = layer;
 
   return (
-    <g>
+    <g opacity={opacity}>
       {areas.entrySeq().map(([areaID, area]) => <Area key={areaID} layer={layer} area={area}
                                                       unit={unit} catalog={catalog}/>)}
       {lines.entrySeq().map(([lineID, line]) => <Line key={lineID} layer={layer} line={line}
