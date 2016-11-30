@@ -31,9 +31,18 @@ export default function (state, action) {
 
 function addLayer(state, name, altitude) {
   let layerID = IDBroker.acquireID();
+  name = name || `layer ${layerID}`;
+  altitude = altitude || 0;
+
   let layer = new Layer({id: layerID, name, altitude});
-  let scene = state.scene.setIn(['layers', layerID], layer);
+  let scene = state.scene;
+  scene = scene.merge({
+    selectedLayer: layerID,
+    layers: scene.layers.set(layerID, layer),
+  });
+
   return state.merge({
+    mode: MODE_CONFIGURING_LAYER,
     scene,
     sceneHistory: state.sceneHistory.push(scene)
   })

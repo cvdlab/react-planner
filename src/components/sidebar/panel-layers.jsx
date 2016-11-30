@@ -57,9 +57,7 @@ const STYLE_EDIT_BUTTON = {
 export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
 
   let addClick = event => {
-    let name = window.prompt("layer name");
-    let altitude = window.prompt("layer altitude");
-    sceneActions.addLayer(name, parseFloat(altitude));
+    sceneActions.addLayer();
     event.stopPropagation();
   };
 
