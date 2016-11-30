@@ -33,5 +33,4 @@ export default class FormTextInput extends Component {
       }}
       type="text"  {...this.props}/>
   }
-
 }

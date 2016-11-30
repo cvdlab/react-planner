@@ -5,6 +5,7 @@ import FormLabel from '../style/form-label';
 import FormBlock from '../style/form-block';
 import FormNumberInput from '../style/form-number-input';
 import FormTextInput from '../style/form-text-input';
+import FormSlider from '../style/form-slider';
 
 import FormSubmitButton from '../style/form-submit-button';
 import CancelButton from '../style/cancel-button';
@@ -92,8 +93,9 @@ export default class LayerConfigurator extends Component {
 
           <FormBlock>
             <FormLabel htmlFor="opacity">opacity</FormLabel>
-            <FormNumberInput id="opacity" placeholder="opacity" value={dataOpacity}
-                             onChange={e => this.setState({dataOpacity: e.target.value})}/>
+            <FormSlider min={0} max={100} value={Math.round(dataOpacity * 100)}
+                        onChange={e => this.setState({dataOpacity: e.target.value / 100})}/>
+
           </FormBlock>
 
           <FormBlock>
