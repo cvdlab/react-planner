@@ -68,6 +68,7 @@ export default function appReducer(state, action) {
     case constants.ADD_LAYER:
     case constants.SET_LAYER_PROPERTIES:
     case constants.SELECT_LAYER:
+    case constants.OPEN_LAYER_CONFIGURATOR:
       return sceneReducer(state, action);
 
     case constants.BEGIN_DRAGGING_VERTEX:

@@ -3,7 +3,8 @@ import Viewer2D from './viewer2d/viewer2d';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import CatalogList from './catalog-view/catalog-list';
-import ProjectConfig from './configurator/project-configurator';
+import ProjectConfigurator from './configurator/project-configurator';
+import LayerConfigurator from './configurator/layer-configurator';
 
 import * as constants from '../constants';
 
@@ -36,7 +37,10 @@ export default function Content({width, height, state, customContents}) {
       return <Viewer2D state={state} width={width} height={height}/>;
 
     case constants.MODE_CONFIGURING_PROJECT:
-      return <ProjectConfig width={width} height={height} state={state}/>;
+      return <ProjectConfigurator width={width} height={height} state={state}/>;
+
+    case constants.MODE_CONFIGURING_LAYER:
+      return <LayerConfigurator width={width} height={height} state={state}/>
 
     default:
       if (customContents.hasOwnProperty(mode)) {

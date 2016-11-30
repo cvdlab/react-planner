@@ -3,6 +3,7 @@ import Panel from './panel';
 import IconVisible from 'react-icons/lib/fa/eye';
 import IconHide from 'react-icons/lib/fa/eye-slash';
 import IconAdd from 'react-icons/lib/ti/plus';
+import IconEdit from 'react-icons/lib/fa/pencil';
 
 const STYLE_LAYER_WRAPPER = {
   display: "flex",
@@ -43,6 +44,16 @@ const STYLE_ADD_LABEL = {
   marginLeft: "5px"
 };
 
+const STYLE_EDIT_BUTTON = {
+  cursor: "pointer",
+  marginLeft: "5px",
+  border: "0px",
+  background: "none",
+  color: "#fff",
+  fontSize: "14px",
+  outline: "0px"
+};
+
 export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
 
   let addClick = event => {
@@ -50,7 +61,7 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
     let altitude = window.prompt("layer altitude");
     sceneActions.addLayer(name, parseFloat(altitude));
     event.stopPropagation();
-  }
+  };
 
   return (
     <Panel name="Layers">
@@ -62,6 +73,7 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
           <IconHide style={{color: "#a5a1a1"}}/>;
 
         let selectClick = event => sceneActions.selectLayer(layerID);
+        let configureClick = event => sceneActions.openLayerConfigurator(layer.id);
 
         let swapVisibility = event => {
           sceneActions.setLayerProperties(layerID, {visible: !layer.visible});
@@ -71,10 +83,13 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
         let iconRendered = isCurrentLayer ?
           <div style={STYLE_ICON}></div> : <div style={STYLE_ICON} onClick={swapVisibility}>{icon}</div>;
 
+
         return (
           <div style={style} key={layerID} onClick={selectClick}>
             {iconRendered}
-            <div style={STYLE_NAME}>[{layer.id}] {layer.name}</div>
+            <div style={STYLE_NAME}>[{layer.id}] {layer.name}
+              <button onClick={configureClick} style={STYLE_EDIT_BUTTON}><IconEdit /></button>
+            </div>
           </div>
         )
       })}

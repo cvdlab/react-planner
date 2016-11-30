@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import FormTextInput from './form-text-input';
 
-const EREG_NUMBER = /^[0-9]+$/;
+const EREG_NUMBER = /^[0-9]*$/;
 
 export default function FormNumberInput({onChange, ...rest}) {
   let onChangeCustom = event => {

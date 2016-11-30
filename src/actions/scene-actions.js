@@ -1,8 +1,15 @@
-import {SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, SET_SCENE_PROPERTIES} from '../constants';
+import {SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, OPEN_LAYER_CONFIGURATOR} from '../constants';
 
 export function selectLayer(layerID) {
   return {
     type: SELECT_LAYER,
+    layerID
+  }
+}
+
+export function openLayerConfigurator(layerID){
+  return {
+    type: OPEN_LAYER_CONFIGURATOR,
     layerID
   }
 }
@@ -23,9 +30,3 @@ export function setLayerProperties(layerID, properties) {
 }
 
 
-export function setSceneProperties(properties) {
-  return {
-    type: SET_SCENE_PROPERTIES,
-    properties
-  }
-}
