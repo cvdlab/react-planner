@@ -24,8 +24,8 @@ export default class Viewer3DFirstPerson extends React.Component {
   componentDidMount() {
 
     /** Variables for movement control **/
-    var prevTime = performance.now();
-    var velocity = new Three.Vector3();
+    let prevTime = performance.now();
+    let velocity = new Three.Vector3();
     let moveForward = false;
     let moveBackward = false;
     let moveLeft = false;
@@ -55,9 +55,9 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.renderer.setSize(this.width, this.height);
 
     // LOAD DATA
-    let planData = parseData(data, actions, catalog);
+    this.planData = parseData(data, actions, catalog);
 
-    scene3D.add(planData.plan);
+    scene3D.add(this.planData.plan);
 
     // CAMERA
     let aspectRatio = this.width / this.height;
@@ -98,7 +98,8 @@ export default class Viewer3DFirstPerson extends React.Component {
     /* Set user initial position */
     let humanHeight = 170; // 170 cm
 
-    let yInitialPosition = planData.boundingBox.min.y + (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeight;
+    let yInitialPosition = this.planData.boundingBox.min.y +
+      (this.planData.boundingBox.min.y - this.planData.boundingBox.max.y) / 2 + humanHeight;
     this.controls.getObject().position.set(-50, yInitialPosition, -100);
     sceneOnTop.add(this.controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
 
@@ -160,7 +161,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
 
     // OBJECT PICKING
-    let toIntersect = [planData.plan];
+    let toIntersect = [this.planData.plan];
 
     let mouseVector = new Three.Vector2(0, 0);
     let raycaster = new Three.Raycaster();
@@ -197,7 +198,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let render = () => {
 
-      yInitialPosition = planData.boundingBox.min.y + humanHeight;
+      yInitialPosition = this.planData.boundingBox.min.y + humanHeight;
+      // console.log(yInitialPosition, this.planData.boundingBox.min);
 
       this.controls.getObject().position.y = yInitialPosition;
 
@@ -233,7 +235,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.camera = camera;
     this.scene3D = scene3D;
     this.sceneOnTop = sceneOnTop;
-    this.planData = planData;
+    // this.planData = planData;
   }
 
   componentWillUnmount() {
