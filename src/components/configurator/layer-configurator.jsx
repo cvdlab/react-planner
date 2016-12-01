@@ -112,14 +112,14 @@ export default class LayerConfigurator extends Component {
 
           <div style={{textAlign: "right"}}>
             <div style={{marginRight: "10px", display: "inline-block"}}>
-              <DeleteButton onClick={e => sceneActions.removeLayer(layerID)}>Delete</DeleteButton>
+              <DeleteButton  size="large" onClick={e => sceneActions.removeLayer(layerID)}>Delete</DeleteButton>
             </div>
 
             <div style={{marginRight: "3px", display: "inline-block"}}>
-              <CancelButton onClick={e => projectActions.rollback()}>Cancel</CancelButton>
+              <CancelButton  size="large" onClick={e => projectActions.rollback()}>Cancel</CancelButton>
             </div>
 
-            <FormSubmitButton>Save</FormSubmitButton>
+            <FormSubmitButton size="large">Save</FormSubmitButton>
           </div>
         </form>
       </ContentContainer>

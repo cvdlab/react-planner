@@ -61,10 +61,10 @@ export default class ProjectConfigurator extends Component {
 
           <div style={{textAlign: "right"}}>
             <div style={{marginRight: "3px", display: "inline-block"}}>
-              <CancelButton onClick={e => projectActions.rollback()}>Cancel</CancelButton>
+              <CancelButton  size="large" onClick={e => projectActions.rollback()}>Cancel</CancelButton>
             </div>
 
-            <FormSubmitButton>Save</FormSubmitButton>
+            <FormSubmitButton  size="large">Save</FormSubmitButton>
           </div>
         </form>
       </ContentContainer>
