@@ -66,7 +66,15 @@ function selectLayer(state, layerID) {
 }
 
 function setLayerProperties(state, layerID, properties) {
-  let scene = state.scene.mergeIn(['layers', layerID], properties);
+  let scene = state.scene;
+
+  let layers = scene.layers.mergeIn([layerID], properties);
+  layers = layers.sort((layerA, layerB) =>
+    layerA.altitude !== layerB.altitude ? layerB.altitude - layerA.altitude : layerA.order - layerB.order
+  );
+
+  scene = scene.set('layers', layers);
+
   return state.merge({
     scene,
     sceneHistory: state.sceneHistory.push(scene),

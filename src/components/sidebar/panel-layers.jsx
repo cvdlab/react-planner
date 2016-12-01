@@ -85,7 +85,7 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
         return (
           <div style={style} key={layerID} onClick={selectClick}>
             {iconRendered}
-            <div style={STYLE_NAME}>[{layer.id}] {layer.name}
+            <div style={STYLE_NAME}>{layer.name} [h:{layer.altitude}]
               <button onClick={configureClick} style={STYLE_EDIT_BUTTON}><IconEdit /></button>
             </div>
           </div>
