@@ -1,6 +1,10 @@
 import React, {PropTypes} from 'react';
 import {UNIT_CENTIMETER, UNIT_FOOT, UNIT_INCH, UNIT_METER, UNIT_MILE, UNIT_MILLIMETER} from './../../constants';
 import convert from 'convert-units';
+import FormLabel from '../../components/style/form-label'
+import FormNumberInput from '../../components/style/form-number-input'
+import FormSelect from '../../components/style/form-select'
+
 
 export default function PropertyLengthMeasure({propertyName, value, onUpdate, configs}) {
   let {_length, _unit, length} = value;
@@ -20,21 +24,27 @@ export default function PropertyLengthMeasure({propertyName, value, onUpdate, co
 
   return (
     <div style={{marginBottom: "3px"}}>
-      <label style={{width: "30%", display: "inline-block"}}>{propertyName}</label>
-      <div style={{display: "inline-block", width: "70%"}}>
+      <div style={{display: "inline-block", width: "30%"}}>
+        <FormLabel>{propertyName}</FormLabel>
+      </div>
+      <div style={{display: "inline-block", width: "45%", marginRight: "5%"}}>
 
-        <input type="number" style={{width: "55%"}} value={_length} onChange={event => updateLength(event.target.value)}
-               min={configs.min} max={configs.max}/>
+        <FormNumberInput value={_length} onChange={event => updateLength(event.target.value)}
+                         min={configs.min} max={configs.max}/>
+      </div>
 
-        <select style={{width: "30%"}} value={_unit} onChange={event => updateUnit(event.target.value)}>
+
+      <div style={{display: "inline-block", width: "20%"}}>
+        <FormSelect value={_unit} onChange={event => updateUnit(event.target.value)}>
           <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
           <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
           <option key={UNIT_MILLIMETER} value={UNIT_MILLIMETER}>{UNIT_MILLIMETER}</option>
           <option key={UNIT_INCH} value={UNIT_INCH}>{UNIT_INCH}</option>
           <option key={UNIT_FOOT} value={UNIT_FOOT}>{UNIT_FOOT}</option>
           <option key={UNIT_MILE} value={UNIT_MILE}>{UNIT_MILE}</option>
-        </select>
+        </FormSelect>
       </div>
+
     </div>
   );
 

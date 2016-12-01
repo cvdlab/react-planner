@@ -97,6 +97,7 @@ export default class Scene3DViewer extends React.Component {
         let intersects = raycaster.intersectObjects(toIntersect, true);
 
         if (intersects.length > 0) {
+          this.context.projectActions.unselectAll();
           intersects[0].object.interact && intersects[0].object.interact();
         } else {
           this.context.projectActions.unselectAll();

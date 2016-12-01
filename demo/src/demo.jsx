@@ -5,7 +5,7 @@ import MyCatalog from './catalog/mycatalog';
 import MyPlugin from './plugins/myplugin/myplugin';
 
 let plugins = [
-  MyPlugin,
+  // MyPlugin,
   PluginBrowserAutosave('react-planner_v0')
 ];
 

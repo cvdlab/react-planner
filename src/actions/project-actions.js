@@ -11,7 +11,9 @@ import {
   SET_PROPERTIES,
   REMOVE,
   UNDO,
-  ROLLBACK
+  ROLLBACK,
+  OPEN_PROJECT_CONFIGURATOR,
+  SET_PROJECT_PROPERTIES
 } from '../constants';
 
 export function loadProject(data) {
@@ -107,5 +109,18 @@ export function undo() {
 export function rollback() {
   return {
     type: ROLLBACK
+  }
+}
+
+export function openProjectConfigurator() {
+  return {
+    type: OPEN_PROJECT_CONFIGURATOR
+  }
+}
+
+export function setProjectProperties(properties) {
+  return {
+    type: SET_PROJECT_PROPERTIES,
+    properties
   }
 }

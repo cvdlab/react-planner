@@ -1,8 +1,15 @@
-import {SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES} from '../constants';
+import {SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, OPEN_LAYER_CONFIGURATOR, REMOVE_LAYER} from '../constants';
 
 export function selectLayer(layerID) {
   return {
     type: SELECT_LAYER,
+    layerID
+  }
+}
+
+export function openLayerConfigurator(layerID){
+  return {
+    type: OPEN_LAYER_CONFIGURATOR,
     layerID
   }
 }
@@ -19,5 +26,12 @@ export function setLayerProperties(layerID, properties) {
     type: SET_LAYER_PROPERTIES,
     layerID,
     properties
+  }
+}
+
+export function removeLayer(layerID) {
+  return {
+    type: REMOVE_LAYER,
+    layerID,
   }
 }

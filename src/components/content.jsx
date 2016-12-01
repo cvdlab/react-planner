@@ -3,6 +3,9 @@ import Viewer2D from './viewer2d/viewer2d';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import CatalogList from './catalog-view/catalog-list';
+import ProjectConfigurator from './configurator/project-configurator';
+import LayerConfigurator from './configurator/layer-configurator';
+
 import * as constants from '../constants';
 
 export default function Content({width, height, state, customContents}) {
@@ -32,6 +35,12 @@ export default function Content({width, height, state, customContents}) {
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_ROTATING_ITEM:
       return <Viewer2D state={state} width={width} height={height}/>;
+
+    case constants.MODE_CONFIGURING_PROJECT:
+      return <ProjectConfigurator width={width} height={height} state={state}/>;
+
+    case constants.MODE_CONFIGURING_LAYER:
+      return <LayerConfigurator width={width} height={height} state={state}/>
 
     default:
       if (customContents.hasOwnProperty(mode)) {

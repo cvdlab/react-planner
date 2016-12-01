@@ -1,17 +1,21 @@
 import React, {PropTypes} from 'react';
 import {Seq} from 'immutable';
+import FormSelect from '../../components/style/form-select';
+import FormLabel from '../../components/style/form-label'
 
 export default function PropertyEnum({propertyName, value, onUpdate, configs}) {
 
   return (
     <div style={{marginBottom: "3px"}}>
-      <label style={{width: "30%", display: "inline-block"}}>{propertyName}</label>
+      <div style={{display: "inline-block", width: "30%"}}>
+        <FormLabel>{propertyName}</FormLabel>
+      </div>
       <div style={{display: "inline-block", width: "70%"}}>
-        <select type="text" style={{width: "100%"}} value={value} onChange={event => onUpdate(event.target.value)}>
+        <FormSelect value={value} onChange={event => onUpdate(event.target.value)}>
           {Seq(configs.values)
             .entrySeq()
             .map(([key, value]) => <option key={key} value={key}>{value}</option>)}
-        </select>
+        </FormSelect>
       </div>
     </div>
   );
