@@ -152,6 +152,8 @@ export class Item extends Record({
 export class Layer extends Record({
   id: "",
   altitude: 0,
+  order: 0,
+  opacity: 1,
   name: "",
   visible: true,
   vertices: new Map(),

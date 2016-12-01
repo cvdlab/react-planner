@@ -4,13 +4,16 @@ import {
   NEW_PROJECT,
   OPEN_CATALOG,
   MODE_VIEWING_CATALOG,
+  MODE_CONFIGURING_PROJECT,
   SELECT_TOOL_EDIT,
   MODE_IDLE,
   UNSELECT_ALL,
   SET_PROPERTIES,
   REMOVE,
   UNDO,
-  ROLLBACK
+  ROLLBACK,
+  SET_PROJECT_PROPERTIES,
+  OPEN_PROJECT_CONFIGURATOR
 } from '../constants';
 
 import {State, Scene, Guide} from "../models";
@@ -59,13 +62,19 @@ export default function (state, action) {
     case ROLLBACK:
       return rollback(state);
 
+    case SET_PROJECT_PROPERTIES:
+      return setProjectProperties(state, action.properties);
+
+    case OPEN_PROJECT_CONFIGURATOR:
+      return openProjectConfigurator(state);
+
     default:
       return state;
 
   }
 }
 
-function openCatalog(state){
+function openCatalog(state) {
   return rollback(state)
     .set('mode', MODE_VIEWING_CATALOG);
 }
@@ -151,5 +160,22 @@ export function rollback(state) {
     mode: MODE_IDLE,
     scene,
     sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+
+function setProjectProperties(state, properties) {
+  let scene = state.scene.merge(properties);
+  return state.merge({
+    mode: MODE_IDLE,
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+
+function openProjectConfigurator(state) {
+  return state.merge({
+    mode: MODE_CONFIGURING_PROJECT,
   });
 }

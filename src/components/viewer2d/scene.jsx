@@ -10,7 +10,7 @@ export default function Scene({scene, catalog}) {
     <g>
       <Guides scene={scene}/>
 
-      <g style={{opacity: 0.3, pointerEvents: "none"}}>
+      <g style={{pointerEvents: "none"}}>
         {layers.entrySeq()
           .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
           .map(([layerID, layer]) => <Layer key={layerID} layer={layer} scene={scene} catalog={catalog}/>)}

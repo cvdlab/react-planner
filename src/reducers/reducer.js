@@ -29,6 +29,8 @@ export default function appReducer(state, action) {
     case constants.REMOVE:
     case constants.UNDO:
     case constants.ROLLBACK:
+    case constants.SET_PROJECT_PROPERTIES:
+    case constants.OPEN_PROJECT_CONFIGURATOR:
       return projectReducer(state, action);
 
     case constants.UPDATE_2D_CAMERA:
@@ -66,6 +68,8 @@ export default function appReducer(state, action) {
     case constants.ADD_LAYER:
     case constants.SET_LAYER_PROPERTIES:
     case constants.SELECT_LAYER:
+    case constants.OPEN_LAYER_CONFIGURATOR:
+    case constants.REMOVE_LAYER:
       return sceneReducer(state, action);
 
     case constants.BEGIN_DRAGGING_VERTEX:
