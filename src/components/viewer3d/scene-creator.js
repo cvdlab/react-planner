@@ -462,11 +462,15 @@ function applyOpacity(object, opacity) {
       if (child.material instanceof Three.MultiMaterial) {
         child.material.materials.forEach(materialChild => {
           materialChild.transparent = true;
-          materialChild.opacity = opacity;
+          if (materialChild.opacity && materialChild.opacity > opacity) {
+            materialChild.opacity = opacity;
+          }
         });
       } else {
         child.material.transparent = true;
-        child.material.opacity = opacity;
+        if (child.material.opacity && child.material.opacity > opacity) {
+          child.material.opacity = opacity;
+        }
       }
     }
   });

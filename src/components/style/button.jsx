@@ -12,8 +12,8 @@ const BASE_STYLE = {
   MozUserSelect: "none",
   MsUserSelect: "none",
   userSelect: "none",
-  padding: ".5rem 1rem",
-  fontSize: "1rem",
+  padding: "5px 14px",
+  fontSize: "14px",
   color: "#000",
   fonWeight: "400px",
   transition: "background-color 175ms ease, border 175ms ease",
@@ -23,6 +23,16 @@ const BASE_STYLE = {
   borderType: "solid",
 };
 
+const BASE_STYLE_SIZE = {
+  small: {
+    fontSize: "12px",
+    padding: "3px 8px",
+  },
+  normal: {},
+  large: {
+    padding: "8px 20px",
+  },
+};
 
 export default class Button extends Component {
 
@@ -33,9 +43,8 @@ export default class Button extends Component {
 
   render() {
     let {hover} = this.state;
-    let {type, style: customStyle, styleHover: customStyleHover, children, ...rest} = this.props;
-
-    let styleMerged = Object.assign({}, BASE_STYLE, hover ? customStyleHover : customStyle);
+    let {type, style: customStyle, styleHover: customStyleHover, children, size, ...rest} = this.props;
+    let styleMerged = Object.assign({}, BASE_STYLE, BASE_STYLE_SIZE[size], hover ? customStyleHover : customStyle);
 
     return <button
       type={type}
@@ -48,6 +57,7 @@ export default class Button extends Component {
 
 Button.defaultProps = {
   type: "button",
+  size: "normal",
   style: {
     backgroundColor: "#e6e6e6",
     borderColor: "#adadad",
@@ -62,5 +72,6 @@ Button.propTypes = {
   type: PropTypes.string,
   style: PropTypes.object,
   styleHover: PropTypes.object,
+  size: PropTypes.oneOf(['large', 'normal', 'small']),
 };
 

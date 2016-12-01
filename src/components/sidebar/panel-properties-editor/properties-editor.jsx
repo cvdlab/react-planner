@@ -1,5 +1,9 @@
 import React, {PropTypes, Component} from 'react';
 import {Seq, Iterable} from 'immutable';
+import FormSubmitButton from '../../style/form-submit-button';
+import CancelButton from '../../style/cancel-button';
+import DeleteButton from '../../style/delete-button';
+import Button from '../../style/button';
 
 const STYLE_WRAPPER_BUTTONS = {textAlign: "right"};
 const STYLE_BUTTON_UNSELECT = {backgroundColor: "gray", border: 0, color: "white", margin: "3px"};
@@ -51,7 +55,8 @@ export default class PropertiesEditor extends Component {
     this.setState(state);
   }
 
-  save() {
+  save(event) {
+    event.preventDefault();
     let {state} = this;
     let {element, layer} = this.props;
     let {editingActions, catalog} = this.context;
@@ -77,17 +82,23 @@ export default class PropertiesEditor extends Component {
     };
 
     return (
-      <div>
+      <form onSubmit={e => this.save(e)}>
         { Seq(state).entrySeq().map(([propertyName, {currentValue, inputElement, configs}]) =>
           renderInputElement(inputElement, propertyName, currentValue, configs)) }
 
         <div style={STYLE_WRAPPER_BUTTONS}>
-          <button style={STYLE_BUTTON_UNSELECT} onClick={event => editingActions.unselectAll()}>Unselect</button>
-          <button style={STYLE_BUTTON_REMOVE} onClick={event => editingActions.remove()}>Remove</button>
-          <button style={STYLE_BUTTON_RESET} onClick={event => this.reset()}>Reset</button>
-          <button style={STYLE_BUTTON_SAVE} onClick={event => this.save()}>Save</button>
+          <div style={{marginRight: "3px", display: "inline-block"}}>
+            <Button size="small" onClick={e => editingActions.unselectAll()}>Unselect</Button>
+          </div>
+          <div style={{marginRight: "3px", display: "inline-block"}}>
+            <DeleteButton size="small" onClick={e => editingActions.remove()}>Delete</DeleteButton>
+          </div>
+          <div style={{marginRight: "3px", display: "inline-block"}}>
+            <CancelButton size="small" onClick={e => this.reset()}>Reset</CancelButton>
+          </div>
+          <FormSubmitButton size="small">Save</FormSubmitButton>
         </div>
-      </div>
+      </form>
     )
   }
 

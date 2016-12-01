@@ -24,13 +24,20 @@ export default class FormTextInput extends Component {
   }
 
   render() {
+    let {style, ...rest} = this.props;
+
     return <input
       onFocus={e => this.setState({focus: true})}
       onBlur={e => this.setState({focus: false})}
       style={{
         ...STYLE_INPUT,
+        ...style,
         border: this.state.focus ? '1px solid #66afe9' : '1px solid rgba(0,0,0,.15)'
       }}
-      type="text"  {...this.props}/>
+      type="text"  {...rest}/>
   }
 }
+
+FormTextInput.defaultProps = {
+  style: {}
+};
