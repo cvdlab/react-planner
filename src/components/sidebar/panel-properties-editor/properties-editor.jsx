@@ -55,7 +55,8 @@ export default class PropertiesEditor extends Component {
     this.setState(state);
   }
 
-  save() {
+  save(event) {
+    event.preventDefault();
     let {state} = this;
     let {element, layer} = this.props;
     let {editingActions, catalog} = this.context;
@@ -81,10 +82,7 @@ export default class PropertiesEditor extends Component {
     };
 
     return (
-      <form onSubmit={e => {
-        e.preventDefault();
-        this.save()
-      }}>
+      <form onSubmit={e => this.save(e)}>
         { Seq(state).entrySeq().map(([propertyName, {currentValue, inputElement, configs}]) =>
           renderInputElement(inputElement, propertyName, currentValue, configs)) }
 
