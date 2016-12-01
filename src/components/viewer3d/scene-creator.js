@@ -353,6 +353,10 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
       return holesActions.selectHole(layer.id, holeData.id)
     });
 
+    if (!holeData.selected) {
+      applyOpacity(pivot, layer.opacity);
+    }
+
   });
 }
 
@@ -385,6 +389,10 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
       return linesActions.selectLine(layer.id, line.id);
     });
 
+    if (!line.selected) {
+      applyOpacity(pivot, layer.opacity);
+    }
+
   });
 }
 
@@ -402,6 +410,10 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
     planData.sceneGraph.layers[layer.id].areas[area.id] = pivot;
 
     applyInteract(pivot, interactFunction);
+
+    if (!area.selected) {
+      applyOpacity(pivot, layer.opacity);
+    }
 
   });
 }
@@ -424,6 +436,10 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
       }
     );
 
+    if (!item.selected) {
+      applyOpacity(pivot, layer.opacity);
+    }
+
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].items[item.id] = pivot;
   });
@@ -438,6 +454,24 @@ function applyInteract(object, interactFunction) {
     }
   });
 }
+
+// Apply opacity to children of an Object3D
+function applyOpacity(object, opacity) {
+  object.traverse(function (child) {
+    if (child instanceof Three.Mesh) {
+      if (child.material instanceof Three.MultiMaterial) {
+        child.material.materials.forEach(materialChild => {
+          materialChild.transparent = true;
+          materialChild.opacity = opacity;
+        });
+      } else {
+        child.material.transparent = true;
+        child.material.opacity = opacity;
+      }
+    }
+  });
+}
+
 
 function updateBoundingBox(planData) {
   let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
