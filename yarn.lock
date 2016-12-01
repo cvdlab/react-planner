@@ -1694,8 +1694,8 @@ json3@^3.3.2:
   resolved "https://registry.yarnpkg.com/json3/-/json3-3.3.2.tgz#3c0434743df93e2f5c42aee7b19bcb483575f4e1"
 
 json5@^0.5.0:
-  version "0.5.0"
-  resolved "https://registry.yarnpkg.com/json5/-/json5-0.5.0.tgz#9b20715b026cbe3778fd769edccd822d8332a5b2"
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/json5/-/json5-0.5.1.tgz#1eade7acc012034ad84e2396767ead9fa5495821"
 
 jsonpointer@^4.0.0:
   version "4.0.0"
@@ -2013,14 +2013,14 @@ node-libs-browser@^0.6.0:
     vm-browserify "0.0.4"
 
 node-pre-gyp@^0.6.29:
-  version "0.6.31"
-  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.31.tgz#d8a00ddaa301a940615dbcc8caad4024d58f6017"
+  version "0.6.32"
+  resolved "https://registry.yarnpkg.com/node-pre-gyp/-/node-pre-gyp-0.6.32.tgz#fc452b376e7319b3d255f5f34853ef6fd8fe1fd5"
   dependencies:
     mkdirp "~0.5.1"
     nopt "~3.0.6"
-    npmlog "^4.0.0"
+    npmlog "^4.0.1"
     rc "~1.1.6"
-    request "^2.75.0"
+    request "^2.79.0"
     rimraf "~2.5.4"
     semver "~5.3.0"
     tar "~2.2.1"
@@ -2036,7 +2036,7 @@ normalize-path@^2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/normalize-path/-/normalize-path-2.0.1.tgz#47886ac1662760d4261b7d979d241709d3ce3f7a"
 
-npmlog@^4.0.0:
+npmlog@^4.0.1:
   version "4.0.1"
   resolved "https://registry.yarnpkg.com/npmlog/-/npmlog-4.0.1.tgz#d14f503b4cd79710375553004ba96e6662fbc0b8"
   dependencies:
@@ -2293,8 +2293,8 @@ raf@^3.1.0:
     performance-now "~0.2.0"
 
 randomatic@^1.1.3:
-  version "1.1.5"
-  resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-1.1.5.tgz#5e9ef5f2d573c67bd2b8124ae90b5156e457840b"
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/randomatic/-/randomatic-1.1.6.tgz#110dcabff397e9dcff7c0789ccc0a49adf1ec5bb"
   dependencies:
     is-number "^2.0.2"
     kind-of "^3.0.2"
@@ -2343,7 +2343,7 @@ react-icons@2.2.1:
   dependencies:
     react-icon-base "2.0.3"
 
-react-range:
+react-range@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/react-range/-/react-range-0.0.7.tgz#e0ed92bace0d88e10e560e7d790c536b7294fa20"
   dependencies:
@@ -2358,9 +2358,9 @@ react-redux@4.4.6:
     lodash "^4.2.0"
     loose-envify "^1.1.0"
 
-react-svg-pan-zoom@2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/react-svg-pan-zoom/-/react-svg-pan-zoom-2.2.0.tgz#e01347c738e37679e3861820bafd60211431836d"
+react-svg-pan-zoom@2.2.1:
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/react-svg-pan-zoom/-/react-svg-pan-zoom-2.2.1.tgz#f22c4448506985341391fc80e9ff38cac8428bb8"
   dependencies:
     transformation-matrix-js "^2.7.0"
 
@@ -2490,7 +2490,7 @@ repeating@^2.0.0:
   dependencies:
     is-finite "^1.0.0"
 
-request@^2.75.0:
+request@^2.79.0:
   version "2.79.0"
   resolved "https://registry.yarnpkg.com/request/-/request-2.79.0.tgz#4dfe5bf6be8b8cdc37fcf93e04b65577722710de"
   dependencies:
@@ -2817,8 +2817,8 @@ ua-parser-js@^0.7.9:
   resolved "https://registry.yarnpkg.com/ua-parser-js/-/ua-parser-js-0.7.12.tgz#04c81a99bdd5dc52263ea29d24c6bf8d4818a4bb"
 
 uglify-js@~2.7.3:
-  version "2.7.4"
-  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.7.4.tgz#a295a0de12b6a650c031c40deb0dc40b14568bd2"
+  version "2.7.5"
+  resolved "https://registry.yarnpkg.com/uglify-js/-/uglify-js-2.7.5.tgz#4612c0c7baaee2ba7c487de4904ae122079f2ca8"
   dependencies:
     async "~0.2.6"
     source-map "~0.5.1"
@@ -2885,8 +2885,8 @@ uuid@^2.0.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-2.0.3.tgz#67e2e863797215530dff318e5bf9dcebfd47b21a"
 
 uuid@^3.0.0:
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.0.tgz#6728fc0459c450d796a99c31837569bdf672d728"
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.0.1.tgz#6544bba2dfda8c1cf17e629a3a305e2bb1fee6c1"
 
 v8flags@^2.0.10:
   version "2.0.11"
