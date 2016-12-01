@@ -6,7 +6,7 @@ import Sidebar from './sidebar/sidebar';
 export default function ({width, height, ...rest}) {
 
   let toolbarWidth = 50;
-  let sidebarWidth = 270;
+  let sidebarWidth = 300;
   let contentWidth = width - toolbarWidth - sidebarWidth;
 
   return (
