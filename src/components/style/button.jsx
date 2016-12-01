@@ -25,7 +25,8 @@ const BASE_STYLE = {
 
 const BASE_STYLE_SIZE = {
   small: {
-    padding: "5px 12px",
+    fontSize: "12px",
+    padding: "3px 8px",
   },
   normal: {},
   large: {
