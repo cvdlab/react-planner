@@ -1,11 +1,16 @@
 import React, {PropTypes} from 'react';
+import FormLabel from '../../components/style/form-label'
+import FormTextInput from '../../components/style/form-text-input';
 
 export default function PropertyString({propertyName, value, onUpdate, configs}) {
   return (
     <div style={{marginBottom: "3px"}}>
-      <label style={{width: "30%", display: "inline-block"}}>{propertyName}</label>
+      <div style={{display: "inline-block", width: "30%"}}>
+        <FormLabel>{propertyName}</FormLabel>
+      </div>
+
       <div style={{display: "inline-block", width: "70%"}}>
-        <input type="text" style={{width: "100%"}} value={value} onChange={event => onUpdate(event.target.value)}/>
+        <FormTextInput value={value} onChange={event => onUpdate(event.target.value)}/>
       </div>
     </div>
   );
