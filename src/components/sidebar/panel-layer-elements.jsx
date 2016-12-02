@@ -4,7 +4,7 @@ import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../constants';
 import {Scrollbars} from 'react-custom-scrollbars';
 
 
-export default function PanelLayerElement({state: {scene, mode}}, {editingActions}) {
+export default function PanelLayerElement({state: {scene, mode}}, {editingActions, translator}) {
 
   if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
 
@@ -16,7 +16,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
 
 
   return (
-    <Panel name={`Elements on layer ${layer.name}`}>
+    <Panel name={translator.t("Elements on layer {0}", layer.name)}>
       <div key={1} style={{background: "#3a3a3e", padding: "5px 15px 5px 15px"}}>
           <div style={{height: "100px", overflowY: "scroll"}} onWheel={e => e.stopPropagation()}>
             {layer.lines.entrySeq().map(([lineID, line]) => {
@@ -63,4 +63,5 @@ PanelLayerElement.propTypes = {
 PanelLayerElement.contextTypes = {
   sceneActions: PropTypes.object.isRequired,
   editingActions: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };

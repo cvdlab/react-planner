@@ -5,6 +5,7 @@ import App from './app';
 import initStore from '../reducers/store';
 import keyboard from '../keyboard';
 import Catalog from './../catalog/catalog';
+import Translator from '../translator/translator';
 import mergePlugins from '../utils/merge-plugins';
 
 
@@ -28,7 +29,7 @@ export default class Planner extends Component {
 
   render() {
     let {store} = this;
-    let {catalog} = this.props;
+    let {catalog, translator} = this.props;
     let {toolbarButtons, customContents, customActions} = this.state;
 
     customActions = bindActionCreators(customActions, store.dispatch);
@@ -41,18 +42,21 @@ export default class Planner extends Component {
         customContents={customContents}
         customActions={customActions}
         allowProjectFileSupport={this.props.allowProjectFileSupport}
+        translator={translator}
       />
     )
   }
 }
 
 Planner.propTypes = {
+  translator: PropTypes.instanceOf(Translator),
   catalog: PropTypes.instanceOf(Catalog),
   plugins: PropTypes.arrayOf(PropTypes.object),
   allowProjectFileSupport: PropTypes.bool
 };
 
 Planner.defaultProps = {
+  translator: new Translator(),
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,

@@ -54,7 +54,7 @@ const STYLE_EDIT_BUTTON = {
   outline: "0px"
 };
 
-export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
+export default function PanelLayers({state: {scene, mode}}, {sceneActions, translator}) {
 
   let addClick = event => {
     sceneActions.addLayer();
@@ -62,7 +62,7 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
   };
 
   return (
-    <Panel name="Layers">
+    <Panel name={translator.t("Layers")}>
       {scene.layers.entrySeq().map(([layerID, layer]) => {
 
         let isCurrentLayer = layerID === scene.selectedLayer;
@@ -94,7 +94,7 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions}) {
 
       <a href="javascript:;" style={STYLE_ADD_WRAPPER} key="add" onClick={addClick}>
         <IconAdd />
-        <span style={STYLE_ADD_LABEL}>New Layer</span>
+        <span style={STYLE_ADD_LABEL}>{translator.t("New layer")}</span>
       </a>
     </Panel>
   )
@@ -106,5 +106,6 @@ PanelLayers.propTypes = {
 };
 
 PanelLayers.contextTypes = {
-  sceneActions: PropTypes.object.isRequired
+  sceneActions: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };

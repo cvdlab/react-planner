@@ -14,6 +14,7 @@ class App extends React.Component {
 
   getChildContext() {
     let ctx = {
+      translator: this.props.translator,
       catalog: this.props.catalog,
       customActions: this.props.customActions,
     };
@@ -59,6 +60,7 @@ class App extends React.Component {
 
 
 App.childContextTypes = {
+  translator: PropTypes.object,
   catalog: PropTypes.object,
   customActions: PropTypes.object,
 };
