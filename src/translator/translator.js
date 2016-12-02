@@ -1,16 +1,21 @@
-import EN_US from './en-us';
+import EN from './en';
 import IT from './it';
 
-const DEFAULT_LOCALE = 'en-US';
+const DEFAULT_LOCALE = 'en';
 
 export default class Translator {
   constructor() {
     this.locale = null;
     this.translations = {};
 
-    this.registerTranslation('en-us', EN_US);
+    this.registerTranslation('en', EN);
     this.registerTranslation('it', IT);
-    this.setLocale(Translator.getBrowserLocale());
+
+    let locale = Translator
+      .getBrowserLanguages()
+      .reduce((prev, cur) => this.translations.hasOwnProperty(cur) ? cur : prev, DEFAULT_LOCALE);
+
+    this.setLocale(locale);
   }
 
   t(phrase, ...params) {
@@ -56,9 +61,9 @@ export default class Translator {
     }
   }
 
-  static getBrowserLocale() {
+  static getBrowserLanguages() {
     return navigator.languages
-      ? navigator.languages[0]
-      : (navigator.language || navigator.userLanguage)
+      ? navigator.languages
+      : ([(navigator.language || navigator.userLanguage)])
   }
 }
