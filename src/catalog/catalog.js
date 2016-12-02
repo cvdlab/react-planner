@@ -20,11 +20,16 @@ export default class Catalog {
   }
 
   getElement(type) {
-
     if (this.hasElement(type)) {
       return this.elements[type];
     }
+    throw new Error(`Element ${type} does not exist in catalog`);
+  }
 
+  getPropertyType(type) {
+    if (this.propertyTypes.hasOwnProperty(type)) {
+      return this.propertyTypes[type];
+    }
     throw new Error(`Element ${type} does not exist in catalog`);
   }
 
