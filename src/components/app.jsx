@@ -29,7 +29,7 @@ class App extends React.Component {
   componentDidMount() {
     window.ReactPlanner = {
       store: this.props.store,
-      getState: () => this.props.store.getState().toJS(),
+      getState: () => this.props.store.getState(),
       ...actions,
       customActions: this.props.customActions,
       do: (actions, delay = 300) => {
