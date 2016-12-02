@@ -16,24 +16,28 @@ export default {
 
   properties: {
     width: {
+      label: "Width",
       type: "length-measure",
       defaultValue: {
         length: 90
       }
     },
     height: {
+      label: "Height",
       type: "length-measure",
       defaultValue: {
         length: 100
       }
     },
     altitude: {
+      label: "Altitude",
       type: "length-measure",
       defaultValue: {
         length: 90
       }
     },
     thickness: {
+      label: "Thickness",
       type: "length-measure",
       defaultValue: {
         length: 10

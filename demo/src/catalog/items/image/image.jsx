@@ -17,36 +17,44 @@ export default {
 
   properties: {
     imageUri: {
+      label: "Image URI",
       type: "string",
       defaultValue: '',
     },
     x1: {
+      label: "x1",
       type: "number",
       defaultValue: 0
     },
     y1: {
+      label: "y1",
       type: "number",
       defaultValue: 0
     },
     x2: {
+      label: "x2",
       type: "number",
       defaultValue: 100
     },
     y2: {
+      label: "y2",
       type: "number",
       defaultValue: 100
     },
     distance: {
+      label: "Distance",
       type: "length-measure",
       defaultValue: {
         length: 100
       }
     },
     width: {
+      label: "Width",
       type: "number",
       defaultValue: 600
     },
     height: {
+      label: "Height",
       type: "number",
       defaultValue: 400
     },

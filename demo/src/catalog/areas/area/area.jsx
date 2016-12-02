@@ -15,10 +15,12 @@ export default {
 
   properties: {
     patternColor: {
+      label: "Color",
       type: "color",
       defaultValue: "#f5f4f4"
     },
     texture: {
+      label: "Floor",
       type: "enum",
       defaultValue: 'none',
       values: {

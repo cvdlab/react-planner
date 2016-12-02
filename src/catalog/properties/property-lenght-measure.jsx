@@ -6,7 +6,7 @@ import FormNumberInput from '../../components/style/form-number-input'
 import FormSelect from '../../components/style/form-select'
 
 
-export default function PropertyLengthMeasure({propertyName, value, onUpdate, configs}) {
+export default function PropertyLengthMeasure({value, onUpdate, configs}) {
   let {_length, _unit, length} = value;
 
   _unit = _unit || UNIT_CENTIMETER;
@@ -25,7 +25,7 @@ export default function PropertyLengthMeasure({propertyName, value, onUpdate, co
   return (
     <div style={{marginBottom: "3px"}}>
       <div style={{display: "inline-block", width: "30%"}}>
-        <FormLabel>{propertyName}</FormLabel>
+        <FormLabel>{configs.label}</FormLabel>
       </div>
       <div style={{display: "inline-block", width: "45%", marginRight: "5%"}}>
 
@@ -51,7 +51,6 @@ export default function PropertyLengthMeasure({propertyName, value, onUpdate, co
 }
 
 PropertyLengthMeasure.propTypes = {
-  propertyName: PropTypes.string.isRequired,
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired

@@ -15,6 +15,7 @@ export default {
 
   properties: {
     color: {
+      label: "Color",
       type: "color",
       defaultValue: "#f48342"
     },

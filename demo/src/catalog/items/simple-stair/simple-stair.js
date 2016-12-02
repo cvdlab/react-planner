@@ -20,6 +20,7 @@ export default {
 
   properties: {
     width: {
+      label: "Width",
       type: "length-measure",
       defaultValue: {
         length: 50,
@@ -27,6 +28,7 @@ export default {
       }
     },
     depth: {
+      label: "Depth",
       type: "length-measure",
       defaultValue: {
         length: 300,
@@ -34,6 +36,7 @@ export default {
       }
     },
     height: {
+      label: "Height",
       type: "length-measure",
       defaultValue: {
         length: 300,
@@ -41,6 +44,7 @@ export default {
       }
     },
     altitude: {
+      label: "Altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

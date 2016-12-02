@@ -18,18 +18,21 @@ export default {
 
   properties: {
     height: {
+      label: "Height",
       type: "length-measure",
       defaultValue: {
         length: 300,
       }
     },
     thickness: {
+      label: "Thickness",
       type: "length-measure",
       defaultValue: {
         length: 20
       }
     },
     textureA: {
+      label: "Covering A",
       type: "enum",
       defaultValue: 'none',
       values: {
@@ -39,6 +42,7 @@ export default {
       }
     },
     textureB: {
+      label: "Covering B",
       type: "enum",
       defaultValue: 'none',
       values: {
