@@ -7,19 +7,22 @@ import FormSelect from '../../components/style/form-select'
 
 
 export default function PropertyLengthMeasure({value, onUpdate, configs}) {
-  let {_length, _unit, length} = value;
 
-  _unit = _unit || UNIT_CENTIMETER;
-  _length = _length || length || 0;
+  let length = value.get('length');
+  let _length, _unit;
 
-  let updateLength = (lengthInput) => {
+  if(value.has('_length') && value.has('_unit')){
+    _length = value.get('_length');
+     _unit = value.get('_unit');
+  }else{
+    _length = length;
+    _unit = UNIT_CENTIMETER;
+  }
+
+  let update = (lengthInput, unitInput) => {
     let _length = parseFloat(lengthInput);
-    let length = convert(_length).from(_unit).to(UNIT_CENTIMETER); //TODO change UNIT_CENTIMETER with scene.unit
-    onUpdate(Object.assign({}, value, {length, _length}));
-  };
-
-  let updateUnit = (unitInput) => {
-    onUpdate(Object.assign({}, value, {_unit: unitInput}));
+    let length = convert(_length).from(unitInput).to(UNIT_CENTIMETER); //TODO change UNIT_CENTIMETER with scene.unit
+    onUpdate(value.merge({length, _length, _unit: unitInput}));
   };
 
   return (
@@ -29,13 +32,13 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}) {
       </div>
       <div style={{display: "inline-block", width: "45%", marginRight: "5%"}}>
 
-        <FormNumberInput value={_length} onChange={event => updateLength(event.target.value)}
+        <FormNumberInput value={_length} onChange={event => update(event.target.value, _unit)}
                          min={configs.min} max={configs.max}/>
       </div>
 
 
       <div style={{display: "inline-block", width: "20%"}}>
-        <FormSelect value={_unit} onChange={event => updateUnit(event.target.value)}>
+        <FormSelect value={_unit} onChange={event => update(_length, event.target.value)}>
           <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
           <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
           <option key={UNIT_MILLIMETER} value={UNIT_MILLIMETER}>{UNIT_MILLIMETER}</option>
