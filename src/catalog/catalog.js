@@ -5,12 +5,14 @@ import PropertyEnum from './properties/property-enum';
 import PropertyString from './properties/property-string';
 import PropertyNumber from './properties/property-number';
 import PropertyLengthMeasure from './properties/property-lenght-measure';
+import {UNIT_CENTIMETER} from '../constants';
 
 export default class Catalog {
 
-  constructor() {
+  constructor(unit = UNIT_CENTIMETER) {
     this.elements = {};
     this.propertyTypes = {};
+    this.unit = unit;
 
     this.registerPropertyType('color', PropertyColor, PropertyColor);
     this.registerPropertyType('enum', PropertyEnum, PropertyEnum);

@@ -6,7 +6,7 @@ import FormNumberInput from '../../components/style/form-number-input'
 import FormSelect from '../../components/style/form-select'
 
 
-export default function PropertyLengthMeasure({value, onUpdate, configs}) {
+export default function PropertyLengthMeasure({value, onUpdate, configs}, {catalog}) {
 
   let length = value.get('length');
   let _length, _unit;
@@ -16,12 +16,12 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}) {
      _unit = value.get('_unit');
   }else{
     _length = length;
-    _unit = UNIT_CENTIMETER;
+    _unit = catalog.unit;
   }
 
   let update = (lengthInput, unitInput) => {
     let _length = parseFloat(lengthInput);
-    let length = convert(_length).from(unitInput).to(UNIT_CENTIMETER); //TODO change UNIT_CENTIMETER with scene.unit
+    let length = convert(_length).from(unitInput).to(catalog.unit);
     onUpdate(value.merge({length, _length, _unit: unitInput}));
   };
 
@@ -57,4 +57,8 @@ PropertyLengthMeasure.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired
+};
+
+PropertyLengthMeasure.contextTypes = {
+  catalog: PropTypes.object.isRequired
 };
