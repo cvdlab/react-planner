@@ -78,9 +78,9 @@ export default class Viewer3DFirstPerson extends React.Component {
     scene3D.add(light);
 
     // Add another light
-    let spotLight1 = new Three.SpotLight(0xffffff, 0.30);
-    spotLight1.position.set(1000, 0, -1000);
-    camera.add(spotLight1);
+    let pointLight = new Three.PointLight(0xffffff, 0.4, 1000);
+    pointLight.position.set(0, 0, 0);
+    scene3D.add(pointLight);
 
     // POINTER LOCK
 
@@ -199,7 +199,6 @@ export default class Viewer3DFirstPerson extends React.Component {
     let render = () => {
 
       yInitialPosition = this.planData.boundingBox.min.y + humanHeight;
-      // console.log(yInitialPosition, this.planData.boundingBox.min);
 
       this.controls.getObject().position.y = yInitialPosition;
 
@@ -219,6 +218,10 @@ export default class Viewer3DFirstPerson extends React.Component {
       this.controls.getObject().translateZ(velocity.z * delta);
 
       prevTime = time;
+
+      // Set light position
+      let controlObjectPosition=  this.controls.getObject().position;
+      pointLight.position.set(controlObjectPosition.x, controlObjectPosition.y, controlObjectPosition.z);
 
       this.renderer.clear();                     // clear buffers
       this.renderer.render(scene3D, camera);     // render scene 1
