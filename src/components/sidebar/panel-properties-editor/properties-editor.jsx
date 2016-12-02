@@ -66,7 +66,7 @@ export default class PropertiesEditor extends Component {
   }
 
   render() {
-    let {state, context: {editingActions, catalog}, props:{state: appState}} = this;
+    let {state, context: {editingActions, catalog}, props:{state: appState}, context:{translator}} = this;
 
     let renderInputElement = (inputElement, propertyName, value, configs) => {
       let {Viewer, Editor} = catalog.propertyTypes[inputElement];
@@ -88,15 +88,15 @@ export default class PropertiesEditor extends Component {
 
         <div style={STYLE_WRAPPER_BUTTONS}>
           <div style={{marginRight: "3px", display: "inline-block"}}>
-            <Button size="small" onClick={e => editingActions.unselectAll()}>Unselect</Button>
+            <Button size="small" onClick={e => editingActions.unselectAll()}>{translator.t("Unselect")}</Button>
           </div>
           <div style={{marginRight: "3px", display: "inline-block"}}>
-            <DeleteButton size="small" onClick={e => editingActions.remove()}>Delete</DeleteButton>
+            <DeleteButton size="small" onClick={e => editingActions.remove()}>{translator.t("Delete")}</DeleteButton>
           </div>
           <div style={{marginRight: "3px", display: "inline-block"}}>
-            <CancelButton size="small" onClick={e => this.reset()}>Reset</CancelButton>
+            <CancelButton size="small" onClick={e => this.reset()}>{translator.t("Reset")}</CancelButton>
           </div>
-          <FormSubmitButton size="small">Save</FormSubmitButton>
+          <FormSubmitButton size="small">{translator.t("Save")}</FormSubmitButton>
         </div>
       </form>
     )
@@ -112,5 +112,6 @@ PropertiesEditor.propTypes = {
 
 PropertiesEditor.contextTypes = {
   editingActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
+  catalog: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };

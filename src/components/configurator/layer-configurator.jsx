@@ -78,48 +78,48 @@ export default class LayerConfigurator extends Component {
   render() {
     let {width, height} = this.props;
     let {layerID, dataName, dataOpacity, dataAltitude, dataOrder} = this.state;
-    let {projectActions, sceneActions} = this.context;
+    let {projectActions, sceneActions, translator} = this.context;
 
     return (
       <ContentContainer width={width} height={height}>
-        <ContentTitle>Layer config</ContentTitle>
+        <ContentTitle>{translator.t("Layer config")}</ContentTitle>
 
         <form onSubmit={e => this.onSubmit(e)}>
           <FormBlock>
-            <FormLabel htmlFor="name">name</FormLabel>
+            <FormLabel htmlFor="name">{translator.t("name")}</FormLabel>
             <FormTextInput id="name" placeholder="name" value={dataName}
                            onChange={e => this.setState({dataName: e.target.value})}/>
           </FormBlock>
 
           <FormBlock>
-            <FormLabel htmlFor="opacity">opacity</FormLabel>
+            <FormLabel htmlFor="opacity">{translator.t("opacity")}</FormLabel>
             <FormSlider min={0} max={100} value={Math.round(dataOpacity * 100)}
                         onChange={e => this.setState({dataOpacity: e.target.value / 100})}/>
 
           </FormBlock>
 
           <FormBlock>
-            <FormLabel htmlFor="altitude">altitude</FormLabel>
+            <FormLabel htmlFor="altitude">{translator.t("altitude")}</FormLabel>
             <FormNumberInput id="altitude" placeholder="altitude" value={dataAltitude}
                              onChange={e => this.setState({dataAltitude: e.target.value})}/>
           </FormBlock>
 
           <FormBlock>
-            <FormLabel htmlFor="order">order</FormLabel>
+            <FormLabel htmlFor="order">{translator.t("order")}</FormLabel>
             <FormNumberInput id="order" placeholder="order" value={dataOrder}
                              onChange={e => this.setState({dataOrder: e.target.value})}/>
           </FormBlock>
 
           <div style={{textAlign: "right"}}>
             <div style={{marginRight: "10px", display: "inline-block"}}>
-              <DeleteButton  size="large" onClick={e => sceneActions.removeLayer(layerID)}>Delete</DeleteButton>
+              <DeleteButton  size="large" onClick={e => sceneActions.removeLayer(layerID)}>{translator.t("Delete")}</DeleteButton>
             </div>
 
             <div style={{marginRight: "3px", display: "inline-block"}}>
-              <CancelButton  size="large" onClick={e => projectActions.rollback()}>Cancel</CancelButton>
+              <CancelButton  size="large" onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>
             </div>
 
-            <FormSubmitButton size="large">Save</FormSubmitButton>
+            <FormSubmitButton size="large">{translator.t("Save")}</FormSubmitButton>
           </div>
         </form>
       </ContentContainer>
@@ -136,4 +136,5 @@ LayerConfigurator.propTypes = {
 LayerConfigurator.contextTypes = {
   projectActions: PropTypes.object.isRequired,
   sceneActions: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };

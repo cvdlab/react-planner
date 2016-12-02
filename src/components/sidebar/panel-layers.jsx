@@ -86,7 +86,8 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions, trans
           <div style={style} key={layerID} onClick={selectClick} onDoubleClick={configureClick}>
             {iconRendered}
             <div style={STYLE_NAME}>{layer.name} [h:{layer.altitude}]
-              <button onClick={configureClick} style={STYLE_EDIT_BUTTON}><IconEdit /></button>
+              <button onClick={configureClick} style={STYLE_EDIT_BUTTON} title={translator.t("Configure layer")}
+              ><IconEdit /></button>
             </div>
           </div>
         )

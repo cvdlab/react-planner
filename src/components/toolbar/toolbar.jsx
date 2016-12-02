@@ -56,6 +56,7 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
   linesActions,
   holesActions,
   itemsActions,
+  translator,
 }) {
 
   let mode = state.get('mode');
@@ -64,48 +65,48 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
     <aside style={{...STYLE, width, height}}>
       <If condition={allowProjectFileSupport}>
         <div>
-          <ToolbarButton tooltip="New project" onClick={event => projectActions.newProject()}>
+          <ToolbarButton tooltip={translator.t("New project")} onClick={event => projectActions.newProject()}>
             <IconNewFile />
           </ToolbarButton>
 
-          <ToolbarButton tooltip="Save project" onClick={event => projectActions.saveProjectToFile()}>
+          <ToolbarButton tooltip={translator.t("Save project")} onClick={event => projectActions.saveProjectToFile()}>
             <IconSave />
           </ToolbarButton>
 
-          <ToolbarButton tooltip="Load project" onClick={event => projectActions.loadProjectFromFile()}>
+          <ToolbarButton tooltip={translator.t("Load project")} onClick={event => projectActions.loadProjectFromFile()}>
             <IconLoad />
           </ToolbarButton>
         </div>
       </If>
 
-      <ToolbarButton active={[MODE_3D_VIEW].includes(mode)} tooltip="3D View"
+      <ToolbarButton active={[MODE_3D_VIEW].includes(mode)} tooltip={translator.t("3D View")}
                      onClick={event => viewer3DActions.selectTool3DView()}>
         <Icon3D />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip="2D View"
+      <ToolbarButton active={[MODE_IDLE].includes(mode)} tooltip={translator.t("2D View")}
                      onClick={event => projectActions.rollback()}>
         {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_3D_FIRST_PERSON].includes(mode)} tooltip="3D First Person"
+      <ToolbarButton active={[MODE_3D_FIRST_PERSON].includes(mode)} tooltip={translator.t("3D First Person")}
                      onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
         <Icon3DFirstPerson />
       </ToolbarButton>
 
       <If condition={![MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)}>
         <div>
-          <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip="Zoom in"
+          <ToolbarButton active={[MODE_2D_ZOOM_IN].includes(mode)} tooltip={translator.t("Zoom in")}
                          onClick={event => viewer2DActions.selectToolZoomIn()}>
             <IconZoomPlus />
           </ToolbarButton>
 
-          <ToolbarButton active={[MODE_2D_ZOOM_OUT].includes(mode)} tooltip="Zoom out"
+          <ToolbarButton active={[MODE_2D_ZOOM_OUT].includes(mode)} tooltip={translator.t("Zoom out")}
                          onClick={event => viewer2DActions.selectToolZoomOut()}>
             <IconZoomMinus />
           </ToolbarButton>
 
-          <ToolbarButton active={[MODE_2D_PAN].includes(mode)} tooltip="Pan"
+          <ToolbarButton active={[MODE_2D_PAN].includes(mode)} tooltip={translator.t("Pan")}
                          onClick={event => viewer2DActions.selectToolPan()}>
             <IconPan />
           </ToolbarButton>
@@ -115,17 +116,17 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
 
       <ToolbarButton
         active={[MODE_VIEWING_CATALOG].includes(mode)}
-        tooltip="Open catalog"
+        tooltip={translator.t("Open catalog")}
         onClick={event => projectActions.openCatalog()}>
         <IconCatalog />
       </ToolbarButton>
 
-      <ToolbarButton active={false} tooltip="Undo (CTRL-Z)"
+      <ToolbarButton active={false} tooltip={translator.t("Undo (CTRL-Z)")}
                      onClick={event => projectActions.undo()}>
         <IconUndo />
       </ToolbarButton>
 
-      <ToolbarButton active={[MODE_CONFIGURING_PROJECT].includes(mode)} tooltip="Configure project"
+      <ToolbarButton active={[MODE_CONFIGURING_PROJECT].includes(mode)} tooltip={translator.t("Configure project")}
                      onClick={event => projectActions.openProjectConfigurator()}>
         <IconConfigure />
       </ToolbarButton>
@@ -148,5 +149,6 @@ Toolbar.contextTypes = {
   viewer3DActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired
+  itemsActions: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };

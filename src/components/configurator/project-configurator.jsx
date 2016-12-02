@@ -40,31 +40,31 @@ export default class ProjectConfigurator extends Component {
   render() {
     let {width, height} = this.props;
     let {dataWidth, dataHeight} = this.state;
-    let {projectActions} = this.context;
+    let {projectActions, translator} = this.context;
 
     return (
       <ContentContainer width={width} height={height}>
-        <ContentTitle>Project config</ContentTitle>
+        <ContentTitle>{translator.t("Project config")}</ContentTitle>
 
         <form onSubmit={e => this.onSubmit(e)}>
           <FormBlock>
-            <FormLabel htmlFor="width">width</FormLabel>
+            <FormLabel htmlFor="width">{translator.t("width")}</FormLabel>
             <FormNumberInput id="width" placeholder="width" value={dataWidth}
                              onChange={e => this.setState({dataWidth: e.target.value})}/>
           </FormBlock>
 
           <FormBlock>
-            <FormLabel htmlFor="height">height</FormLabel>
+            <FormLabel htmlFor="height">{translator.t("height")}</FormLabel>
             <FormNumberInput id="height" placeholder="height" value={dataHeight}
                              onChange={e => this.setState({dataHeight: e.target.value})}/>
           </FormBlock>
 
           <div style={{textAlign: "right"}}>
             <div style={{marginRight: "3px", display: "inline-block"}}>
-              <CancelButton  size="large" onClick={e => projectActions.rollback()}>Cancel</CancelButton>
+              <CancelButton  size="large" onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>
             </div>
 
-            <FormSubmitButton  size="large">Save</FormSubmitButton>
+            <FormSubmitButton  size="large">{translator.t("Save")}</FormSubmitButton>
           </div>
         </form>
       </ContentContainer>
@@ -80,4 +80,5 @@ ProjectConfigurator.propTypes = {
 
 ProjectConfigurator.contextTypes = {
   projectActions: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };
