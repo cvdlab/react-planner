@@ -11,9 +11,16 @@ export default class Translator {
     this.registerTranslation('en', EN);
     this.registerTranslation('it', IT);
 
-    let locale = Translator
-      .getBrowserLanguages()
-      .reduce((prev, cur) => this.translations.hasOwnProperty(cur) ? cur : prev, DEFAULT_LOCALE);
+    let locale = null;
+    let languages = Translator.getBrowserLanguages();
+    for (let i = 0; i < languages.length; i++) {
+      let lang = languages[i];
+      if (this.translations.hasOwnProperty(lang)) {
+        locale = lang;
+        break;
+      }
+    }
+    locale = locale ? locale : DEFAULT_LOCALE;
 
     this.setLocale(locale);
   }
