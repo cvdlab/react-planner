@@ -178,7 +178,7 @@ export class Layer extends Record({
 
 
 export const DefaultLayers = new Map({
-  'layer-1': new Layer({id: 'layer-1', name: 'default layer'})
+  'layer-1': new Layer({id: 'layer-1', name: 'default'})
 });
 
 
