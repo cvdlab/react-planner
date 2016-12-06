@@ -15,8 +15,11 @@ export function updateDraggingVertex(x, y) {
 }
 
 export function endDraggingVertex(x, y) {
-  return {
-    type: END_DRAGGING_VERTEX,
-    x, y
+  return (dispatch, getState, {catalog}) => {
+    dispatch({
+      type: END_DRAGGING_VERTEX,
+      x, y,
+      catalog
+    });
   }
 }

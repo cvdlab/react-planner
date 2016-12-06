@@ -8,7 +8,7 @@ import {
 import {Map, List} from 'immutable';
 import {sceneSnapElements} from '../utils/snap-scene';
 import {nearestSnap} from '../utils/snap';
-import {mergeEqualsVertices} from '../utils/layer-operations';
+import {detectAndUpdateAreas, removeLine, addLineAvoidingIntersections} from '../utils/layer-operations';
 
 export default function (state, action) {
   switch (action.type) {
@@ -19,7 +19,7 @@ export default function (state, action) {
       return updateDraggingVertex(state, action.x, action.y);
 
     case END_DRAGGING_VERTEX:
-      return endDraggingVertex(state, action.x, action.y);
+      return endDraggingVertex(state, action.x, action.y, action.catalog);
 
     default:
       return state;
@@ -52,13 +52,36 @@ function updateDraggingVertex(state, x, y) {
   });
 }
 
-function endDraggingVertex(state, x, y) {
+function endDraggingVertex(state, x, y, catalog) {
   let {draggingSupport} = state;
   let layerID = draggingSupport.get('layerID');
   let vertexID = draggingSupport.get('vertexID');
+  let lineIDs = state.scene.layers.get(layerID).vertices.get(vertexID).lines;
 
   state = updateDraggingVertex(state, x, y);
-  let scene = state.scene.updateIn(['layers', layerID], layer => mergeEqualsVertices(layer, vertexID));
+  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+
+    lineIDs.forEach(lineID =>{
+      let line = layer.lines.get(lineID);
+
+      let oldVertexID;
+
+      if(line.vertices.get(0) === vertexID) {
+        // I need to invert vertices
+        oldVertexID = line.vertices.get(1);
+      } else {
+        oldVertexID = line.vertices.get(0);
+      }
+
+      let oldVertex = layer.vertices.get(oldVertexID);
+      let vertex = layer.vertices.get(vertexID);
+
+      removeLine(layer, lineID);
+      addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog);
+    });
+
+    detectAndUpdateAreas(layer, catalog);
+  }));
 
   return state.merge({
     mode: MODE_IDLE,
