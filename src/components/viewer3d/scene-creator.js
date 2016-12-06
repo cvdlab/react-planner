@@ -321,11 +321,13 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
     // First of all I need to find the vertices of this line
     let vertex0 = layer.vertices.get(line.vertices.get(0));
     let vertex1 = layer.vertices.get(line.vertices.get(1));
+    let offset = holeData.offset;
 
     if (vertex0.x > vertex1.x) {
       let app = vertex0;
       vertex0 = vertex1;
       vertex1 = app;
+      offset = 1 - offset;
     }
 
     let distance = Math.sqrt(Math.pow(vertex0.x - vertex1.x, 2) + Math.pow(vertex0.y - vertex1.y, 2));
@@ -338,13 +340,12 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
     let holeAltitude = holeData.properties.get('altitude').get('length');
-
     let holeHeight = holeData.properties.get('height').get('length');
 
     pivot.rotation.y = alpha;
-    pivot.position.x = layer.vertices.get(line.vertices.get(0)).x + distance * holeData.offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
+    pivot.position.x = vertex0.x + distance * offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
     pivot.position.y = holeAltitude + holeHeight / 2 - center[1] + layer.altitude;
-    pivot.position.z = -layer.vertices.get(line.vertices.get(0)).y - distance * holeData.offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
+    pivot.position.z = -vertex0.y - distance * offset * Math.sin(alpha) - center[2] * Math.cos(alpha);
 
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].holes[holeData.id] = pivot;

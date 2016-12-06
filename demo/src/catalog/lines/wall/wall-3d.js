@@ -6,12 +6,14 @@ export default function (element, layer, scene) {
   // Get the two vertices of the wall
   let vertex0 = layer.vertices.get(element.vertices.get(0));
   let vertex1 = layer.vertices.get(element.vertices.get(1));
+  let inverted = false;
 
   // The first vertex is the smaller one
   if (vertex0.x > vertex1.x) {
     let app = vertex0;
     vertex0 = vertex1;
     vertex1 = app;
+    inverted = true;
   }
 
   // Get height and thickness of the wall converting them into the current scene units
@@ -78,6 +80,7 @@ export default function (element, layer, scene) {
     let holeWidth = holeData.properties.get('width').get('length');
     let holeHeight = holeData.properties.get('height').get('length');
     let holeAltitude = holeData.properties.get('altitude').get('length');
+    let offset = inverted? 1- holeData.offset: holeData.offset;
 
 
     // Now I can build the coordinates of the hole shape:
@@ -98,7 +101,7 @@ export default function (element, layer, scene) {
      *
      */
 
-    let startAt = (distance - bevelRadius) * holeData.offset - holeWidth / 2 + bevelRadius / 2;
+    let startAt = (distance - bevelRadius) * offset - holeWidth / 2 + bevelRadius / 2;
 
     // I add 0.00001 to the holeAltitude to avoid a warning with the Three triangulation algorithm
     let holeCoords = [
