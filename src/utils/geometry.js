@@ -63,8 +63,8 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
   let numA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
   let numB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
 
-  if (denom == 0) {
-    if (numA == 0 && numB == 0) {
+  if (Math.abs(denom) <= EPSILON) {
+    if (Math.abs(numA) <= EPSILON && Math.abs(numB) <= EPSILON) {
 
       let comparator = (pa, pb) => pa.x === pb.x ? pa.y - pb.y : pa.x - pb.x;
       let line0 = [p1, p2].sort(comparator);

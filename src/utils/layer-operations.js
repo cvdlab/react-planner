@@ -118,27 +118,28 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
     lines.forEach(line => {
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
-      if (
-        !(Geometry.samePoints(v0, {x: x0, y: y0})
+      let hasCommonEndpoint =
+        (Geometry.samePoints(v0, {x: x0, y: y0})
         || Geometry.samePoints(v0, {x: x1, y: y1})
         || Geometry.samePoints(v1, {x: x0, y: y0})
-        || Geometry.samePoints(v1, {x: x1, y: y1}))) {
+        || Geometry.samePoints(v1, {x: x1, y: y1}));
 
-        let intersection = Geometry.intersectionFromTwoLineSegment(
-          {x: x0, y: y0}, {x: x1, y: y1},
-          v0, v1
-        );
 
-        if (intersection.type === "colinear") {
-          removeLine(layer, line.id);
-          points.push(v0, v1);
-        }
+      let intersection = Geometry.intersectionFromTwoLineSegment(
+        {x: x0, y: y0}, {x: x1, y: y1},
+        v0, v1
+      );
 
-        if (intersection.type === "intersecting") {
-          splitLine(layer, line.id, intersection.point.x, intersection.point.y, catalog);
-          points.push(intersection.point);
-        }
+      if (intersection.type === "colinear") {
+        removeLine(layer, line.id);
+        points.push(v0, v1);
       }
+
+      if (intersection.type === "intersecting" && (!hasCommonEndpoint)) {
+        splitLine(layer, line.id, intersection.point.x, intersection.point.y, catalog);
+        points.push(intersection.point);
+      }
+
     });
     addLinesFromPoints(layer, type, points, catalog);
   });
