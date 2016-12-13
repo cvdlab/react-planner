@@ -26,6 +26,12 @@ class App extends React.Component {
     return ctx;
   }
 
+  componentWillMount() {
+    let projectActions = this.props.projectActions;
+    let catalog = this.props.catalog;
+    projectActions.initCatalog(catalog);
+  }
+
   componentDidMount() {
     window.ReactPlanner = {
       store: this.props.store,

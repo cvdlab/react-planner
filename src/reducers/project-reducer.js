@@ -13,10 +13,11 @@ import {
   UNDO,
   ROLLBACK,
   SET_PROJECT_PROPERTIES,
-  OPEN_PROJECT_CONFIGURATOR
+  OPEN_PROJECT_CONFIGURATOR,
+  INIT_CATALOG
 } from '../constants';
 
-import {State, Scene, Guide} from "../models";
+import {State, Scene, Guide, Catalog} from "../models";
 
 import {
   removeLine,
@@ -67,6 +68,9 @@ export default function (state, action) {
 
     case OPEN_PROJECT_CONFIGURATOR:
       return openProjectConfigurator(state);
+
+    case INIT_CATALOG:
+      return initCatalog(state, action.catalog);
 
     default:
       return state;
@@ -178,4 +182,8 @@ function openProjectConfigurator(state) {
   return state.merge({
     mode: MODE_CONFIGURING_PROJECT,
   });
+}
+
+function initCatalog(state, catalog){
+  return state.set('catalog', new Catalog(catalog));
 }

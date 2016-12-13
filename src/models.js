@@ -204,12 +204,38 @@ export class Scene extends Record({
   }
 }
 
+export class CatalogElement extends Record({
+  name: "",
+  prototype: "",
+  info: new Map(),
+  properties: new Map(),
+}, 'CatalogElement') {
+  constructor(json = {}) {
+    super({
+      ...json,
+      info: fromJS(json.info),
+      properties: fromJS(json.properties)
+    });
+  }
+}
+
+export class Catalog extends Record({
+  elements: new Map(),
+}, 'Catalog') {
+  constructor(json = {}) {
+    super({
+      elements: safeLoadMapList(json.elements, CatalogElement)
+    })
+  }
+}
 
 export class State extends Record({
   mode: MODE_IDLE,
 
   scene: new Scene(),
   sceneHistory: new List([new Scene()]),
+
+  catalog: new Catalog(),
 
   viewer2D: new Map(),
 
@@ -229,6 +255,8 @@ export class State extends Record({
       scene,
       sceneHistory: json.sceneHistory ? json.sceneHistory : new List([scene]),
 
+      catalog: new Catalog(json.catalog || {}),
+
       viewer2D: new Map(json.viewer2D || {}),
 
       drawingSupport: new Map(json.drawingSupport || {}),
@@ -239,4 +267,6 @@ export class State extends Record({
     })
   }
 }
+
+
 

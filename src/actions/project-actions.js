@@ -13,7 +13,8 @@ import {
   UNDO,
   ROLLBACK,
   OPEN_PROJECT_CONFIGURATOR,
-  SET_PROJECT_PROPERTIES
+  SET_PROJECT_PROPERTIES,
+  INIT_CATALOG
 } from '../constants';
 
 export function loadProject(data) {
@@ -122,5 +123,12 @@ export function setProjectProperties(properties) {
   return {
     type: SET_PROJECT_PROPERTIES,
     properties
+  }
+}
+
+export function initCatalog(catalog){
+  return {
+    type: INIT_CATALOG,
+    catalog
   }
 }

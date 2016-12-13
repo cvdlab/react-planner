@@ -31,6 +31,7 @@ export default function appReducer(state, action) {
     case constants.ROLLBACK:
     case constants.SET_PROJECT_PROPERTIES:
     case constants.OPEN_PROJECT_CONFIGURATOR:
+    case constants.INIT_CATALOG:
       return projectReducer(state, action);
 
     case constants.UPDATE_2D_CAMERA:
