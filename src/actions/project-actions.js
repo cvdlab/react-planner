@@ -17,10 +17,10 @@ import {
   INIT_CATALOG
 } from '../constants';
 
-export function loadProject(data) {
+export function loadProject(sceneJSON) {
   return {
     type: LOAD_PROJECT,
-    data
+    sceneJSON
   }
 }
 

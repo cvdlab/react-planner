@@ -40,7 +40,7 @@ export default function (state, action) {
       return newProject(state);
 
     case LOAD_PROJECT:
-      return loadProject(state, action.data);
+      return loadProject(state, action.sceneJSON);
 
     case OPEN_CATALOG:
       return openCatalog(state);
@@ -87,8 +87,8 @@ function newProject(state) {
   return new State({catalog: state.catalog.toJS()});
 }
 
-function loadProject(state, data) {
-  return new State({scene: data, catalog: state.catalog.toJS()});
+function loadProject(state, sceneJSON) {
+  return new State({scene: sceneJSON, catalog: state.catalog.toJS()});
 }
 
 
