@@ -4,6 +4,7 @@ import {bindActionCreators} from 'redux';
 import App from './app';
 import initStore from '../reducers/store';
 import keyboard from '../keyboard';
+import autosave from '../autosave';
 import Catalog from './../catalog/catalog';
 import Translator from '../translator/translator';
 import mergePlugins from '../utils/merge-plugins';
@@ -18,11 +19,12 @@ export default class Planner extends Component {
   }
 
   componentWillMount() {
-    let {catalog} = this.props;
+    let {catalog, autosaveKey, autosaveDelay} = this.props;
     let {customReducer, actionsExtraArgument, onReady} = this.state;
 
     let store = initStore({...actionsExtraArgument, catalog}, customReducer);
     keyboard(store);
+    autosave(store, autosaveKey, autosaveDelay);
     onReady(store);
     this.store = store;
   }
@@ -52,7 +54,9 @@ Planner.propTypes = {
   translator: PropTypes.instanceOf(Translator),
   catalog: PropTypes.instanceOf(Catalog),
   plugins: PropTypes.arrayOf(PropTypes.object),
-  allowProjectFileSupport: PropTypes.bool
+  allowProjectFileSupport: PropTypes.bool,
+  autosaveKey: PropTypes.string,
+  autosaveDelay: PropTypes.number
 };
 
 Planner.defaultProps = {
@@ -60,4 +64,6 @@ Planner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
+  autosaveKey: null,
+  autosaveDelay: null,
 };
