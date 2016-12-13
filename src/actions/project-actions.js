@@ -18,11 +18,9 @@ import {
 } from '../constants';
 
 export function loadProject(data) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: LOAD_PROJECT,
-      data, catalog
-    });
+  return {
+    type: LOAD_PROJECT,
+    data
   }
 }
 
@@ -64,11 +62,8 @@ export function saveProjectToFile() {
 }
 
 export function openCatalog() {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: OPEN_CATALOG,
-      catalog
-    });
+  return {
+    type: OPEN_CATALOG
   }
 }
 
@@ -93,11 +88,8 @@ export function setProperties(properties) {
 }
 
 export function remove() {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: REMOVE,
-      catalog
-    })
+  return {
+    type: REMOVE
   }
 }
 
@@ -126,7 +118,7 @@ export function setProjectProperties(properties) {
   }
 }
 
-export function initCatalog(catalog){
+export function initCatalog(catalog) {
   return {
     type: INIT_CATALOG,
     catalog

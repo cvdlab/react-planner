@@ -19,7 +19,7 @@ export default function (state, action) {
       return updateDraggingVertex(state, action.x, action.y);
 
     case END_DRAGGING_VERTEX:
-      return endDraggingVertex(state, action.x, action.y, action.catalog);
+      return endDraggingVertex(state, action.x, action.y);
 
     default:
       return state;
@@ -52,7 +52,9 @@ function updateDraggingVertex(state, x, y) {
   });
 }
 
-function endDraggingVertex(state, x, y, catalog) {
+function endDraggingVertex(state, x, y) {
+  let catalog = state.catalog;
+
   let {draggingSupport} = state;
   let layerID = draggingSupport.get('layerID');
   let vertexID = draggingSupport.get('vertexID');

@@ -17,7 +17,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
     ({layer, vertex: v0} = addVertex(layer, x0, y0, 'lines', lineID));
     ({layer, vertex: v1} = addVertex(layer, x1, y1, 'lines', lineID));
 
-    line = catalog.createElement(type, {
+    line = catalog.factoryElement(type, {
       id: lineID,
       vertices: new List([v0.id, v1.id]),
       type
@@ -282,7 +282,7 @@ export function addArea(layer, type, verticesCoords, catalog) {
       vertices.push(vertex.id);
     });
 
-    area = catalog.createElement(type, {
+    area = catalog.factoryElement(type, {
       id: areaID,
       type,
       prototype: "areas",
@@ -365,7 +365,7 @@ export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
   layer = layer.withMutations(layer => {
     let holeID = IDBroker.acquireID();
 
-    hole = catalog.createElement(type, {
+    hole = catalog.factoryElement(type, {
       id: holeID,
       type,
       offset,
@@ -400,7 +400,7 @@ export function addItem(layer, type, x, y, width, height, rotation, catalog) {
   layer = layer.withMutations(layer => {
     let itemID = IDBroker.acquireID();
 
-    item = catalog.createElement(type, {
+    item = catalog.factoryElement(type, {
       id: itemID,
       type,
       height,

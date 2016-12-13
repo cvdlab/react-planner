@@ -75,36 +75,6 @@ export default class Catalog {
     return true;
   }
 
-  createElement(type, options, initialProperties = {}) {
-    let element = this.getElement(type);
-
-    initialProperties = new Map(initialProperties);
-
-    let properties = new Seq(element.properties)
-      .map(value => fromJS(value.defaultValue))
-      .map((value, key) => initialProperties.has(key) ? initialProperties.get(key) : value)
-      .toMap();
-
-    options = {...options, properties};
-
-    switch (element.prototype) {
-      case 'lines':
-        return new Line(options);
-
-      case 'holes':
-        return new Hole(options);
-
-      case 'areas':
-        return new Area(options);
-
-      case 'items':
-        return new Item(options);
-
-      default:
-        throw new Error('prototype not valid');
-    }
-  }
-
   hasElement(type) {
     return this.elements.hasOwnProperty(type);
   }

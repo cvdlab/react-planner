@@ -1,4 +1,4 @@
-import {Record, List, Map, fromJS} from 'immutable';
+import {Record, List, Map, fromJS, Seq} from 'immutable';
 import {MODE_IDLE} from './constants';
 
 let safeLoadMapList = (mapList, Model, defaultMap) => {
@@ -226,6 +226,37 @@ export class Catalog extends Record({
     super({
       elements: safeLoadMapList(json.elements, CatalogElement)
     })
+  }
+
+  factoryElement(type, options, initialProperties = {}) {
+    if(!this.elements.has(type)){
+      let catList = this.elements.map(element => element.name).toArray();
+      throw new Error(`Element ${type} does not exist in catalog ${catList}`);
+    }
+
+    let element = this.elements.get(type);
+
+    initialProperties = new Map(initialProperties);
+
+    let properties = element.properties
+      .map((value, key) => initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue'));
+
+    switch (element.prototype) {
+      case 'lines':
+        return new Line(options).merge({properties});
+
+      case 'holes':
+        return new Hole(options).merge({properties});
+
+      case 'areas':
+        return new Area(options).merge({properties});
+
+      case 'items':
+        return new Item(options).merge({properties});
+
+      default:
+        throw new Error('prototype not valid');
+    }
   }
 }
 

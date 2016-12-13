@@ -36,64 +36,50 @@ export function updateDrawingItem(layerID, x, y) {
 }
 
 export function endDrawingItem(layerID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_DRAWING_ITEM,
-      layerID, x, y, catalog
-    })
-  };
+  return {
+    type: END_DRAWING_ITEM,
+    layerID, x, y
+  }
 }
 
 export function beginDraggingItem(layerID, itemID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: BEGIN_DRAGGING_ITEM,
-      layerID, itemID, x, y, catalog
-    })
-  };
+  return {
+    type: BEGIN_DRAGGING_ITEM,
+    layerID, itemID, x, y
+  }
 }
 
 export function updateDraggingItem(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: UPDATE_DRAGGING_ITEM,
-      x, y, catalog
-    });
+  return {
+    type: UPDATE_DRAGGING_ITEM,
+    x, y
   }
 }
 
 export function endDraggingItem(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_DRAGGING_ITEM,
-      x, y, catalog
-    });
+  return {
+    type: END_DRAGGING_ITEM,
+    x, y
   }
 }
 
 export function beginRotatingItem(layerID, itemID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: BEGIN_ROTATING_ITEM,
-      layerID, itemID, x, y, catalog
-    })
-  };
+  return {
+    type: BEGIN_ROTATING_ITEM,
+    layerID, itemID, x, y
+  }
 }
 
 export function updateRotatingItem(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: UPDATE_ROTATING_ITEM,
-      x, y, catalog
-    });
+  return {
+    type: UPDATE_ROTATING_ITEM,
+    x, y
   }
 }
 
 export function endRotatingItem(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_ROTATING_ITEM,
-      x, y, catalog
-    });
+  return {
+    type: END_ROTATING_ITEM,
+    x, y
   }
 }

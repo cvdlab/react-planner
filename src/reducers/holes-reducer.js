@@ -30,10 +30,10 @@ export default function (state, action) {
       return selectToolDrawingHole(state, action.sceneComponentType);
 
     case UPDATE_DRAWING_HOLE:
-      return updateDrawingHole(state, action.layerID, action.x, action.y, action.catalog);
+      return updateDrawingHole(state, action.layerID, action.x, action.y);
 
     case END_DRAWING_HOLE:
-      return endDrawingHole(state, action.layerID, action.x, action.y, action.catalog);
+      return endDrawingHole(state, action.layerID, action.x, action.y);
 
     case BEGIN_DRAGGING_HOLE:
       return beginDraggingHole(state, action.layerID, action.holeID, action.x, action.y);
@@ -75,7 +75,8 @@ function selectToolDrawingHole(state, sceneComponentType) {
 }
 
 /** holes operations **/
-function updateDrawingHole(state, layerID, x, y, catalog) {
+function updateDrawingHole(state, layerID, x, y) {
+  let catalog = state.catalog;
 
   //calculate snap and overwrite coords if needed
   let snap = nearestSnap(state.snapElements, x, y);
@@ -103,7 +104,9 @@ function updateDrawingHole(state, layerID, x, y, catalog) {
   return state.set('scene', scene);
 }
 
-function endDrawingHole(state, layerID, x, y, catalog) {
+function endDrawingHole(state, layerID, x, y) {
+  let catalog = state.catalog;
+
   state = updateDrawingHole(state, layerID, x, y, catalog);
   let scene = state.scene.updateIn(['layers', layerID], layer => unselectAll(layer));
   return state.merge({

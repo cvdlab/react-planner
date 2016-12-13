@@ -30,10 +30,10 @@ export default function (state, action) {
       return selectToolDrawingItem(state, action.sceneComponentType);
 
     case UPDATE_DRAWING_ITEM:
-      return updateDrawingItem(state, action.layerID, action.x, action.y, action.catalog);
+      return updateDrawingItem(state, action.layerID, action.x, action.y);
 
     case END_DRAWING_ITEM:
-      return endDrawingItem(state, action.layerID, action.x, action.y, action.catalog);
+      return endDrawingItem(state, action.layerID, action.x, action.y);
 
     case BEGIN_DRAGGING_ITEM:
       return beginDraggingItem(state, action.layerID, action.itemID, action.x, action.y);
@@ -68,8 +68,8 @@ function selectToolDrawingItem(state, sceneComponentType) {
 }
 
 /** holes operations **/
-function updateDrawingItem(state, layerID, x, y, catalog) {
-  let {drawingSupport} = state;
+function updateDrawingItem(state, layerID, x, y) {
+  let {drawingSupport, catalog} = state;
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
 
@@ -88,7 +88,8 @@ function updateDrawingItem(state, layerID, x, y, catalog) {
   });
 }
 
-function endDrawingItem(state, layerID, x, y, catalog) {
+function endDrawingItem(state, layerID, x, y) {
+  let catalog = state.catalog;
   state = updateDrawingItem(state, layerID, x, y, catalog);
   let scene = state.scene.updateIn(['layers', layerID], layer => unselectAll(layer));
   return state.merge({

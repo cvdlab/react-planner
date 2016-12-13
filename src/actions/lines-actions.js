@@ -25,55 +25,43 @@ export function selectToolDrawingLine(sceneComponentType) {
 }
 
 export function beginDrawingLine(layerID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: BEGIN_DRAWING_LINE,
-      layerID, x, y, catalog
-    })
-  };
+  return {
+    type: BEGIN_DRAWING_LINE,
+    layerID, x, y
+  }
 }
 
 export function updateDrawingLine(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: UPDATE_DRAWING_LINE,
-      x, y, catalog
-    });
+  return {
+    type: UPDATE_DRAWING_LINE,
+    x, y
   }
 }
 
 export function endDrawingLine(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_DRAWING_LINE,
-      x, y, catalog
-    });
+  return {
+    type: END_DRAWING_LINE,
+    x, y
   }
 }
 
 export function beginDraggingLine(layerID, lineID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: BEGIN_DRAGGING_LINE,
-      layerID, lineID, x, y, catalog
-    })
-  };
+  return {
+    type: BEGIN_DRAGGING_LINE,
+    layerID, lineID, x, y
+  }
 }
 
 export function updateDraggingLine(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: UPDATE_DRAGGING_LINE,
-      x, y, catalog
-    });
+  return {
+    type: UPDATE_DRAGGING_LINE,
+    x, y
   }
 }
 
 export function endDraggingLine(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_DRAGGING_LINE,
-      x, y, catalog
-    });
+  return {
+    type: END_DRAGGING_LINE,
+    x, y
   }
 }

@@ -37,10 +37,10 @@ export default function (state, action) {
   switch (action.type) {
 
     case NEW_PROJECT:
-      return new State();
+      return newProject(state);
 
     case LOAD_PROJECT:
-      return loadProject(state, action.data, action.catalog);
+      return loadProject(state, action.data);
 
     case OPEN_CATALOG:
       return openCatalog(state);
@@ -55,7 +55,7 @@ export default function (state, action) {
       return setProperties(state, action.properties);
 
     case REMOVE:
-      return remove(state, action.catalog);
+      return remove(state);
 
     case UNDO:
       return undo(state);
@@ -83,8 +83,12 @@ function openCatalog(state) {
     .set('mode', MODE_VIEWING_CATALOG);
 }
 
-function loadProject(state, data, catalog) {
-  return new State({scene: data});
+function newProject(state) {
+  return new State({catalog: state.catalog.toJS()});
+}
+
+function loadProject(state, data) {
+  return new State({scene: data, catalog: state.catalog.toJS()});
 }
 
 
@@ -108,8 +112,9 @@ function unselectAll(state) {
   })
 }
 
-function remove(state, catalog) {
+function remove(state) {
   let scene = state.scene;
+  let catalog = state.catalog;
 
   scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
     let {lines: selectedLines, holes: selectedHoles, items: selectedItems} = layer.selected;

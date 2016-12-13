@@ -24,21 +24,17 @@ export function selectToolDrawingHole(sceneComponentType) {
 }
 
 export function updateDrawingHole(layerID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: UPDATE_DRAWING_HOLE,
-      layerID, x, y, catalog
-    });
+  return {
+    type: UPDATE_DRAWING_HOLE,
+    layerID, x, y
   }
 }
 
 export function endDrawingHole(layerID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_DRAWING_HOLE,
-      layerID, x, y, catalog
-    });
-  };
+  return {
+    type: END_DRAWING_HOLE,
+    layerID, x, y
+  }
 }
 
 
@@ -52,19 +48,15 @@ export function beginDraggingHole(layerID, holeID, x, y) {
 }
 
 export function updateDraggingHole(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: UPDATE_DRAGGING_HOLE,
-      x, y, catalog
-    });
+  return {
+    type: UPDATE_DRAGGING_HOLE,
+    x, y
   }
 }
 
 export function endDraggingHole(x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: END_DRAGGING_HOLE,
-      x, y, catalog
-    });
+  return {
+    type: END_DRAGGING_HOLE,
+    x, y
   }
 }
