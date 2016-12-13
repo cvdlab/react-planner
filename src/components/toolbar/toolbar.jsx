@@ -1,7 +1,5 @@
 import React, {PropTypes} from 'react';
 import IconNewFile from 'react-icons/lib/fa/file-o';
-import IconSave from 'react-icons/lib/fa/floppy-o';
-import IconLoad from 'react-icons/lib/fa/folder-open-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import IconZoomPlus from 'react-icons/lib/ti/zoom-in';
 import IconZoomMinus from 'react-icons/lib/ti/zoom-out';
@@ -10,6 +8,8 @@ import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
 import IconCatalog from 'react-icons/lib/fa/plus';
 import IconUndo from 'react-icons/lib/md/undo'
 import IconConfigure from 'react-icons/lib/md/settings'
+import ToolbarSaveButton from './toolbar-save-button';
+import ToolbarLoadButton from './toolbar-load-button';
 
 import If from "../../utils/react-if";
 
@@ -69,13 +69,10 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
             <IconNewFile />
           </ToolbarButton>
 
-          <ToolbarButton tooltip={translator.t("Save project")} onClick={event => projectActions.saveProjectToFile()}>
-            <IconSave />
-          </ToolbarButton>
+          <ToolbarSaveButton state={state}/>
 
-          <ToolbarButton tooltip={translator.t("Load project")} onClick={event => projectActions.loadProjectFromFile()}>
-            <IconLoad />
-          </ToolbarButton>
+          <ToolbarLoadButton state={state}/>
+
         </div>
       </If>
 
