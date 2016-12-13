@@ -59,8 +59,8 @@ class App extends React.Component {
   }
 
   render() {
-    let {containerWidth, containerHeight, ...props} = this.props;
-    return <Layout width={containerWidth} height={containerHeight} {...props} />;
+    let {width, height, ...props} = this.props;
+    return <Layout width={width} height={height} {...props} />;
   }
 }
 
@@ -88,5 +88,4 @@ function mapDispatchToProps(dispatch) {
 }
 
 App = connect(mapStateToProps, mapDispatchToProps)(App);
-App = ReactDimensions()(App);
 export default App;

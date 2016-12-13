@@ -31,7 +31,7 @@ export default class Planner extends Component {
 
   render() {
     let {store} = this;
-    let {catalog, translator} = this.props;
+    let {catalog, translator, width, height} = this.props;
     let {toolbarButtons, customContents, customActions} = this.state;
 
     customActions = bindActionCreators(customActions, store.dispatch);
@@ -43,6 +43,8 @@ export default class Planner extends Component {
         toolbarButtons={toolbarButtons}
         customContents={customContents}
         customActions={customActions}
+        width={width}
+        height={height}
         allowProjectFileSupport={this.props.allowProjectFileSupport}
         translator={translator}
       />
@@ -56,7 +58,9 @@ Planner.propTypes = {
   plugins: PropTypes.arrayOf(PropTypes.object),
   allowProjectFileSupport: PropTypes.bool,
   autosaveKey: PropTypes.string,
-  autosaveDelay: PropTypes.number
+  autosaveDelay: PropTypes.number,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
 };
 
 Planner.defaultProps = {
