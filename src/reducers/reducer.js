@@ -20,8 +20,6 @@ export default function appReducer(state, action) {
     case constants.NEW_PROJECT:
     case constants.LOAD_PROJECT:
     case constants.SAVE_PROJECT:
-    case constants.LOAD_PROJECT_FROM_FILE:
-    case constants.SAVE_PROJECT_TO_FILE:
     case constants.OPEN_CATALOG:
     case constants.SELECT_TOOL_EDIT:
     case constants.UNSELECT_ALL:
