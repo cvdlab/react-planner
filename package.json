@@ -67,7 +67,6 @@
     "react-redux": "4.4.6",
     "react-svg-pan-zoom": "2.2.1",
     "redux": "3.6.0",
-    "redux-thunk": "2.1.0",
     "shortid": "2.2.6"
   },
   "devDependencies": {
