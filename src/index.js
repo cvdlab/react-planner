@@ -1,4 +1,3 @@
-import Planner from './components/planner';
 import Catalog from './catalog/catalog';
 import Translator from './translator/translator';
 import ToolbarButton from './components/toolbar/toolbar-button';
@@ -12,5 +11,5 @@ import Plugins from './plugins/plugins';
 console.info(`react-planner started`); //MIT LICENSE COMPLIANT
 
 export {
-  Planner, Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Plugins
+  Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Plugins
 };
