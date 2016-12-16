@@ -1,11 +1,11 @@
 const localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
-import {loadProject} from './actions/project-actions';
+import {loadProject} from '../actions/project-actions';
 
 const TIMEOUT_DELAY = 500;
 
 let timeout = null;
 
-export default function autosave(store, autosaveKey, delay) {
+export default function autosave(store, stateExtractor, autosaveKey, delay) {
 
   delay = delay || TIMEOUT_DELAY;
 
@@ -23,7 +23,9 @@ export default function autosave(store, autosaveKey, delay) {
   store.subscribe(() => {
     if (timeout) clearTimeout(timeout);
     timeout = setTimeout(() => {
-      let state = store.getState();
+
+      let state = stateExtractor(store.getState());
+
       let scene = state.sceneHistory.last();
       let json = JSON.stringify(scene.toJS());
       localStorage.setItem(autosaveKey, json);

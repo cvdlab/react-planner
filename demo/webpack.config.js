@@ -3,7 +3,7 @@ const webpack = require("webpack");
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 
 module.exports = {
-  entry: path.resolve(__dirname, 'renderer.js'),
+  entry: path.resolve(__dirname, 'src/renderer.jsx'),
   output: {
     path: __dirname + "/build",
     filename: "demo.build.js"
