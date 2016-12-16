@@ -237,10 +237,30 @@ function updateDraggingLine(state, x, y, catalog) {
 }
 
 function endDraggingLine(state, x, y, catalog) {
+  let {draggingSupport} = state;
+  let layerID = draggingSupport.get('layerID');
+  let lineID = draggingSupport.get('lineID');
+
   return state.withMutations(state => {
-    updateDraggingLine(state, x, y, catalog);
+    let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+
+      let diffX = x - draggingSupport.get('startPointX');
+      let diffY = y - draggingSupport.get('startPointY');
+      let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
+      let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
+      let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
+      let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
+      let line = layer.lines.get(lineID);
+
+      removeLine(layer, lineID);
+      addLineAvoidingIntersections(layer, line.type, newVertex0X, newVertex0Y, newVertex1X, newVertex1Y, catalog);
+      detectAndUpdateAreas(layer, catalog);
+    }));
+
+
     state.merge({
       mode: MODE_IDLE,
+      scene,
       draggingSupport: null,
       activeSnapElement: null,
       snapElements: new List(),
