@@ -19,8 +19,9 @@ class ReactPlanner extends Component {
   }
 
   componentWillMount() {
-    let projectActions = this.props.projectActions;
-    let catalog = this.props.catalog;
+    let {store} = this.context;
+    let {projectActions, catalog, stateExtractor, plugins} = this.props;
+    plugins.forEach(plugin => plugin(store, stateExtractor));
     projectActions.initCatalog(catalog);
   }
 
@@ -34,10 +35,16 @@ ReactPlanner.propTypes = {
   translator: PropTypes.instanceOf(Translator),
   catalog: PropTypes.instanceOf(Catalog),
   allowProjectFileSupport: PropTypes.bool,
+  plugins: PropTypes.arrayOf(PropTypes.func),
   autosaveKey: PropTypes.string,
   autosaveDelay: PropTypes.number,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
+  stateExtractor: PropTypes.func.isRequired,
+};
+
+ReactPlanner.contextTypes = {
+  store: PropTypes.object.isRequired,
 };
 
 ReactPlanner.childContextTypes = {
@@ -51,12 +58,10 @@ ReactPlanner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-  stateExtractor: PropTypes.func.isRequired,
 
   toolbarButtons: [],
   customContents: {},
 };
-
 
 
 //redux connect

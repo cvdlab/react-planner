@@ -6,26 +6,30 @@ const KEY_BACKSPACE = 8;
 const KEY_ESC = 27;
 const KEY_Z = 90;
 
-export default function keyboard(store, stateExtractor) {
-  window.addEventListener('keydown', event => {
+export default function keyboard() {
 
-    let state = stateExtractor(store.getState());
+  return (store, stateExtractor) => {
 
-    switch (event.keyCode) {
-      case KEY_BACKSPACE:
-      case KEY_DELETE:
-        if ([MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(state.get('mode')))
-          store.dispatch(remove());
-        break;
+    window.addEventListener('keydown', event => {
 
-      case KEY_ESC:
-        store.dispatch(rollback());
-        break;
+      let state = stateExtractor(store.getState());
 
-      case KEY_Z:
-        if (event.getModifierState('Control') || event.getModifierState('Meta'))
-          store.dispatch(undo());
-        break;
-    }
-  });
+      switch (event.keyCode) {
+        case KEY_BACKSPACE:
+        case KEY_DELETE:
+          if ([MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(state.get('mode')))
+            store.dispatch(remove());
+          break;
+
+        case KEY_ESC:
+          store.dispatch(rollback());
+          break;
+
+        case KEY_Z:
+          if (event.getModifierState('Control') || event.getModifierState('Meta'))
+            store.dispatch(undo());
+          break;
+      }
+    });
+  }
 }

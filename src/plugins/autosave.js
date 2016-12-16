@@ -5,30 +5,33 @@ const TIMEOUT_DELAY = 500;
 
 let timeout = null;
 
-export default function autosave(store, stateExtractor, autosaveKey, delay) {
+export default function autosave(autosaveKey, delay) {
 
-  delay = delay || TIMEOUT_DELAY;
+  return (store, stateExtractor) => {
 
-  if (!autosaveKey) return;
-  if (!localStorage) return;
+    delay = delay || TIMEOUT_DELAY;
 
-  //revert
-  if (localStorage.getItem(autosaveKey) !== null) {
-    let data = localStorage.getItem(autosaveKey);
-    let json = JSON.parse(data);
-    store.dispatch(loadProject(json));
+    if (!autosaveKey) return;
+    if (!localStorage) return;
+
+    //revert
+    if (localStorage.getItem(autosaveKey) !== null) {
+      let data = localStorage.getItem(autosaveKey);
+      let json = JSON.parse(data);
+      store.dispatch(loadProject(json));
+    }
+
+    //update
+    store.subscribe(() => {
+      if (timeout) clearTimeout(timeout);
+      timeout = setTimeout(() => {
+
+        let state = stateExtractor(store.getState());
+
+        let scene = state.sceneHistory.last();
+        let json = JSON.stringify(scene.toJS());
+        localStorage.setItem(autosaveKey, json);
+      }, delay)
+    });
   }
-
-  //update
-  store.subscribe(() => {
-    if (timeout) clearTimeout(timeout);
-    timeout = setTimeout(() => {
-
-      let state = stateExtractor(store.getState());
-
-      let scene = state.sceneHistory.last();
-      let json = JSON.stringify(scene.toJS());
-      localStorage.setItem(autosaveKey, json);
-    }, delay)
-  });
 }
