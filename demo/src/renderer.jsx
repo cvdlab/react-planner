@@ -14,11 +14,15 @@ import {
   Plugins as PlannerPlugins,
 } from '../../src'; //react-planner
 
+
+
 //define state
 let AppState = Map({
   'react-planner': new PlannerModels.State()
 });
 let stateExtractor = state => state.get('react-planner');
+
+
 
 //define reducer
 let reducer = (state, action) => {
@@ -27,12 +31,15 @@ let reducer = (state, action) => {
   return state;
 };
 
+
 //init store
 let store = createStore(reducer, null, window.devToolsExtension ? window.devToolsExtension() : f => f);
 PlannerPlugins.Keyboard(store, stateExtractor);
 PlannerPlugins.Autosave(store, stateExtractor, 'react-planner_v0');
 PlannerPlugins.ConsoleDebugger(store, stateExtractor);
 
+
+//render
 ReactDOM.render(
   (
     <Provider store={store}>
