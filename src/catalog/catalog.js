@@ -1,5 +1,3 @@
-import {Map, Seq, fromJS} from 'immutable';
-import {Line, Area, Hole, Item} from '../models';
 import PropertyColor from './properties/property-color';
 import PropertyEnum from './properties/property-enum';
 import PropertyString from './properties/property-string';
