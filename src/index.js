@@ -7,9 +7,12 @@ import State2DViewer from './components/viewer2d/state';
 import reducer from './reducers/reducer';
 import ReactPlanner from './react-planner';
 import Plugins from './plugins/plugins';
+import WallFactory from './catalog/factories/wall-factory.jsx';
+
+let ElementsFactories = {WallFactory: WallFactory};
 
 console.info(`react-planner started`); //MIT LICENSE COMPLIANT
 
 export {
-  Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Plugins
+  Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Plugins, ElementsFactories
 };

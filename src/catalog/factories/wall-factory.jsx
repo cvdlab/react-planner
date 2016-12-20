@@ -1,15 +1,24 @@
-import render3D from './wall-3d.js';
+import buildWall from './wall-factory-3d';
 import React from 'react';
 
 function distanceFromTwoPoints(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow((x1 - x0), 2) + Math.pow((y1 - y0), 2));
 }
 
-export default WallFactory = (name, info, textures) => {
+export default function WallFactory(name, info, textures) {
+
+  let textureValues = {
+    'none': 'None'
+  };
+
+  for (let textureName in textures) {
+    textureValues[textureName] = textures[textureName].name
+  }
 
   return {
+    name,
     prototype: "lines",
-
+    info,
     properties: {
       height: {
         label: "Height",
@@ -29,21 +38,13 @@ export default WallFactory = (name, info, textures) => {
         label: "Covering A",
         type: "enum",
         defaultValue: 'none',
-        values: {
-          'none': "None",
-          'bricks': "Bricks",
-          'painted': "Painting"
-        }
+        values: textureValues
       },
       textureB: {
         label: "Covering B",
         type: "enum",
         defaultValue: 'none',
-        values: {
-          'none': "None",
-          'bricks': "Bricks",
-          'painted': "Paintings"
-        }
+        values: textureValues
       }
     },
 

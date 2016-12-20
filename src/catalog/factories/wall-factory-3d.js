@@ -1,6 +1,6 @@
 import * as Three from 'three';
 
-export default buildWall = (element, layer, scene, textures) => {
+export default function buildWall(element, layer, scene, textures) {
 
   // Get the two vertices of the wall
   let vertex0 = layer.vertices.get(element.vertices.get(0));
@@ -350,47 +350,6 @@ function createShape(shapeCoords) {
   return shape;
 }
 
-// /**
-//  * Apply a texture to a wall face
-//  * @param material: The material of the face
-//  * @param textureName: The name of the texture to load
-//  * @param length: The lenght of the face
-//  * @param height: The height of the face
-//  */
-// function applyTexture(material, textureName, length, height) {
-//
-//   let loader = new Three.TextureLoader();
-//
-//   switch (textureName) {
-//     case 'bricks':
-//       material.map = loader.load(require('./textures/bricks.jpg'));
-//       material.needsUpdate = true;
-//       material.map.wrapS = Three.RepeatWrapping;
-//       material.map.wrapT = Three.RepeatWrapping;
-//       material.map.repeat.set(length / 100, height / 100);
-//
-//       material.normalMap = loader.load(require("./textures/bricks-normal.jpg"));
-//       material.normalScale = new Three.Vector2(0.8, 0.8);
-//       material.normalMap.wrapS = Three.RepeatWrapping;
-//       material.normalMap.wrapT = Three.RepeatWrapping;
-//       material.normalMap.repeat.set(length / 100, height / 100);
-//       break;
-//     case 'painted':
-//       material.map = loader.load(require('./textures/painted.jpg'));
-//       material.needsUpdate = true;
-//       material.map.wrapS = Three.RepeatWrapping;
-//       material.map.wrapT = Three.RepeatWrapping;
-//       material.map.repeat.set(length / 100, height / 100);
-//
-//       material.normalMap = loader.load(require("./textures/painted-normal.png"));
-//       material.normalScale = new Three.Vector2(0.4, 0.4);
-//       material.normalMap.wrapS = Three.RepeatWrapping;
-//       material.normalMap.wrapT = Three.RepeatWrapping;
-//       material.normalMap.repeat.set(length / 100, height / 100);
-//       break;
-//   }
-// }
-
 /**
  * Apply a texture to a wall face
  * @param material: The material of the face
@@ -404,18 +363,21 @@ function applyTexture(material, textureName, length, height, textures) {
   let loader = new Three.TextureLoader();
 
   let textureParams = textures[textureName];
-  material.map = loader.load(require(textureParams.uri));
-  material.needsUpdate = true;
-  material.map.wrapS = Three.RepeatWrapping;
-  material.map.wrapT = Three.RepeatWrapping;
-  material.map.repeat.set(length * textureParams.lengthRepeatScale, height * textureParams.heightRepeatScale);
 
-  if (textureParams.normal) {
-    material.normalMap = loader.load(require(textureParams.normal.uri));
-    material.normalScale = new Three.Vector2(textureParams.normal.normalScaleX, textureParams.normal.normalScaleY);
-    material.normalMap.wrapS = Three.RepeatWrapping;
-    material.normalMap.wrapT = Three.RepeatWrapping;
-    material.normalMap.repeat.set(length * textureParams.normal.lengthRepeatScale, height * textureParams.normal.heightRepeatScale);
+  if (textureParams) {
+    material.map = loader.load(textureParams.uri);
+    material.needsUpdate = true;
+    material.map.wrapS = Three.RepeatWrapping;
+    material.map.wrapT = Three.RepeatWrapping;
+    material.map.repeat.set(length * textureParams.lengthRepeatScale, height * textureParams.heightRepeatScale);
+
+    if (textureParams.normal) {
+      material.normalMap = loader.load(textureParams.normal.uri);
+      material.normalScale = new Three.Vector2(textureParams.normal.normalScaleX, textureParams.normal.normalScaleY);
+      material.normalMap.wrapS = Three.RepeatWrapping;
+      material.normalMap.wrapT = Three.RepeatWrapping;
+      material.normalMap.repeat.set(length * textureParams.normal.lengthRepeatScale, height * textureParams.normal.heightRepeatScale);
+    }
   }
 }
 
