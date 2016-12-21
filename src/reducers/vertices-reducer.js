@@ -60,7 +60,6 @@ function endDraggingVertex(state, x, y) {
   let vertexID = draggingSupport.get('vertexID');
   let lineIDs = state.scene.layers.get(layerID).vertices.get(vertexID).lines;
 
-  state = updateDraggingVertex(state, x, y);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
 
     lineIDs.forEach(lineID =>{
