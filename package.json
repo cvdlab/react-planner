@@ -7,7 +7,7 @@
   "jsnext:main": "es/index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --config demo/webpack.config.js --env.port 9000 --env.title='React Planner Demo'",
-    "build-demo": "webpack --config demo/webpack.config.js",
+    "build-demo": "webpack --config demo/webpack.config.js --evn.production",
     "build-commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build-es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
