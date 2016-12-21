@@ -11,6 +11,7 @@ export default function Line({line, layer, scene, catalog}) {
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
   if (vertex0.id === vertex1.id) return null; //avoid 0-length lines
+  if (vertex0.x === vertex1.x && vertex0.y === vertex1.y) return null;
 
   let x1, y1, x2, y2;
   if (vertex0.x <= vertex1.x) {
