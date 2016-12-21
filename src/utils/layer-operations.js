@@ -86,7 +86,7 @@ export function splitLine(layer, lineID, x, y, catalog) {
   return {layer, lines: new List([line0, line1])};
 }
 
-export function addLinesFromPoints(layer, type, points, catalog) {
+export function addLinesFromPoints(layer, type, points, catalog, properties) {
   points = new List(points)
     .sort(({x:x1, y:y1}, {x:x2, y:y2}) => {
       return x1 === x2 ? y1 - y2 : x1 - x2;
@@ -100,7 +100,7 @@ export function addLinesFromPoints(layer, type, points, catalog) {
   let lines = (new List()).withMutations(lines => {
     layer = layer.withMutations(layer => {
       pointsPair.forEach(([{x:x1, y:y1}, {x:x2, y:y2}]) => {
-        let {line} = addLine(layer, type, x1, y1, x2, y2, catalog);
+        let {line} = addLine(layer, type, x1, y1, x2, y2, catalog, properties);
         lines.push(line);
       });
     });
@@ -109,7 +109,7 @@ export function addLinesFromPoints(layer, type, points, catalog) {
   return {layer, lines};
 }
 
-export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalog) {
+export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalog, properties) {
 
   let points = [{x: x0, y: y0}, {x: x1, y: y1}];
 
@@ -141,7 +141,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       }
 
     });
-    addLinesFromPoints(layer, type, points, catalog);
+    addLinesFromPoints(layer, type, points, catalog, properties);
   });
 
   return {layer};
