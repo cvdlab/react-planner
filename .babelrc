@@ -1,0 +1,13 @@
+{
+  "plugins": [
+    "transform-object-rest-spread"
+  ],
+  "env": {
+    "commonjs": {
+      "presets": ["es2015", "react"]
+    },
+    "es": {
+      "presets": [["es2015", { "modules": false }], "react"]
+    }
+  }
+}
