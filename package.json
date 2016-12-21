@@ -7,13 +7,14 @@
   "jsnext:main": "es/index.js",
   "scripts": {
     "start": "webpack-dev-server --inline --config demo/webpack.config.js --env.port 9000 --env.title='React Planner Demo'",
-    "build-demo": "webpack --config demo/webpack.config.js --evn.production",
+    "build-demo": "webpack --config demo/webpack.config.js --env.production",
     "build-commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build-es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
+    "add-build-to-vcs": "git add -A es && git add -A lib && git add -A demo/dist",
     "clean": "rimraf lib es demo/dist",
     "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
-    "version": "npm run build",
+    "version": "npm run build && npm run add-build-to-vcs",
     "postpublish": "npm run website-update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
