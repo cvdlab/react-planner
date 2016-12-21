@@ -36,4 +36,4 @@ let textures = {
   },
 };
 
-export default new ElementsFactories.WallFactory("wall", info, textures)
+export default ElementsFactories.WallFactory("wall", info, textures)

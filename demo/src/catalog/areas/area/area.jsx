@@ -22,4 +22,4 @@ let textures = {
   },
 };
 
-export default new ElementsFactories.AreaFactory("area", info, textures);
+export default ElementsFactories.AreaFactory("area", info, textures);
