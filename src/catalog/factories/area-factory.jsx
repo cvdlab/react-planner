@@ -3,15 +3,7 @@ import React from 'react';
 
 export default function AreaFactory(name, info, textures) {
 
-  let textureValues = {
-    'none': 'None'
-  };
-
-  for (let textureName in textures) {
-    textureValues[textureName] = textures[textureName].name
-  }
-
-  return {
+  let areaElement = {
     name,
     prototype: "areas",
     info,
@@ -20,12 +12,6 @@ export default function AreaFactory(name, info, textures) {
         label: "Color",
         type: "color",
         defaultValue: "#f5f4f4"
-      },
-      texture: {
-        label: "Floor",
-        type: "enum",
-        defaultValue: 'none',
-        values: textureValues
       }
     },
     render2D: function (element, layer, scene) {
@@ -48,6 +34,27 @@ export default function AreaFactory(name, info, textures) {
       return createArea(element, layer, scene, textures)
     },
 
+  };
+
+  if (textures && textures !== {}) {
+
+    let textureValues = {
+      'none': 'None'
+    };
+
+    for (let textureName in textures) {
+      textureValues[textureName] = textures[textureName].name
+    }
+
+    areaElement.properties.texture = {
+      label: "Floor",
+      type: "enum",
+      defaultValue: 'none',
+      values: textureValues
+    };
+
   }
+
+  return areaElement
 
 }

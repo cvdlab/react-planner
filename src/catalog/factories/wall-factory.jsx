@@ -7,15 +7,7 @@ function distanceFromTwoPoints(x0, y0, x1, y1) {
 
 export default function WallFactory(name, info, textures) {
 
-  let textureValues = {
-    'none': 'None'
-  };
-
-  for (let textureName in textures) {
-    textureValues[textureName] = textures[textureName].name
-  }
-
-  return {
+  let wallElement = {
     name,
     prototype: "lines",
     info,
@@ -33,18 +25,6 @@ export default function WallFactory(name, info, textures) {
         defaultValue: {
           length: 20
         }
-      },
-      textureA: {
-        label: "Covering A",
-        type: "enum",
-        defaultValue: 'none',
-        values: textureValues
-      },
-      textureB: {
-        label: "Covering B",
-        type: "enum",
-        defaultValue: 'none',
-        values: textureValues
       }
     },
 
@@ -80,6 +60,34 @@ export default function WallFactory(name, info, textures) {
       return buildWall(element, layer, scene, textures)
     },
 
+  };
+
+  if (textures && textures !== {}) {
+
+    let textureValues = {
+      'none': 'None'
+    };
+
+    for (let textureName in textures) {
+      textureValues[textureName] = textures[textureName].name
+    }
+
+    wallElement.properties.textureA = {
+      label: "Covering A",
+      type: "enum",
+      defaultValue: 'none',
+      values: textureValues
+    };
+
+    wallElement.properties.textureB = {
+      label: "Covering B",
+      type: "enum",
+      defaultValue: 'none',
+      values: textureValues
+    };
+
   }
+
+  return wallElement
 
 }
