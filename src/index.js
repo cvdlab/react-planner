@@ -8,8 +8,9 @@ import reducer from './reducers/reducer';
 import ReactPlanner from './react-planner';
 import Plugins from './plugins/plugins';
 import WallFactory from './catalog/factories/wall-factory.jsx';
+import AreaFactory from './catalog/factories/area-factory.jsx';
 
-let ElementsFactories = {WallFactory: WallFactory};
+let ElementsFactories = {WallFactory, AreaFactory};
 
 console.info(`react-planner started`); //MIT LICENSE COMPLIANT
 
