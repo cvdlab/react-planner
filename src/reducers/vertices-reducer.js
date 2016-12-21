@@ -62,23 +62,26 @@ function endDraggingVertex(state, x, y) {
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
 
-    lineIDs.forEach(lineID =>{
+    lineIDs.forEach(lineID => {
       let line = layer.lines.get(lineID);
 
-      let oldVertexID;
+      if (line) {
 
-      if(line.vertices.get(0) === vertexID) {
-        // I need to invert vertices
-        oldVertexID = line.vertices.get(1);
-      } else {
-        oldVertexID = line.vertices.get(0);
+        let oldVertexID;
+
+        if (line.vertices.get(0) === vertexID) {
+          // I need to invert vertices
+          oldVertexID = line.vertices.get(1);
+        } else {
+          oldVertexID = line.vertices.get(0);
+        }
+
+        let oldVertex = layer.vertices.get(oldVertexID);
+        let vertex = layer.vertices.get(vertexID);
+
+        removeLine(layer, lineID);
+        addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties);
       }
-
-      let oldVertex = layer.vertices.get(oldVertexID);
-      let vertex = layer.vertices.get(vertexID);
-
-      removeLine(layer, lineID);
-      addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties);
     });
 
     detectAndUpdateAreas(layer, catalog);
