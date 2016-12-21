@@ -12,9 +12,9 @@
     "build-es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
     "clean": "rimraf lib es demo/dist",
-    "website:update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
+    "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
     "version": "npm run build",
-    "postpublish": "npm run website:update",
+    "postpublish": "npm run website-update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
