@@ -79,7 +79,7 @@ function endDraggingVertex(state, x, y) {
       let vertex = layer.vertices.get(vertexID);
 
       removeLine(layer, lineID);
-      addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog);
+      addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties);
     });
 
     detectAndUpdateAreas(layer, catalog);
