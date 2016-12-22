@@ -7,8 +7,8 @@ import State2DViewer from './components/viewer2d/state';
 import reducer from './reducers/reducer';
 import ReactPlanner from './react-planner';
 import Plugins from './plugins/plugins';
-import WallFactory from './catalog/factories/wall-factory.jsx';
-import AreaFactory from './catalog/factories/area-factory.jsx';
+import WallFactory from './catalog/factories/wall-factory';
+import AreaFactory from './catalog/factories/area-factory';
 
 var ElementsFactories = { WallFactory: WallFactory, AreaFactory: AreaFactory };
 
