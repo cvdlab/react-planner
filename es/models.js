@@ -303,8 +303,10 @@ export var Catalog = function (_Record11) {
 
     _classCallCheck(this, Catalog);
 
+    var elements = safeLoadMapList(json.elements, CatalogElement);
     return _possibleConstructorReturn(this, (Catalog.__proto__ || Object.getPrototypeOf(Catalog)).call(this, {
-      elements: safeLoadMapList(json.elements, CatalogElement)
+      elements: elements,
+      ready: !elements.isEmpty()
     }));
   }
 
@@ -349,6 +351,7 @@ export var Catalog = function (_Record11) {
 
   return Catalog;
 }(Record({
+  ready: false,
   elements: new Map()
 }, 'Catalog'));
 

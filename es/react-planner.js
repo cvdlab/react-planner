@@ -57,6 +57,20 @@ var ReactPlanner = function (_Component) {
       projectActions.initCatalog(catalog);
     }
   }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      var stateExtractor = nextProps.stateExtractor,
+          state = nextProps.state,
+          projectActions = nextProps.projectActions,
+          catalog = nextProps.catalog;
+
+      var plannerState = stateExtractor(state);
+      var catalogReady = plannerState.getIn(['catalog', 'ready']);
+      if (!catalogReady) {
+        projectActions.initCatalog(catalog);
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _props2 = this.props,
@@ -82,7 +96,9 @@ ReactPlanner.propTypes = {
   autosaveDelay: PropTypes.number,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  stateExtractor: PropTypes.func.isRequired
+  stateExtractor: PropTypes.func.isRequired,
+  toolbarButtons: PropTypes.array,
+  customContents: PropTypes.object
 };
 
 ReactPlanner.contextTypes = {
