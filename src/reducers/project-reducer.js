@@ -84,7 +84,7 @@ function openCatalog(state) {
 }
 
 function newProject(state) {
-  return new State({catalog: state.catalog.toJS()});
+  return new State();
 }
 
 function loadProject(state, sceneJSON) {

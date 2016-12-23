@@ -220,16 +220,19 @@ export class CatalogElement extends Record({
 }
 
 export class Catalog extends Record({
+  ready: false,
   elements: new Map(),
 }, 'Catalog') {
   constructor(json = {}) {
+    let elements = safeLoadMapList(json.elements, CatalogElement);
     super({
-      elements: safeLoadMapList(json.elements, CatalogElement)
+      elements,
+      ready: !elements.isEmpty()
     })
   }
 
   factoryElement(type, options, initialProperties = {}) {
-    if(!this.elements.has(type)){
+    if (!this.elements.has(type)) {
       let catList = this.elements.map(element => element.name).toArray();
       throw new Error(`Element ${type} does not exist in catalog ${catList}`);
     }

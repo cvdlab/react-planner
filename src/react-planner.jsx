@@ -25,6 +25,15 @@ class ReactPlanner extends Component {
     projectActions.initCatalog(catalog);
   }
 
+  componentWillReceiveProps(nextProps){
+    let {stateExtractor, state, projectActions, catalog} = nextProps;
+    let plannerState = stateExtractor(state);
+    let catalogReady = plannerState.getIn(['catalog', 'ready']);
+    if(!catalogReady) {
+      projectActions.initCatalog(catalog);
+    }
+  }
+
   render() {
     let {width, height, state, stateExtractor, ...props} = this.props;
     return <Layout width={width} height={height} state={stateExtractor(state)} {...props} />;
