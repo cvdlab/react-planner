@@ -39,11 +39,9 @@ export function endDrawingHole(layerID, x, y) {
 
 
 export function beginDraggingHole(layerID, holeID, x, y) {
-  return (dispatch, getState, {catalog}) => {
-    dispatch({
-      type: BEGIN_DRAGGING_HOLE,
-      layerID, holeID, x, y, catalog
-    })
+  return {
+    type: BEGIN_DRAGGING_HOLE,
+    layerID, holeID, x, y
   };
 }
 
