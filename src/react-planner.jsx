@@ -50,6 +50,8 @@ ReactPlanner.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   stateExtractor: PropTypes.func.isRequired,
+  toolbarButtons: PropTypes.array,
+  customContents: PropTypes.object,
 };
 
 ReactPlanner.contextTypes = {
