@@ -25,8 +25,9 @@ Draw a 2D floorplan and navigate it in 3D mode.
  import {createStore} from 'redux';
  import {Provider} from 'react-redux';
 
- import MyCatalog from './catalog/mycatalog';
-
+ //download this demo catalog https://github.com/cvdlab/react-planner/tree/master/demo/src/catalog
+ import MyCatalog from './catalog/mycatalog'; 
+ 
  import {
    Models as PlannerModels,
    reducer as PlannerReducer,
