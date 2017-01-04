@@ -25,8 +25,9 @@ Draw a 2D floorplan and navigate it in 3D mode.
  import {createStore} from 'redux';
  import {Provider} from 'react-redux';
 
- import MyCatalog from './catalog/mycatalog';
-
+ //download this demo catalog https://github.com/cvdlab/react-planner/tree/master/demo/src/catalog
+ import MyCatalog from './catalog/mycatalog'; 
+ 
  import {
    Models as PlannerModels,
    reducer as PlannerReducer,
@@ -59,7 +60,7 @@ Draw a 2D floorplan and navigate it in 3D mode.
  ReactDOM.render(
    (
      <Provider store={store}>
-       <ReactPlanner catalog={MyCatalog} width={width} height={height} plugins={plugins}
+       <ReactPlanner catalog={MyCatalog} width={800} height={600} plugins={plugins}
                      stateExtractor={state => state.get('react-planner')}
        />
      </Provider>
