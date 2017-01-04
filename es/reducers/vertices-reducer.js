@@ -2,7 +2,7 @@ import { BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX, MOD
 import { Map, List } from 'immutable';
 import { sceneSnapElements } from '../utils/snap-scene';
 import { nearestSnap } from '../utils/snap';
-import { detectAndUpdateAreas, removeLine, addLineAvoidingIntersections } from '../utils/layer-operations';
+import { detectAndUpdateAreas, removeLine, addLineAvoidingIntersections, mergeEqualsVertices } from '../utils/layer-operations';
 
 export default function (state, action) {
   switch (action.type) {
@@ -63,31 +63,10 @@ function endDraggingVertex(state, x, y) {
   var vertexID = draggingSupport.get('vertexID');
   var lineIDs = state.scene.layers.get(layerID).vertices.get(vertexID).lines;
 
+  /** TODO: remove this **/
   state = updateDraggingVertex(state, x, y);
   var scene = state.scene.updateIn(['layers', layerID], function (layer) {
-    return layer.withMutations(function (layer) {
-
-      lineIDs.forEach(function (lineID) {
-        var line = layer.lines.get(lineID);
-
-        var oldVertexID = void 0;
-
-        if (line.vertices.get(0) === vertexID) {
-          // I need to invert vertices
-          oldVertexID = line.vertices.get(1);
-        } else {
-          oldVertexID = line.vertices.get(0);
-        }
-
-        var oldVertex = layer.vertices.get(oldVertexID);
-        var vertex = layer.vertices.get(vertexID);
-
-        removeLine(layer, lineID);
-        addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog);
-      });
-
-      detectAndUpdateAreas(layer, catalog);
-    });
+    return mergeEqualsVertices(layer, vertexID);
   });
 
   return state.merge({
@@ -99,4 +78,43 @@ function endDraggingVertex(state, x, y) {
     snapElements: new List(),
     sceneHistory: state.sceneHistory.push(scene)
   });
+
+  /** end TODO **/
+
+  // let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+  //
+  //   lineIDs.forEach(lineID => {
+  //     let line = layer.lines.get(lineID);
+  //
+  //     if (line) {
+  //
+  //       let oldVertexID;
+  //
+  //       if (line.vertices.get(0) === vertexID) {
+  //         // I need to invert vertices
+  //         oldVertexID = line.vertices.get(1);
+  //       } else {
+  //         oldVertexID = line.vertices.get(0);
+  //       }
+  //
+  //       let oldVertex = layer.vertices.get(oldVertexID);
+  //       let vertex = layer.vertices.get(vertexID);
+  //
+  //       removeLine(layer, lineID);
+  //       addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties);
+  //     }
+  //   });
+  //
+  //   detectAndUpdateAreas(layer, catalog);
+  // }));
+  //
+  // return state.merge({
+  //   mode: MODE_IDLE,
+  //   draggingSupport: null,
+  //   scene,
+  //
+  //   activeSnapElement: null,
+  //   snapElements: new List(),
+  //   sceneHistory: state.sceneHistory.push(scene)
+  // });
 }

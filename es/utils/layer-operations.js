@@ -126,7 +126,7 @@ export function splitLine(layer, lineID, x, y, catalog) {
   return { layer: layer, lines: new List([line0, line1]) };
 }
 
-export function addLinesFromPoints(layer, type, points, catalog) {
+export function addLinesFromPoints(layer, type, points, catalog, properties, holes) {
   points = new List(points).sort(function (_ref, _ref2) {
     var x1 = _ref.x,
         y1 = _ref.y;
@@ -159,8 +159,10 @@ export function addLinesFromPoints(layer, type, points, catalog) {
             x2 = _ref6$2.x,
             y2 = _ref6$2.y;
 
-        var _addLine3 = addLine(layer, type, x1, y1, x2, y2, catalog),
+        var _addLine3 = addLine(layer, type, x1, y1, x2, y2, catalog, properties),
             line = _addLine3.line;
+        //TODO: Add holes
+
 
         lines.push(line);
       });
@@ -170,7 +172,7 @@ export function addLinesFromPoints(layer, type, points, catalog) {
   return { layer: layer, lines: lines };
 }
 
-export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalog) {
+export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalog, oldProperties, oldHoles) {
 
   var points = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
 
@@ -200,7 +202,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
         points.push(intersection.point);
       }
     });
-    addLinesFromPoints(layer, type, points, catalog);
+    addLinesFromPoints(layer, type, points, catalog, oldProperties, oldHoles);
   });
 
   return { layer: layer };
