@@ -1,4 +1,4 @@
-import {Catalog} from '../../../src/index';
+import {Catalog} from 'react-planner';
 
 import area from './areas/area/area';
 import door from './holes/door/door';

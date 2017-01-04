@@ -12,7 +12,7 @@ import {
   reducer as PlannerReducer,
   ReactPlanner,
   Plugins as PlannerPlugins,
-} from '../../src'; //react-planner
+} from 'react-planner'; //react-planner
 
 
 //define state
