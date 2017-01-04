@@ -245,36 +245,75 @@ function updateDraggingLine(state, x, y) {
   });
 }
 
+// function endDraggingLine(state, x, y) {
+//   let catalog = state.catalog;
+//   let {draggingSupport} = state;
+//   let layerID = draggingSupport.get('layerID');
+//   let layer = state.scene.layers.get(layerID);
+//   let lineID = draggingSupport.get('lineID');
+//   let line = layer.lines.get(lineID);
+//
+//   let holesWithBeginPosition = [];
+//   layer.lines.get(lineID).holes.forEach(holeID => {
+//     let hole = layer.holes.get(holeID);
+//     let vertex0 = layer.vertices.get(line.vertices.get(0));
+//     let vertex1 = layer.vertices.get(line.vertices.get(1));
+//
+//     // TODO: Order vertices and correct offset (we need this to compute the right sign for begin position)
+//     let linelength = Math.sqrt(Math.pow(vertex1.x - vertex0.x, 2) + Math.pow(vertex1.y - vertex0.y, 2));
+//     console.log(linelength, hole.toJS());
+//     let lineRotation = Math.atan2(vertex1.y - vertex0.y, vertex1.x - vertex0.x);
+//     let beginPosition = {
+//       x: ((linelength * hole.offset) - hole.properties.get('width').get('length')/2) * Math.cos(lineRotation) + vertex0.x,
+//       y: ((linelength * hole.offset) - hole.properties.get('width').get('length')/2) * Math.sin(lineRotation) + vertex0.y
+//     };
+//
+//     console.log(vertex0.toJS(), beginPosition)
+//     holesWithBeginPosition.push({hole, beginPosition});
+//   });
+//
+//   console.log(holesWithBeginPosition);
+//
+//   return state.withMutations(state => {
+//     let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+//
+//       let diffX = x - draggingSupport.get('startPointX');
+//       let diffY = y - draggingSupport.get('startPointY');
+//       let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
+//       let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
+//       let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
+//       let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
+//
+//       removeLine(layer, lineID);
+//       addLineAvoidingIntersections(layer, line.type,
+//         newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
+//         catalog, line.properties, holesWithBeginPosition);
+//       detectAndUpdateAreas(layer, catalog);
+//     }));
+//
+//
+//     state.merge({
+//       mode: MODE_IDLE,
+//       scene,
+//       draggingSupport: null,
+//       activeSnapElement: null,
+//       snapElements: new List(),
+//       sceneHistory: state.sceneHistory.push(scene)
+//     });
+//   });
+// }
+
 function endDraggingLine(state, x, y) {
   let catalog = state.catalog;
-  let {draggingSupport} = state;
-  let layerID = draggingSupport.get('layerID');
-  let lineID = draggingSupport.get('lineID');
 
   return state.withMutations(state => {
-    let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
-
-      let diffX = x - draggingSupport.get('startPointX');
-      let diffY = y - draggingSupport.get('startPointY');
-      let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
-      let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
-      let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
-      let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
-      let line = layer.lines.get(lineID);
-
-      removeLine(layer, lineID);
-      addLineAvoidingIntersections(layer, line.type, newVertex0X, newVertex0Y, newVertex1X, newVertex1Y, catalog);
-      detectAndUpdateAreas(layer, catalog);
-    }));
-
-
+    updateDraggingLine(state, x, y, catalog);
     state.merge({
       mode: MODE_IDLE,
-      scene,
       draggingSupport: null,
       activeSnapElement: null,
       snapElements: new List(),
-      sceneHistory: state.sceneHistory.push(scene)
+      sceneHistory: state.sceneHistory.push(state.scene)
     });
   });
 }
