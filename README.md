@@ -60,7 +60,7 @@ Draw a 2D floorplan and navigate it in 3D mode.
  ReactDOM.render(
    (
      <Provider store={store}>
-       <ReactPlanner catalog={MyCatalog} width={width} height={height} plugins={plugins}
+       <ReactPlanner catalog={MyCatalog} width={800} height={600} plugins={plugins}
                      stateExtractor={state => state.get('react-planner')}
        />
      </Provider>
