@@ -86,6 +86,16 @@ export default function Toolbar(_ref, _ref2) {
     ),
     React.createElement(
       ToolbarButton,
+      {
+        active: [MODE_VIEWING_CATALOG].includes(mode),
+        tooltip: translator.t("Open catalog"),
+        onClick: function onClick(event) {
+          return projectActions.openCatalog();
+        } },
+      React.createElement(IconCatalog, null)
+    ),
+    React.createElement(
+      ToolbarButton,
       { active: [MODE_3D_VIEW].includes(mode), tooltip: translator.t("3D View"),
         onClick: function onClick(event) {
           return viewer3DActions.selectTool3DView();
@@ -139,16 +149,6 @@ export default function Toolbar(_ref, _ref2) {
           React.createElement(IconPan, null)
         )
       )
-    ),
-    React.createElement(
-      ToolbarButton,
-      {
-        active: [MODE_VIEWING_CATALOG].includes(mode),
-        tooltip: translator.t("Open catalog"),
-        onClick: function onClick(event) {
-          return projectActions.openCatalog();
-        } },
-      React.createElement(IconCatalog, null)
     ),
     React.createElement(
       ToolbarButton,
