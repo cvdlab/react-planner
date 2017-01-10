@@ -76,6 +76,13 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
         </div>
       </If>
 
+      <ToolbarButton
+        active={[MODE_VIEWING_CATALOG].includes(mode)}
+        tooltip={translator.t("Open catalog")}
+        onClick={event => projectActions.openCatalog()}>
+        <IconCatalog />
+      </ToolbarButton>
+
       <ToolbarButton active={[MODE_3D_VIEW].includes(mode)} tooltip={translator.t("3D View")}
                      onClick={event => viewer3DActions.selectTool3DView()}>
         <Icon3D />
@@ -85,6 +92,7 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
                      onClick={event => projectActions.rollback()}>
         {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
       </ToolbarButton>
+
 
       <ToolbarButton active={[MODE_3D_FIRST_PERSON].includes(mode)} tooltip={translator.t("3D First Person")}
                      onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
@@ -111,12 +119,6 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
       </If>
 
 
-      <ToolbarButton
-        active={[MODE_VIEWING_CATALOG].includes(mode)}
-        tooltip={translator.t("Open catalog")}
-        onClick={event => projectActions.openCatalog()}>
-        <IconCatalog />
-      </ToolbarButton>
 
       <ToolbarButton active={false} tooltip={translator.t("Undo (CTRL-Z)")}
                      onClick={event => projectActions.undo()}>

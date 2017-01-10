@@ -1,4 +1,4 @@
-import {ElementsFactories} from '../../../../../src';
+import {ElementsFactories} from 'react-planner';
 
 let info = {
   tag: ['wall'],

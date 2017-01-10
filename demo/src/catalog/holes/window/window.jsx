@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Three from 'three';
-import {loadObjWithMaterial} from '../../../utils/load-obj';
+import {loadObjWithMaterial} from '../../utils/load-obj';
 import path from 'path';
 
 export default {

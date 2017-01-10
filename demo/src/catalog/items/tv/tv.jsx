@@ -1,5 +1,5 @@
 import * as Three from 'three';
-import {loadObjWithMaterial} from '../../../utils/load-obj';
+import {loadObjWithMaterial} from '../../utils/load-obj';
 
 import React from 'react';
 import convert from 'convert-units';
