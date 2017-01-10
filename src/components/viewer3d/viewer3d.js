@@ -18,7 +18,7 @@ export default class Scene3DViewer extends React.Component {
     this.height = props.height;
     this.stopRendering = false;
 
-    this.renderer = window.__threeRenderer || new Three.WebGLRenderer();
+    this.renderer = window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true});
     window.__threeRenderer = this.renderer;
   }
 
@@ -209,15 +209,14 @@ export default class Scene3DViewer extends React.Component {
     /************************************/
 
     let render = () => {
-
-      orbitController.update();
-      spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
-      spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
-      camera.updateMatrix();
-      camera.updateMatrixWorld();
-
-      this.renderer.render(scene3D, camera);
       if (!this.stopRendering) {
+        orbitController.update();
+        spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
+        spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
+        camera.updateMatrix();
+        camera.updateMatrixWorld();
+
+        this.renderer.render(scene3D, camera);
         requestAnimationFrame(render);
       }
     };
