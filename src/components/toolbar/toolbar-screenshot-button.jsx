@@ -13,7 +13,7 @@ export default function ToolbarScreenshotButton({state}, {translator, projectAct
   };
 
   return (
-    <ToolbarButton tooltip={translator.t("Get Screenshot")} onClick={saveScreenshotToFile}>
+    <ToolbarButton active={false} tooltip={translator.t("Get Screenshot")} onClick={saveScreenshotToFile}>
       <IconSave />
     </ToolbarButton>
   );
