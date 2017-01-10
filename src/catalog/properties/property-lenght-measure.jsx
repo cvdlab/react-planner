@@ -21,6 +21,11 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
 
   let update = (lengthInput, unitInput) => {
     let _length = parseFloat(lengthInput);
+
+    if (isNaN(_length)) {
+      _length = 0;
+    }
+
     let length = convert(_length).from(unitInput).to(catalog.unit);
     onUpdate(value.merge({length, _length, _unit: unitInput}));
   };
