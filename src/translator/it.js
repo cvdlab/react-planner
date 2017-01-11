@@ -28,5 +28,6 @@ export default {
   "Reset": "Annulla",
   "Unselect": "Deseleziona",
   "Configure layer": "Configura layer",
-  "Properties: [{0}] {1}": "Proprietà: [{0}] {1}"
+  "Properties: [{0}] {1}": "Proprietà: [{0}] {1}",
+  "Get Screenshot" : "Cattura uno screenshot"
 }

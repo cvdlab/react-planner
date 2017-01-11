@@ -12,7 +12,7 @@ export default function ToolbarSaveButton({state}, {translator, projectActions})
   };
 
   return (
-    <ToolbarButton tooltip={translator.t("Save project")} onClick={saveProjectToFile}>
+    <ToolbarButton active={false} tooltip={translator.t("Save project")} onClick={saveProjectToFile}>
       <IconSave />
     </ToolbarButton>
   );

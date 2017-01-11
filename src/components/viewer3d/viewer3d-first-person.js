@@ -17,7 +17,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     this.width = props.width;
     this.height = props.height;
     this.stopRendering = false;
-    this.renderer = window.__threeRenderer || new Three.WebGLRenderer();
+    this.renderer = window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true});
     window.__threeRenderer = this.renderer;
   }
 
@@ -198,37 +198,38 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     let render = () => {
 
-      yInitialPosition = this.planData.boundingBox.min.y + humanHeight;
-
-      this.controls.getObject().position.y = yInitialPosition;
-
-      let time = performance.now();
-      let delta = ( time - prevTime ) / 200;
-
-      velocity.x -= velocity.x * 10.0 * delta;
-      velocity.z -= velocity.z * 10.0 * delta;
-
-      if (moveForward) velocity.z -= 400.0 * delta;
-      if (moveBackward) velocity.z += 400.0 * delta;
-
-      if (moveLeft) velocity.x -= 400.0 * delta;
-      if (moveRight) velocity.x += 400.0 * delta;
-
-      this.controls.getObject().translateX(velocity.x * delta);
-      this.controls.getObject().translateZ(velocity.z * delta);
-
-      prevTime = time;
-
-      // Set light position
-      let controlObjectPosition=  this.controls.getObject().position;
-      pointLight.position.set(controlObjectPosition.x, controlObjectPosition.y, controlObjectPosition.z);
-
-      this.renderer.clear();                     // clear buffers
-      this.renderer.render(scene3D, camera);     // render scene 1
-      this.renderer.clearDepth();                // clear depth buffer
-      this.renderer.render(sceneOnTop, camera);  // render scene 2
-
       if (!this.stopRendering) {
+        yInitialPosition = this.planData.boundingBox.min.y + humanHeight;
+
+        this.controls.getObject().position.y = yInitialPosition;
+
+        let time = performance.now();
+        let delta = ( time - prevTime ) / 200;
+
+        velocity.x -= velocity.x * 10.0 * delta;
+        velocity.z -= velocity.z * 10.0 * delta;
+
+        if (moveForward) velocity.z -= 400.0 * delta;
+        if (moveBackward) velocity.z += 400.0 * delta;
+
+        if (moveLeft) velocity.x -= 400.0 * delta;
+        if (moveRight) velocity.x += 400.0 * delta;
+
+        this.controls.getObject().translateX(velocity.x * delta);
+        this.controls.getObject().translateZ(velocity.z * delta);
+
+        prevTime = time;
+
+        // Set light position
+        let controlObjectPosition = this.controls.getObject().position;
+        pointLight.position.set(controlObjectPosition.x, controlObjectPosition.y, controlObjectPosition.z);
+
+        this.renderer.clear();                     // clear buffers
+        this.renderer.render(scene3D, camera);     // render scene 1
+        this.renderer.clearDepth();                // clear depth buffer
+        this.renderer.render(sceneOnTop, camera);  // render scene 2
+
+
         requestAnimationFrame(render);
       }
     };

@@ -13,7 +13,7 @@ export default function ToolbarLoadButton({state}, {translator, projectActions})
   };
 
   return (
-    <ToolbarButton tooltip={translator.t("Load project")} onClick={loadProjectFromFile}>
+    <ToolbarButton active={false} tooltip={translator.t("Load project")} onClick={loadProjectFromFile}>
       <IconLoad />
     </ToolbarButton>
   );

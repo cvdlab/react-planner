@@ -11,7 +11,8 @@ import {
   ROLLBACK,
   OPEN_PROJECT_CONFIGURATOR,
   SET_PROJECT_PROPERTIES,
-  INIT_CATALOG
+  INIT_CATALOG,
+  SAVE_SCREENSHOT
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -95,4 +96,10 @@ export function initCatalog(catalog) {
     type: INIT_CATALOG,
     catalog
   }
+}
+
+export function saveScreenshot() {
+  return {
+    type: SAVE_SCREENSHOT
+  };
 }
