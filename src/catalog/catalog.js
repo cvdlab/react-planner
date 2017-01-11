@@ -3,6 +3,8 @@ import PropertyEnum from './properties/property-enum';
 import PropertyString from './properties/property-string';
 import PropertyNumber from './properties/property-number';
 import PropertyLengthMeasure from './properties/property-lenght-measure';
+import PropertyToggle from './properties/property-toggle';
+
 import {UNIT_CENTIMETER} from '../constants';
 
 export default class Catalog {
@@ -17,6 +19,7 @@ export default class Catalog {
     this.registerPropertyType('string', PropertyString, PropertyString);
     this.registerPropertyType('number', PropertyNumber, PropertyNumber);
     this.registerPropertyType('length-measure', PropertyLengthMeasure, PropertyLengthMeasure);
+    this.registerPropertyType('toggle', PropertyToggle, PropertyToggle);
   }
 
   getElement(type) {
