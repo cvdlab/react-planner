@@ -4,6 +4,7 @@ import PropertyString from './properties/property-string';
 import PropertyNumber from './properties/property-number';
 import PropertyLengthMeasure from './properties/property-lenght-measure';
 import PropertyToggle from './properties/property-toggle';
+import PropertyCheckbox from './properties/property-checkbox';
 
 import {UNIT_CENTIMETER} from '../constants';
 
@@ -20,6 +21,7 @@ export default class Catalog {
     this.registerPropertyType('number', PropertyNumber, PropertyNumber);
     this.registerPropertyType('length-measure', PropertyLengthMeasure, PropertyLengthMeasure);
     this.registerPropertyType('toggle', PropertyToggle, PropertyToggle);
+    this.registerPropertyType('checkbox', PropertyCheckbox, PropertyCheckbox);
   }
 
   getElement(type) {
