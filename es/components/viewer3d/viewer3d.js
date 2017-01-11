@@ -29,7 +29,7 @@ var Scene3DViewer = function (_React$Component) {
     _this.height = props.height;
     _this.stopRendering = false;
 
-    _this.renderer = window.__threeRenderer || new Three.WebGLRenderer();
+    _this.renderer = window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
     window.__threeRenderer = _this.renderer;
     return _this;
   }
@@ -113,7 +113,6 @@ var Scene3DViewer = function (_React$Component) {
           var intersects = raycaster.intersectObjects(toIntersect, true);
 
           if (intersects.length > 0) {
-            _this2.context.projectActions.unselectAll();
             intersects[0].object.interact && intersects[0].object.interact();
           } else {
             _this2.context.projectActions.unselectAll();
@@ -218,15 +217,14 @@ var Scene3DViewer = function (_React$Component) {
       /************************************/
 
       var render = function render() {
-
-        orbitController.update();
-        spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
-        spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
-        camera.updateMatrix();
-        camera.updateMatrixWorld();
-
-        _this2.renderer.render(scene3D, camera);
         if (!_this2.stopRendering) {
+          orbitController.update();
+          spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
+          spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
+          camera.updateMatrix();
+          camera.updateMatrixWorld();
+
+          _this2.renderer.render(scene3D, camera);
           requestAnimationFrame(render);
         }
       };

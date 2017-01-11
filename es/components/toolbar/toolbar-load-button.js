@@ -18,7 +18,7 @@ export default function ToolbarLoadButton(_ref, _ref2) {
 
   return React.createElement(
     ToolbarButton,
-    { tooltip: translator.t("Load project"), onClick: loadProjectFromFile },
+    { active: false, tooltip: translator.t("Load project"), onClick: loadProjectFromFile },
     React.createElement(IconLoad, null)
   );
 }

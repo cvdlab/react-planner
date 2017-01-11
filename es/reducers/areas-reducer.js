@@ -15,10 +15,14 @@ export default function (state, action) {
 function selectArea(state, layerID, areaID) {
   var scene = state.scene;
 
+  scene = scene.merge({
+    layers: scene.layers.map(unselectAll),
+    selectedLayer: layerID
+  });
+
   scene = scene.updateIn(['layers', layerID], function (layer) {
     return layer.withMutations(function (layer) {
       var area = layer.getIn(['areas', areaID]);
-      unselectAll(layer);
       select(layer, 'areas', areaID);
       area.vertices.forEach(function (vertexID) {
         return select(layer, 'vertices', vertexID);

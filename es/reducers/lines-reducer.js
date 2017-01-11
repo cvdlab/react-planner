@@ -344,10 +344,14 @@ function endDraggingLine(state, x, y) {
 function selectLine(state, layerID, lineID) {
   var scene = state.scene;
 
+  scene = scene.merge({
+    layers: scene.layers.map(unselectAll),
+    selectedLayer: layerID
+  });
+
   scene = scene.updateIn(['layers', layerID], function (layer) {
     return layer.withMutations(function (layer) {
       var line = layer.getIn(['lines', lineID]);
-      unselectAll(layer);
       select(layer, 'lines', lineID);
       select(layer, 'vertices', line.vertices.get(0));
       select(layer, 'vertices', line.vertices.get(1));

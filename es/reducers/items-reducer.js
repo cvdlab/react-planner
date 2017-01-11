@@ -192,10 +192,14 @@ function endRotatingItem(state, x, y) {
 function selectItem(state, layerID, itemID) {
   var scene = state.scene;
 
+  scene = scene.merge({
+    layers: scene.layers.map(unselectAll),
+    selectedLayer: layerID
+  });
+
   scene = scene.updateIn(['layers', layerID], function (layer) {
     return layer.withMutations(function (layer) {
       var item = layer.getIn(['items', itemID]);
-      unselectAll(layer);
       select(layer, 'items', itemID);
     });
   });

@@ -26,6 +26,11 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
 
   var update = function update(lengthInput, unitInput) {
     var _length = parseFloat(lengthInput);
+
+    if (isNaN(_length)) {
+      _length = 0;
+    }
+
     var length = convert(_length).from(unitInput).to(catalog.unit);
     onUpdate(value.merge({ length: length, _length: _length, _unit: unitInput }));
   };
