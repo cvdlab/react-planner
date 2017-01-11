@@ -321,7 +321,10 @@ function endDraggingLine(state, x, y) {
 function selectLine(state, layerID, lineID) {
   let scene = state.scene;
 
-  scene = scene.update('layers', layer => layer.map(unselectAll));
+  scene = scene.merge({
+    layers: scene.layers.map(unselectAll),
+    selectedLayer: layerID
+  });
 
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let line = layer.getIn(['lines', lineID]);

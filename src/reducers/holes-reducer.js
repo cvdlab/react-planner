@@ -177,7 +177,10 @@ function endDraggingHole(state, x, y) {
 function selectHole(state, layerID, holeID) {
   let scene = state.scene;
 
-  scene = scene.update('layers', layer => layer.map(unselectAll));
+  scene = scene.merge({
+    layers: scene.layers.map(unselectAll),
+    selectedLayer: layerID
+  });
 
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     select(layer, 'holes', holeID);

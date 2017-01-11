@@ -6,7 +6,7 @@ import {
 import {SELECT_AREA} from '../constants';
 
 export default function (state, action) {
-  switch(action.type){
+  switch (action.type) {
     case SELECT_AREA:
       return selectArea(state, action.layerID, action.areaID);
 
@@ -19,7 +19,10 @@ export default function (state, action) {
 function selectArea(state, layerID, areaID) {
   let scene = state.scene;
 
-  scene = scene.update('layers', layer => layer.map(unselectAll));
+  scene = scene.merge({
+    layers: scene.layers.map(unselectAll),
+    selectedLayer: layerID
+  });
 
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let area = layer.getIn(['areas', areaID]);
