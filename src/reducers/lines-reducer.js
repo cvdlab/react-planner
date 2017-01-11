@@ -321,9 +321,10 @@ function endDraggingLine(state, x, y) {
 function selectLine(state, layerID, lineID) {
   let scene = state.scene;
 
+  scene = scene.update('layers', layer => layer.map(unselectAll));
+
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let line = layer.getIn(['lines', lineID]);
-      unselectAll(layer);
       select(layer, 'lines', lineID);
       select(layer, 'vertices', line.vertices.get(0));
       select(layer, 'vertices', line.vertices.get(1));

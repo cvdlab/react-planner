@@ -195,9 +195,10 @@ function endRotatingItem(state, x, y) {
 function selectItem(state, layerID, itemID) {
   let scene = state.scene;
 
+  scene = scene.update('layers', layer => layer.map(unselectAll));
+
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let item = layer.getIn(['items', itemID]);
-      unselectAll(layer);
       select(layer, 'items', itemID);
     })
   );

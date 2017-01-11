@@ -19,9 +19,10 @@ export default function (state, action) {
 function selectArea(state, layerID, areaID) {
   let scene = state.scene;
 
+  scene = scene.update('layers', layer => layer.map(unselectAll));
+
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let area = layer.getIn(['areas', areaID]);
-      unselectAll(layer);
       select(layer, 'areas', areaID);
       area.vertices.forEach(vertexID => select(layer, 'vertices', vertexID));
     })
