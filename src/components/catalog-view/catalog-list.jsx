@@ -10,10 +10,10 @@ const STYLE_ITEMS = {
 };
 
 
-export default function CatalogList({width, height, state}, {catalog}) {
+export default function CatalogList({width, height, state}, {catalog, translator}) {
   return (
     <ContentContainer width={width} height={height}>
-      <ContentTitle>Layer config</ContentTitle>
+      <ContentTitle>{translator.t('Catalog')}</ContentTitle>
       <div style={STYLE_ITEMS}>
         {Seq(catalog.elements)
           .entrySeq()
@@ -32,4 +32,5 @@ CatalogList.propTypes = {
 
 CatalogList.contextTypes = {
   catalog: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired,
 };
