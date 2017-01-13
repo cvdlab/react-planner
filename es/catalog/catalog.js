@@ -9,6 +9,8 @@ import PropertyNumber from './properties/property-number';
 import PropertyLengthMeasure from './properties/property-lenght-measure';
 import PropertyToggle from './properties/property-toggle';
 import PropertyCheckbox from './properties/property-checkbox';
+import PropertyHidden from './properties/property-hidden';
+import PropertyReadOnly from './properties/property-read-only';
 
 import { UNIT_CENTIMETER } from '../constants';
 
@@ -29,6 +31,8 @@ var Catalog = function () {
     this.registerPropertyType('length-measure', PropertyLengthMeasure, PropertyLengthMeasure);
     this.registerPropertyType('toggle', PropertyToggle, PropertyToggle);
     this.registerPropertyType('checkbox', PropertyCheckbox, PropertyCheckbox);
+    this.registerPropertyType('hidden', PropertyHidden, PropertyHidden);
+    this.registerPropertyType('read-only', PropertyReadOnly, PropertyReadOnly);
   }
 
   _createClass(Catalog, [{

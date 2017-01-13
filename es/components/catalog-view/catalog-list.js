@@ -15,7 +15,8 @@ export default function CatalogList(_ref, _ref2) {
   var width = _ref.width,
       height = _ref.height,
       state = _ref.state;
-  var catalog = _ref2.catalog;
+  var catalog = _ref2.catalog,
+      translator = _ref2.translator;
 
   return React.createElement(
     ContentContainer,
@@ -23,7 +24,7 @@ export default function CatalogList(_ref, _ref2) {
     React.createElement(
       ContentTitle,
       null,
-      'Layer config'
+      translator.t('Catalog')
     ),
     React.createElement(
       'div',
@@ -52,5 +53,6 @@ CatalogList.propTypes = {
 };
 
 CatalogList.contextTypes = {
-  catalog: PropTypes.object.isRequired
+  catalog: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired
 };
