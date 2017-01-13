@@ -1,5 +1,5 @@
 import React, {PropTypes, Component} from 'react';
-import ReactRange from 'react-range';
+import ReactRange from '@mapbox/react-range';
 import FormTextInput from './form-text-input';
 
 const STYLE_INPUT = {

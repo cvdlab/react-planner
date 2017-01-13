@@ -60,6 +60,7 @@
   ],
   "homepage": "https://github.com/cvdlab/react-planner#readme",
   "dependencies": {
+    "@mapbox/react-range": "^0.0.7",
     "area-polygon": "1.0.1",
     "convert-units": "2.0.0",
     "html-webpack-plugin": "^2.24.1",
@@ -68,7 +69,6 @@
     "polylabel": "1.0.2",
     "react-custom-scrollbars": "4.0.1",
     "react-icons": "2.2.3",
-    "react-range": "^0.0.7",
     "react-redux": "5.0.2",
     "react-svg-pan-zoom": "2.4.0",
     "redux": "3.6.0",
@@ -91,8 +91,8 @@
     "react-dom": "15.4.2",
     "rimraf": "^2.5.4",
     "three": "0.83.0",
-    "webpack": "webpack/webpack#2.2.0-rc.3",
-    "webpack-dev-server": "webpack/webpack-dev-server#2.2.0-rc.0"
+    "webpack": "2.2.0-rc.4",
+    "webpack-dev-server": "2.2.0-rc.0"
   },
   "peerDependencies": {
     "react": "15.x",
