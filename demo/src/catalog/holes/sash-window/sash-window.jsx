@@ -8,6 +8,7 @@ export default {
   prototype: "holes",
 
   info: {
+    title: "sash window",
     tag: ['window'],
     group: "Vertical closure",
     description: "Sash window",

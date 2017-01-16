@@ -9,6 +9,7 @@ export default {
   prototype: "items",
 
   info: {
+    title: "tv",
     tag: ['furnishing', 'electronics'],
     group: "Items",
     description: "LCD TV",

@@ -7,6 +7,7 @@ export default {
   prototype: "items",
 
   info: {
+    title: "cube",
     tag: ['demo'],
     group: "Items",
     description: "Demo item",

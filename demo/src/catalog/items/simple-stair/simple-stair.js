@@ -12,6 +12,7 @@ export default {
   prototype: "items",
 
   info: {
+    title: "simple stair",
     tag: ['building', 'stair'],
     group: "Items",
     description: "Simple stair",

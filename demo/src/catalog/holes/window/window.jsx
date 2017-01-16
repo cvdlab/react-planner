@@ -8,6 +8,7 @@ export default {
   prototype: "holes",
 
   info: {
+    title: "window",
     tag: ['window'],
     group: "Vertical Closing",
     description: "Window",

@@ -29,7 +29,7 @@ const STYLE_IMAGE = {
   border: "solid 1px #e6e6e6"
 };
 
-const STYLE_NAME = {
+const STYLE_TITLE = {
   fontSize: "16px",
   fontWeight: "bold"
 };
@@ -108,7 +108,7 @@ export default class CatalogItem extends Component {
         <If condition={hover}>
           <div style={STYLE_SELECT}><IconAdd /></div>
         </If>
-        <div style={STYLE_NAME}>{element.name}</div>
+        <div style={STYLE_TITLE}>{element.info.title}</div>
         <ul style={STYLE_TAGS}>
           {new Seq(element.info.tag).map((tag, index) => <li style={STYLE_TAG} key={index}>{tag}</li>)}
         </ul>
