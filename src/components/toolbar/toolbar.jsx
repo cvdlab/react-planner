@@ -63,7 +63,7 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
   let mode = state.get('mode');
 
   return (
-    <aside style={{...STYLE, width, height}}>
+    <aside style={{...STYLE, width, height}} className="toolbar">
       <If condition={allowProjectFileSupport}>
         <div>
           <ToolbarButton active={false} tooltip={translator.t("New project")} onClick={event => projectActions.newProject()}>
