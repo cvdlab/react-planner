@@ -136,17 +136,6 @@ var PropertiesEditor = function (_Component) {
             'div',
             { style: { marginRight: "3px", display: "inline-block" } },
             React.createElement(
-              Button,
-              { size: 'small', onClick: function onClick(e) {
-                  return projectActions.unselectAll();
-                } },
-              translator.t("Unselect")
-            )
-          ),
-          React.createElement(
-            'div',
-            { style: { marginRight: "3px", display: "inline-block" } },
-            React.createElement(
               DeleteButton,
               { size: 'small', onClick: function onClick(e) {
                   return projectActions.remove();

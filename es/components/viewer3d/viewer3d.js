@@ -78,8 +78,8 @@ var Scene3DViewer = function (_React$Component) {
       camera.up = new Three.Vector3(0, 1, 0);
 
       // HELPER AXIS
-      var axisHelper = new Three.AxisHelper(100);
-      scene3D.add(axisHelper);
+      // let axisHelper = new Three.AxisHelper(100);
+      // scene3D.add(axisHelper);
 
       // LIGHT
       var light = new Three.AmbientLight(0xafafaf); // soft white light

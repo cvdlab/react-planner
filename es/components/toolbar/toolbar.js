@@ -67,7 +67,7 @@ export default function Toolbar(_ref, _ref2) {
 
   return React.createElement(
     'aside',
-    { style: _extends({}, STYLE, { width: width, height: height }) },
+    { style: _extends({}, STYLE, { width: width, height: height }), className: 'toolbar' },
     React.createElement(
       If,
       { condition: allowProjectFileSupport },

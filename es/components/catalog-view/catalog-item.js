@@ -38,7 +38,7 @@ var STYLE_IMAGE = {
   border: "solid 1px #e6e6e6"
 };
 
-var STYLE_NAME = {
+var STYLE_TITLE = {
   fontSize: "16px",
   fontWeight: "bold"
 };
@@ -147,8 +147,8 @@ var CatalogItem = function (_Component) {
         ),
         React.createElement(
           'div',
-          { style: STYLE_NAME },
-          element.name
+          { style: STYLE_TITLE },
+          element.info.title
         ),
         React.createElement(
           'ul',

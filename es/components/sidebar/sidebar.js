@@ -18,11 +18,24 @@ export default function Sidebar(_ref) {
       },
       onKeyUp: function onKeyUp(event) {
         return event.stopPropagation();
-      }
+      },
+      className: 'sidebar'
     },
-    React.createElement(PanelLayerElements, { state: state }),
-    React.createElement(PanelPropertiesEditor, { state: state }),
-    React.createElement(PanelLayers, { state: state })
+    React.createElement(
+      'div',
+      { className: 'layer-elements' },
+      React.createElement(PanelLayerElements, { state: state })
+    ),
+    React.createElement(
+      'div',
+      { className: 'properties' },
+      React.createElement(PanelPropertiesEditor, { state: state })
+    ),
+    React.createElement(
+      'div',
+      { className: 'layers' },
+      React.createElement(PanelLayers, { state: state })
+    )
   );
 }
 
