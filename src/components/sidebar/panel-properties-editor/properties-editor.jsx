@@ -91,9 +91,9 @@ export default class PropertiesEditor extends Component {
         }
 
         <div style={{textAlign: "right"}}>
-          <div style={{marginRight: "3px", display: "inline-block"}}>
+          {/*<div style={{marginRight: "3px", display: "inline-block"}}>
             <Button size="small" onClick={e => projectActions.unselectAll()}>{translator.t("Unselect")}</Button>
-          </div>
+          </div>*/}
           <div style={{marginRight: "3px", display: "inline-block"}}>
             <DeleteButton size="small" onClick={e => projectActions.remove()}>{translator.t("Delete")}</DeleteButton>
           </div>
