@@ -9,6 +9,7 @@ export default {
   prototype: "items",
 
   info: {
+    title: "image",
     tag: ['image'],
     group: "Items",
     description: "Image",

@@ -8,6 +8,7 @@ export default {
   prototype: "holes",
 
   info: {
+    title: "door",
     tag: ['door'],
     group: "Horizontal communication",
     description: "Wooden door",

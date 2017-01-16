@@ -1,6 +1,7 @@
 import {ElementsFactories} from 'react-planner';
 
 let info = {
+  title: "wall",
   tag: ['wall'],
   group: "Vertical closure",
   description: "Wall with bricks or painted",

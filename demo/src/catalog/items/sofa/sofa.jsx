@@ -14,6 +14,7 @@ export default {
   prototype: "items",
 
   info: {
+    title: "sofa",
     tag: ['furnishings', 'leather'],
     group: "Items",
     description: "Leather sofa",
