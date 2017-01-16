@@ -62,8 +62,8 @@ export default class Scene3DViewer extends React.Component {
     camera.up = new Three.Vector3(0, 1, 0);
 
     // HELPER AXIS
-    let axisHelper = new Three.AxisHelper(100);
-    scene3D.add(axisHelper);
+    // let axisHelper = new Three.AxisHelper(100);
+    // scene3D.add(axisHelper);
 
     // LIGHT
     let light = new Three.AmbientLight(0xafafaf); // soft white light
