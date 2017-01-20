@@ -256,7 +256,8 @@ export var Scene = function (_Record9) {
     return _possibleConstructorReturn(this, (Scene.__proto__ || Object.getPrototypeOf(Scene)).call(this, _extends({}, json, {
       guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
       layers: layers,
-      selectedLayer: layers.first().id
+      selectedLayer: layers.first().id,
+      meta: json.meta ? fromJS(json.meta) : new Map()
     })));
   }
 
