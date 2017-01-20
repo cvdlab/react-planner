@@ -199,7 +199,8 @@ export class Scene extends Record({
       ...json,
       guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
       layers,
-      selectedLayer: layers.first().id
+      selectedLayer: layers.first().id,
+      meta: json.meta ? fromJS(json.meta) : new Map()
     })
   }
 }
