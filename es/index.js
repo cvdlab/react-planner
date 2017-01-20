@@ -22,6 +22,7 @@ import FormSelect from './components/style/form-select';
 import FormSlider from './components/style/form-slider';
 import FormSubmitButton from './components/style/form-submit-button';
 import FormTextInput from './components/style/form-text-input';
+import { VERSION } from './version';
 
 var ElementsFactories = { WallFactory: WallFactory, AreaFactory: AreaFactory };
 var StyleComponents = {
@@ -29,6 +30,6 @@ var StyleComponents = {
   FormColorInput: FormColorInput, FormLabel: FormLabel, FormNumberInput: FormNumberInput, FormSelect: FormSelect, FormSlider: FormSlider, FormSubmitButton: FormSubmitButton, FormTextInput: FormTextInput
 };
 
-console.info('react-planner started'); //MIT LICENSE COMPLIANT
+console.info('react-planner ' + VERSION + ' started'); //MIT LICENSE COMPLIANT
 
 export { Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Plugins, ElementsFactories, StyleComponents };
