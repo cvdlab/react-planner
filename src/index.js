@@ -22,6 +22,7 @@ import FormSelect from './components/style/form-select';
 import FormSlider from './components/style/form-slider';
 import FormSubmitButton from './components/style/form-submit-button';
 import FormTextInput from './components/style/form-text-input';
+import {VERSION} from './version';
 
 let ElementsFactories = {WallFactory, AreaFactory};
 let StyleComponents = {
@@ -29,7 +30,7 @@ let StyleComponents = {
   FormColorInput, FormLabel, FormNumberInput, FormSelect, FormSlider, FormSubmitButton, FormTextInput
 };
 
-console.info(`react-planner started`); //MIT LICENSE COMPLIANT
+console.info(`react-planner ${VERSION} started`); //MIT LICENSE COMPLIANT
 
 export {
   Catalog,

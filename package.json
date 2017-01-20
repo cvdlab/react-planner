@@ -14,7 +14,8 @@
     "add-build-to-vcs": "git add -A es && git add -A lib && git add -A demo/dist",
     "clean": "rimraf lib es demo/dist",
     "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
-    "version": "npm run build && npm run add-build-to-vcs",
+    "update-version-file": "const-version ./package.json ./src/version.js",
+    "version": "npm run update-version-file && npm run build && npm run add-build-to-vcs",
     "postpublish": "npm run website-update",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -82,6 +83,7 @@
     "babel-preset-es2015": "^6.18.0",
     "babel-preset-es2015-webpack2": "^1.0.0",
     "babel-preset-react": "6.16.0",
+    "const-version": "^0.0.2",
     "cross-env": "^3.1.3",
     "file-loader": "0.9.0",
     "gh-pages": "0.12.0",
