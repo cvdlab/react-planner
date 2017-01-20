@@ -11,7 +11,7 @@
     "build-commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build-es": "cross-env BABEL_ENV=es babel src --out-dir es",
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
-    "add-build-to-vcs": "git add -A es && git add -A lib && git add -A demo/dist",
+    "add-build-to-vcs": "git add -A src/version.js && git add -A es && git add -A lib && git add -A demo/dist",
     "clean": "rimraf lib es demo/dist",
     "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
     "update-version-file": "const-version ./package.json ./src/version.js",
