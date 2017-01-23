@@ -6,20 +6,20 @@ const DEPTH = 40;
 const HEIGHT = 70;
 
 export default {
-  name: "recyclingBins",
+  name: "recycling-bins",
   prototype: "items",
 
   info: {
-    tag: ['Arredamento'],
+    tag: ['Furnishings'],
     group: "Items",
-    title: "Cestini per la differenziata",
-    description: "Cestini per la raccolta differenziata",
+    title: "recycling bins",
+    description: "Crecycling-bins",
     image: require('./recycling-bins.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,
@@ -100,7 +100,7 @@ export default {
       etichetta.position.set(-.1, .8, 0);
       plane1.add(etichetta);
 
-      var texture = new Three.TextureLoader().load(require('./reciclo.png'));
+      var texture = new Three.TextureLoader().load(require('./recycle.png'));
 
       var planeGeometry2 = new Three.PlaneGeometry(.5, .5);
       var planeMaterial2 = new Three.MeshLambertMaterial({map: texture, transparent: true});

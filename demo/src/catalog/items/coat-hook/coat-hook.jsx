@@ -10,16 +10,16 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Arredamento', 'Opzionale'],
+    tag: ['Furnishings', 'Optional'],
     group: "Items",
     title: "Coat hook",
-    description: "attaccapanni",
+    description: "Coat hook",
     image: require('./coat-hook.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 120,

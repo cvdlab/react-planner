@@ -10,10 +10,10 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Arredamento'],
+    tag: ['Furnishings'],
     group: "Items",
     title: "Trash",
-    description: "Cestino per la raccolta indifferenziata",
+    description: "Trash",
     image: require('./trash.png')
   },
 

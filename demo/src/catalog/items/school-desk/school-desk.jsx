@@ -10,7 +10,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Arredamento'],
+    tag: ['Furnishings'],
     group: "Items",
     title: "School desk",
     description: "school desk",

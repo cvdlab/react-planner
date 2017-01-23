@@ -10,10 +10,10 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Arredamento'],
+    tag: ['Furnishings'],
     group: "teaching post",
-    title: "Teaching-post",
-    description: "cattedra",
+    title: "Teaching post",
+    description: "Teaching post",
     image: require('./teaching-post.png')
   },
 

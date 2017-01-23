@@ -9,7 +9,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Sicurezza', 'Opzionale'],
+    tag: ['Security', 'Optional'],
     group: "Items",
     title: "Fire extinguisher",
     description: "Estintore",
@@ -18,7 +18,7 @@ export default {
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 100,

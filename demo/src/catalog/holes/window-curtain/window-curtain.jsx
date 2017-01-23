@@ -10,8 +10,8 @@ export default {
   info: {
     tag: ['Finestre'],
     group: "Vertical Closing",
-    title: "Finestra con tenda",
-    description: "Finestra con tenda",
+    title: "Curtain window",
+    description: "Curtain window",
     image: require('./window-curtain.png')
   },
 

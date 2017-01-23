@@ -11,10 +11,10 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Arredamento'],
+    tag: ['Furnishings'],
     group: "Items",
-    title: "Termosifone",
-    description: "Termosifone",
+    title: "Radiator",
+    description: "Radiator",
     image: require('./radiator.png')
   },
 

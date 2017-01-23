@@ -10,7 +10,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Arredamento'],
+    tag: ['Furnishings'],
     group: "Items",
     title: "School desk double",
     description: "school desk double",
@@ -19,7 +19,7 @@ export default {
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,
