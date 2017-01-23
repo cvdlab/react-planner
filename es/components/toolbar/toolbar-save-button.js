@@ -2,6 +2,7 @@ import React, { PropTypes } from 'react';
 import IconSave from 'react-icons/lib/fa/floppy-o';
 import ToolbarButton from './toolbar-button';
 import { browserDownload } from '../../utils/browser';
+import { unselectAll } from '../../utils/layer-operations';
 
 export default function ToolbarSaveButton(_ref, _ref2) {
   var state = _ref.state;
@@ -11,7 +12,12 @@ export default function ToolbarSaveButton(_ref, _ref2) {
 
   var saveProjectToFile = function saveProjectToFile(event) {
     event.preventDefault();
-    var scene = state.get('scene').toJS();
+    var scene = state.get('scene').update('layers', function (layers) {
+      return layers.map(function (layer) {
+        return unselectAll(layer);
+      });
+    }).toJS();
+
     browserDownload(scene);
   };
 
