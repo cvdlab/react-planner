@@ -1,6 +1,5 @@
 # react-planner
-*react-planner* is a React Component for plans design.
-Draw a 2D floorplan and navigate it in 3D mode.
+*react-planner* is a React Component which can be used to draw model buildings. Drag & dropping from a catalog of customizable and ready-to-use objects, you can start from 2D wireframes and land on 3D models. As a developer you can provide your users with new objects by adding them to the catalog.
 
 [![npm](https://img.shields.io/npm/v/react-planner.svg?maxAge=2592000?style=plastic)](https://www.npmjs.com/package/react-planner)
 ![javascript](https://img.shields.io/badge/javascript-ES6-fbde34.svg)
