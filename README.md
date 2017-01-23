@@ -1,4 +1,4 @@
-# react-planner [WIP]
+# react-planner
 *react-planner* is a React Component for plans design.
 Draw a 2D floorplan and navigate it in 3D mode.
 
