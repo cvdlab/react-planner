@@ -2,12 +2,17 @@ import React, {PropTypes} from 'react';
 import IconSave from 'react-icons/lib/fa/floppy-o';
 import ToolbarButton from './toolbar-button';
 import {browserDownload}  from '../../utils/browser';
+import {unselectAll} from '../../utils/layer-operations';
 
 export default function ToolbarSaveButton({state}, {translator, projectActions}) {
 
   let saveProjectToFile = event => {
     event.preventDefault();
-    let scene = state.get('scene').toJS();
+    let scene = state
+      .get('scene')
+      .update('layers', layers => layers.map(layer => unselectAll(layer)))
+      .toJS();
+
     browserDownload(scene);
   };
 
