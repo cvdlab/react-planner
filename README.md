@@ -6,15 +6,11 @@ Draw a 2D floorplan and navigate it in 3D mode.
 ![javascript](https://img.shields.io/badge/javascript-ES6-fbde34.svg)
 ![react-version](https://img.shields.io/badge/react%20version-15.0.0%20or%20later-61dafb.svg)
 
-## Features
-- Fully customizable catalog
-- 3D realtime view
-- Pan & zoom support
-- ES6 syntax
-
 ## Demo
 
 [https://cvdlab.github.io/react-planner](https://cvdlab.github.io/react-planner)
+
+[![react-planner](https://raw.githubusercontent.com/cvdlab/react-planner/master/preview.png)](https://cvdlab.github.io/react-planner)
 
 
 ## Usage
