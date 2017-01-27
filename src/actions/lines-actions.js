@@ -24,44 +24,44 @@ export function selectToolDrawingLine(sceneComponentType) {
   }
 }
 
-export function beginDrawingLine(layerID, x, y) {
+export function beginDrawingLine(layerID, x, y, detectSnap) {
   return {
     type: BEGIN_DRAWING_LINE,
-    layerID, x, y
+    layerID, x, y, detectSnap
   }
 }
 
-export function updateDrawingLine(x, y) {
+export function updateDrawingLine(x, y, detectSnap) {
   return {
     type: UPDATE_DRAWING_LINE,
-    x, y
+    x, y, detectSnap
   }
 }
 
-export function endDrawingLine(x, y) {
+export function endDrawingLine(x, y, detectSnap) {
   return {
     type: END_DRAWING_LINE,
-    x, y
+    x, y, detectSnap
   }
 }
 
-export function beginDraggingLine(layerID, lineID, x, y) {
+export function beginDraggingLine(layerID, lineID, x, y, detectSnap) {
   return {
     type: BEGIN_DRAGGING_LINE,
-    layerID, lineID, x, y
+    layerID, lineID, x, y, detectSnap
   }
 }
 
-export function updateDraggingLine(x, y) {
+export function updateDraggingLine(x, y, detectSnap) {
   return {
     type: UPDATE_DRAGGING_LINE,
-    x, y
+    x, y, detectSnap
   }
 }
 
-export function endDraggingLine(x, y) {
+export function endDraggingLine(x, y, detectSnap) {
   return {
     type: END_DRAGGING_LINE,
-    x, y
+    x, y, detectSnap
   }
 }

@@ -13,20 +13,20 @@ import {detectAndUpdateAreas, removeLine, addLineAvoidingIntersections, mergeEqu
 export default function (state, action) {
   switch (action.type) {
     case BEGIN_DRAGGING_VERTEX:
-      return beginDraggingVertex(state, action.layerID, action.vertexID, action.x, action.y);
+      return beginDraggingVertex(state, action.layerID, action.vertexID, action.x, action.y, action.detectSnap);
 
     case UPDATE_DRAGGING_VERTEX:
-      return updateDraggingVertex(state, action.x, action.y);
+      return updateDraggingVertex(state, action.x, action.y, action.detectSnap);
 
     case END_DRAGGING_VERTEX:
-      return endDraggingVertex(state, action.x, action.y);
+      return endDraggingVertex(state, action.x, action.y, action.detectSnap);
 
     default:
       return state;
   }
 }
 
-function beginDraggingVertex(state, layerID, vertexID, x, y) {
+function beginDraggingVertex(state, layerID, vertexID, x, y, detectSnap) {
 
   let snapElements = sceneSnapElements(state.scene);
 
@@ -39,10 +39,14 @@ function beginDraggingVertex(state, layerID, vertexID, x, y) {
   });
 }
 
-function updateDraggingVertex(state, x, y) {
+function updateDraggingVertex(state, x, y, detectSnap) {
   let {draggingSupport, snapElements, scene} = state;
-  let snap = nearestSnap(snapElements, x, y);
-  if (snap) ({x, y} = snap.point);
+
+  let snap = null;
+  if(detectSnap) {
+    snap = nearestSnap(snapElements, x, y);
+    if (snap) ({x, y} = snap.point);
+  }
 
   let layerID = draggingSupport.get('layerID');
   let vertexID = draggingSupport.get('vertexID');
@@ -52,7 +56,7 @@ function updateDraggingVertex(state, x, y) {
   });
 }
 
-function endDraggingVertex(state, x, y) {
+function endDraggingVertex(state, x, y, detectSnap) {
   let catalog = state.catalog;
 
   let {draggingSupport} = state;
@@ -61,7 +65,7 @@ function endDraggingVertex(state, x, y) {
   let lineIDs = state.scene.layers.get(layerID).vertices.get(vertexID).lines;
 
  /** TODO: remove this **/
-  state = updateDraggingVertex(state, x, y);
+  state = updateDraggingVertex(state, x, y, detectSnap);
   let scene = state.scene.updateIn(['layers', layerID], layer => mergeEqualsVertices(layer, vertexID));
 
   return state.merge({
