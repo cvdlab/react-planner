@@ -36,22 +36,22 @@ export default function (state, action) {
       return selectToolDrawingLine(state, action.sceneComponentType);
 
     case BEGIN_DRAWING_LINE:
-      return beginDrawingLine(state, action.layerID, action.x, action.y);
+      return beginDrawingLine(state, action.layerID, action.x, action.y, action.detectSnap);
 
     case UPDATE_DRAWING_LINE:
-      return updateDrawingLine(state, action.x, action.y);
+      return updateDrawingLine(state, action.x, action.y, action.detectSnap);
 
     case END_DRAWING_LINE:
-      return endDrawingLine(state, action.x, action.y);
+      return endDrawingLine(state, action.x, action.y, action.detectSnap);
 
     case BEGIN_DRAGGING_LINE:
-      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y);
+      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y, action.detectSnap);
 
     case UPDATE_DRAGGING_LINE:
-      return updateDraggingLine(state, action.x, action.y);
+      return updateDraggingLine(state, action.x, action.y, action.detectSnap);
 
     case END_DRAGGING_LINE:
-      return endDraggingLine(state, action.x, action.y);
+      return endDraggingLine(state, action.x, action.y, action.detectSnap);
 
     case SELECT_LINE:
       return selectLine(state, action.layerID, action.lineID);
@@ -71,21 +71,24 @@ function selectToolDrawingLine(state, sceneComponentType) {
 }
 
 /** lines operations **/
-function beginDrawingLine(state, layerID, x, y) {
+function beginDrawingLine(state, layerID, x, y, detectSnap) {
   let catalog = state.catalog;
 
-  //calculate snap and overwrite coords if needed
   let snapElements = sceneSnapElements(state.scene);
-  let snap = nearestSnap(snapElements, x, y);
-  if (snap) ({x, y} = snap.point);
+  let snap = null;
 
-  snapElements = snapElements.withMutations(snapElements => {
-    let a, b, c;
-    ({a, b, c} = Geometry.horizontalLine(y));
-    addLineSnap(snapElements, a, b, c, 10, 3, null);
-    ({a, b, c} = Geometry.verticalLine(x));
-    addLineSnap(snapElements, a, b, c, 10, 3, null);
-  });
+  if(detectSnap) {
+    snap = nearestSnap(snapElements, x, y);
+    if (snap) ({x, y} = snap.point);
+
+    snapElements = snapElements.withMutations(snapElements => {
+      let a, b, c;
+      ({a, b, c} = Geometry.horizontalLine(y));
+      addLineSnap(snapElements, a, b, c, 10, 3, null);
+      ({a, b, c} = Geometry.verticalLine(x));
+      addLineSnap(snapElements, a, b, c, 10, 3, null);
+    });
+  }
 
   let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
@@ -105,13 +108,15 @@ function beginDrawingLine(state, layerID, x, y) {
   });
 }
 
-function updateDrawingLine(state, x, y) {
+function updateDrawingLine(state, x, y, detectSnap) {
 
   let catalog = state.catalog;
 
-  //calculate snap and overwrite coords if needed
-  let snap = nearestSnap(state.snapElements, x, y);
-  if (snap) ({x, y} = snap.point);
+  let snap = null;
+  if(detectSnap) {
+    snap = nearestSnap(state.snapElements, x, y);
+    if (snap) ({x, y} = snap.point);
+  }
 
   let layerID = state.getIn(['drawingSupport', 'layerID']);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
@@ -128,12 +133,13 @@ function updateDrawingLine(state, x, y) {
   });
 }
 
-function endDrawingLine(state, x, y) {
+function endDrawingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
 
-  //calculate snap and overwrite coords if needed
-  let snap = nearestSnap(state.snapElements, x, y);
-  if (snap) ({x, y} = snap.point);
+  if(detectSnap) {
+    let snap = nearestSnap(state.snapElements, x, y);
+    if (snap) ({x, y} = snap.point);
+  }
 
   let layerID = state.getIn(['drawingSupport', 'layerID']);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
@@ -158,7 +164,7 @@ function endDrawingLine(state, x, y) {
   });
 }
 
-function beginDraggingLine(state, layerID, lineID, x, y) {
+function beginDraggingLine(state, layerID, lineID, x, y, detectSnap) {
 
   let catalog = state.catalog;
 
@@ -185,7 +191,7 @@ function beginDraggingLine(state, layerID, lineID, x, y) {
   })
 }
 
-function updateDraggingLine(state, x, y) {
+function updateDraggingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
 
   let draggingSupport = state.draggingSupport;
@@ -202,8 +208,11 @@ function updateDraggingLine(state, x, y) {
 
 
   let activeSnapElement = null;
-  let curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y);
-  let curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y);
+  let curSnap0 = null, curSnap1 = null;
+  if(detectSnap) {
+    curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y);
+    curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y);
+  }
 
   let deltaX = 0, deltaY = 0;
   if (curSnap0 && curSnap1) {
@@ -303,7 +312,7 @@ function updateDraggingLine(state, x, y) {
 //   });
 // }
 
-function endDraggingLine(state, x, y) {
+function endDraggingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
 
   return state.withMutations(state => {
