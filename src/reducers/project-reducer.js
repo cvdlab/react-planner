@@ -168,10 +168,14 @@ export function rollback(state) {
   return state.merge({
     mode: MODE_IDLE,
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: state.sceneHistory.push(scene),
+    snapElements: new List(),
+    activeSnapElement: null,
+    drawingSupport: new Map(),
+    draggingSupport: new Map(),
+    rotatingSupport: new Map(),
   });
 }
-
 
 function setProjectProperties(state, properties) {
   let scene = state.scene.merge(properties);
@@ -189,6 +193,6 @@ function openProjectConfigurator(state) {
   });
 }
 
-function initCatalog(state, catalog){
+function initCatalog(state, catalog) {
   return state.set('catalog', new Catalog(catalog));
 }
