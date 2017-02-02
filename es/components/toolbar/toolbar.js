@@ -12,7 +12,6 @@ import IconUndo from 'react-icons/lib/md/undo';
 import IconConfigure from 'react-icons/lib/md/settings';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
-import ToolBarScreenshotButton from './toolbar-screenshot-button';
 
 import If from "../../utils/react-if";
 
@@ -166,11 +165,6 @@ export default function Toolbar(_ref, _ref2) {
           return projectActions.openProjectConfigurator();
         } },
       React.createElement(IconConfigure, null)
-    ),
-    React.createElement(
-      If,
-      { condition: [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) },
-      React.createElement(ToolBarScreenshotButton, { state: state })
     ),
     toolbarButtons.map(function (Component, index) {
       return React.createElement(Component, { mode: mode, key: index });

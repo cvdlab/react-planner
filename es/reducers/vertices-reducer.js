@@ -7,20 +7,20 @@ import { detectAndUpdateAreas, removeLine, addLineAvoidingIntersections, mergeEq
 export default function (state, action) {
   switch (action.type) {
     case BEGIN_DRAGGING_VERTEX:
-      return beginDraggingVertex(state, action.layerID, action.vertexID, action.x, action.y);
+      return beginDraggingVertex(state, action.layerID, action.vertexID, action.x, action.y, action.detectSnap);
 
     case UPDATE_DRAGGING_VERTEX:
-      return updateDraggingVertex(state, action.x, action.y);
+      return updateDraggingVertex(state, action.x, action.y, action.detectSnap);
 
     case END_DRAGGING_VERTEX:
-      return endDraggingVertex(state, action.x, action.y);
+      return endDraggingVertex(state, action.x, action.y, action.detectSnap);
 
     default:
       return state;
   }
 }
 
-function beginDraggingVertex(state, layerID, vertexID, x, y) {
+function beginDraggingVertex(state, layerID, vertexID, x, y, detectSnap) {
 
   var snapElements = sceneSnapElements(state.scene);
 
@@ -33,19 +33,24 @@ function beginDraggingVertex(state, layerID, vertexID, x, y) {
   });
 }
 
-function updateDraggingVertex(state, x, y) {
+function updateDraggingVertex(state, x, y, detectSnap) {
   var draggingSupport = state.draggingSupport,
       snapElements = state.snapElements,
       scene = state.scene;
 
-  var snap = nearestSnap(snapElements, x, y);
-  if (snap) {
-    ;
 
-    var _snap$point = snap.point;
-    x = _snap$point.x;
-    y = _snap$point.y;
-  }var layerID = draggingSupport.get('layerID');
+  var snap = null;
+  if (detectSnap) {
+    snap = nearestSnap(snapElements, x, y);
+    if (snap) {
+      ;
+      var _snap$point = snap.point;
+      x = _snap$point.x;
+      y = _snap$point.y;
+    }
+  }
+
+  var layerID = draggingSupport.get('layerID');
   var vertexID = draggingSupport.get('vertexID');
   return state.merge({
     activeSnapElement: snap ? snap.snap : null,
@@ -53,7 +58,7 @@ function updateDraggingVertex(state, x, y) {
   });
 }
 
-function endDraggingVertex(state, x, y) {
+function endDraggingVertex(state, x, y, detectSnap) {
   var catalog = state.catalog;
 
   var _state = state,
@@ -64,7 +69,7 @@ function endDraggingVertex(state, x, y) {
   var lineIDs = state.scene.layers.get(layerID).vertices.get(vertexID).lines;
 
   /** TODO: remove this **/
-  state = updateDraggingVertex(state, x, y);
+  state = updateDraggingVertex(state, x, y, detectSnap);
   var scene = state.scene.updateIn(['layers', layerID], function (layer) {
     return mergeEqualsVertices(layer, vertexID);
   });

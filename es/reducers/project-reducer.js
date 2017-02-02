@@ -154,7 +154,12 @@ export function rollback(state) {
   return state.merge({
     mode: MODE_IDLE,
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: state.sceneHistory.push(scene),
+    snapElements: new List(),
+    activeSnapElement: null,
+    drawingSupport: new Map(),
+    draggingSupport: new Map(),
+    rotatingSupport: new Map()
   });
 }
 

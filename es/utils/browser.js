@@ -16,21 +16,6 @@ export function browserDownload(json) {
   document.body.removeChild(fileOutputLink);
 }
 
-export function imageBrowserDownload(imageUri) {
-  var fileOutputLink = document.createElement('a');
-
-  var filename = "output" + Date.now() + ".png";
-  filename = window.prompt("Insert output filename", filename);
-  if (!filename) return;
-
-  fileOutputLink.setAttribute('download', filename);
-  fileOutputLink.href = imageUri;
-  fileOutputLink.style.display = 'none';
-  document.body.appendChild(fileOutputLink);
-  fileOutputLink.click();
-  document.body.removeChild(fileOutputLink);
-}
-
 export function browserUpload() {
   return new Promise(function (resolve, reject) {
 

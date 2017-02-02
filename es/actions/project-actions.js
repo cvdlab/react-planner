@@ -1,4 +1,4 @@
-import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG, SAVE_SCREENSHOT } from '../constants';
+import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG } from '../constants';
 
 export function loadProject(sceneJSON) {
   return {
@@ -79,11 +79,5 @@ export function initCatalog(catalog) {
   return {
     type: INIT_CATALOG,
     catalog: catalog
-  };
-}
-
-export function saveScreenshot() {
-  return {
-    type: SAVE_SCREENSHOT
   };
 }
