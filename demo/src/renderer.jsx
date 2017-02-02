@@ -7,6 +7,8 @@ import {Provider} from 'react-redux';
 
 import MyCatalog from './catalog/mycatalog';
 
+import ToolbarScreenshotButton from './ui/toolbar-screenshot-button';
+
 import {
   Models as PlannerModels,
   reducer as PlannerReducer,
@@ -37,6 +39,10 @@ let plugins = [
   PlannerPlugins.ConsoleDebugger(),
 ];
 
+let toolbarButtons = [
+  ToolbarScreenshotButton,
+];
+
 //render
 ReactDOM.render(
   (
@@ -44,7 +50,7 @@ ReactDOM.render(
       <ContainerDimensions>
         {({width, height}) =>
           <ReactPlanner catalog={MyCatalog} width={width} height={height} plugins={plugins}
-                        stateExtractor={state => state.get('react-planner')}
+                        toolbarButtons={toolbarButtons} stateExtractor={state => state.get('react-planner')}
           />
         }
       </ContainerDimensions>

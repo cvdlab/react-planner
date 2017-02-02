@@ -10,7 +10,6 @@ import IconUndo from 'react-icons/lib/md/undo'
 import IconConfigure from 'react-icons/lib/md/settings'
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
-import ToolBarScreenshotButton from './toolbar-screenshot-button';
 
 import If from "../../utils/react-if";
 
@@ -130,11 +129,6 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
                      onClick={event => projectActions.openProjectConfigurator()}>
         <IconConfigure />
       </ToolbarButton>
-
-      <If condition={[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)}>
-        <ToolBarScreenshotButton state={state}/>
-      </If>
-
       {toolbarButtons.map((Component, index) => <Component mode={mode} key={index}/>)}
     </aside>
   )
