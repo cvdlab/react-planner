@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 import IconSave from 'react-icons/lib/md/camera-alt';
 import {ToolbarButton} from 'react-planner';
 
-export default function ToolbarScreenshotButton({mode}, {translator, projectActions}) {
+export default function ToolbarScreenshotButton({mode}, {translator}) {
 
   let imageBrowserDownload = imageUri => {
     let fileOutputLink = document.createElement('a');
@@ -24,7 +24,6 @@ export default function ToolbarScreenshotButton({mode}, {translator, projectActi
     event.preventDefault();
     let canvas = document.getElementsByTagName('canvas')[0];
     imageBrowserDownload(canvas.toDataURL());
-    projectActions.saveScreenshot();
   };
 
   if (["MODE_3D_FIRST_PERSON", "MODE_3D_VIEW"].includes(mode)){
@@ -44,6 +43,5 @@ ToolbarScreenshotButton.propTypes = {
 };
 
 ToolbarScreenshotButton.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
   translator: PropTypes.object.isRequired,
 };
