@@ -1,5 +1,5 @@
 import {List, Seq, Map, fromJS} from 'immutable';
-import {Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item} from '../models';
+import {Layer, Vertex, Line, Hole, Area, ElementsSet, Item} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';

@@ -11,10 +11,10 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
   let length = value.get('length');
   let _length, _unit;
 
-  if(value.has('_length') && value.has('_unit')){
+  if (value.has('_length') && value.has('_unit')) {
     _length = value.get('_length');
-     _unit = value.get('_unit');
-  }else{
+    _unit = value.get('_unit');
+  } else {
     _length = length;
     _unit = catalog.unit;
   }

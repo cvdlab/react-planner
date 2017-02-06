@@ -45,7 +45,7 @@ export default {
     let mesh = new Mesh(geometry, material);
 
     if (element.selected) {
-      let box = new BoxHelper(mesh, '#000000');
+      let box = new BoxHelper(mesh, '#000');
       box.material.linewidth = 1;
       box.material.depthTest = false;
       box.renderOrder = 1000;
