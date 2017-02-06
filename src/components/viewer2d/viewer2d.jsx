@@ -21,7 +21,6 @@ function mode2Tool(mode) {
 
 function mode2PointerEvents(mode) {
   switch (mode) {
-    case constants.MODE_WAITING_DRAWING_LINE:
     case constants.MODE_DRAWING_LINE:
     case constants.MODE_DRAWING_HOLE:
     case constants.MODE_DRAWING_ITEM:
@@ -47,8 +46,11 @@ function mode2Cursor(mode) {
     case constants.MODE_ROTATING_ITEM:
       return {cursor: 'ew-resize'};
 
-    default:
+    case constants.MODE_WAITING_DRAWING_LINE:
+    case constants.MODE_DRAWING_LINE:
       return {cursor: 'crosshair'};
+    default:
+      return {cursor: 'default'};
   }
 }
 
