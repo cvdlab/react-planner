@@ -3,6 +3,8 @@ import * as Three from 'three';
 import {loadObjWithMaterial} from '../../utils/load-obj';
 import path from 'path';
 
+let cached3DDoor = null;
+
 export default {
   name: "door",
   prototype: "holes",
@@ -121,12 +123,19 @@ export default {
       return object;
     };
 
+    if(cached3DDoor) {
+      return Promise.resolve(onLoadItem(cached3DDoor.clone()));
+    }
+
     let mtl = require('./door.mtl');
     let obj = require('./door.obj');
     let img = require('./texture.png');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
-      .then(object => onLoadItem(object))
+      .then(object => {
+        cached3DDoor = object;
+        return onLoadItem(cached3DDoor.clone())
+      })
 
   }
 };

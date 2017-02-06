@@ -3,6 +3,8 @@ import * as Three from 'three';
 import {loadObjWithMaterial} from '../../utils/load-obj';
 import path from 'path';
 
+let cached3DWindow = null;
+
 export default {
   name: "sash window",
   prototype: "holes",
@@ -92,11 +94,18 @@ export default {
       return object;
     };
 
+    if(cached3DWindow) {
+      return Promise.resolve(onLoadItem(cached3DWindow.clone()));
+    }
+
     let mtl = require('./sash-window.mtl');
     let obj = require('./sash-window.obj');
     let img = require('./texture.png');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
-      .then(object => onLoadItem(object))
+      .then(object => {
+        cached3DWindow = object;
+        return onLoadItem(cached3DWindow.clone());
+      })
   }
 };
