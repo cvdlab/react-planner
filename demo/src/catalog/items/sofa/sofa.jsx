@@ -78,13 +78,13 @@ export default {
       return object;
     };
 
-    let mtl = require('./sofa.mtl');
-    let obj = require('./sofa.obj');
-    let img = require('./texture.jpg');
-
     if(cached3DSofa) {
       return Promise.resolve(onLoadItem(cached3DSofa.clone()));
     }
+
+    let mtl = require('./sofa.mtl');
+    let obj = require('./sofa.obj');
+    let img = require('./texture.jpg');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
       .then(object => {

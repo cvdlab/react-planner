@@ -4,6 +4,8 @@ import {loadObjWithMaterial} from '../../utils/load-obj';
 import React from 'react';
 import convert from 'convert-units';
 
+let cached3DTV = null;
+
 export default {
   name: "tv",
   prototype: "items",
@@ -86,11 +88,19 @@ export default {
       return object;
     };
 
+
+    if(cached3DTV) {
+      return Promise.resolve(onLoadItem(cached3DTV.clone()));
+    }
+
     let mtl = require('./tv.mtl');
     let obj = require('./tv.obj');
 
     return loadObjWithMaterial(mtl, obj, '')
-      .then(object => onLoadItem(object))
+      .then(object => {
+        cached3DTV = object;
+        return onLoadItem(cached3DTV.clone())
+      })
   }
 
 };
