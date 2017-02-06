@@ -5,9 +5,7 @@ import convert from 'convert-units';
 
 import React from 'react';
 
-let rectSVG = React.createFactory('rect');
-let gSVG = React.createFactory('g');
-let textSVG = React.createFactory('text');
+let cached3DSofa = null;
 
 export default {
   name: "sofa",
@@ -77,7 +75,6 @@ export default {
       object.position.y -= center[1] - (boundingBox.max.y - boundingBox.min.y) / 2;
       object.position.z -= center[2];
 
-
       return object;
     };
 
@@ -85,8 +82,14 @@ export default {
     let obj = require('./sofa.obj');
     let img = require('./texture.jpg');
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
-      .then(object => onLoadItem(object))
-  }
+    if(cached3DSofa) {
+      return Promise.resolve(onLoadItem(cached3DSofa.clone()));
+    }
 
+    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+      .then(object => {
+        cached3DSofa = object;
+        return onLoadItem(cached3DSofa.clone())
+      })
+  }
 };
