@@ -158,6 +158,29 @@ function updateDraggingHole(state, x, y) {
   ({x, y} = snap.point);
 
   let offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+
+  let minVertex;
+
+  if (v0.x < v1.x) {
+    minVertex = v0
+  } else {
+    if (v0.x > v1.x) {
+      minVertex = v1;
+    } else {
+      minVertex = v0.y > v1.y ? v0 : v1;
+    }
+  }
+
+  console.log(x, y, x < minVertex.x && y <minVertex.y, minVertex);
+
+  if(x < minVertex.x && y <minVertex.y) {
+    // NON VA BENE DEVO IDENTIFICARE UN CASO IN CUI L'OFFSET PUÒ ESSERE 1
+    offset = 0;
+  } else {
+    offset = Math.max(0, offset);
+    offset = Math.min(1, offset);
+  }
+
   hole = hole.set('offset', offset);
 
   return state.merge({
