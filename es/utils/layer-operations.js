@@ -3,7 +3,7 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 import { List, Seq, Map, fromJS } from 'immutable';
-import { Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item } from '../models';
+import { Layer, Vertex, Line, Hole, Area, ElementsSet, Item } from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
