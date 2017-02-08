@@ -157,29 +157,94 @@ function updateDraggingHole(state, x, y) {
 
   ({x, y} = snap.point);
 
-  let offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+  // let offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
 
-  let minVertex;
+  // I need min and max vertices on this line segment
+  let minVertex, maxVertex;
 
   if (v0.x < v1.x) {
-    minVertex = v0
+    minVertex = v0;
+    maxVertex = v1;
   } else {
     if (v0.x > v1.x) {
       minVertex = v1;
+      maxVertex = v0;
     } else {
-      minVertex = v0.y > v1.y ? v0 : v1;
+      if (v0.y < v1.y) {
+        minVertex = v0;
+        maxVertex = v1;
+      } else {
+        minVertex = v1;
+        maxVertex = v0;
+      }
     }
   }
 
-  console.log(x, y, x < minVertex.x && y <minVertex.y, minVertex);
+  console.log(x, y, x < minVertex.x && y < minVertex.y, minVertex);
 
-  if(x < minVertex.x && y <minVertex.y) {
-    // NON VA BENE DEVO IDENTIFICARE UN CASO IN CUI L'OFFSET PUÒ ESSERE 1
+  console.log("minVertex = ", minVertex === v0 ? `v0 = (${v0.x},${v0.y}) vs ${v1.x},${v1.y}` : `v1 = (${v1.x},${v1.y}) vs ${v0.x},${v0.y}`);
+
+
+  // DEVO VERIFICARE NON X E Y MA SEMPLICEMENTE SE IL VERTICE VIENE PRIMA DELL'ALTRO (MAGARI y NON È MINORE O VICEVERSA)
+
+  // Now I need to verify if the snap vertex (with coordinates x and y) is on the line segment
+
+  let offset;
+
+  offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+
+
+  if (x < minVertex.x) {
+    //Snap point is previous the line
     offset = 0;
   } else {
-    offset = Math.max(0, offset);
-    offset = Math.min(1, offset);
+    if (x === minVertex.x && v0.x === v1.x) {
+      // I need to control if I am after a vertical line
+      if (y > maxVertex.y) {
+        offset = 1;
+      } else if (y < minVertex.y) {
+        offset = 0;
+      } else {
+        // The snap point is on the line
+        offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+      }
+    } else {
+      // The snap point is on the line or after
+      if (x > maxVertex.x) {
+        offset = 1;
+      } else {
+        // The snap point is on the line
+        offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+      }
+    }
   }
+
+  // if (x < minVertex.x) {
+  //   offset = 0;
+  // } else if (x === minVertex.x) {
+  //   if (y < minVertex.y) {
+  //     offset = 0;
+  //   }
+  // } else {
+  //   // Vertex is on the line or after
+  //   if (x > maxVertex.x) {
+  //     offset = 1;
+  //   } else if (x === maxVertex.x) {
+  //     if (y > maxVertex.y) {
+  //       offset = 1;
+  //     }
+  //   }
+  // }
+
+  // if (x < minVertex.x && y < minVertex.y) {
+  //   offset = 0;
+  // } else if (x > maxVertex.x && y > maxVertex.y) {
+  //   offset = 1;
+  // } else {
+  //   // offset = Math.max(0, offset);
+  //   offset = Math.min(1, offset);
+  //   offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+  // }
 
   hole = hole.set('offset', offset);
 
