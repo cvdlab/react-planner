@@ -178,8 +178,6 @@ function updateDraggingHole(state, x, y) {
     }
   }
 
-  console.log("minVertex = ", minVertex === v0 ? `v0 = (${v0.x},${v0.y}) vs ${v1.x},${v1.y}` : `v1 = (${v1.x},${v1.y}) vs ${v0.x},${v0.y}`);
-
   // Now I need to verify if the snap vertex (with coordinates x and y) is on the line segment
 
   let offset;
@@ -210,6 +208,24 @@ function updateDraggingHole(state, x, y) {
   }
 
   // TODO: Improve range for offset
+  let width = hole.properties.get('width').get('length');
+  let lineLength = Geometry.distanceFromTwoPoints(v0.x, v0.y, v1.x, v1.y);
+  let alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
+
+  let cos = Math.cos(alpha);
+  let sin = Math.sin(alpha);
+
+  cos = cos < 0.0000001 ? 0 : cos;
+  sin = sin < 0.0000001 ? 0 : sin;
+
+  let leftVertexHole = {
+    x: lineLength * offset * cos - width / 2 * cos + minVertex.x,
+    y: lineLength * offset * sin - width / 2 * sin + minVertex.y
+  };
+
+  console.log(width, lineLength, alpha * 180 / Math.PI, leftVertexHole);
+
+  // let minXPoint =
 
   hole = hole.set('offset', offset);
 
