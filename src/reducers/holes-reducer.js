@@ -157,8 +157,6 @@ function updateDraggingHole(state, x, y) {
 
   ({x, y} = snap.point);
 
-  // let offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
-
   // I need min and max vertices on this line segment
   let minVertex, maxVertex;
 
@@ -180,19 +178,11 @@ function updateDraggingHole(state, x, y) {
     }
   }
 
-  console.log(x, y, x < minVertex.x && y < minVertex.y, minVertex);
-
   console.log("minVertex = ", minVertex === v0 ? `v0 = (${v0.x},${v0.y}) vs ${v1.x},${v1.y}` : `v1 = (${v1.x},${v1.y}) vs ${v0.x},${v0.y}`);
-
-
-  // DEVO VERIFICARE NON X E Y MA SEMPLICEMENTE SE IL VERTICE VIENE PRIMA DELL'ALTRO (MAGARI y NON È MINORE O VICEVERSA)
 
   // Now I need to verify if the snap vertex (with coordinates x and y) is on the line segment
 
   let offset;
-
-  offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
-
 
   if (x < minVertex.x) {
     //Snap point is previous the line
@@ -219,32 +209,7 @@ function updateDraggingHole(state, x, y) {
     }
   }
 
-  // if (x < minVertex.x) {
-  //   offset = 0;
-  // } else if (x === minVertex.x) {
-  //   if (y < minVertex.y) {
-  //     offset = 0;
-  //   }
-  // } else {
-  //   // Vertex is on the line or after
-  //   if (x > maxVertex.x) {
-  //     offset = 1;
-  //   } else if (x === maxVertex.x) {
-  //     if (y > maxVertex.y) {
-  //       offset = 1;
-  //     }
-  //   }
-  // }
-
-  // if (x < minVertex.x && y < minVertex.y) {
-  //   offset = 0;
-  // } else if (x > maxVertex.x && y > maxVertex.y) {
-  //   offset = 1;
-  // } else {
-  //   // offset = Math.max(0, offset);
-  //   offset = Math.min(1, offset);
-  //   offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
-  // }
+  // TODO: Improve range for offset
 
   hole = hole.set('offset', offset);
 
