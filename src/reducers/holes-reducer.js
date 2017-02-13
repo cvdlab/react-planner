@@ -158,74 +158,93 @@ function updateDraggingHole(state, x, y) {
   ({x, y} = snap.point);
 
   // I need min and max vertices on this line segment
-  let minVertex, maxVertex;
+  let minVertex = Geometry.minVertex(v0, v1);
+  let maxVertex = Geometry.maxVertex(v0, v1);
 
-  if (v0.x < v1.x) {
-    minVertex = v0;
-    maxVertex = v1;
-  } else {
-    if (v0.x > v1.x) {
-      minVertex = v1;
-      maxVertex = v0;
-    } else {
-      if (v0.y < v1.y) {
-        minVertex = v0;
-        maxVertex = v1;
-      } else {
-        minVertex = v1;
-        maxVertex = v0;
-      }
-    }
-  }
+  // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
+
+  let width = hole.properties.get('width').get('length');
+  let lineLength = Geometry.distanceFromTwoPoints(v0.x, v0.y, v1.x, v1.y);
+  let alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
+
+  let cosWithThreshold = (alpha) => {
+    let cos = Math.cos(alpha);
+    return cos < 0.0000001 ? 0 : cos;
+  };
+
+  let sinWithThreshold = (alpha) => {
+    let sin = Math.sin(alpha);
+    return sin < 0.0000001 ? 0 : sin;
+  };
+
+  let cosAlpha = cosWithThreshold(alpha);
+  let sinAlpha = sinWithThreshold(alpha);
+
+  let minLeftVertexHole = {
+    x: minVertex.x + width / 2 * cosAlpha,
+    y: minVertex.y + width / 2 * sinAlpha
+  };
+
+  let maxRightVertexHole = {
+    x: minVertex.x + lineLength * cosAlpha - width / 2 * cosAlpha,
+    y: minVertex.y + lineLength * sinAlpha - width / 2 * sinAlpha
+  };
+
+  let leftVertexHole = {
+    x: lineLength * offset * cosAlpha - width / 2 * cosAlpha + minVertex.x,
+    y: lineLength * offset * sinAlpha - width / 2 * sinAlpha + minVertex.y
+  };
+
+  let rightVertexHole = {
+    x: lineLength * offset * cosAlpha + width / 2 * cosAlpha + minVertex.x,
+    y: lineLength * offset * sinAlpha + width / 2 * sinAlpha + minVertex.y
+  };
+
 
   // Now I need to verify if the snap vertex (with coordinates x and y) is on the line segment
 
   let offset;
 
-  if (x < minVertex.x) {
-    //Snap point is previous the line
-    offset = 0;
+  if (x < minLeftVertexHole.x) {
+    // Snap point is previous the the line
+    offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+      maxVertex.x, maxVertex.y,
+      minLeftVertexHole.x, minLeftVertexHole.y);
   } else {
-    if (x === minVertex.x && v0.x === v1.x) {
-      // I need to control if I am after a vertical line
-      if (y > maxVertex.y) {
-        offset = 1;
-      } else if (y < minVertex.y) {
-        offset = 0;
+    // Snap point is after the line or on the line
+    if (x > maxRightVertexHole.x) {
+      offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+        maxVertex.x, maxVertex.y,
+        maxRightVertexHole.x, maxRightVertexHole.y);
+    } else if (x === minLeftVertexHole.x && x === maxRightVertexHole.x) {
+      // I am on a vertial line, I need to check y coordinates
+      if (y < minLeftVertexHole.y) {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          minLeftVertexHole.x, minLeftVertexHole.y);
+
+        offset = minVertex === v0? offset : 1-offset;
+
+      } else if (y > maxRightVertexHole.y) {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          maxRightVertexHole.x, maxRightVertexHole.y);
+
+        offset = minVertex === v0? offset : 1-offset;
+
       } else {
-        // The snap point is on the line
-        offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          x, y);
+
+        offset = minVertex === v0? offset : 1-offset;
       }
     } else {
-      // The snap point is on the line or after
-      if (x > maxVertex.x) {
-        offset = 1;
-      } else {
-        // The snap point is on the line
-        offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
-      }
+      offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+        maxVertex.x, maxVertex.y,
+        x, y);
     }
   }
-
-  // TODO: Improve range for offset
-  let width = hole.properties.get('width').get('length');
-  let lineLength = Geometry.distanceFromTwoPoints(v0.x, v0.y, v1.x, v1.y);
-  let alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
-
-  let cos = Math.cos(alpha);
-  let sin = Math.sin(alpha);
-
-  cos = cos < 0.0000001 ? 0 : cos;
-  sin = sin < 0.0000001 ? 0 : sin;
-
-  let leftVertexHole = {
-    x: lineLength * offset * cos - width / 2 * cos + minVertex.x,
-    y: lineLength * offset * sin - width / 2 * sin + minVertex.y
-  };
-
-  console.log(width, lineLength, alpha * 180 / Math.PI, leftVertexHole);
-
-  // let minXPoint =
 
   hole = hole.set('offset', offset);
 
