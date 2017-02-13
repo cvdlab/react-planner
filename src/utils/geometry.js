@@ -1,3 +1,15 @@
+export function compareVertices(v0, v1) {
+  return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x
+}
+
+export function minVertex(v0,v1) {
+  return compareVertices(v0,v1) > 0 ? v1: v0;
+}
+
+export function maxVertex(v0,v1) {
+  return compareVertices(v0,v1) > 0 ? v0: v1;
+}
+
 export function distanceFromTwoPoints(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow((x1 - x0), 2) + Math.pow((y1 - y0), 2));
 }
