@@ -217,27 +217,27 @@ function updateDraggingHole(state, x, y) {
         maxVertex.x, maxVertex.y,
         maxRightVertexHole.x, maxRightVertexHole.y);
     } else if (x === minLeftVertexHole.x && x === maxRightVertexHole.x) {
-      // I am on a vertial line, I need to check y coordinates
+      // I am on a vertical line, I need to check y coordinates
       if (y < minLeftVertexHole.y) {
         offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
           maxVertex.x, maxVertex.y,
           minLeftVertexHole.x, minLeftVertexHole.y);
 
-        offset = minVertex === v0? offset : 1-offset;
+        offset = minVertex === v0 ? offset : 1 - offset;
 
       } else if (y > maxRightVertexHole.y) {
         offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
           maxVertex.x, maxVertex.y,
           maxRightVertexHole.x, maxRightVertexHole.y);
 
-        offset = minVertex === v0? offset : 1-offset;
+        offset = minVertex === v0 ? offset : 1 - offset;
 
       } else {
         offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
           maxVertex.x, maxVertex.y,
           x, y);
 
-        offset = minVertex === v0? offset : 1-offset;
+        offset = minVertex === v0 ? offset : 1 - offset;
       }
     } else {
       offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
