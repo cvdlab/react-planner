@@ -20,5 +20,5 @@ const BASE_STYLE = {
 };
 
 export default function FormSelect({children, style, ...rest}) {
-  return <select type="text" style={{...BASE_STYLE, style}} {...rest}>{children}</select>;
+  return <select type="text" style={{...BASE_STYLE, ...style}} {...rest}>{children}</select>;
 }
