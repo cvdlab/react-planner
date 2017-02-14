@@ -2,6 +2,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
+export function compareVertices(v0, v1) {
+  return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x;
+}
+
+export function minVertex(v0, v1) {
+  return compareVertices(v0, v1) > 0 ? v1 : v0;
+}
+
+export function maxVertex(v0, v1) {
+  return compareVertices(v0, v1) > 0 ? v0 : v1;
+}
+
 export function distanceFromTwoPoints(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
 }
