@@ -6,6 +6,7 @@ export const OPEN_CATALOG = 'OPEN_CATALOG';
 export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 export const UNSELECT_ALL = 'UNSELECT_ALL';
 export const SET_PROPERTIES = 'SET_PROPERTIES';
+export const SET_ATTRIBUTES = 'SET_ATTRIBUTES';
 export const REMOVE = 'REMOVE';
 export const UNDO = 'UNDO';
 export const ROLLBACK = 'ROLLBACK';

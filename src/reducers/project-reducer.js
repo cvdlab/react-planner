@@ -9,6 +9,7 @@ import {
   MODE_IDLE,
   UNSELECT_ALL,
   SET_PROPERTIES,
+  SET_ATTRIBUTES,
   REMOVE,
   UNDO,
   ROLLBACK,
@@ -24,12 +25,14 @@ import {
   removeHole,
   detectAndUpdateAreas,
   setProperties as setPropertiesOp,
+  setAttributes as setAttributesOp,
   select,
   unselect,
   unselectAll as unselectAllOp,
   removeItem,
   loadLayerFromJSON,
-  setPropertiesOnSelected
+  setPropertiesOnSelected,
+  setAttributesOnSelected
 } from '../utils/layer-operations';
 
 export default function (state, action) {
@@ -53,6 +56,9 @@ export default function (state, action) {
 
     case SET_PROPERTIES:
       return setProperties(state, action.properties);
+
+    case SET_ATTRIBUTES:
+      return setAttributes(state, action.attributes)
 
     case REMOVE:
       return remove(state);
@@ -95,6 +101,15 @@ function loadProject(state, sceneJSON) {
 function setProperties(state, properties) {
   let scene = state.scene;
   scene = scene.set('layers', scene.layers.map(layer => setPropertiesOnSelected(layer, properties)));
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
+}
+
+function setAttributes(state, attributes) {
+  let scene = state.scene;
+  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes)));
   return state.merge({
     scene,
     sceneHistory: state.sceneHistory.push(scene)

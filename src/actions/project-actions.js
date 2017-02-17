@@ -6,6 +6,7 @@ import {
   SELECT_TOOL_EDIT,
   UNSELECT_ALL,
   SET_PROPERTIES,
+  SET_ATTRIBUTES,
   REMOVE,
   UNDO,
   ROLLBACK,
@@ -56,6 +57,13 @@ export function setProperties(properties) {
   return {
     type: SET_PROPERTIES,
     properties
+  }
+}
+
+export function setAttributes(attributes) {
+  return {
+    type: SET_ATTRIBUTES,
+    attributes
   }
 }
 

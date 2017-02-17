@@ -2,9 +2,10 @@ import React, {PropTypes, Component} from 'react';
 import Panel from '../panel';
 import {Map, Seq, Iterable} from 'immutable';
 import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../../constants';
-import PropertiesEditor from './properties-editor';
+import ElementEditor from './element-editor';
+import If from '../../../utils/react-if';
 
-export default function PanelPropertiesEditor({state}, {translator}) {
+export default function PanelElementEditor({state}, {translator}) {
 
   let {scene, mode} = state;
 
@@ -12,8 +13,8 @@ export default function PanelPropertiesEditor({state}, {translator}) {
 
   let componentRenderer = (element, layer) =>
     <Panel key={element.id} name={translator.t("Properties: [{0}] {1}", element.type, element.id)}>
-      <div style={{padding: "5px 15px 5px 15px"}}>
-        <PropertiesEditor element={element} layer={layer} state={state}/>
+      <div style={{padding: "5px 15px"}}>
+        <ElementEditor element={element} layer={layer} state={state}/>
       </div>
     </Panel>;
 
@@ -30,10 +31,10 @@ export default function PanelPropertiesEditor({state}, {translator}) {
 
 }
 
-PanelPropertiesEditor.propTypes = {
+PanelElementEditor.propTypes = {
   state: PropTypes.object.isRequired,
 };
 
-PanelPropertiesEditor.contextTypes= {
+PanelElementEditor.contextTypes= {
   translator: PropTypes.object.isRequired
 };

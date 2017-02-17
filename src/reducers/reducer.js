@@ -24,6 +24,7 @@ export default function appReducer(state, action) {
     case constants.SELECT_TOOL_EDIT:
     case constants.UNSELECT_ALL:
     case constants.SET_PROPERTIES:
+    case constants.SET_ATTRIBUTES:
     case constants.REMOVE:
     case constants.UNDO:
     case constants.ROLLBACK:

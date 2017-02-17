@@ -253,6 +253,11 @@ export function setProperties(layer, prototype, ID, properties) {
   return layer.mergeIn([prototype, ID, 'properties'], properties);
 }
 
+export function setAttributes(layer, prototype, ID, attributes) {
+  attributes = fromJS(attributes);
+  return layer.mergeIn([prototype, ID], attributes);
+}
+
 export function setPropertiesOnSelected(layer, properties) {
   return layer.withMutations(layer => {
     let selected = layer.selected;
@@ -260,6 +265,16 @@ export function setPropertiesOnSelected(layer, properties) {
     selected.holes.forEach(holeID => setProperties(layer, 'holes', holeID, properties));
     selected.areas.forEach(areaID => setProperties(layer, 'areas', areaID, properties));
     selected.items.forEach(itemID => setProperties(layer, 'items', itemID, properties));
+  });
+}
+
+export function setAttributesOnSelected(layer, attributes) {
+  return layer.withMutations(layer => {
+    let selected = layer.selected;
+    selected.lines.forEach(lineID => setAttributes(layer, 'lines', lineID, attributes));
+    selected.holes.forEach(holeID => setAttributes(layer, 'holes', holeID, attributes));
+    selected.areas.forEach(areaID => setAttributes(layer, 'areas', areaID, attributes));
+    selected.items.forEach(itemID => setAttributes(layer, 'items', itemID, attributes));
   });
 }
 
