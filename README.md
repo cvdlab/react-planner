@@ -10,7 +10,7 @@
 
 [Demo][demo]
 
-[![react-planner](preview_image)][demo]
+[![react-planner][preview_image]][demo]
 
 
 ## Usage
