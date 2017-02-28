@@ -36,12 +36,8 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
     onUpdate(value.merge({length, _length, _unit: unitInput}));
   };
 
-  let selectStyle = {
-    marginLeft: '0.5em'
-  };
-
   return (
-    <table>
+    <table className="PropertyLengthMeasure">
       <tbody>
         <tr>
           <td style={firstTdStyle}>{configs.label}:</td>
@@ -51,7 +47,7 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
                 <tr>
                   <td><FormNumberInput value={_length} onChange={event => update(event.target.value, _unit)} min={configs.min} max={configs.max}/></td>
                   <td style={{ width:'4em'}}>
-                    <FormSelect style={selectStyle} value={_unit} onChange={event => update(_length, event.target.value)}>
+                    <FormSelect value={_unit} onChange={event => update(_length, event.target.value)}>
                       <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
                       <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
                       <option key={UNIT_MILLIMETER} value={UNIT_MILLIMETER}>{UNIT_MILLIMETER}</option>

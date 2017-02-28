@@ -4,7 +4,7 @@ import FormColorInput from '../../components/style/form-color-input';
 
 export default function PropertyColor({value, onUpdate, configs}) {
   return (
-    <div style={{marginBottom: "3px"}}>
+    <div className="PropertyColor" style={{marginBottom: "3px"}}>
       <div style={{display: "inline-block", width: "30%"}}>
         <FormLabel>{configs.label}</FormLabel>
       </div>

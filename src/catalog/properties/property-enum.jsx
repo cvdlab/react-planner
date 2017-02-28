@@ -6,7 +6,7 @@ import FormLabel from '../../components/style/form-label'
 export default function PropertyEnum({value, onUpdate, configs}) {
 
   return (
-    <div style={{marginBottom: "3px"}}>
+    <div className="PropertyEnum" style={{marginBottom: "3px"}}>
       <div style={{display: "inline-block", width: "30%"}}>
         <FormLabel>{configs.label}</FormLabel>
       </div>
