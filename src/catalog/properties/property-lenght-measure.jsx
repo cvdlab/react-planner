@@ -37,16 +37,16 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
   };
 
   return (
-    <table className="PropertyLengthMeasure">
+    <table className="PropertyLengthMeasure" style={{ borderSpacing: "2px 0", marginBottom: "2px" }}>
       <tbody>
         <tr>
           <td style={firstTdStyle}>{configs.label}:</td>
-          <td>
+          <td style={{padding: 0}}>
             <table style={tableStyle}>
               <tbody>
                 <tr>
                   <td><FormNumberInput value={_length} onChange={event => update(event.target.value, _unit)} min={configs.min} max={configs.max}/></td>
-                  <td style={{ width:'4em'}}>
+                  <td style={{ width:'5em'}}>
                     <FormSelect value={_unit} onChange={event => update(_length, event.target.value)}>
                       <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
                       <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
