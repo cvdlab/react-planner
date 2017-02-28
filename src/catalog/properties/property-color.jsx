@@ -2,16 +2,24 @@ import React, {PropTypes} from 'react';
 import FormLabel from '../../components/style/form-label'
 import FormColorInput from '../../components/style/form-color-input';
 
+let firstTdStyle = {
+  width: '6em'
+};
+
 export default function PropertyColor({value, onUpdate, configs}) {
   return (
-    <div className="PropertyColor" style={{marginBottom: "3px"}}>
-      <div style={{display: "inline-block", width: "30%"}}>
-        <FormLabel>{configs.label}</FormLabel>
-      </div>
-      <div style={{display: "inline-block", width: "70%"}}>
-        <FormColorInput value={value} onChange={event => onUpdate(event.target.value)}/>
-      </div>
-    </div>
+    <table className="PropertyColor" style={{ width: "100%", borderSpacing: "2px 0", marginBottom: "2px" }}>
+      <tbody>
+        <tr>
+          <td style={firstTdStyle}>
+            <FormLabel>{configs.label}</FormLabel>
+          </td>
+          <td>
+            <FormColorInput value={value} onChange={event => onUpdate(event.target.value)}/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 }
 
