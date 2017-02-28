@@ -3,7 +3,6 @@ import Panel from '../panel';
 import {Map, Seq, Iterable} from 'immutable';
 import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON} from '../../../constants';
 import ElementEditor from './element-editor';
-import If from '../../../utils/react-if';
 
 export default function PanelElementEditor({state}, {translator}) {
 

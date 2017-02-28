@@ -46,7 +46,10 @@ import {
 } from '../../constants';
 
 import ToolbarButton from './toolbar-button';
-const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
+const STYLE = {
+  backgroundColor: '#28292D',
+  padding: "0.5em"
+};
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
   projectActions,

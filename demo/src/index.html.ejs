@@ -4,13 +4,21 @@
   <meta charset="UTF-8"/>
   <title><%= htmlWebpackPlugin.options.title %></title>
   <style>
+    *{
+      box-sizing: border-box;
+    }
+
     html, body, #app {
-    width: 100%;
-    height: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-  }
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      overflow: hidden;
+      position: absolute;
+      left: 0;
+      top: 0;
+    }
   </style>
 </head>
 <body>

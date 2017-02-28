@@ -137,8 +137,6 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
   let promises = [];
 
   switch (modifiedPath[3]) {
-    case "layer":
-      break;
     case "vertices":
       break;
     case "holes":
@@ -390,7 +388,7 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
       return linesActions.selectLine(layer.id, line.id);
     });
 
-    if (!line.selected) {
+    if (!line.selected && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -412,7 +410,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 
     applyInteract(pivot, interactFunction);
 
-    if (!area.selected) {
+    if (!area.selected && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -437,7 +435,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
       }
     );
 
-    if (!item.selected) {
+    if (!item.selected  && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
