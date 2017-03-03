@@ -21,8 +21,8 @@
  import {Provider} from 'react-redux';
 
  //download this demo catalog https://github.com/cvdlab/react-planner/tree/master/demo/src/catalog
- import MyCatalog from './catalog/mycatalog'; 
- 
+ import MyCatalog from './catalog/mycatalog';
+
  import {
    Models as PlannerModels,
    reducer as PlannerReducer,
@@ -77,6 +77,7 @@ Your contributions (issues and pull request) are very appreciated!
 - [danilosalvati](https://github.com/danilosalvati)
 - [enricomarino](https://github.com/enricomarino)
 - [federicospini](https://github.com/federicospini)
+- [alessiocarrafa](https://github.com/alessiocarrafa)
 
 
 Developed @ [CVDLAB](http://cvdlab.org/)
