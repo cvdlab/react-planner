@@ -271,7 +271,7 @@ export default class Scene3DViewer extends React.Component {
     }
 
     renderer.setSize(width, height);
-    renderer.render(scene3D, camera);
+    //renderer.render(scene3D, camera);
   }
 
   render() {
