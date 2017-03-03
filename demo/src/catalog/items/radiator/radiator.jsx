@@ -20,7 +20,7 @@ export default {
 
   properties: {
     altitude: {
-      label: "altitude",
+      label: "Altitude",
       type: "length-measure",
       defaultValue: {
         length: 20,

@@ -13,7 +13,7 @@ export default function ({width, height, ...rest}) {
     <div style={{display: "flex", flexFlow: "row nowrap", height}} onWheel={event => event.preventDefault()}>
       <Toolbar style={{width: toolbarWidth, height}} {...rest} />
       <Content style={{width: contentWidth, height}} width={contentWidth} height={height} {...rest} />
-      <Sidebar style={{width: sidebarWidth, height}}{...rest} width={sidebarWidth} height={height} />
+      <Sidebar style={{width: sidebarWidth, height}} {...rest} />
     </div>
   );
 }

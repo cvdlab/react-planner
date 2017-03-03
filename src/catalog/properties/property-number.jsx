@@ -14,7 +14,7 @@ export default function PropertyNumber({value, onUpdate, configs}) {
   };
 
   return (
-    <div style={{marginBottom: "3px"}}>
+    <div className="PropertyNumber" style={{marginBottom: "3px"}}>
       <div style={{display: "inline-block", width: "30%"}}>
         <FormLabel>{configs.label}</FormLabel>
       </div>
