@@ -4,10 +4,10 @@ import FormSubmitButton from '../../style/form-submit-button';
 import CancelButton from '../../style/cancel-button';
 import DeleteButton from '../../style/delete-button';
 import Button from '../../style/button';
-import AttributesEditor from './attributes-editor/attributes-editor'
+import AttributesEditor from './attributes-editor/attributes-editor';
 
 let tableStyle = {
-  width: '102%'
+  width: '100%'
 };
 
 export default class ElementEditor extends Component {
@@ -24,11 +24,39 @@ export default class ElementEditor extends Component {
   }
 
   initAttrData() {
-    return new Map({
-      x:this.props.element.x,
-      y:this.props.element.y,
-      rotation:this.props.element.rotation
-  });
+
+    switch( this.props.element.prototype )
+    {
+      case 'items':
+      {
+        return new Map({
+            x:this.props.element.x,
+            y:this.props.element.y,
+            rotation:this.props.element.rotation
+        });
+      }
+      case 'lines':
+      {
+        return new Map({
+            vertexOne: this.props.layer.vertices.get( this.props.element.vertices.get('0') ),
+            vertexTwo: this.props.layer.vertices.get( this.props.element.vertices.get('1') )
+        });
+      }
+      case 'holes':
+      {
+        return new Map({
+          offset: this.props.element.offset
+        });
+      }
+      case 'areas':
+      {
+        return new Map({});
+      }
+      default: return null;
+    }
+
+
+
   }
 
   initPropData() {
@@ -48,9 +76,31 @@ export default class ElementEditor extends Component {
   }
 
   updateAttribute(AttributeName, value) {
-    let {state: {attributesFormData}} = this;
-    attributesFormData = attributesFormData.set( AttributeName, value );
-    this.setState({ attributesFormData });
+    switch( this.props.element.prototype )
+    {
+      case 'items':
+      {
+        let {state: {attributesFormData}} = this;
+        attributesFormData = attributesFormData.set( AttributeName, value );
+        this.setState({ attributesFormData });
+        break;
+      }
+      case 'lines':
+      {
+        let {state: {attributesFormData}} = this;
+        attributesFormData = attributesFormData.set( AttributeName, attributesFormData.get( AttributeName ).merge( value ) );
+        this.setState({ attributesFormData });
+        break;
+      }
+      case 'holes':
+      {
+        let {state: {attributesFormData}} = this;
+        attributesFormData = attributesFormData.set( AttributeName, value );
+        this.setState({ attributesFormData });
+        break;
+      }
+      default: break;
+    }
   }
 
   updateProperty(propertyName, value) {
@@ -67,16 +117,27 @@ export default class ElementEditor extends Component {
     event.preventDefault();
     let {state: {propertiesFormData, attributesFormData}, context: {projectActions}} = this;
 
-    //console.debug( 'AAAAAAAAAA', propertiesFormData, attributesFormData );
-
-    let properties = propertiesFormData.map(data => { console.log( 'propertiesFormData', data ); return data.get('currentValue'); });
-    //let attributes = attributesFormData.map(data => data.get('currentValue'));
-    console.log( attributesFormData );
-    //let attributes = attributesFormData.map(data => { console.log( 'attributesFormData', data ); } );
-    let attributes = attributesFormData;
+    let properties = propertiesFormData.map(data => { return data.get('currentValue'); });
 
     projectActions.setProperties(properties);
-    projectActions.setAttributes(attributes);
+    switch( this.props.element.prototype )
+    {
+      case 'items':
+      {
+        projectActions.setItemsAttributes(attributesFormData);
+        break;
+      }
+      case 'lines':
+      {
+        projectActions.setLinesAttributes(attributesFormData);
+        break;
+      }
+      case 'holes':
+      {
+        projectActions.setHolesAttributes(attributesFormData);
+        break;
+      }
+    }
   }
 
   render() {

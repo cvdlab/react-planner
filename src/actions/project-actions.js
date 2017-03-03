@@ -6,7 +6,9 @@ import {
   SELECT_TOOL_EDIT,
   UNSELECT_ALL,
   SET_PROPERTIES,
-  SET_ATTRIBUTES,
+  SET_ITEMS_ATTRIBUTES,
+  SET_LINES_ATTRIBUTES,
+  SET_HOLES_ATTRIBUTES,
   REMOVE,
   UNDO,
   ROLLBACK,
@@ -60,10 +62,24 @@ export function setProperties(properties) {
   }
 }
 
-export function setAttributes(attributes) {
+export function setItemsAttributes(itemsAttributes) {
   return {
-    type: SET_ATTRIBUTES,
-    attributes
+    type: SET_ITEMS_ATTRIBUTES,
+    itemsAttributes
+  }
+}
+
+export function setLinesAttributes(linesAttributes) {
+  return {
+    type: SET_LINES_ATTRIBUTES,
+    linesAttributes
+  }
+}
+
+export function setHolesAttributes(holesAttributes) {
+  return {
+    type: SET_HOLES_ATTRIBUTES,
+    holesAttributes
   }
 }
 

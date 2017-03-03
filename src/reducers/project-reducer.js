@@ -9,7 +9,9 @@ import {
   MODE_IDLE,
   UNSELECT_ALL,
   SET_PROPERTIES,
-  SET_ATTRIBUTES,
+  SET_ITEMS_ATTRIBUTES,
+  SET_LINES_ATTRIBUTES,
+  SET_HOLES_ATTRIBUTES,
   REMOVE,
   UNDO,
   ROLLBACK,
@@ -25,7 +27,9 @@ import {
   removeHole,
   detectAndUpdateAreas,
   setProperties as setPropertiesOp,
-  setAttributes as setAttributesOp,
+  setItemsAttributes as setItemsAttributesOp,
+  setLinesAttributes as setLinesAttributesOp,
+  setHolesAttributes as setHolesAttributesOp,
   select,
   unselect,
   unselectAll as unselectAllOp,
@@ -57,8 +61,14 @@ export default function (state, action) {
     case SET_PROPERTIES:
       return setProperties(state, action.properties);
 
-    case SET_ATTRIBUTES:
-      return setAttributes(state, action.attributes)
+    case SET_ITEMS_ATTRIBUTES:
+      return setItemsAttributes(state, action.itemsAttributes)
+
+    case SET_LINES_ATTRIBUTES:
+      return setLinesAttributes(state, action.linesAttributes)
+
+    case SET_HOLES_ATTRIBUTES:
+      return setHolesAttributes(state, action.holesAttributes)
 
     case REMOVE:
       return remove(state);
@@ -107,13 +117,33 @@ function setProperties(state, properties) {
   })
 }
 
-function setAttributes(state, attributes) {
+function setItemsAttributes(state, attributes) {
   let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes)));
+  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes, state.catalog)));
   return state.merge({
     scene,
     sceneHistory: state.sceneHistory.push(scene)
-  })
+  });
+}
+
+function setLinesAttributes(state, attributes) {
+  let scene = state.scene;
+
+  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes, state.catalog)));
+
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+function setHolesAttributes(state, attributes) {
+  let scene = state.scene;
+  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes, state.catalog)));
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
 }
 
 function unselectAll(state) {
