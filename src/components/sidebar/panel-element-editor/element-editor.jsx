@@ -1,9 +1,8 @@
-import React, { PropTypes, Component } from 'react';
-import { Map, Seq, Iterable, fromJS } from 'immutable';
+import React, {PropTypes, Component} from 'react';
+import {Map, fromJS} from 'immutable';
 import FormSubmitButton from '../../style/form-submit-button';
 import CancelButton from '../../style/cancel-button';
 import DeleteButton from '../../style/delete-button';
-import Button from '../../style/button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 
 let tableStyle = {
@@ -20,41 +19,36 @@ export default class ElementEditor extends Component {
       propertiesFormData: this.initPropData()
     };
 
-    this.updateAttribute = this.updateAttribute.bind( this );
+    this.updateAttribute = this.updateAttribute.bind(this);
   }
 
   initAttrData() {
 
-    switch( this.props.element.prototype )
-    {
-      case 'items':
-      {
+    switch (this.props.element.prototype) {
+      case 'items': {
         return new Map({
-            x:this.props.element.x,
-            y:this.props.element.y,
-            rotation:this.props.element.rotation
+          x: this.props.element.x,
+          y: this.props.element.y,
+          rotation: this.props.element.rotation
         });
       }
-      case 'lines':
-      {
+      case 'lines': {
         return new Map({
-            vertexOne: this.props.layer.vertices.get( this.props.element.vertices.get('0') ),
-            vertexTwo: this.props.layer.vertices.get( this.props.element.vertices.get('1') )
+          vertexOne: this.props.layer.vertices.get(this.props.element.vertices.get('0')),
+          vertexTwo: this.props.layer.vertices.get(this.props.element.vertices.get('1'))
         });
       }
-      case 'holes':
-      {
+      case 'holes': {
         return new Map({
           offset: this.props.element.offset
         });
       }
-      case 'areas':
-      {
+      case 'areas': {
         return new Map({});
       }
-      default: return null;
+      default:
+        return null;
     }
-
 
 
   }
@@ -64,8 +58,8 @@ export default class ElementEditor extends Component {
     let {catalog} = this.context;
     let catalogElement = catalog.getElement(element.type);
 
-    var mapped = {};
-    for (var name in catalogElement.properties) {
+    let mapped = {};
+    for (let name in catalogElement.properties) {
       mapped[name] = new Map({
         currentValue: element.properties.has(name) ? element.properties.get(name) : fromJS(curr.defaultValue),
         configs: catalogElement.properties[name]
@@ -76,64 +70,59 @@ export default class ElementEditor extends Component {
   }
 
   updateAttribute(AttributeName, value) {
-    switch( this.props.element.prototype )
-    {
-      case 'items':
-      {
+    switch (this.props.element.prototype) {
+      case 'items': {
         let {state: {attributesFormData}} = this;
-        attributesFormData = attributesFormData.set( AttributeName, value );
-        this.setState({ attributesFormData });
+        attributesFormData = attributesFormData.set(AttributeName, value);
+        this.setState({attributesFormData});
         break;
       }
-      case 'lines':
-      {
+      case 'lines': {
         let {state: {attributesFormData}} = this;
-        attributesFormData = attributesFormData.set( AttributeName, attributesFormData.get( AttributeName ).merge( value ) );
-        this.setState({ attributesFormData });
+        attributesFormData = attributesFormData.set(AttributeName, attributesFormData.get(AttributeName).merge(value));
+        this.setState({attributesFormData});
         break;
       }
-      case 'holes':
-      {
+      case 'holes': {
         let {state: {attributesFormData}} = this;
-        attributesFormData = attributesFormData.set( AttributeName, value );
-        this.setState({ attributesFormData });
+        attributesFormData = attributesFormData.set(AttributeName, value);
+        this.setState({attributesFormData});
         break;
       }
-      default: break;
+      default:
+        break;
     }
   }
 
   updateProperty(propertyName, value) {
     let {state: {propertiesFormData}} = this;
     propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
-    this.setState({ propertiesFormData });
+    this.setState({propertiesFormData});
   }
 
   reset() {
-    this.setState({ propertiesFormData: this.initPropData() });
+    this.setState({propertiesFormData: this.initPropData()});
   }
 
   save(event) {
     event.preventDefault();
     let {state: {propertiesFormData, attributesFormData}, context: {projectActions}} = this;
 
-    let properties = propertiesFormData.map(data => { return data.get('currentValue'); });
+    let properties = propertiesFormData.map(data => {
+      return data.get('currentValue');
+    });
 
     projectActions.setProperties(properties);
-    switch( this.props.element.prototype )
-    {
-      case 'items':
-      {
+    switch (this.props.element.prototype) {
+      case 'items': {
         projectActions.setItemsAttributes(attributesFormData);
         break;
       }
-      case 'lines':
-      {
+      case 'lines': {
         projectActions.setLinesAttributes(attributesFormData);
         break;
       }
-      case 'holes':
-      {
+      case 'holes': {
         projectActions.setHolesAttributes(attributesFormData);
         break;
       }
@@ -150,14 +139,16 @@ export default class ElementEditor extends Component {
     return (
       <form onSubmit={e => this.save(e)}>
 
-        <AttributesEditor element={this.props.element} onUpdate={this.updateAttribute} attributeFormData={attributesFormData}/>
+        <AttributesEditor element={this.props.element}
+                          onUpdate={this.updateAttribute}
+                          attributeFormData={attributesFormData}/>
 
         {propertiesFormData.entrySeq()
           .map(([propertyName, data]) => {
 
             let currentValue = data.get('currentValue'), configs = data.get('configs');
 
-            let {Viewer, Editor} = catalog.getPropertyType(configs.type);
+            let {Editor} = catalog.getPropertyType(configs.type);
 
             return <Editor
               key={propertyName}
@@ -172,11 +163,12 @@ export default class ElementEditor extends Component {
 
         <table style={tableStyle}>
           <tbody>
-            <tr>
-              <td><DeleteButton size="small" onClick={e => projectActions.remove()}>{translator.t("Delete")}</DeleteButton></td>
-              <td><CancelButton size="small" onClick={e => this.reset()}>{translator.t("Reset")}</CancelButton></td>
-              <td><FormSubmitButton size="small">{translator.t("Save")}</FormSubmitButton></td>
-            </tr>
+          <tr>
+            <td><DeleteButton size="small"
+                              onClick={e => projectActions.remove()}>{translator.t("Delete")}</DeleteButton></td>
+            <td><CancelButton size="small" onClick={e => this.reset()}>{translator.t("Reset")}</CancelButton></td>
+            <td><FormSubmitButton size="small">{translator.t("Save")}</FormSubmitButton></td>
+          </tr>
           </tbody>
         </table>
 
