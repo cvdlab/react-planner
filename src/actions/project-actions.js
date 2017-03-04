@@ -70,6 +70,14 @@ export function setItemsAttributes(itemsAttributes) {
 }
 
 export function setLinesAttributes(linesAttributes) {
+
+  linesAttributes = linesAttributes.withMutations(attributes => {
+    attributes.setIn(['vertexOne','x'],parseFloat(linesAttributes.getIn(['vertexOne','x'])));
+    attributes.setIn(['vertexOne','y'],parseFloat(linesAttributes.getIn(['vertexOne','y'])));
+    attributes.setIn(['vertexTwo','x'],parseFloat(linesAttributes.getIn(['vertexTwo','x'])));
+    attributes.setIn(['vertexTwo','y'],parseFloat(linesAttributes.getIn(['vertexTwo','y'])));
+  });
+
   return {
     type: SET_LINES_ATTRIBUTES,
     linesAttributes
