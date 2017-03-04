@@ -63,6 +63,9 @@ export function setProperties(properties) {
 }
 
 export function setItemsAttributes(itemsAttributes) {
+
+  itemsAttributes = itemsAttributes.set('rotation', parseFloat(itemsAttributes.get('rotation')));
+
   return {
     type: SET_ITEMS_ATTRIBUTES,
     itemsAttributes
@@ -72,10 +75,10 @@ export function setItemsAttributes(itemsAttributes) {
 export function setLinesAttributes(linesAttributes) {
 
   linesAttributes = linesAttributes.withMutations(attributes => {
-    attributes.setIn(['vertexOne','x'],parseFloat(linesAttributes.getIn(['vertexOne','x'])));
-    attributes.setIn(['vertexOne','y'],parseFloat(linesAttributes.getIn(['vertexOne','y'])));
-    attributes.setIn(['vertexTwo','x'],parseFloat(linesAttributes.getIn(['vertexTwo','x'])));
-    attributes.setIn(['vertexTwo','y'],parseFloat(linesAttributes.getIn(['vertexTwo','y'])));
+    attributes.setIn(['vertexOne', 'x'], parseFloat(linesAttributes.getIn(['vertexOne', 'x'])));
+    attributes.setIn(['vertexOne', 'y'], parseFloat(linesAttributes.getIn(['vertexOne', 'y'])));
+    attributes.setIn(['vertexTwo', 'x'], parseFloat(linesAttributes.getIn(['vertexTwo', 'x'])));
+    attributes.setIn(['vertexTwo', 'y'], parseFloat(linesAttributes.getIn(['vertexTwo', 'y'])));
   });
 
   return {
