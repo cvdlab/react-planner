@@ -1,5 +1,5 @@
-import { List, Seq, Map, fromJS } from 'immutable';
-import { Layer, Vertex, Line, Hole, Area, ElementsSet, Item } from '../models';
+import {List, fromJS} from 'immutable';
+import {Vertex} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
@@ -12,8 +12,8 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
     let lineID = IDBroker.acquireID();
 
     let v0, v1;
-    ({ layer, vertex: v0 } = addVertex(layer, x0, y0, 'lines', lineID));
-    ({ layer, vertex: v1 } = addVertex(layer, x1, y1, 'lines', lineID));
+    ({layer, vertex: v0} = addVertex(layer, x0, y0, 'lines', lineID));
+    ({layer, vertex: v1} = addVertex(layer, x1, y1, 'lines', lineID));
 
     line = catalog.factoryElement(type, {
       id: lineID,
@@ -24,7 +24,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
     layer.setIn(['lines', lineID], line);
   });
 
-  return { layer, line };
+  return {layer, line};
 }
 
 export function replaceLineVertex(layer, lineID, vertexIndex, x, y) {
@@ -35,11 +35,11 @@ export function replaceLineVertex(layer, lineID, vertexIndex, x, y) {
     let vertexID = line.vertices.get(vertexIndex);
     unselect(layer, 'vertices', vertexID);
     removeVertex(layer, vertexID, 'lines', line.id);
-    ({ layer, vertex } = addVertex(layer, x, y, 'lines', line.id));
+    ({layer, vertex} = addVertex(layer, x, y, 'lines', line.id));
     line = line.setIn(['vertices', vertexIndex], vertex.id);
     layer.setIn(['lines', lineID], line);
   }));
-  return { layer, line, vertex };
+  return {layer, line, vertex};
 }
 
 export function removeLine(layer, lineID) {
@@ -52,7 +52,7 @@ export function removeLine(layer, lineID) {
     line.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'lines', line.id));
   });
 
-  return { layer, line };
+  return {layer, line};
 }
 
 export function splitLine(layer, lineID, x, y, catalog) {
@@ -63,8 +63,8 @@ export function splitLine(layer, lineID, x, y, catalog) {
     let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
     let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
 
-    ({ line: line0 } = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties));
-    ({ line: line1 } = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
+    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties));
+    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
 
     let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
     line.holes.forEach(holeID => {
@@ -81,7 +81,7 @@ export function splitLine(layer, lineID, x, y, catalog) {
     removeLine(layer, lineID);
   });
 
-  return { layer, lines: new List([line0, line1]) };
+  return {layer, lines: new List([line0, line1])};
 }
 
 export function addLinesFromPoints(layer, type, points, catalog, properties, holes) {
@@ -102,18 +102,17 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
         //TODO: Add holes
 
 
-
         lines.push(line);
       });
     });
   });
 
-  return { layer, lines };
+  return {layer, lines};
 }
 
 export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalog, oldProperties, oldHoles) {
 
-  let points = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
+  let points = [{x: x0, y: y0}, {x: x1, y: y1}];
 
   layer = layer.withMutations(layer => {
     let {lines, vertices} = layer;
@@ -121,14 +120,14 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
       let hasCommonEndpoint =
-        (Geometry.samePoints(v0, { x: x0, y: y0 })
-          || Geometry.samePoints(v0, { x: x1, y: y1 })
-          || Geometry.samePoints(v1, { x: x0, y: y0 })
-          || Geometry.samePoints(v1, { x: x1, y: y1 }));
+        (Geometry.samePoints(v0, {x: x0, y: y0})
+        || Geometry.samePoints(v0, {x: x1, y: y1})
+        || Geometry.samePoints(v1, {x: x0, y: y0})
+        || Geometry.samePoints(v1, {x: x1, y: y1}));
 
 
       let intersection = Geometry.intersectionFromTwoLineSegment(
-        { x: x0, y: y0 }, { x: x1, y: y1 },
+        {x: x0, y: y0}, {x: x1, y: y1},
         v0, v1
       );
 
@@ -146,12 +145,12 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
     addLinesFromPoints(layer, type, points, catalog, oldProperties, oldHoles);
   });
 
-  return { layer };
+  return {layer};
 }
 
 /** vertices features **/
 export function addVertex(layer, x, y, relatedPrototype, relatedID) {
-  let vertex = layer.vertices.find(vertex => Geometry.samePoints(vertex, { x, y }));
+  let vertex = layer.vertices.find(vertex => Geometry.samePoints(vertex, {x, y}));
   if (vertex) {
     vertex = vertex.update(relatedPrototype, related => related.push(relatedID));
   } else {
@@ -162,7 +161,7 @@ export function addVertex(layer, x, y, relatedPrototype, relatedID) {
     });
   }
   layer = layer.setIn(['vertices', vertex.id], vertex);
-  return { layer, vertex };
+  return {layer, vertex};
 }
 
 export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
@@ -177,7 +176,7 @@ export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
   } else {
     layer = layer.setIn(['vertices', vertex.id], vertex);
   }
-  return { layer, vertex };
+  return {layer, vertex};
 }
 
 export function mergeEqualsVertices(layer, vertexID) {
@@ -226,13 +225,11 @@ export function mergeEqualsVertices(layer, vertexID) {
   });
 }
 
-
 export function select(layer, prototype, ID) {
   return layer.withMutations(layer => {
     layer.setIn([prototype, ID, 'selected'], true);
     layer.updateIn(['selected', prototype], elements => elements.push(ID));
-  }
-  );
+  });
 }
 
 export function unselect(layer, prototype, ID) {
@@ -242,8 +239,7 @@ export function unselect(layer, prototype, ID) {
     let selected = ids.some(key => key === ID);
     layer.setIn(['selected', prototype], ids);
     layer.setIn([prototype, ID, 'selected'], selected);
-  }
-  );
+  });
 }
 
 function opSetProperties(layer, prototype, ID, properties) {
@@ -262,8 +258,8 @@ function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
 
   layer.withMutations(layer => {
     layer
-      .mergeIn(['vertices', vertexOne.id], { x: vertexOne.x, y: vertexOne.y })
-      .mergeIn(['vertices', vertexTwo.id], { x: vertexTwo.x, y: vertexTwo.y });
+      .mergeIn(['vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
+      .mergeIn(['vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y});
 
     mergeEqualsVertices(layer, vertexOne.id);
     //check if second vertex has different coordinates than the first
@@ -332,7 +328,7 @@ export function addArea(layer, type, verticesCoords, catalog) {
     layer.setIn(['areas', areaID], area);
   });
 
-  return { layer, area };
+  return {layer, area};
 }
 
 export function removeArea(layer, areaID) {
@@ -344,7 +340,7 @@ export function removeArea(layer, areaID) {
     area.vertices.forEach(vertexID => removeVertex(layer, vertexID, 'areas', area.id));
   });
 
-  return { layer, area };
+  return {layer, area};
 }
 
 export function detectAndUpdateAreas(layer, catalog) {
@@ -388,14 +384,14 @@ export function detectAndUpdateAreas(layer, catalog) {
       if (!areaInUse) {
         let areaVerticesCoords = cycle.map(vertexId => {
           let vertex = layerVertices.get(vertexId);
-          return { x: vertex.x, y: vertex.y };
+          return {x: vertex.x, y: vertex.y};
         });
         addArea(layer, 'area', areaVerticesCoords, catalog)
       }
     });
   });
 
-  return { layer };
+  return {layer};
 }
 
 /** holes features **/
@@ -416,7 +412,7 @@ export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
     layer.updateIn(['lines', lineID, 'holes'], holes => holes.push(holeID));
   });
 
-  return { layer, hole };
+  return {layer, hole};
 }
 
 export function removeHole(layer, holeID) {
@@ -430,7 +426,7 @@ export function removeHole(layer, holeID) {
     });
   });
 
-  return { layer, hole };
+  return {layer, hole};
 }
 
 /** items features **/
@@ -453,7 +449,7 @@ export function addItem(layer, type, x, y, width, height, rotation, catalog) {
     layer.setIn(['items', itemID], item);
   });
 
-  return { layer, item };
+  return {layer, item};
 }
 
 export function removeItem(layer, itemID) {
@@ -463,6 +459,6 @@ export function removeItem(layer, itemID) {
     layer.deleteIn(['items', item.id]);
   });
 
-  return { layer, item };
+  return {layer, item};
 }
 
