@@ -48,7 +48,7 @@ import {
 import ToolbarButton from './toolbar-button';
 const STYLE = {
   backgroundColor: '#28292D',
-  padding: "0.5em"
+  padding: 10
 };
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
@@ -140,6 +140,8 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired
 };
 

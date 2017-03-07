@@ -8,15 +8,14 @@ const STYLE = {
   backgroundColor: "#28292D",
   display: "block",
   overflowY: "auto",
-  overflowX: "hidden",
-  width: "100%"
+  overflowX: "hidden"
 };
 
-export default function Sidebar({state}) {
+export default function Sidebar({state, width, height }) {
 
   return (
     <aside
-      style={STYLE}
+      style={{ width, height, ...STYLE }}
       onKeyDown={event => event.stopPropagation()}
       onKeyUp={event => event.stopPropagation()}
       className="sidebar"
@@ -30,5 +29,7 @@ export default function Sidebar({state}) {
 }
 
 Sidebar.propTypes = {
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired
 };
