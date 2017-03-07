@@ -15,32 +15,32 @@ export default class ElementEditor extends Component {
     super(props, context);
 
     this.state = {
-      attributesFormData: this.initAttrData(),
-      propertiesFormData: this.initPropData()
+      attributesFormData: this.initAttrData(this.props.element, this.props.layer, this.props.state),
+      propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state)
     };
 
     this.updateAttribute = this.updateAttribute.bind(this);
   }
 
-  initAttrData() {
+  initAttrData(element, layer, state) {
 
-    switch (this.props.element.prototype) {
+    switch (element.prototype) {
       case 'items': {
         return new Map({
-          x: this.props.element.x,
-          y: this.props.element.y,
-          rotation: this.props.element.rotation
+          x: element.x,
+          y: element.y,
+          rotation: element.rotation
         });
       }
       case 'lines': {
         return new Map({
-          vertexOne: this.props.layer.vertices.get(this.props.element.vertices.get('0')),
-          vertexTwo: this.props.layer.vertices.get(this.props.element.vertices.get('1'))
+          vertexOne: layer.vertices.get(element.vertices.get('0')),
+          vertexTwo: layer.vertices.get(element.vertices.get('1'))
         });
       }
       case 'holes': {
         return new Map({
-          offset: this.props.element.offset
+          offset: element.offset
         });
       }
       case 'areas': {
@@ -53,8 +53,7 @@ export default class ElementEditor extends Component {
 
   }
 
-  initPropData() {
-    let {element} = this.props;
+  initPropData(element, layer, state) {
     let {catalog} = this.context;
     let catalogElement = catalog.getElement(element.type);
 
@@ -175,6 +174,11 @@ export default class ElementEditor extends Component {
       </form>
     )
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state)});
+  }
+
 
 }
 

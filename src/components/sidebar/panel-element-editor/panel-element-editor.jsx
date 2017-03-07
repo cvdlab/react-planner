@@ -1,7 +1,7 @@
 import React, {PropTypes, Component} from 'react';
 import Panel from '../panel';
-import {Map, Seq, Iterable} from 'immutable';
-import {MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT,
+import {Seq} from 'immutable';
+import {MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT,
   MODE_CONFIGURING_LAYER
 } from '../../../constants';
 import ElementEditor from './element-editor';
@@ -9,8 +9,6 @@ import ElementEditor from './element-editor';
 export default function PanelElementEditor({state}, {translator}) {
 
   let {scene, mode} = state;
-
-  // if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
 
   if ([MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, MODE_CONFIGURING_LAYER].includes(mode)) return null;
 
