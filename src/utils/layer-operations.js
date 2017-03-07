@@ -38,8 +38,6 @@ export function replaceLineVertex(layer, lineID, vertexIndex, x, y) {
     ({ layer, vertex } = addVertex(layer, x, y, 'lines', line.id));
     line = line.setIn(['vertices', vertexIndex], vertex.id);
     layer.setIn(['lines', lineID], line);
-    //TODO check if line is selected, then select vertex
-    select(layer, 'vertices', vertex.id);
   }));
   return { layer, line, vertex };
 }
