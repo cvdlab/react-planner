@@ -88,6 +88,9 @@ export function setLinesAttributes(linesAttributes) {
 }
 
 export function setHolesAttributes(holesAttributes) {
+
+  holesAttributes = holesAttributes.set('offset', parseFloat(holesAttributes.get('offset')));
+
   return {
     type: SET_HOLES_ATTRIBUTES,
     holesAttributes
