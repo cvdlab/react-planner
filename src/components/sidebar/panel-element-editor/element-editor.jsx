@@ -35,8 +35,8 @@ export default class ElementEditor extends Component {
         });
       }
       case 'lines': {
-        let v_a = this.props.layer.vertices.get(this.props.element.vertices.get('0'));
-        let v_b = this.props.layer.vertices.get(this.props.element.vertices.get('1'));
+        let v_a = layer.vertices.get(element.vertices.get('0'));
+        let v_b = layer.vertices.get(element.vertices.get('1'));
 
         return new Map({
           vertexOne : v_a,
@@ -75,16 +75,15 @@ export default class ElementEditor extends Component {
   }
 
   updateAttribute(AttributeName, value) {
+
+    let {attributesFormData} = this.state;
+
     switch (this.props.element.prototype) {
       case 'items': {
-        let {state: {attributesFormData}} = this;
         attributesFormData = attributesFormData.set(AttributeName, value);
-        this.setState({attributesFormData});
         break;
       }
       case 'lines': {
-        let {state: {attributesFormData}} = this;
-
         if( AttributeName === 'lineLength' )
         {
           let v_0 = attributesFormData.get('vertexOne');
@@ -94,8 +93,10 @@ export default class ElementEditor extends Component {
 
           let v_b_new = geometry.extendLine( v_a.x, v_a.y, v_b.x, v_b.y, value );
 
-          attributesFormData = attributesFormData.set('vertexTwo', v_b.merge( v_b_new ) );
-          attributesFormData = attributesFormData.set(AttributeName, value);
+          attributesFormData = attributesFormData.withMutations( attr => {
+            attr.set( v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge( v_b_new ) );
+            attr.set('lineLength', value);
+          });
         }
         else
         {
@@ -106,19 +107,16 @@ export default class ElementEditor extends Component {
 
           attributesFormData = attributesFormData.set('lineLength', geometry.pointsDistance( v_0.x, v_0.y, v_1.x, v_1.y ) );
         }
-
-        this.setState({attributesFormData});
         break;
       }
       case 'holes': {
-        let {state: {attributesFormData}} = this;
         attributesFormData = attributesFormData.set(AttributeName, value);
-        this.setState({attributesFormData});
         break;
       }
       default:
         break;
     }
+    this.setState({attributesFormData});
   }
 
   updateProperty(propertyName, value) {
