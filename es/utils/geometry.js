@@ -14,7 +14,7 @@ export function maxVertex(v0, v1) {
   return compareVertices(v0, v1) > 0 ? v0 : v1;
 }
 
-export function distanceFromTwoPoints(x0, y0, x1, y1) {
+export function pointsDistance(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
 }
 
@@ -181,8 +181,8 @@ export function closestPointFromLineSegment(x1, y1, x2, y2, xp, yp) {
 }
 
 export function pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp) {
-  var length = distanceFromTwoPoints(x1, y1, x2, y2);
-  var distance = distanceFromTwoPoints(x1, y1, xp, yp);
+  var length = pointsDistance(x1, y1, x2, y2);
+  var distance = pointsDistance(x1, y1, xp, yp);
 
   var offset = distance / length;
   if (x1 > x2) offset = mapRange(offset, 0, 1, 1, 0);
@@ -195,7 +195,7 @@ export function mapRange(value, low1, high1, low2, high2) {
 }
 
 export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
-  var length = distanceFromTwoPoints(x1, y1, x2, y2);
+  var length = pointsDistance(x1, y1, x2, y2);
   return -Math.asin((y1 - y2) / length) * 180 / Math.PI;
 }
 

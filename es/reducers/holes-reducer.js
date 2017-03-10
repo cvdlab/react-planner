@@ -105,7 +105,7 @@ function updateDrawingHole(state, layerID, x, y) {
         // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 
         // let width = hole.properties.get('width').get('length');
-        var lineLength = Geometry.distanceFromTwoPoints(x1, y1, x2, y2);
+        var lineLength = Geometry.pointsDistance(x1, y1, x2, y2);
         var alpha = Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
 
         var cosWithThreshold = function cosWithThreshold(alpha) {
@@ -232,7 +232,7 @@ function updateDraggingHole(state, x, y) {
   // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 
   var width = hole.properties.get('width').get('length');
-  var lineLength = Geometry.distanceFromTwoPoints(v0.x, v0.y, v1.x, v1.y);
+  var lineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
   var alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
 
   var cosWithThreshold = function cosWithThreshold(alpha) {
