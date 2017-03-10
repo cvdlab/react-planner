@@ -4,6 +4,8 @@ import FormSubmitButton from '../../style/form-submit-button';
 import CancelButton from '../../style/cancel-button';
 import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
+import * as geometry from '../../../utils/geometry.js';
+import Vertex from '../../../models'
 
 let tableStyle = {
   width: '100%'
@@ -33,9 +35,13 @@ export default class ElementEditor extends Component {
         });
       }
       case 'lines': {
+        let v_a = this.props.layer.vertices.get(this.props.element.vertices.get('0'));
+        let v_b = this.props.layer.vertices.get(this.props.element.vertices.get('1'));
+
         return new Map({
-          vertexOne: this.props.layer.vertices.get(this.props.element.vertices.get('0')),
-          vertexTwo: this.props.layer.vertices.get(this.props.element.vertices.get('1'))
+          vertexOne : v_a,
+          vertexTwo : v_b,
+          lineLength: geometry.pointsDistance( v_a.x, v_a.y, v_b.x, v_b.y )
         });
       }
       case 'holes': {
@@ -79,7 +85,25 @@ export default class ElementEditor extends Component {
       }
       case 'lines': {
         let {state: {attributesFormData}} = this;
-        attributesFormData = attributesFormData.set(AttributeName, attributesFormData.get(AttributeName).merge(value));
+
+        if( AttributeName === 'lineLength' )
+        {
+          let v_a = attributesFormData.get('vertexOne');
+          let v_b = attributesFormData.get('vertexTwo');
+
+          let v_b_new = geometry.extendLine( v_a.x, v_a.y, v_b.x, v_b.y, value );
+
+          //console.log( geometry.orderVertices( [ v_a, v_b  ] ) );
+
+          attributesFormData = attributesFormData.set('vertexTwo', v_b.merge( v_b_new ) );
+          attributesFormData = attributesFormData.set(AttributeName, value);
+        }
+        else
+        {
+          console.log( AttributeName, value );
+          attributesFormData = attributesFormData.set(AttributeName, attributesFormData.get(AttributeName).merge(value));
+        }
+
         this.setState({attributesFormData});
         break;
       }

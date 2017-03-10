@@ -79,6 +79,8 @@ export function setLinesAttributes(linesAttributes) {
     attributes.setIn(['vertexOne', 'y'], parseFloat(linesAttributes.getIn(['vertexOne', 'y'])));
     attributes.setIn(['vertexTwo', 'x'], parseFloat(linesAttributes.getIn(['vertexTwo', 'x'])));
     attributes.setIn(['vertexTwo', 'y'], parseFloat(linesAttributes.getIn(['vertexTwo', 'y'])));
+
+    attributes.setIn('lineLength', parseFloat(linesAttributes.getIn('lineLength')));
   });
 
   return {

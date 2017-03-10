@@ -15,6 +15,7 @@ export default function LineAttributesEditor( { element, onUpdate, attributeForm
 {
   let vertexOne = attributeFormData.has('vertexOne') ? attributeFormData.get('vertexOne') : null;
   let vertexTwo = attributeFormData.has('vertexTwo') ? attributeFormData.get('vertexTwo') : null;
+  let lineLength = attributeFormData.has('lineLength') ? attributeFormData.get('lineLength') : null;
 
   return <table style={tableStyle}>
     <tbody>
@@ -33,6 +34,10 @@ export default function LineAttributesEditor( { element, onUpdate, attributeForm
       <tr>
         <td style={firstTdStyle}>Y2: </td>
         <td><FormNumberInput value={vertexTwo.get('y')} onChange={event => onUpdate( 'vertexTwo', { 'y': event.target.value } )} style={inputStyle} /></td>
+      </tr>
+      <tr>
+        <td style={firstTdStyle}>Length: </td>
+        <td><FormNumberInput value={lineLength} onChange={event => onUpdate( 'lineLength', event.target.value )} style={inputStyle} /></td>
       </tr>
     </tbody>
   </table>;
