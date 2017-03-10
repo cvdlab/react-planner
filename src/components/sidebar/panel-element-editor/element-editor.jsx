@@ -87,12 +87,12 @@ export default class ElementEditor extends Component {
 
         if( AttributeName === 'lineLength' )
         {
-          let v_a = attributesFormData.get('vertexOne');
-          let v_b = attributesFormData.get('vertexTwo');
+          let v_0 = attributesFormData.get('vertexOne');
+          let v_1 = attributesFormData.get('vertexTwo');
+
+          let [ v_a, v_b ] = geometry.orderVertices( [ v_0, v_1  ] );
 
           let v_b_new = geometry.extendLine( v_a.x, v_a.y, v_b.x, v_b.y, value );
-
-          //console.log( geometry.orderVertices( [ v_a, v_b  ] ) );
 
           attributesFormData = attributesFormData.set('vertexTwo', v_b.merge( v_b_new ) );
           attributesFormData = attributesFormData.set(AttributeName, value);
