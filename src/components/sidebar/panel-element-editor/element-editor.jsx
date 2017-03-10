@@ -99,8 +99,12 @@ export default class ElementEditor extends Component {
         }
         else
         {
-          console.log( AttributeName, value );
           attributesFormData = attributesFormData.set(AttributeName, attributesFormData.get(AttributeName).merge(value));
+
+          let v_0 = attributesFormData.get('vertexOne');
+          let v_1 = attributesFormData.get('vertexTwo');
+
+          attributesFormData = attributesFormData.set('lineLength', geometry.pointsDistance( v_0.x, v_0.y, v_1.x, v_1.y ) );
         }
 
         this.setState({attributesFormData});
