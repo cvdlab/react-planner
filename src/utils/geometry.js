@@ -211,3 +211,17 @@ export function extendLine(x1, y1, x2, y2, newDistance){
     y: ( y1 + ( Math.sin( rad ) * newDistance ) ),
   }
 }
+
+export function toFixedFloat( num, precision )
+{
+  let prec = ( 10 ** precision );
+  return ( Math.round( num * prec ) / prec );
+}
+
+export function roundVertex( vertex, precision )
+{
+  vertex.set( 'x', toFixedFloat( vertex.get('x'), 6 ) );
+  vertex.set( 'y', toFixedFloat( vertex.get('y'), 6 ) );
+
+  return vertex;
+}
