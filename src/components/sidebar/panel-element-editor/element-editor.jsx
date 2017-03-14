@@ -26,6 +26,8 @@ export default class ElementEditor extends Component {
 
   initAttrData(element, layer, state) {
 
+    element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)): element;
+
     switch (element.prototype) {
       case 'items': {
         return new Map({
@@ -46,7 +48,8 @@ export default class ElementEditor extends Component {
       }
       case 'holes': {
         return new Map({
-          offset: element.offset
+          offset: element.offset,
+          offsetA: new Map({ length : element.offset, _length:element.offset, _unit: element.misc.get('_unitA')})
         });
       }
       case 'areas': {

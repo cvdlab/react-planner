@@ -1,4 +1,4 @@
-import {List, fromJS} from 'immutable';
+import {Map, List, fromJS} from 'immutable';
 import {Vertex} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
@@ -270,8 +270,15 @@ function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
 }
 
 function opSetHolesAttributes(layer, prototype, ID, holesAttributes) {
-  holesAttributes = fromJS(holesAttributes);
-  layer.mergeIn([prototype, ID], holesAttributes);
+
+  let offset = holesAttributes.get('offset');
+  let misc = new Map({ _unitA : holesAttributes.get('offsetA').get('_unit') });
+
+  //TODO new Map -> mergeDeep
+  layer.mergeIn([prototype, ID], new Map({
+    offset,
+    misc
+  }));
 }
 
 
