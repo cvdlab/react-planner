@@ -2,8 +2,9 @@ import React, {PropTypes} from 'react';
 import {UNIT_CENTIMETER, UNIT_FOOT, UNIT_INCH, UNIT_METER, UNIT_MILE, UNIT_MILLIMETER} from './../../constants';
 import convert from 'convert-units';
 import FormLabel from '../../components/style/form-label'
-import FormNumberInput from '../../components/style/form-number-input'
-import FormSelect from '../../components/style/form-select'
+import FormNumberInput from '../../components/style/form-number-input';
+import FormSelect from '../../components/style/form-select';
+import {Map} from 'immutable';
 
 let tableStyle = {
   borderCollapse: 'collapse'
@@ -26,6 +27,7 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
   }
 
   let update = (lengthInput, unitInput) => {
+
     let _length = parseFloat(lengthInput);
 
     if (isNaN(_length)) {
@@ -33,6 +35,7 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
     }
 
     let length = convert(_length).from(unitInput).to(catalog.unit);
+
     onUpdate(value.merge({length, _length, _unit: unitInput}));
   };
 
@@ -68,7 +71,7 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
 }
 
 PropertyLengthMeasure.propTypes = {
-  value: PropTypes.any.isRequired,
+  value: PropTypes.instanceOf(Map).isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired
 };
