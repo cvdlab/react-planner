@@ -68,6 +68,7 @@ export class Vertex extends Record({
   selected: false,
   lines: new List(),
   areas: new List(),
+  misc: new Map()
 }, 'Vertex') {
   constructor(json = {}) {
     super({
@@ -85,7 +86,8 @@ export class Line extends Record({
   vertices: new List(),
   holes: new List(),
   selected: false,
-  properties: new Map()
+  properties: new Map(),
+  misc: new Map()
 }, 'Line') {
   constructor(json = {}) {
     super({
@@ -105,6 +107,7 @@ export class Hole extends Record({
   line: "",
   selected: false,
   properties: new Map(),
+  misc: new Map()
 }, 'Hole') {
   constructor(json = {}) {
     super({
@@ -120,7 +123,8 @@ export class Area extends Record({
   prototype: "areas",
   vertices: new List(),
   selected: false,
-  properties: new Map()
+  properties: new Map(),
+  misc: new Map()
 }, 'Area') {
   constructor(json = {}) {
     super({
@@ -139,7 +143,8 @@ export class Item extends Record({
   selected: false,
   x: 0,
   y: 0,
-  rotation: 0
+  rotation: 0,
+  misc: new Map()
 }, 'Item') {
   constructor(json = {}) {
     super({
