@@ -5,7 +5,8 @@ import CancelButton from '../../style/cancel-button';
 import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import * as geometry from '../../../utils/geometry.js';
-import Vertex from '../../../models'
+import convert from 'convert-units';
+import {UNIT_CENTIMETER} from "../../../constants";
 
 let tableStyle = {
   width: '100%'
@@ -26,7 +27,7 @@ export default class ElementEditor extends Component {
 
   initAttrData(element, layer, state) {
 
-    element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)): element;
+    element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)) : element;
 
     switch (element.prototype) {
       case 'items': {
@@ -41,15 +42,29 @@ export default class ElementEditor extends Component {
         let v_b = layer.vertices.get(element.vertices.get('1'));
 
         return new Map({
-          vertexOne : v_a,
-          vertexTwo : v_b,
-          lineLength: geometry.pointsDistance( v_a.x, v_a.y, v_b.x, v_b.y )
+          vertexOne: v_a,
+          vertexTwo: v_b,
+          lineLength: geometry.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y)
         });
       }
       case 'holes': {
+        let line = layer.lines.get(element.line);
+        let {x: x0, y:y0} = layer.vertices.get(line.vertices.get(0));
+        let {x: x1, y:y1} = layer.vertices.get(line.vertices.get(1));
+        let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+        let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
+
+        let _unitA = element.misc.get('_unitA') || UNIT_CENTIMETER;
+        let _lengthA = convert(startAt).from(UNIT_CENTIMETER).to(_unitA);
+
+        let endAt = lineLength - lineLength * element.offset - element.properties.get('width').get('length') / 2;
+        let _unitB = element.misc.get('_unitA') || UNIT_CENTIMETER;
+        let _lengthB = convert(endAt).from(UNIT_CENTIMETER).to(_unitA);
+
         return new Map({
           offset: element.offset,
-          offsetA: new Map({ length : element.offset, _length:element.offset, _unit: element.misc.get('_unitA')})
+          offsetA: new Map({length: element.offset, _length: _lengthA, _unit: _unitA}),
+          offsetB: new Map({length: element.offset, _length: _lengthB, _unit: _unitB})
         });
       }
       case 'areas': {
@@ -87,28 +102,26 @@ export default class ElementEditor extends Component {
         break;
       }
       case 'lines': {
-        if( AttributeName === 'lineLength' )
-        {
+        if (AttributeName === 'lineLength') {
           let v_0 = attributesFormData.get('vertexOne');
           let v_1 = attributesFormData.get('vertexTwo');
 
-          let [ v_a, v_b ] = geometry.orderVertices( [ v_0, v_1  ] );
+          let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
 
-          let v_b_new = geometry.extendLine( v_a.x, v_a.y, v_b.x, v_b.y, value );
+          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value);
 
-          attributesFormData = attributesFormData.withMutations( attr => {
-            attr.set( v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge( v_b_new ) );
+          attributesFormData = attributesFormData.withMutations(attr => {
+            attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
             attr.set('lineLength', value);
           });
         }
-        else
-        {
+        else {
           attributesFormData = attributesFormData.set(AttributeName, attributesFormData.get(AttributeName).merge(value));
 
           let v_0 = attributesFormData.get('vertexOne');
           let v_1 = attributesFormData.get('vertexTwo');
 
-          attributesFormData = attributesFormData.set('lineLength', geometry.pointsDistance( v_0.x, v_0.y, v_1.x, v_1.y ) );
+          attributesFormData = attributesFormData.set('lineLength', geometry.pointsDistance(v_0.x, v_0.y, v_1.x, v_1.y));
         }
         break;
       }

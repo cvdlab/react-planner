@@ -6,31 +6,39 @@ import {Map} from 'immutable';
 let tableStyle = {
   width: '100%'
 };
+
 let firstTdStyle = {
   width: '6em'
 };
-let inputStyle = {
-  textAlign : 'left'
-}
 
-export default function HoleAttributesEditor( { element, onUpdate, attributeFormData }, {translator} )
-{
+let inputStyle = {
+  textAlign: 'left'
+};
+
+export default function HoleAttributesEditor({element, onUpdate, attributeFormData}, {translator}) {
   let offset = attributeFormData.has('offset') ? attributeFormData.get('offset') : element.offset;
   let offsetA = attributeFormData.has('offsetA') ? attributeFormData.get('offsetA') : element.offsetA;
+  let offsetB = attributeFormData.has('offsetB') ? attributeFormData.get('offsetB') : element.offsetA;
 
   return <div>
     <table style={tableStyle}>
       <tbody>
-        <tr>
-          <td style={firstTdStyle}>Offset: </td>
-          <td><FormNumberInput value={offset} onChange={event => onUpdate( 'offset', event.target.value)} style={inputStyle} /></td>
-        </tr>
+      <tr>
+        <td style={firstTdStyle}>Offset:</td>
+        <td><FormNumberInput value={offset} onChange={event => onUpdate('offset', event.target.value)}
+                             style={inputStyle}/></td>
+      </tr>
       </tbody>
     </table>
     <PropertyLengthMeasure
       value={ offsetA }
-      onUpdate={mapped => onUpdate( 'offsetA', mapped )}
-      configs={{label:'Offset 1', min:0, max:Infinity}}
+      onUpdate={mapped => onUpdate('offsetA', mapped)}
+      configs={{label: 'Offset 1', min: 0, max: Infinity}}
+    />
+    <PropertyLengthMeasure
+      value={ offsetB }
+      onUpdate={mapped => onUpdate('offsetB', mapped)}
+      configs={{label: 'Offset 2', min: 0, max: Infinity}}
     />
   </div>;
 }
