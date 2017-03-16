@@ -58,8 +58,8 @@ export default class ElementEditor extends Component {
         let _lengthA = convert(startAt).from(UNIT_CENTIMETER).to(_unitA);
 
         let endAt = lineLength - lineLength * element.offset - element.properties.get('width').get('length') / 2;
-        let _unitB = element.misc.get('_unitA') || UNIT_CENTIMETER;
-        let _lengthB = convert(endAt).from(UNIT_CENTIMETER).to(_unitA);
+        let _unitB = element.misc.get('_unitB') || UNIT_CENTIMETER;
+        let _lengthB = convert(endAt).from(UNIT_CENTIMETER).to(_unitB);
 
         return new Map({
           offset: element.offset,
@@ -92,17 +92,17 @@ export default class ElementEditor extends Component {
     return new Map(mapped);
   }
 
-  updateAttribute(AttributeName, value) {
+  updateAttribute(attributeName, value) {
 
     let {attributesFormData} = this.state;
 
     switch (this.props.element.prototype) {
       case 'items': {
-        attributesFormData = attributesFormData.set(AttributeName, value);
+        attributesFormData = attributesFormData.set(attributeName, value);
         break;
       }
       case 'lines': {
-        if (AttributeName === 'lineLength') {
+        if (attributeName === 'lineLength') {
           let v_0 = attributesFormData.get('vertexOne');
           let v_1 = attributesFormData.get('vertexTwo');
 
@@ -116,7 +116,7 @@ export default class ElementEditor extends Component {
           });
         }
         else {
-          attributesFormData = attributesFormData.set(AttributeName, attributesFormData.get(AttributeName).merge(value));
+          attributesFormData = attributesFormData.set(attributeName, attributesFormData.get(attributeName).merge(value));
 
           let v_0 = attributesFormData.get('vertexOne');
           let v_1 = attributesFormData.get('vertexTwo');
@@ -126,7 +126,24 @@ export default class ElementEditor extends Component {
         break;
       }
       case 'holes': {
-        attributesFormData = attributesFormData.set(AttributeName, value);
+        let offset;
+        if (attributeName === 'offsetA') {
+
+          let line = this.props.layer.lines.get(this.props.element.line);
+          let {x: x0, y:y0} = this.props.layer.vertices.get(line.vertices.get(0));
+          let {x: x1, y:y1} = this.props.layer.vertices.get(line.vertices.get(1));
+          let alpha = Math.atan2(y1 - y0, x1 - x0);
+
+          let xp = (attributesFormData.get('offsetA').get('length') +
+            this.props.element.properties.get('width').get('length')) * Math.cos(alpha) + x0;
+          let yp = (attributesFormData.get('offsetA').get('length') +
+            this.props.element.properties.get('width').get('length')) * Math.sin(alpha) + y0;
+          offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+          console.log(xp, yp, offset);
+        } else if (attributeName === 'offsetB') {
+
+        }
+        attributesFormData = attributesFormData.set(attributeName, value).set('offset', offset);
         break;
       }
       default:
