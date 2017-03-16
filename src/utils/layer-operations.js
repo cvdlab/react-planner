@@ -272,10 +272,13 @@ function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
 function opSetHolesAttributes(layer, prototype, ID, holesAttributes) {
 
   let offset = holesAttributes.get('offset');
-  let misc = new Map({ _unitA : holesAttributes.get('offsetA').get('_unit') });
 
-  //TODO new Map -> mergeDeep
-  layer.mergeIn([prototype, ID], new Map({
+  let misc = new Map({
+    _unitA: holesAttributes.get('offsetA').get('_unit'),
+    _unitB: holesAttributes.get('offsetB').get('_unit')
+  });
+
+  layer.mergeDeepIn([prototype, ID], new Map({
     offset,
     misc
   }));
