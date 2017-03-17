@@ -28,6 +28,14 @@ export function pointsDistance(x0, y0, x1, y1) {
   return Math.sqrt((diff_x * diff_x) + (diff_y * diff_y));
 }
 
+export function verticesDistance( v1, v2 ) {
+
+  let {x: x0, y:y0} = v1;
+  let {x: x1, y:y1} = v2;
+
+  return pointsDistance(x0, y0, x1, y1);
+}
+
 export function horizontalLine(y) {
   return { a: 0, b: 1, c: -y }
 }
