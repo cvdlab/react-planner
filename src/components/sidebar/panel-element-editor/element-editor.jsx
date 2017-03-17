@@ -5,6 +5,7 @@ import CancelButton from '../../style/cancel-button';
 import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import * as geometry from '../../../utils/geometry.js';
+import * as math from '../../../utils/math.js';
 import convert from 'convert-units';
 
 let tableStyle = {
@@ -67,13 +68,13 @@ export default class ElementEditor extends Component {
         return new Map({
           offset: element.offset,
           offsetA: new Map({
-            length: geometry.toFixedFloat(startAt, 2),
-            _length: geometry.toFixedFloat(_lengthA, 2),
+            length: math.toFixedFloat(startAt, 2),
+            _length: math.toFixedFloat(_lengthA, 2),
             _unit: _unitA
           }),
           offsetB: new Map({
-            length: geometry.toFixedFloat(endAt, 2),
-            _length: geometry.toFixedFloat(_lengthB, 2),
+            length: math.toFixedFloat(endAt, 2),
+            _length: math.toFixedFloat(_lengthB, 2),
             _unit: _unitB
           })
         });
@@ -166,7 +167,7 @@ export default class ElementEditor extends Component {
 
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-          let endAt = geometry.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+          let endAt = math.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
 
           let offsetB = new Map({
             length: endAt,
@@ -185,7 +186,7 @@ export default class ElementEditor extends Component {
 
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-          let startAt = geometry.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+          let startAt = math.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
 
           let offsetA = new Map({
             length: startAt,
@@ -197,9 +198,9 @@ export default class ElementEditor extends Component {
         }
 
         let offsetAttribute = new Map({
-          length: geometry.toFixedFloat(lengthValue, 2),
+          length: math.toFixedFloat(lengthValue, 2),
           _unit: value.get('_unit'),
-          _length: geometry.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+          _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
         });
 
         attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
