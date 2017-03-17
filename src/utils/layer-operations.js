@@ -257,13 +257,16 @@ function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
   let {vertexOne, vertexTwo} = linesAttributes.toJS();
 
   layer.withMutations(layer => {
+
     layer
       .mergeIn(['vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
-      .mergeIn(['vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y});
+      .mergeIn(['vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y})
+      .mergeDeepIn([prototype, ID, 'misc'], new Map({ '_unitLength' : linesAttributes.get('lineLength').get('_unit') } ) );
 
     mergeEqualsVertices(layer, vertexOne.id);
     //check if second vertex has different coordinates than the first
     if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) mergeEqualsVertices(layer, vertexTwo.id);
+
   });
 
   detectAndUpdateAreas(layer, catalog);

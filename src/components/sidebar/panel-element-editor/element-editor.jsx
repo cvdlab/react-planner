@@ -38,13 +38,17 @@ export default class ElementEditor extends Component {
         });
       }
       case 'lines': {
-        let v_a = layer.vertices.get(element.vertices.get('0'));
-        let v_b = layer.vertices.get(element.vertices.get('1'));
+        let v_a = layer.vertices.get(element.vertices.get(0));
+        let v_b = layer.vertices.get(element.vertices.get(1));
+
+        let distance = geometry.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
+        let _unit = element.misc.get('_unitLength') || UNIT_CENTIMETER;
+        let _length = convert(distance).from(UNIT_CENTIMETER).to(_unit);
 
         return new Map({
           vertexOne: v_a,
           vertexTwo: v_b,
-          lineLength: geometry.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y)
+          lineLength: new Map({length: distance, _length, _unit}),
         });
       }
       case 'holes': {
@@ -108,7 +112,7 @@ export default class ElementEditor extends Component {
 
           let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
 
-          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value);
+          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'));
 
           attributesFormData = attributesFormData.withMutations(attr => {
             attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -116,12 +120,15 @@ export default class ElementEditor extends Component {
           });
         }
         else {
-          attributesFormData = attributesFormData.set(attributeName, attributesFormData.get(attributeName).merge(value));
+          attributesFormData = attributesFormData.withMutations(attr => {
+            attr.set(attributeName, attr.get(attributeName).merge(value));
+            let {x: x0, y:y0} = attr.get('vertexOne');
+            let {x: x1, y:y1} = attr.get('vertexTwo');
 
-          let v_0 = attributesFormData.get('vertexOne');
-          let v_1 = attributesFormData.get('vertexTwo');
+            let newDistance = geometry.pointsDistance(x0, y0, x1, y1);
 
-          attributesFormData = attributesFormData.set('lineLength', geometry.pointsDistance(v_0.x, v_0.y, v_1.x, v_1.y));
+            attr.mergeIn(['lineLength'], attr.get('lineLength').set('_length', newDistance ) );
+          });
         }
         break;
       }
