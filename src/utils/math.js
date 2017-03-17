@@ -1,9 +1,9 @@
 /** @description Return float fixed to desired precision
  *  @param {number} num Float to fix
- *  @param {number} precision Desired precision
+ *  @param {number} precision Desired precision, or 6 if not specified
  *  @return {number}
 */
-export function toFixedFloat(num, precision) {
+export function toFixedFloat(num, precision = 6) {
   if (num && precision) {
     let prec = (10 ** precision);
     return ( ~~(num * prec) / prec);
