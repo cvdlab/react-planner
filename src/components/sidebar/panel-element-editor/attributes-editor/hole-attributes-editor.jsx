@@ -1,7 +1,6 @@
 import React, {PropTypes, Component} from 'react';
 import FormNumberInput from '../../../style/form-number-input';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
-import {Map} from 'immutable';
 
 let tableStyle = {
   width: '100%'
