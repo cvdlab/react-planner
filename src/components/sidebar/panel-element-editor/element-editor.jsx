@@ -147,10 +147,9 @@ export default class ElementEditor extends Component {
           let yp = (value.get('length') +
             this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
-          console.log(xp, yp, value.get('length'), offset, lineLength);
 
           let endAt = geometry.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
-          
+
           let offsetB = new Map({
             length: endAt,
             _length: convert(endAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetB').get('_unit')),
