@@ -143,10 +143,16 @@ export default class ElementEditor extends Component {
       case 'holes': {
         let offset;
         let line = this.props.layer.lines.get(this.props.element.line);
-        let {x: x0, y:y0} = this.props.layer.vertices.get(line.vertices.get(0));
-        let {x: x1, y:y1} = this.props.layer.vertices.get(line.vertices.get(1));
+
+        let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
+          this.props.layer.vertices.get(line.vertices.get(1))]);
+
+        let {x: x0, y:y0} = orderedVertices[0];
+        let {x: x1, y:y1} = orderedVertices[1];
+
         let alpha = Math.atan2(y1 - y0, x1 - x0);
         let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+
         let lengthValue = value.get('length');
         lengthValue = Math.max(lengthValue, 0);
         lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
@@ -157,6 +163,7 @@ export default class ElementEditor extends Component {
             this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
           let yp = (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
+
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
           let endAt = geometry.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
@@ -175,6 +182,7 @@ export default class ElementEditor extends Component {
             this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
           let yp = y1 - (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha);
+
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
           let startAt = geometry.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
