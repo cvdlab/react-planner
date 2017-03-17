@@ -119,7 +119,7 @@ export default class ElementEditor extends Component {
 
           let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
 
-          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2 );
+          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2);
 
           attributesFormData = attributesFormData.withMutations(attr => {
             attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -130,12 +130,12 @@ export default class ElementEditor extends Component {
           attributesFormData = attributesFormData.withMutations(attr => {
             attr.set(attributeName, attr.get(attributeName).merge(value));
 
-            let newDistance = geometry.verticesDistance( attr.get('vertexOne'), attr.get('vertexTwo') );
+            let newDistance = geometry.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
 
             attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
               'length': newDistance,
               '_length': convert(newDistance).from(this.context.catalog.unit).to(attr.get('lineLength').get('_unit'))
-            }) );
+            }));
           });
         }
         break;
@@ -147,11 +147,11 @@ export default class ElementEditor extends Component {
         let {x: x1, y:y1} = this.props.layer.vertices.get(line.vertices.get(1));
         let alpha = Math.atan2(y1 - y0, x1 - x0);
         let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+        let lengthValue = value.get('length');
+        lengthValue = Math.max(lengthValue, 0);
+        lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
 
         if (attributeName === 'offsetA') {
-
-          let lengthValue = value.get('length');
-          lengthValue = Math.max(lengthValue, 0);
 
           let xp = (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
@@ -171,9 +171,6 @@ export default class ElementEditor extends Component {
 
         } else if (attributeName === 'offsetB') {
 
-          let lengthValue = value.get('length');
-          lengthValue = Math.max(lengthValue, 0);
-
           let xp = x1 - (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
           let yp = y1 - (lengthValue +
@@ -191,7 +188,13 @@ export default class ElementEditor extends Component {
           attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
         }
 
-        attributesFormData = attributesFormData.set(attributeName, value.set('_length', Math.max(value.get('_length'), 0)));
+        let offsetAttribute = new Map({
+          length: geometry.toFixedFloat(lengthValue, 2),
+          _unit: value.get('_unit'),
+          _length: geometry.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+        });
+
+        attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
         break;
       }
       default:
