@@ -220,8 +220,8 @@ export function toFixedFloat( num, precision )
 
 export function roundVertex( vertex, precision )
 {
-  vertex.set( 'x', toFixedFloat( vertex.get('x'), 6 ) );
-  vertex.set( 'y', toFixedFloat( vertex.get('y'), 6 ) );
+  vertex.set( 'x', toFixedFloat( vertex.get('x'), precision || 6 ) );
+  vertex.set( 'y', toFixedFloat( vertex.get('y'), precision || 6 ) );
 
   return vertex;
 }
