@@ -41,8 +41,8 @@ export default class ElementEditor extends Component {
         let v_b = layer.vertices.get(element.vertices.get(1));
 
         let distance = geometry.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
-        let _unit = element.misc.get('_unitLength') || UNIT_CENTIMETER;
-        let _length = convert(distance).from(UNIT_CENTIMETER).to(_unit);
+        let _unit = element.misc.get('_unitLength') || this.context.catalog.unit;
+        let _length = convert(distance).from(this.context.catalog.unit).to(_unit);
 
         return new Map({
           vertexOne: v_a,
