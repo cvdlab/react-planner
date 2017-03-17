@@ -119,7 +119,7 @@ export default class ElementEditor extends Component {
 
           let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
 
-          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'));
+          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2 );
 
           attributesFormData = attributesFormData.withMutations(attr => {
             attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -129,12 +129,13 @@ export default class ElementEditor extends Component {
         else {
           attributesFormData = attributesFormData.withMutations(attr => {
             attr.set(attributeName, attr.get(attributeName).merge(value));
-            let {x: x0, y:y0} = attr.get('vertexOne');
-            let {x: x1, y:y1} = attr.get('vertexTwo');
 
-            let newDistance = geometry.pointsDistance(x0, y0, x1, y1);
+            let newDistance = geometry.verticesDistance( attr.get('vertexOne'), attr.get('vertexTwo') );
 
-            attr.mergeIn(['lineLength'], attr.get('lineLength').set('_length', newDistance ) );
+            attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
+              'length': newDistance,
+              '_length': convert(newDistance).from(this.context.catalog.unit).to(attr.get('lineLength').get('_unit'))
+            }) );
           });
         }
         break;
