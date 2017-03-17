@@ -134,7 +134,7 @@ export default class ElementEditor extends Component {
 
             let newDistance = geometry.pointsDistance(x0, y0, x1, y1);
 
-            attr.mergeIn(['lineLength'], attr.get('lineLength').set('_length', newDistance ) );
+            attr.mergeIn(['lineLength'], attr.get('lineLength').set('_length', newDistance));
           });
         }
         break;
@@ -149,9 +149,12 @@ export default class ElementEditor extends Component {
 
         if (attributeName === 'offsetA') {
 
-          let xp = (value.get('length') +
+          let lengthValue = value.get('length');
+          lengthValue = Math.max(lengthValue, 0);
+
+          let xp = (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
-          let yp = (value.get('length') +
+          let yp = (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
@@ -167,9 +170,12 @@ export default class ElementEditor extends Component {
 
         } else if (attributeName === 'offsetB') {
 
-          let xp = x1 - (value.get('length') +
+          let lengthValue = value.get('length');
+          lengthValue = Math.max(lengthValue, 0);
+
+          let xp = x1 - (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
-          let yp = y1 - (value.get('length') +
+          let yp = y1 - (lengthValue +
             this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha);
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
@@ -184,13 +190,15 @@ export default class ElementEditor extends Component {
           attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
         }
 
-        attributesFormData = attributesFormData.set(attributeName, value);
+        attributesFormData = attributesFormData.set(attributeName, value.set('_length', Math.max(value.get('_length'), 0)));
         break;
       }
       default:
         break;
     }
-    this.setState({attributesFormData});
+
+    this
+      .setState({attributesFormData});
   }
 
   updateProperty(propertyName, value) {
