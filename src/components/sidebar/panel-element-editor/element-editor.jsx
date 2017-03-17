@@ -190,9 +190,9 @@ export default class ElementEditor extends Component {
         }
 
         let offsetAttribute = new Map({
-          length: geometry.toFixedFloat(lengthValue, 2),
+          length: math.toFixedFloat(lengthValue, 2),
           _unit: value.get('_unit'),
-          _length: geometry.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+          _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
         });
 
         attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
