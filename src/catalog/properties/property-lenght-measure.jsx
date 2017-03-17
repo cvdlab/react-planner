@@ -5,6 +5,7 @@ import FormLabel from '../../components/style/form-label'
 import FormNumberInput from '../../components/style/form-number-input';
 import FormSelect from '../../components/style/form-select';
 import {Map} from 'immutable';
+import * as math from '../../utils/math';
 
 let tableStyle = {
   borderCollapse: 'collapse'
@@ -28,15 +29,10 @@ export default function PropertyLengthMeasure({value, onUpdate, configs}, {catal
 
   let update = (lengthInput, unitInput) => {
 
-    let _length = parseFloat(lengthInput);
+    let newLength = math.toFixedFloat(lengthInput);
+    let length = convert(newLength).from(unitInput).to(catalog.unit);
 
-    if (isNaN(_length)) {
-      _length = 0;
-    }
-
-    let length = convert(_length).from(unitInput).to(catalog.unit);
-
-    onUpdate(value.merge({length, _length, _unit: unitInput}));
+    onUpdate(value.merge({length, _length : lengthInput, _unit: unitInput}));
   };
 
   return (
