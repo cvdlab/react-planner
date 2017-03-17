@@ -1,3 +1,5 @@
+import {toFixedFloat, fAbs} from './math.js';
+
 export function compareVertices(v0, v1) {
   return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x
 }
@@ -61,7 +63,7 @@ export function linePassingThroughTwoPoints(x1, y1, x2, y2) {
 
 export function distancePointFromLine(a, b, c, x, y) {
   //https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
-  return Math.abs(a * x + b * y + c) / Math.sqrt(a * a + b * b);
+  return fAbs(a * x + b * y + c) / Math.sqrt(a * a + b * b);
 }
 
 export function closestPointFromLine(a, b, c, x, y) {
@@ -97,8 +99,8 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
   let numA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
   let numB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
 
-  if (Math.abs(denom) <= EPSILON) {
-    if (Math.abs(numA) <= EPSILON && Math.abs(numB) <= EPSILON) {
+  if (fAbs(denom) <= EPSILON) {
+    if (fAbs(numA) <= EPSILON && fAbs(numB) <= EPSILON) {
 
       let comparator = (pa, pb) => pa.x === pb.x ? pa.y - pb.y : pa.x - pb.x;
       let line0 = [p1, p2].sort(comparator);
@@ -200,7 +202,7 @@ export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
 
 export function samePoints({ x: x1, y: y1 }, { x: x2, y: y2 }) {
   let EPSILON = 10e-6;
-  return Math.abs(x1 - x2) <= EPSILON && Math.abs(y1 - y2) <= EPSILON;
+  return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
 }
 
 /** @description Extend line based on coordinates and new line length
@@ -218,14 +220,6 @@ export function extendLine(x1, y1, x2, y2, newDistance, precision = 6) {
     x: toFixedFloat(x1 + (Math.cos(rad) * newDistance), precision),
     y: toFixedFloat(y1 + (Math.sin(rad) * newDistance), precision),
   }
-}
-
-export function toFixedFloat(num, precision) {
-  if (num && precision) {
-    let prec = (10 ** precision);
-    return (Math.round(num * prec) / prec);
-  }
-  return 0;
 }
 
 export function roundVertex(vertex, precision = 6) {
