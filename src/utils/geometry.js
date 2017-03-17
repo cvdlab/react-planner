@@ -10,8 +10,8 @@ export function maxVertex(v0, v1) {
   return compareVertices(v0, v1) > 0 ? v0 : v1;
 }
 
-export function orderVertices(vertices){
-  return vertices.sort( compareVertices );
+export function orderVertices(vertices) {
+  return vertices.sort(compareVertices);
 }
 
 /** @description Determines the distance between two points
@@ -26,6 +26,14 @@ export function pointsDistance(x0, y0, x1, y1) {
   let diff_y = y0 - y1;
 
   return Math.sqrt((diff_x * diff_x) + (diff_y * diff_y));
+}
+
+export function verticesDistance( v1, v2 ) {
+
+  let {x: x0, y:y0} = v1;
+  let {x: x1, y:y1} = v2;
+
+  return pointsDistance(x0, y0, x1, y1);
 }
 
 export function horizontalLine(y) {
@@ -115,7 +123,7 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
       x: x1 + (uA * (x2 - x1)),
       y: y1 + (uA * (y2 - y1))
     };
-    return { type: "intersecting", point };extendLine
+    return { type: "intersecting", point };
   }
 
   return { type: "none" };
@@ -203,25 +211,26 @@ export function samePoints({ x: x1, y: y1 }, { x: x2, y: y2 }) {
  *  @param {number} newDistance New line length
  *  @return {object}
 */
-export function extendLine(x1, y1, x2, y2, newDistance){
-  let rad = Math.atan2( y2 - y1, x2 - x1 );
+export function extendLine(x1, y1, x2, y2, newDistance, precision = 6) {
+  let rad = Math.atan2(y2 - y1, x2 - x1);
 
   return {
-    x: ( x1 + ( Math.cos( rad ) * newDistance ) ),
-    y: ( y1 + ( Math.sin( rad ) * newDistance ) ),
+    x: toFixedFloat(x1 + (Math.cos(rad) * newDistance), precision),
+    y: toFixedFloat(y1 + (Math.sin(rad) * newDistance), precision),
   }
 }
 
-export function toFixedFloat( num, precision )
-{
-  let prec = ( 10 ** precision );
-  return ( Math.round( num * prec ) / prec );
+export function toFixedFloat(num, precision) {
+  if (num && precision) {
+    let prec = (10 ** precision);
+    return (Math.round(num * prec) / prec);
+  }
+  return 0;
 }
 
-export function roundVertex( vertex, precision )
-{
-  vertex.set( 'x', toFixedFloat( vertex.get('x'), precision || 6 ) );
-  vertex.set( 'y', toFixedFloat( vertex.get('y'), precision || 6 ) );
+export function roundVertex(vertex, precision = 6) {
+  vertex.set('x', toFixedFloat(vertex.get('x'), precision));
+  vertex.set('y', toFixedFloat(vertex.get('y'), precision));
 
   return vertex;
 }
