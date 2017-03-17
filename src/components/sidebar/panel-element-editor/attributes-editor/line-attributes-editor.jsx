@@ -37,10 +37,6 @@ export default function LineAttributesEditor( { element, onUpdate, attributeForm
           <td style={firstTdStyle}>Y2: </td>
           <td><FormNumberInput value={vertexTwo.get('y')} onChange={event => onUpdate( 'vertexTwo', { 'y': event.target.value } )} style={inputStyle} /></td>
         </tr>
-        {/*<tr>
-          <td style={firstTdStyle}>Length: </td>
-          <td><FormNumberInput value={lineLength} onChange={event => onUpdate( 'lineLength', event.target.value )} style={inputStyle} /></td>
-        </tr>*/}
       </tbody>
     </table>
     <PropertyLengthMeasure
