@@ -6,7 +6,6 @@ import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import * as geometry from '../../../utils/geometry.js';
 import convert from 'convert-units';
-import {UNIT_CENTIMETER} from "../../../constants";
 
 let tableStyle = {
   width: '100%'
@@ -58,17 +57,25 @@ export default class ElementEditor extends Component {
         let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
         let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
 
-        let _unitA = element.misc.get('_unitA') || UNIT_CENTIMETER;
-        let _lengthA = convert(startAt).from(UNIT_CENTIMETER).to(_unitA);
+        let _unitA = element.misc.get('_unitA') || this.context.catalog.unit;
+        let _lengthA = convert(startAt).from(this.context.catalog.unit).to(_unitA);
 
         let endAt = lineLength - lineLength * element.offset - element.properties.get('width').get('length') / 2;
-        let _unitB = element.misc.get('_unitB') || UNIT_CENTIMETER;
-        let _lengthB = convert(endAt).from(UNIT_CENTIMETER).to(_unitB);
+        let _unitB = element.misc.get('_unitB') || this.context.catalog.unit;
+        let _lengthB = convert(endAt).from(this.context.catalog.unit).to(_unitB);
 
         return new Map({
           offset: element.offset,
-          offsetA: new Map({length: element.offset, _length: _lengthA, _unit: _unitA}),
-          offsetB: new Map({length: element.offset, _length: _lengthB, _unit: _unitB})
+          offsetA: new Map({
+            length: geometry.toFixedFloat(startAt, 2),
+            _length: geometry.toFixedFloat(_lengthA, 2),
+            _unit: _unitA
+          }),
+          offsetB: new Map({
+            length: geometry.toFixedFloat(endAt, 2),
+            _length: geometry.toFixedFloat(_lengthB, 2),
+            _unit: _unitB
+          })
         });
       }
       case 'areas': {
@@ -134,23 +141,50 @@ export default class ElementEditor extends Component {
       }
       case 'holes': {
         let offset;
+        let line = this.props.layer.lines.get(this.props.element.line);
+        let {x: x0, y:y0} = this.props.layer.vertices.get(line.vertices.get(0));
+        let {x: x1, y:y1} = this.props.layer.vertices.get(line.vertices.get(1));
+        let alpha = Math.atan2(y1 - y0, x1 - x0);
+        let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+
         if (attributeName === 'offsetA') {
 
-          let line = this.props.layer.lines.get(this.props.element.line);
-          let {x: x0, y:y0} = this.props.layer.vertices.get(line.vertices.get(0));
-          let {x: x1, y:y1} = this.props.layer.vertices.get(line.vertices.get(1));
-          let alpha = Math.atan2(y1 - y0, x1 - x0);
-
-          let xp = (attributesFormData.get('offsetA').get('length') +
-            this.props.element.properties.get('width').get('length')) * Math.cos(alpha) + x0;
-          let yp = (attributesFormData.get('offsetA').get('length') +
-            this.props.element.properties.get('width').get('length')) * Math.sin(alpha) + y0;
+          let xp = (value.get('length') +
+            this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
+          let yp = (value.get('length') +
+            this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
           offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
-          console.log(xp, yp, offset);
+
+          let endAt = geometry.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+
+          let offsetB = new Map({
+            length: endAt,
+            _length: convert(endAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetB').get('_unit')),
+            _unit: attributesFormData.get('offsetB').get('_unit')
+          });
+
+          attributesFormData = attributesFormData.set('offsetB', offsetB).set('offset', offset);
+
         } else if (attributeName === 'offsetB') {
 
+          let xp = x1 - (value.get('length') +
+            this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
+          let yp = y1 - (value.get('length') +
+            this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha);
+          offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+
+          let startAt = geometry.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+
+          let offsetA = new Map({
+            length: startAt,
+            _length: convert(startAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetA').get('_unit')),
+            _unit: attributesFormData.get('offsetA').get('_unit')
+          });
+
+          attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
         }
-        attributesFormData = attributesFormData.set(attributeName, value).set('offset', offset);
+
+        attributesFormData = attributesFormData.set(attributeName, value);
         break;
       }
       default:
