@@ -34,7 +34,7 @@ export default class ElementEditor extends Component {
         return new Map({
           x: element.x,
           y: element.y,
-          rotation: element.rotation
+          rotation: math.toFixedFloat(element.rotation, 2)
         });
       }
       case 'lines': {
