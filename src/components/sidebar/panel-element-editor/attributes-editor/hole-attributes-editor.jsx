@@ -1,18 +1,5 @@
 import React, {PropTypes, Component} from 'react';
-import FormNumberInput from '../../../style/form-number-input';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
-
-let tableStyle = {
-  width: '100%'
-};
-
-let firstTdStyle = {
-  width: '6em'
-};
-
-let inputStyle = {
-  textAlign: 'left'
-};
 
 export default function HoleAttributesEditor({element, onUpdate, attributeFormData}, {translator}) {
   let offsetA = attributeFormData.has('offsetA') ? attributeFormData.get('offsetA') : element.offsetA;
