@@ -435,7 +435,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
       }
     );
 
-    if (!item.selected  && layer.opacity !== 1) {
+    if (!item.selected && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -461,13 +461,19 @@ function applyOpacity(object, opacity) {
       if (child.material instanceof Three.MultiMaterial) {
         child.material.materials.forEach(materialChild => {
           materialChild.transparent = true;
-          if (materialChild.opacity && materialChild.opacity > opacity) {
+          if (materialChild.maxOpacity) {
+            materialChild.opacity = Math.min(materialChild.maxOpacity, opacity);
+          } else if (materialChild.opacity && materialChild.opacity > opacity) {
+            materialChild.maxOpacity = materialChild.opacity;
             materialChild.opacity = opacity;
           }
         });
       } else {
         child.material.transparent = true;
-        if (child.material.opacity && child.material.opacity > opacity) {
+        if (child.material.maxOpacity) {
+          child.material.opacity = Math.min(child.material.maxOpacity, opacity);
+        } else if (child.material.opacity && child.material.opacity > opacity) {
+          child.material.maxOpacity = child.material.opacity;
           child.material.opacity = opacity;
         }
       }
