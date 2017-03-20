@@ -3,10 +3,6 @@ import * as Three from 'three';
 import React from 'react';
 import convert from 'convert-units';
 
-let rectSVG = React.createFactory('rect');
-let gSVG = React.createFactory('g');
-let textSVG = React.createFactory('text');
-
 export default {
   name: "simple-stair",
   prototype: "items",
