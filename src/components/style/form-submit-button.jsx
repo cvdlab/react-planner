@@ -4,15 +4,13 @@ import Button from './button';
 const STYLE = {
   borderColor: "#415375",
   backgroundColor: "#415375",
-  color: "#fff",
-  width: "100%"
+  color: "#fff"
 };
 
 const STYLE_HOVER = {
   borderColor: "#1f3149",
   backgroundColor: "#1f3149",
-  color: "#fff",
-  width: "100%"
+  color: "#fff"
 };
 
 export default function FormSubmitButton({children, ...rest}) {

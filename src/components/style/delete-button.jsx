@@ -4,15 +4,13 @@ import Button from './button';
 const STYLE = {
   borderColor: "#c12e2a",
   backgroundColor: "#c9302c",
-  color: "#fff",
-  width: "100%"
+  color: "#fff"
 };
 
 const STYLE_HOVER = {
   backgroundColor: "#972726",
   borderColor: "#c12e2a",
-  color: "#fff",
-  width: "100%"
+  color: "#fff"
 };
 
 export default function FormDeleteButton({children, ...rest}) {

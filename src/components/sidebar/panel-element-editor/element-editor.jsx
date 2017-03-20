@@ -9,7 +9,9 @@ import * as math from '../../../utils/math.js';
 import convert from 'convert-units';
 
 let tableStyle = {
-  width: '100%'
+  marginTop: '10px',
+  marginRight: '0px',
+  marginLeft: 'auto'
 };
 
 export default class ElementEditor extends Component {
