@@ -31,12 +31,11 @@ export default {
   render2D: function (element, layer, scene) {
 
     let angle = element.rotation + 90;
-    //console.log(angle);
 
-    if (angle>-180 && angle<0)
-      angle =  360;
-    else
-      angle = 0;
+    let textRotation = 0;
+    if (Math.sin(angle * Math.PI / 180) < 0) {
+      textRotation = 180;
+    }
 
     let circleStyle = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
     let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: "2px", fill: "#84e1ce"};
@@ -48,7 +47,7 @@ export default {
         <line key="3" x1={-RADIUS/2+.25*RADIUS} x2={-RADIUS/2+RADIUS/2} y1={1.2*RADIUS} y2={1.5*RADIUS} style={arrow_style} />
         <line key="4" x1={0} x2={-RADIUS/2+.75*RADIUS} y1={1.5*RADIUS} y2={1.2*RADIUS} style={arrow_style} />
         <text key="5" cx="0" cy="0"
-              transform={`scale(1,-1) rotate(${angle/2})`}
+              transform={`scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
           {element.type}
         </text>
