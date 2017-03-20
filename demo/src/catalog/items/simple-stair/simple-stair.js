@@ -64,24 +64,29 @@ export default {
       .from(element.properties.get('depth').get('unit'))
       .to(scene.unit);
 
+    let angle = element.rotation + 90;
+    let textRotation = 0;
+    if (Math.sin(angle * Math.PI / 180) < 0) {
+      textRotation = 180;
+    }
 
-    return gSVG({transform: `translate(${-newWidth / 2},${-newDepth / 2})`}, [
-      rectSVG({
-        key: 1,
-        x: 0,
-        y: 0,
-        width: newWidth,
-        height: newDepth,
-        style: {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}
-      }),
-      textSVG({
-        key: 2,
-        x: 0,
-        y: 0,
-        transform: `translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1)`,
-        style: {textAnchor: "middle", fontSize: "11px"},
-      }, element.type)
-    ]);
+    let style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
+    let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: "2px", fill: "#84e1ce"};
+
+    return (
+      <g transform={`translate(${-newWidth / 2},${-newDepth / 2})`}>
+        <rect key="1" x="0" y="0" width={newWidth} height={newDepth} style={style}/>
+        <line key="2" x1={newWidth / 2} x2={newWidth / 2} y1={newDepth} y2={newDepth + 30} style={arrow_style}/>
+        <line key="3" x1={.35 * newWidth} x2={newWidth / 2} y1={newDepth + 15} y2={newDepth + 30} style={arrow_style}/>
+        <line key="4" x1={newWidth / 2} x2={.65 * newWidth} y1={newDepth + 30} y2={newDepth + 15} style={arrow_style}/>
+        <text key="5" x="0" y="0"
+              transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
+              style={{textAnchor: "middle", fontSize: "11px"}}>
+          {element.type}
+        </text>
+      </g>
+    );
+
   },
 
   render3D: function (element, layer, scene) {
@@ -192,9 +197,9 @@ export default {
     // Build closures for the stair
 
     /*** CLOSURE 1 ***/
-    let closure1Slope = -Math.atan(stepHeight / stepDepth);
+    let closure1Slope = -Math.atan(stepDepth / stepHeight);
     let stairClosure1Width = newWidth;
-    let stairClosure1Height = (numberOfSteps - 1) * stepDepth / Math.cos(closure1Slope);
+    let stairClosure1Height = (numberOfSteps - 1) * stepHeight / Math.cos(closure1Slope);
     let stairClosure1Geometry = new Three.PlaneGeometry(stairClosure1Width, stairClosure1Height);
 
     let closure1Material = new Three.MeshPhongMaterial({side: Three.BackSide});
@@ -224,7 +229,10 @@ export default {
     stair.add(closure2);
 
     /*** CLOSURE 2 ***/
-    let closure3 = new Three.Mesh(stepPlaneGeometry, stepPlaneMaterial);
+    let closure3Width = 0;
+    let closure3Depth = 0;
+    let stairClosure3Geometry = new Three.PlaneGeometry(stepWidth, stepDepth);
+    let closure3 = new Three.Mesh(stairClosure3Geometry, stepPlaneMaterial);
     closure3.rotation.x = Math.PI / 2;
     closure3.position.x = stepWidth / 2;
     closure3.position.z = (numberOfSteps - 1) * stepDepth + stepDepth / 2;
