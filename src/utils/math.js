@@ -5,7 +5,7 @@
 */
 export function toFixedFloat(num, precision = 6) {
   if (num && precision) {
-    let prec = (10 ** precision);
+    let prec = (Math.pow(10,precision));
     return ( ~~(num * prec) / prec);
   }
   return 0;
