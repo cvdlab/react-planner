@@ -18,7 +18,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
   return (
     <Panel name={translator.t("Elements on layer {0}", layer.name)}>
       <div key={1} style={{background: "#3a3a3e", padding: "5px 15px 5px 15px"}}>
-        <div style={{height: "100px", overflowY: "scroll"}} onWheel={e => e.stopPropagation()}>
+        <div style={{height: "100px", overflowY: "auto"}} onWheel={e => e.stopPropagation()}>
           {layer.lines.entrySeq().map(([lineID, line]) => {
             return (
               <div key={lineID} style={{cursor: "pointer"}}

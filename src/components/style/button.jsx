@@ -21,6 +21,7 @@ const BASE_STYLE = {
   borderRadius: "2px",
   borderWidth: "1px",
   borderType: "solid",
+  width: '100%'
 };
 
 const BASE_STYLE_SIZE = {

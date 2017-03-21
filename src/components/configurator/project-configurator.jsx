@@ -59,13 +59,19 @@ export default class ProjectConfigurator extends Component {
                              onChange={e => this.setState({dataHeight: e.target.value})}/>
           </FormBlock>
 
-          <div style={{textAlign: "right"}}>
-            <div style={{marginRight: "3px", display: "inline-block"}}>
-              <CancelButton  size="large" onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>
-            </div>
-
-            <FormSubmitButton  size="large">{translator.t("Save")}</FormSubmitButton>
-          </div>
+          <table style={{float: 'right'}}>
+            <tbody>
+            <tr>
+              <td>
+                <CancelButton size="large"
+                              onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>
+              </td>
+              <td>
+                <FormSubmitButton size="large">{translator.t("Save")}</FormSubmitButton>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </form>
       </ContentContainer>
     )

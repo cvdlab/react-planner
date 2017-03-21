@@ -110,17 +110,19 @@ export default class LayerConfigurator extends Component {
                              onChange={e => this.setState({dataOrder: e.target.value})}/>
           </FormBlock>
 
-          <div style={{textAlign: "right"}}>
-            <div style={{marginRight: "10px", display: "inline-block"}}>
-              <DeleteButton  size="large" onClick={e => sceneActions.removeLayer(layerID)}>{translator.t("Delete")}</DeleteButton>
-            </div>
-
-            <div style={{marginRight: "3px", display: "inline-block"}}>
-              <CancelButton  size="large" onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>
-            </div>
-
-            <FormSubmitButton size="large">{translator.t("Save")}</FormSubmitButton>
-          </div>
+          <table style={{float:'right'}}>
+            <tbody>
+            <tr>
+              <td>
+                <DeleteButton  size="large" onClick={e => sceneActions.removeLayer(layerID)}>{translator.t("Delete")}</DeleteButton>
+              </td>
+              <td>
+                <CancelButton  size="large" onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>              </td>
+              <td>
+                <FormSubmitButton size="large">{translator.t("Save")}</FormSubmitButton>              </td>
+            </tr>
+            </tbody>
+          </table>
         </form>
       </ContentContainer>
     )
