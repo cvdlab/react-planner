@@ -103,14 +103,11 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
         if (holes) {
           holes.forEach(holeWithOffsetPoint => {
 
-            let distance = Geometry.distancePointFromLineSegment(x1, y1, x2, y2,
-              holeWithOffsetPoint.offsetPosition.x,
-              holeWithOffsetPoint.offsetPosition.y);
+            let {x: xp, y: yp} = holeWithOffsetPoint.offsetPosition;
 
-            if (distance < EPSILON) {
-              let newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2,
-                holeWithOffsetPoint.offsetPosition.x,
-                holeWithOffsetPoint.offsetPosition.y);
+            if (Geometry.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
+
+              let newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
 
               if (newOffset >= 0 && newOffset <= 1) {
 
