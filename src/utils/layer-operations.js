@@ -152,14 +152,24 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
           oldHoles = [];
         }
 
+        let orderedVertices = Geometry.orderVertices([ {x: x0, y: y0}, {x: x1, y: y1}]);
+
         layer.lines.get(line.id).holes.forEach(holeID => {
           let hole = layer.holes.get(holeID);
           let oldLineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
 
-          let alpha = Math.atan2(v1.y - v0.y, v1.x - v0.x);
+          let alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y,
+            orderedVertices[1].x - orderedVertices[0].x);
 
-          let xp = oldLineLength * hole.offset * Math.cos(alpha) + v0.x;
-          let yp = oldLineLength * hole.offset * Math.sin(alpha) + v0.y;
+          let offset = hole.offset;
+
+          if (orderedVertices[1].x === line.vertices.get(1).x
+            && orderedVertices[1].y === line.vertices(1).y) {
+            offset = 1 - offset;
+          }
+
+          let xp = oldLineLength * offset * Math.cos(alpha) + v0.x;
+          let yp = oldLineLength * offset * Math.sin(alpha) + v0.y;
 
           oldHoles.push({hole, offsetPosition: {x: xp, y: yp}});
         });

@@ -129,8 +129,6 @@ function endDraggingVertex(state, x, y, detectSnap) {
           oldHoles.push({hole, offsetPosition: {x: xp, y: yp}});
         });
 
-        console.log(oldHoles);
-
         removeLine(layer, lineID);
         addLineAvoidingIntersections(layer, line.type,
           oldVertex.x, oldVertex.y,
