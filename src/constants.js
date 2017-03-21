@@ -103,3 +103,5 @@ export const UNIT_METER = 'm';
 export const UNIT_INCH = 'in';
 export const UNIT_FOOT = 'ft';
 export const UNIT_MILE = 'mi';
+
+export const EPSILON = 1e-6;

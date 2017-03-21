@@ -1,10 +1,11 @@
+/** lines features **/
 import {Map, List, fromJS} from 'immutable';
 import {Vertex} from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
+import {EPSILON} from "../constants";
 
-/** lines features **/
 export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
   let line;
 
@@ -102,18 +103,23 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
         if (holes) {
           holes.forEach(holeWithOffsetPoint => {
 
-            let newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2,
+            let distance = Geometry.distancePointFromLineSegment(x1, y1, x2, y2,
               holeWithOffsetPoint.offsetPosition.x,
               holeWithOffsetPoint.offsetPosition.y);
 
-            if (newOffset >= 0 && newOffset <= 1) {
+            if (distance < EPSILON) {
+              let newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2,
+                holeWithOffsetPoint.offsetPosition.x,
+                holeWithOffsetPoint.offsetPosition.y);
 
-              addHole(layer, holeWithOffsetPoint.hole.type, line.id, holeWithOffsetPoint.hole.offset, catalog,
-                holeWithOffsetPoint.hole.properties);
+              if (newOffset >= 0 && newOffset <= 1) {
+
+                addHole(layer, holeWithOffsetPoint.hole.type, line.id, newOffset, catalog,
+                  holeWithOffsetPoint.hole.properties);
+              }
             }
           });
         }
-
 
         lines.push(line);
       });

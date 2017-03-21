@@ -195,6 +195,7 @@ export function mapRange(value, low1, high1, low2, high2) {
   return low2 + (high2 - low2) * (value - low1) / (high1 - low1);
 }
 
+// TODO: USE atan2
 export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
   let length = pointsDistance(x1, y1, x2, y2);
   return (-Math.asin((y1 - y2) / length)) * 180 / Math.PI;
