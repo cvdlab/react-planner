@@ -21,8 +21,8 @@ export default function (_ref) {
     { style: { display: "flex", flexFlow: "row nowrap", height: height }, onWheel: function onWheel(event) {
         return event.preventDefault();
       } },
-    React.createElement(Toolbar, _extends({ style: { width: toolbarWidth, height: height } }, rest)),
-    React.createElement(Content, _extends({ style: { width: contentWidth, height: height }, width: contentWidth, height: height }, rest)),
-    React.createElement(Sidebar, _extends({ style: { width: sidebarWidth, height: height } }, rest, { width: sidebarWidth, height: height }))
+    React.createElement(Toolbar, _extends({ width: toolbarWidth, height: height }, rest)),
+    React.createElement(Content, _extends({ width: contentWidth, height: height }, rest)),
+    React.createElement(Sidebar, _extends({ width: sidebarWidth, height: height }, rest))
   );
 }

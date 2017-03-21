@@ -104,7 +104,8 @@ export var Vertex = function (_Record3) {
   prototype: "vertices",
   selected: false,
   lines: new List(),
-  areas: new List()
+  areas: new List(),
+  misc: new Map()
 }, 'Vertex'));
 
 export var Line = function (_Record4) {
@@ -130,7 +131,8 @@ export var Line = function (_Record4) {
   vertices: new List(),
   holes: new List(),
   selected: false,
-  properties: new Map()
+  properties: new Map(),
+  misc: new Map()
 }, 'Line'));
 
 export var Hole = function (_Record5) {
@@ -154,7 +156,8 @@ export var Hole = function (_Record5) {
   offset: -1,
   line: "",
   selected: false,
-  properties: new Map()
+  properties: new Map(),
+  misc: new Map()
 }, 'Hole'));
 
 export var Area = function (_Record6) {
@@ -178,7 +181,8 @@ export var Area = function (_Record6) {
   prototype: "areas",
   vertices: new List(),
   selected: false,
-  properties: new Map()
+  properties: new Map(),
+  misc: new Map()
 }, 'Area'));
 
 export var Item = function (_Record7) {
@@ -203,7 +207,8 @@ export var Item = function (_Record7) {
   selected: false,
   x: 0,
   y: 0,
-  rotation: 0
+  rotation: 0,
+  misc: new Map()
 }, 'Item'));
 
 export var Layer = function (_Record8) {

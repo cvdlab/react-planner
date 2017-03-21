@@ -285,7 +285,7 @@ var Scene3DViewer = function (_React$Component) {
       }
 
       renderer.setSize(width, height);
-      renderer.render(scene3D, camera);
+      //renderer.render(scene3D, camera);
     }
   }, {
     key: 'render',

@@ -6,7 +6,7 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 import React, { PropTypes } from 'react';
 import Panel from './panel';
-import { MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON } from '../../constants';
+import { MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, MODE_CONFIGURING_LAYER } from '../../constants';
 import { Scrollbars } from 'react-custom-scrollbars';
 
 export default function PanelLayerElement(_ref, _ref2) {
@@ -17,7 +17,7 @@ export default function PanelLayerElement(_ref, _ref2) {
       translator = _ref2.translator;
 
 
-  if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
+  if ([MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, MODE_CONFIGURING_LAYER].includes(mode)) return null;
 
   var layer = scene.layers.get(scene.selectedLayer);
 
@@ -36,7 +36,7 @@ export default function PanelLayerElement(_ref, _ref2) {
       { key: 1, style: { background: "#3a3a3e", padding: "5px 15px 5px 15px" } },
       React.createElement(
         'div',
-        { style: { height: "100px", overflowY: "scroll" }, onWheel: function onWheel(e) {
+        { style: { height: "100px", overflowY: "auto" }, onWheel: function onWheel(e) {
             return e.stopPropagation();
           } },
         layer.lines.entrySeq().map(function (_ref4) {

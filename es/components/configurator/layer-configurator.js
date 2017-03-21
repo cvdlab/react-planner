@@ -176,34 +176,48 @@ var LayerConfigurator = function (_Component) {
               } })
           ),
           React.createElement(
-            'div',
-            { style: { textAlign: "right" } },
+            'table',
+            { style: { float: 'right' } },
             React.createElement(
-              'div',
-              { style: { marginRight: "10px", display: "inline-block" } },
+              'tbody',
+              null,
               React.createElement(
-                DeleteButton,
-                { size: 'large', onClick: function onClick(e) {
-                    return sceneActions.removeLayer(layerID);
-                  } },
-                translator.t("Delete")
+                'tr',
+                null,
+                React.createElement(
+                  'td',
+                  null,
+                  React.createElement(
+                    DeleteButton,
+                    { size: 'large', onClick: function onClick(e) {
+                        return sceneActions.removeLayer(layerID);
+                      } },
+                    translator.t("Delete")
+                  )
+                ),
+                React.createElement(
+                  'td',
+                  null,
+                  React.createElement(
+                    CancelButton,
+                    { size: 'large', onClick: function onClick(e) {
+                        return projectActions.rollback();
+                      } },
+                    translator.t("Cancel")
+                  ),
+                  '              '
+                ),
+                React.createElement(
+                  'td',
+                  null,
+                  React.createElement(
+                    FormSubmitButton,
+                    { size: 'large' },
+                    translator.t("Save")
+                  ),
+                  '              '
+                )
               )
-            ),
-            React.createElement(
-              'div',
-              { style: { marginRight: "3px", display: "inline-block" } },
-              React.createElement(
-                CancelButton,
-                { size: 'large', onClick: function onClick(e) {
-                    return projectActions.rollback();
-                  } },
-                translator.t("Cancel")
-              )
-            ),
-            React.createElement(
-              FormSubmitButton,
-              { size: 'large' },
-              translator.t("Save")
             )
           )
         )

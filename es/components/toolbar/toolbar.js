@@ -44,7 +44,10 @@ var Icon3D = function Icon3D() {
 import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
 
 import ToolbarButton from './toolbar-button';
-var STYLE = { backgroundColor: '#28292D', padding: "10px 10px" };
+var STYLE = {
+  backgroundColor: '#28292D',
+  padding: 10
+};
 
 export default function Toolbar(_ref, _ref2) {
   var state = _ref.state,
@@ -174,6 +177,8 @@ export default function Toolbar(_ref, _ref2) {
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired
 };
 

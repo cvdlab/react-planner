@@ -32,7 +32,8 @@ var BASE_STYLE = {
   outline: "none",
   borderRadius: "2px",
   borderWidth: "1px",
-  borderType: "solid"
+  borderType: "solid",
+  width: '100%'
 };
 
 var BASE_STYLE_SIZE = {
