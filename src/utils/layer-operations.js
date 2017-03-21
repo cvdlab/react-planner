@@ -99,7 +99,6 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
     layer = layer.withMutations(layer => {
       pointsPair.forEach(([{x: x1, y: y1}, {x: x2, y: y2}]) => {
         let {line} = addLine(layer, type, x1, y1, x2, y2, catalog, properties);
-        //TODO: Add holes
         if (holes) {
           holes.forEach(holeWithOffsetPoint => {
 
@@ -107,17 +106,11 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
               holeWithOffsetPoint.offsetPosition.x,
               holeWithOffsetPoint.offsetPosition.y);
 
-            console.log(x1,y1,x2,y2,newOffset, holeWithOffsetPoint);
-
             if (newOffset >= 0 && newOffset <= 1) {
 
               addHole(layer, holeWithOffsetPoint.hole.type, line.id, holeWithOffsetPoint.hole.offset, catalog,
                 holeWithOffsetPoint.hole.properties);
             }
-
-            // let holesPushed = line.holes.push(holeWithOffsetPoint.hole);
-            // line = line.holes.merge(holesPushed);
-            // console.log(holesPushed, line, line.holes, new Line(line));
           });
         }
 
@@ -162,22 +155,12 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
 
           let alpha = Math.atan2(v1.y - v0.y, v1.x - v0.x);
 
-          // TODO: FINISH THIS WORK (FIND THE RIGHT INTERSECTION AND SEE NEXT ON THE BLOCK NOTES)
-          // let xp = (oldLineLength +
-          //   hole.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
-          // let yp = (oldLineLength +
-          //   hole.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
-
           let xp = oldLineLength * hole.offset * Math.cos(alpha) + v0.x;
           let yp = oldLineLength * hole.offset * Math.sin(alpha) + v0.y;
 
-          console.log(alpha * 180 / Math.PI, xp, yp);
-
-          // TODO: Controlla che l'offset sia poi quello corretto e ricorda di calcolare alpha
           oldHoles.push({hole, offsetPosition: {x: xp, y: yp}});
         });
 
-        // oldHoles.push({hole: layer.lines.get(line.id).holes.toJS()});
         removeLine(layer, line.id);
         points.push(v0, v1);
       }
