@@ -277,12 +277,10 @@ function endDraggingLine(state, x, y) {
 
     let offset = hole.offset;
 
-    if (orderedVertices[0] === vertex1) {
-      offset = 1 - offset;
-    }
-
     let xp = lineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
     let yp = lineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
+
+    console.log(xp,yp, offset);
 
     holesWithOffsetPosition.push({hole, offsetPosition: {x: xp, y: yp}});
   });
