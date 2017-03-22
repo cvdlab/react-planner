@@ -68,13 +68,29 @@ export function splitLine(layer, lineID, x, y, catalog) {
     ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
 
     let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+
     line.holes.forEach(holeID => {
       let hole = layer.holes.get(holeID);
-      if (hole.offset < splitPointOffset) {
-        let offset = hole.offset / splitPointOffset;
+
+      let minVertex = Geometry.minVertex({x: x0, y: y0}, {x: x1, y: y1});
+
+      let holeOffset = hole.offset;
+      if (minVertex.x === x1 && minVertex.y === y1) {
+        splitPointOffset = 1 - splitPointOffset;
+        holeOffset = 1 - hole.offset;
+      }
+
+      if (holeOffset < splitPointOffset) {
+        let offset = holeOffset / splitPointOffset;
+        if (minVertex.x === x1 && minVertex.y === y1) {
+          offset = 1 - offset;
+        }
         addHole(layer, hole.type, line0.id, offset, catalog, hole.properties);
       } else {
-        let offset = (hole.offset - splitPointOffset) / (1 - splitPointOffset);
+        let offset = (holeOffset - splitPointOffset) / (1 - splitPointOffset);
+        if (minVertex.x === x1 && minVertex.y === y1) {
+          offset = 1 - offset;
+        }
         addHole(layer, hole.type, line1.id, offset, catalog, hole.properties);
       }
     });
@@ -152,7 +168,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
           oldHoles = [];
         }
 
-        let orderedVertices = Geometry.orderVertices([ {x: x0, y: y0}, {x: x1, y: y1}]);
+        let orderedVertices = Geometry.orderVertices([{x: x0, y: y0}, {x: x1, y: y1}]);
 
         layer.lines.get(line.id).holes.forEach(holeID => {
           let hole = layer.holes.get(holeID);
