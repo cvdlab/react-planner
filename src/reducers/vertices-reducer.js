@@ -70,22 +70,6 @@ function endDraggingVertex(state, x, y, detectSnap) {
   let vertexID = draggingSupport.get('vertexID');
   let lineIDs = state.scene.layers.get(layerID).vertices.get(vertexID).lines;
 
-  /** TODO: remove this **/
-  // state = updateDraggingVertex(state, x, y, detectSnap);
-  // let scene = state.scene.updateIn(['layers', layerID], layer => mergeEqualsVertices(layer, vertexID));
-  //
-  // return state.merge({
-  //   mode: MODE_IDLE,
-  //   draggingSupport: null,
-  //   scene,
-  //
-  //   activeSnapElement: null,
-  //   snapElements: new List(),
-  //   sceneHistory: state.sceneHistory.push(scene)
-  // });
-
-  /** end TODO **/
-
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
 
     lineIDs.forEach(lineID => {
