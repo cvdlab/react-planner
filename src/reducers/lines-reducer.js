@@ -341,21 +341,6 @@ function endDraggingLine(state, x, y, detectSnap) {
   });
 }
 
-// function endDraggingLine(state, x, y, detectSnap) {
-//   let catalog = state.catalog;
-//
-//   return state.withMutations(state => {
-//     updateDraggingLine(state, x, y, catalog);
-//     state.merge({
-//       mode: MODE_IDLE,
-//       draggingSupport: null,
-//       activeSnapElement: null,
-//       snapElements: new List(),
-//       sceneHistory: state.sceneHistory.push(state.scene)
-//     });
-//   });
-// }
-
 function selectLine(state, layerID, lineID) {
   let scene = state.scene;
 
