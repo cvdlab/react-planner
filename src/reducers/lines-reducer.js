@@ -254,7 +254,7 @@ function updateDraggingLine(state, x, y, detectSnap) {
   });
 }
 
-function endDraggingLine(state, x, y) {
+function endDraggingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
   let {draggingSupport} = state;
   let layerID = draggingSupport.get('layerID');
@@ -280,8 +280,6 @@ function endDraggingLine(state, x, y) {
     let xp = lineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
     let yp = lineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
 
-    console.log(xp,yp, offset);
-
     holesWithOffsetPosition.push({hole, offsetPosition: {x: xp, y: yp}});
   });
 
@@ -295,6 +293,36 @@ function endDraggingLine(state, x, y) {
       let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
       let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
 
+      if (detectSnap) {
+
+        let curSnap0 = nearestSnap(state.snapElements, newVertex0X, newVertex0Y);
+        let curSnap1 = nearestSnap(state.snapElements, newVertex1X, newVertex1Y);
+
+        let deltaX = 0, deltaY = 0;
+        if (curSnap0 && curSnap1) {
+          if (curSnap0.point.distance < curSnap1.point.distance) {
+            deltaX = curSnap0.point.x - newVertex0X;
+            deltaY = curSnap0.point.y - newVertex0Y;
+          } else {
+            deltaX = curSnap1.point.x - newVertex1X;
+            deltaY = curSnap1.point.y - newVertex1Y;
+          }
+        } else {
+          if (curSnap0) {
+            deltaX = curSnap0.point.x - newVertex0X;
+            deltaY = curSnap0.point.y - newVertex0Y;
+          }
+          if (curSnap1) {
+            deltaX = curSnap1.point.x - newVertex1X;
+            deltaY = curSnap1.point.y - newVertex1Y;
+          }
+        }
+
+        newVertex0X += deltaX;
+        newVertex0Y += deltaY;
+        newVertex1X += deltaX;
+        newVertex1Y += deltaY;
+      }
       removeLine(layer, lineID);
       addLineAvoidingIntersections(layer, line.type,
         newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
@@ -312,6 +340,21 @@ function endDraggingLine(state, x, y) {
     });
   });
 }
+
+// function endDraggingLine(state, x, y, detectSnap) {
+//   let catalog = state.catalog;
+//
+//   return state.withMutations(state => {
+//     updateDraggingLine(state, x, y, catalog);
+//     state.merge({
+//       mode: MODE_IDLE,
+//       draggingSupport: null,
+//       activeSnapElement: null,
+//       snapElements: new List(),
+//       sceneHistory: state.sceneHistory.push(state.scene)
+//     });
+//   });
+// }
 
 function selectLine(state, layerID, lineID) {
   let scene = state.scene;
