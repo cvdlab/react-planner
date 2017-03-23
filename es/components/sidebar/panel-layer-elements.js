@@ -7,7 +7,6 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 import React, { PropTypes } from 'react';
 import Panel from './panel';
 import { MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, MODE_CONFIGURING_LAYER } from '../../constants';
-import { Scrollbars } from 'react-custom-scrollbars';
 
 export default function PanelLayerElement(_ref, _ref2) {
   var _ref$state = _ref.state,
