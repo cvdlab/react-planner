@@ -1,5 +1,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 import React, { PropTypes } from 'react';
 import PanelElementEditor from './panel-element-editor/panel-element-editor';
 import PanelLayers from './panel-layers';
@@ -14,6 +16,8 @@ var STYLE = {
 };
 
 export default function Sidebar(_ref) {
+  var _extends2;
+
   var state = _ref.state,
       width = _ref.width,
       height = _ref.height;
@@ -22,7 +26,7 @@ export default function Sidebar(_ref) {
   return React.createElement(
     'aside',
     {
-      style: _extends({ minWidth: width, maxWidth: width, maxHeight: height }, STYLE),
+      style: _extends((_extends2 = { width: width }, _defineProperty(_extends2, 'width', width), _defineProperty(_extends2, 'height', height), _extends2), STYLE),
       onKeyDown: function onKeyDown(event) {
         return event.stopPropagation();
       },
