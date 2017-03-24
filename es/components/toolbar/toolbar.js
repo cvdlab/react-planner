@@ -46,7 +46,7 @@ import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW
 import ToolbarButton from './toolbar-button';
 var STYLE = {
   backgroundColor: '#28292D',
-  padding: 10
+  padding: "10px"
 };
 
 export default function Toolbar(_ref, _ref2) {
@@ -69,7 +69,7 @@ export default function Toolbar(_ref, _ref2) {
 
   return React.createElement(
     'aside',
-    { style: _extends({}, STYLE, { width: width, height: height }), className: 'toolbar' },
+    { style: _extends({}, STYLE, { maxWidth: width, maxHeight: height }), className: 'toolbar' },
     React.createElement(
       If,
       { condition: allowProjectFileSupport },
@@ -78,7 +78,8 @@ export default function Toolbar(_ref, _ref2) {
         null,
         React.createElement(
           ToolbarButton,
-          { active: false, tooltip: translator.t("New project"), onClick: function onClick(event) {
+          { active: false, tooltip: translator.t("New project"),
+            onClick: function onClick(event) {
               return projectActions.newProject();
             } },
           React.createElement(IconNewFile, null)

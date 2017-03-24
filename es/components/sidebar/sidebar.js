@@ -22,7 +22,7 @@ export default function Sidebar(_ref) {
   return React.createElement(
     'aside',
     {
-      style: _extends({ width: width, height: height }, STYLE),
+      style: _extends({ minWidth: width, maxWidth: width, maxHeight: height }, STYLE),
       onKeyDown: function onKeyDown(event) {
         return event.stopPropagation();
       },
