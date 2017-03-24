@@ -48,27 +48,28 @@ import {
 import ToolbarButton from './toolbar-button';
 const STYLE = {
   backgroundColor: '#28292D',
-  padding: 10
+  padding: "10px"
 };
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
-  projectActions,
-  viewer2DActions,
-  editingActions,
-  viewer3DActions,
-  linesActions,
-  holesActions,
-  itemsActions,
-  translator,
-}) {
+                                  projectActions,
+                                  viewer2DActions,
+                                  editingActions,
+                                  viewer3DActions,
+                                  linesActions,
+                                  holesActions,
+                                  itemsActions,
+                                  translator,
+                                }) {
 
   let mode = state.get('mode');
 
   return (
-    <aside style={{...STYLE, width, height}} className="toolbar">
+    <aside style={{...STYLE, maxWidth: width, maxHeight: height}} className="toolbar">
       <If condition={allowProjectFileSupport}>
         <div>
-          <ToolbarButton active={false} tooltip={translator.t("New project")} onClick={event => projectActions.newProject()}>
+          <ToolbarButton active={false} tooltip={translator.t("New project")}
+                         onClick={event => projectActions.newProject()}>
             <IconNewFile />
           </ToolbarButton>
 
@@ -120,7 +121,6 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
           </ToolbarButton>
         </div>
       </If>
-
 
 
       <ToolbarButton active={false} tooltip={translator.t("Undo (CTRL-Z)")}
