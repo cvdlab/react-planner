@@ -11,11 +11,11 @@ const STYLE = {
   overflowX: "hidden"
 };
 
-export default function Sidebar({state, width, height }) {
+export default function Sidebar({state, width, height}) {
 
   return (
     <aside
-      style={{ width, height, ...STYLE }}
+      style={{minWidth: width, maxWidth: width, maxHeight: height, ...STYLE}}
       onKeyDown={event => event.stopPropagation()}
       onKeyUp={event => event.stopPropagation()}
       className="sidebar"
