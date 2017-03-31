@@ -55,8 +55,8 @@ export default class ElementEditor extends Component {
       }
       case 'holes': {
         let line = layer.lines.get(element.line);
-        let {x: x0, y:y0} = layer.vertices.get(line.vertices.get(0));
-        let {x: x1, y:y1} = layer.vertices.get(line.vertices.get(1));
+        let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
+        let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
         let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
         let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
 
@@ -150,8 +150,8 @@ export default class ElementEditor extends Component {
         let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
           this.props.layer.vertices.get(line.vertices.get(1))]);
 
-        let {x: x0, y:y0} = orderedVertices[0];
-        let {x: x1, y:y1} = orderedVertices[1];
+        let {x: x0, y: y0} = orderedVertices[0];
+        let {x: x1, y: y1} = orderedVertices[1];
 
         let alpha = Math.atan2(y1 - y0, x1 - x0);
         let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
@@ -223,7 +223,7 @@ export default class ElementEditor extends Component {
   }
 
   reset() {
-    this.setState({propertiesFormData: this.initPropData()});
+    this.setState({propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state)});
   }
 
   save(event) {
