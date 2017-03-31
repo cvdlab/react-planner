@@ -74,7 +74,7 @@
     "polylabel": "1.0.2",
     "react-icons": "2.2.3",
     "react-redux": "5.0.3",
-    "react-svg-pan-zoom": "2.5.0",
+    "react-svg-pan-zoom": "chrvadala/react-svg-pan-zoom#a11e195d4a18a7ed39691c20d093eec0936f8a56",
     "redux": "3.6.0",
     "shortid": "2.2.8"
   },
