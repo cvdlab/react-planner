@@ -3005,11 +3005,11 @@ react-redux@5.0.3:
     lodash-es "^4.2.0"
     loose-envify "^1.1.0"
 
-react-svg-pan-zoom@chrvadala/react-svg-pan-zoom#a11e195d4a18a7ed39691c20d093eec0936f8a56:
-  version "2.6.0"
-  resolved "https://codeload.github.com/chrvadala/react-svg-pan-zoom/tar.gz/a11e195d4a18a7ed39691c20d093eec0936f8a56"
+react-svg-pan-zoom@2.6.1:
+  version "2.6.1"
+  resolved "https://registry.yarnpkg.com/react-svg-pan-zoom/-/react-svg-pan-zoom-2.6.1.tgz#a9b8a3ecc151c561626f2f65b239129410aa1d79"
   dependencies:
-    transformation-matrix "^1.0.0"
+    transformation-matrix "^1.1.1"
 
 react@15.4.2:
   version "15.4.2"
@@ -3539,9 +3539,9 @@ tough-cookie@~2.3.0:
   dependencies:
     punycode "^1.4.1"
 
-transformation-matrix@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/transformation-matrix/-/transformation-matrix-1.0.0.tgz#b9dc99c9b0a04fac1772b300c2d5c66748b4cb10"
+transformation-matrix@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/transformation-matrix/-/transformation-matrix-1.1.1.tgz#595107bc598cf7462abf53b1343cf8d1f87283a3"
 
 trim-right@^1.0.1:
   version "1.0.1"
