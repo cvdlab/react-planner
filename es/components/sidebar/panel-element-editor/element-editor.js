@@ -263,7 +263,7 @@ var ElementEditor = function (_Component) {
   }, {
     key: 'reset',
     value: function reset() {
-      this.setState({ propertiesFormData: this.initPropData() });
+      this.setState({ propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state) });
     }
   }, {
     key: 'save',
@@ -315,9 +315,7 @@ var ElementEditor = function (_Component) {
 
       return React.createElement(
         'form',
-        { onSubmit: function onSubmit(e) {
-            return _this3.save(e);
-          } },
+        { onSubmit: this.save },
         React.createElement(AttributesEditor, { element: this.props.element,
           onUpdate: this.updateAttribute,
           attributeFormData: attributesFormData }),

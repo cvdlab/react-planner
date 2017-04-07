@@ -1,5 +1,7 @@
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 import PropertyColor from './properties/property-color';
@@ -24,15 +26,7 @@ var Catalog = function () {
     this.propertyTypes = {};
     this.unit = unit;
 
-    this.registerPropertyType('color', PropertyColor, PropertyColor);
-    this.registerPropertyType('enum', PropertyEnum, PropertyEnum);
-    this.registerPropertyType('string', PropertyString, PropertyString);
-    this.registerPropertyType('number', PropertyNumber, PropertyNumber);
-    this.registerPropertyType('length-measure', PropertyLengthMeasure, PropertyLengthMeasure);
-    this.registerPropertyType('toggle', PropertyToggle, PropertyToggle);
-    this.registerPropertyType('checkbox', PropertyCheckbox, PropertyCheckbox);
-    this.registerPropertyType('hidden', PropertyHidden, PropertyHidden);
-    this.registerPropertyType('read-only', PropertyReadOnly, PropertyReadOnly);
+    this.registerMultiplePropertyType([['color', PropertyColor, PropertyColor], ['enum', PropertyEnum, PropertyEnum], ['string', PropertyString, PropertyString], ['number', PropertyNumber, PropertyNumber], ['length-measure', PropertyLengthMeasure, PropertyLengthMeasure], ['toggle', PropertyToggle, PropertyToggle], ['checkbox', PropertyCheckbox, PropertyCheckbox], ['hidden', PropertyHidden, PropertyHidden], ['read-only', PropertyReadOnly, PropertyReadOnly]]);
   }
 
   _createClass(Catalog, [{
@@ -67,6 +61,15 @@ var Catalog = function () {
         Viewer: propertyViewer,
         Editor: propertyEditor
       };
+    }
+  }, {
+    key: 'registerMultiplePropertyType',
+    value: function registerMultiplePropertyType(propertyTypeArray) {
+      var _this = this;
+
+      propertyTypeArray.forEach(function (el) {
+        return _this.registerPropertyType.apply(_this, _toConsumableArray(el));
+      });
     }
   }, {
     key: 'validateElement',
