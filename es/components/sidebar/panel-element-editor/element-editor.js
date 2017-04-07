@@ -315,7 +315,9 @@ var ElementEditor = function (_Component) {
 
       return React.createElement(
         'form',
-        { onSubmit: this.save },
+        { onSubmit: function onSubmit(e) {
+            return _this3.save(e);
+          } },
         React.createElement(AttributesEditor, { element: this.props.element,
           onUpdate: this.updateAttribute,
           attributeFormData: attributesFormData }),
