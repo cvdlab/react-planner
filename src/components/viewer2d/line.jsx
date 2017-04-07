@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {distanceFromTwoPoints, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
+import {pointsDistance, angleBetweenTwoPointsAndOrigin} from '../../utils/geometry';
 import {MODE_IDLE} from '../../constants';
 import Ruler from './ruler';
 
@@ -22,7 +22,7 @@ export default function Line({line, layer, scene, catalog}) {
     ({x: x2, y: y2} = vertex0);
   }
 
-  let length = distanceFromTwoPoints(x1, y1, x2, y2);
+  let length = pointsDistance(x1, y1, x2, y2);
   let angle = angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
 
   let renderedHoles = line.holes.map(holeID => {

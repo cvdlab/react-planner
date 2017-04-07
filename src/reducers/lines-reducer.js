@@ -77,7 +77,7 @@ function beginDrawingLine(state, layerID, x, y, detectSnap) {
   let snapElements = sceneSnapElements(state.scene);
   let snap = null;
 
-  if(detectSnap) {
+  if (detectSnap) {
     snap = nearestSnap(snapElements, x, y);
     if (snap) ({x, y} = snap.point);
 
@@ -113,7 +113,7 @@ function updateDrawingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
 
   let snap = null;
-  if(detectSnap) {
+  if (detectSnap) {
     snap = nearestSnap(state.snapElements, x, y);
     if (snap) ({x, y} = snap.point);
   }
@@ -136,7 +136,7 @@ function updateDrawingLine(state, x, y, detectSnap) {
 function endDrawingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
 
-  if(detectSnap) {
+  if (detectSnap) {
     let snap = nearestSnap(state.snapElements, x, y);
     if (snap) ({x, y} = snap.point);
   }
@@ -209,7 +209,7 @@ function updateDraggingLine(state, x, y, detectSnap) {
 
   let activeSnapElement = null;
   let curSnap0 = null, curSnap1 = null;
-  if(detectSnap) {
+  if (detectSnap) {
     curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y);
     curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y);
   }
@@ -254,75 +254,89 @@ function updateDraggingLine(state, x, y, detectSnap) {
   });
 }
 
-// function endDraggingLine(state, x, y) {
-//   let catalog = state.catalog;
-//   let {draggingSupport} = state;
-//   let layerID = draggingSupport.get('layerID');
-//   let layer = state.scene.layers.get(layerID);
-//   let lineID = draggingSupport.get('lineID');
-//   let line = layer.lines.get(lineID);
-//
-//   let holesWithBeginPosition = [];
-//   layer.lines.get(lineID).holes.forEach(holeID => {
-//     let hole = layer.holes.get(holeID);
-//     let vertex0 = layer.vertices.get(line.vertices.get(0));
-//     let vertex1 = layer.vertices.get(line.vertices.get(1));
-//
-//     // TODO: Order vertices and correct offset (we need this to compute the right sign for begin position)
-//     let linelength = Math.sqrt(Math.pow(vertex1.x - vertex0.x, 2) + Math.pow(vertex1.y - vertex0.y, 2));
-//     console.log(linelength, hole.toJS());
-//     let lineRotation = Math.atan2(vertex1.y - vertex0.y, vertex1.x - vertex0.x);
-//     let beginPosition = {
-//       x: ((linelength * hole.offset) - hole.properties.get('width').get('length')/2) * Math.cos(lineRotation) + vertex0.x,
-//       y: ((linelength * hole.offset) - hole.properties.get('width').get('length')/2) * Math.sin(lineRotation) + vertex0.y
-//     };
-//
-//     console.log(vertex0.toJS(), beginPosition)
-//     holesWithBeginPosition.push({hole, beginPosition});
-//   });
-//
-//   console.log(holesWithBeginPosition);
-//
-//   return state.withMutations(state => {
-//     let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
-//
-//       let diffX = x - draggingSupport.get('startPointX');
-//       let diffY = y - draggingSupport.get('startPointY');
-//       let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
-//       let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
-//       let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
-//       let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
-//
-//       removeLine(layer, lineID);
-//       addLineAvoidingIntersections(layer, line.type,
-//         newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
-//         catalog, line.properties, holesWithBeginPosition);
-//       detectAndUpdateAreas(layer, catalog);
-//     }));
-//
-//
-//     state.merge({
-//       mode: MODE_IDLE,
-//       scene,
-//       draggingSupport: null,
-//       activeSnapElement: null,
-//       snapElements: new List(),
-//       sceneHistory: state.sceneHistory.push(scene)
-//     });
-//   });
-// }
-
 function endDraggingLine(state, x, y, detectSnap) {
   let catalog = state.catalog;
+  let {draggingSupport} = state;
+  let layerID = draggingSupport.get('layerID');
+  let layer = state.scene.layers.get(layerID);
+  let lineID = draggingSupport.get('lineID');
+  let line = layer.lines.get(lineID);
+
+  let vertex0 = layer.vertices.get(line.vertices.get(0));
+  let vertex1 = layer.vertices.get(line.vertices.get(1));
+
+  let orderedVertices = Geometry.orderVertices([vertex0, vertex1]);
+  let lineLength = Geometry.pointsDistance(orderedVertices[0].x, orderedVertices[0].y,
+    orderedVertices[1].x, orderedVertices[1].y);
+
+  let alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
+
+  let holesWithOffsetPosition = [];
+  layer.lines.get(lineID).holes.forEach(holeID => {
+    let hole = layer.holes.get(holeID);
+
+    let offset = hole.offset;
+
+    let xp = lineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
+    let yp = lineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
+
+    holesWithOffsetPosition.push({hole, offsetPosition: {x: xp, y: yp}});
+  });
 
   return state.withMutations(state => {
-    updateDraggingLine(state, x, y, catalog);
+    let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+
+      let diffX = x - draggingSupport.get('startPointX');
+      let diffY = y - draggingSupport.get('startPointY');
+      let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
+      let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
+      let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
+      let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
+
+      if (detectSnap) {
+
+        let curSnap0 = nearestSnap(state.snapElements, newVertex0X, newVertex0Y);
+        let curSnap1 = nearestSnap(state.snapElements, newVertex1X, newVertex1Y);
+
+        let deltaX = 0, deltaY = 0;
+        if (curSnap0 && curSnap1) {
+          if (curSnap0.point.distance < curSnap1.point.distance) {
+            deltaX = curSnap0.point.x - newVertex0X;
+            deltaY = curSnap0.point.y - newVertex0Y;
+          } else {
+            deltaX = curSnap1.point.x - newVertex1X;
+            deltaY = curSnap1.point.y - newVertex1Y;
+          }
+        } else {
+          if (curSnap0) {
+            deltaX = curSnap0.point.x - newVertex0X;
+            deltaY = curSnap0.point.y - newVertex0Y;
+          }
+          if (curSnap1) {
+            deltaX = curSnap1.point.x - newVertex1X;
+            deltaY = curSnap1.point.y - newVertex1Y;
+          }
+        }
+
+        newVertex0X += deltaX;
+        newVertex0Y += deltaY;
+        newVertex1X += deltaX;
+        newVertex1Y += deltaY;
+      }
+      removeLine(layer, lineID);
+      addLineAvoidingIntersections(layer, line.type,
+        newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
+        catalog, line.properties, holesWithOffsetPosition);
+      detectAndUpdateAreas(layer, catalog);
+    }));
+
     state.merge({
       mode: MODE_IDLE,
+      scene,
       draggingSupport: null,
       activeSnapElement: null,
       snapElements: new List(),
-      sceneHistory: state.sceneHistory.push(state.scene)
+      sceneHistory: state.sceneHistory.push(scene)
     });
   });
 }

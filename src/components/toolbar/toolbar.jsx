@@ -46,26 +46,30 @@ import {
 } from '../../constants';
 
 import ToolbarButton from './toolbar-button';
-const STYLE = {backgroundColor: '#28292D', padding: "10px 10px"};
+const STYLE = {
+  backgroundColor: '#28292D',
+  padding: "10px"
+};
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
-  projectActions,
-  viewer2DActions,
-  editingActions,
-  viewer3DActions,
-  linesActions,
-  holesActions,
-  itemsActions,
-  translator,
-}) {
+                                  projectActions,
+                                  viewer2DActions,
+                                  editingActions,
+                                  viewer3DActions,
+                                  linesActions,
+                                  holesActions,
+                                  itemsActions,
+                                  translator,
+                                }) {
 
   let mode = state.get('mode');
 
   return (
-    <aside style={{...STYLE, width, height}} className="toolbar">
+    <aside style={{...STYLE, maxWidth: width, maxHeight: height}} className="toolbar">
       <If condition={allowProjectFileSupport}>
         <div>
-          <ToolbarButton active={false} tooltip={translator.t("New project")} onClick={event => projectActions.newProject()}>
+          <ToolbarButton active={false} tooltip={translator.t("New project")}
+                         onClick={event => projectActions.newProject()}>
             <IconNewFile />
           </ToolbarButton>
 
@@ -119,7 +123,6 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
       </If>
 
 
-
       <ToolbarButton active={false} tooltip={translator.t("Undo (CTRL-Z)")}
                      onClick={event => projectActions.undo()}>
         <IconUndo />
@@ -137,6 +140,8 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired
 };
 

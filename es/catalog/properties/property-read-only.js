@@ -8,7 +8,7 @@ export default function PropertyReadOnly(_ref) {
 
   return React.createElement(
     'div',
-    { style: { marginBottom: "3px" } },
+    { className: 'PropertyReadOnly', style: { marginBottom: "3px" } },
     React.createElement(
       'div',
       { style: { display: "inline-block", width: "30%" } },

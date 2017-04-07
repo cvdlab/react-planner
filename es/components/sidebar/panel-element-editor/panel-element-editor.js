@@ -1,17 +1,17 @@
 import React, { PropTypes, Component } from 'react';
 import Panel from '../panel';
-import { Map, Seq, Iterable } from 'immutable';
-import { MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON } from '../../../constants';
-import PropertiesEditor from './properties-editor';
+import { Seq } from 'immutable';
+import { MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, MODE_CONFIGURING_LAYER } from '../../../constants';
+import ElementEditor from './element-editor';
 
-export default function PanelPropertiesEditor(_ref, _ref2) {
+export default function PanelElementEditor(_ref, _ref2) {
   var state = _ref.state;
   var translator = _ref2.translator;
   var scene = state.scene,
       mode = state.mode;
 
 
-  if (![MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON].includes(mode)) return null;
+  if ([MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, MODE_CONFIGURING_LAYER].includes(mode)) return null;
 
   var componentRenderer = function componentRenderer(element, layer) {
     return React.createElement(
@@ -19,8 +19,8 @@ export default function PanelPropertiesEditor(_ref, _ref2) {
       { key: element.id, name: translator.t("Properties: [{0}] {1}", element.type, element.id) },
       React.createElement(
         'div',
-        { style: { padding: "5px 15px 5px 15px" } },
-        React.createElement(PropertiesEditor, { element: element, layer: layer, state: state })
+        { style: { padding: "5px 15px" } },
+        React.createElement(ElementEditor, { element: element, layer: layer, state: state })
       )
     );
   };
@@ -40,10 +40,10 @@ export default function PanelPropertiesEditor(_ref, _ref2) {
   );
 }
 
-PanelPropertiesEditor.propTypes = {
+PanelElementEditor.propTypes = {
   state: PropTypes.object.isRequired
 };
 
-PanelPropertiesEditor.contextTypes = {
+PanelElementEditor.contextTypes = {
   translator: PropTypes.object.isRequired
 };

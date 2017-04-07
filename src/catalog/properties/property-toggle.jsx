@@ -6,7 +6,7 @@ export default function PropertyToggle({value, onUpdate, configs}) {
   value = value === true;
 
   return (
-    <div style={{marginBottom: "3px"}}>
+    <div className="PropertyToggle" style={{marginBottom: "3px"}}>
       <div style={{display: "inline-block", width: "30%"}}>
         <FormLabel>{configs.label}</FormLabel>
       </div>

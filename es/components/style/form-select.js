@@ -30,7 +30,7 @@ export default function FormSelect(_ref) {
 
   return React.createElement(
     "select",
-    _extends({ type: "text", style: _extends({}, BASE_STYLE, { style: style }) }, rest),
+    _extends({ type: "text", style: _extends({}, BASE_STYLE, style) }, rest),
     children
   );
 }

@@ -1,27 +1,35 @@
 import React, {PropTypes} from 'react';
-import PanelPropertiesEditor from './panel-properties-editor/panel-properties-editor';
+import PanelElementEditor from './panel-element-editor/panel-element-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
 import PanelLayerElements from './panel-layer-elements';
 
-export default function Sidebar({width, height, state}) {
+const STYLE = {
+  backgroundColor: "#28292D",
+  display: "block",
+  overflowY: "auto",
+  overflowX: "hidden"
+};
+
+export default function Sidebar({state, width, height}) {
+
   return (
     <aside
-      style={{backgroundColor: "#28292D", display: "block", overflow: "scroll", width, height}}
+      style={{width, width, height, ...STYLE}}
       onKeyDown={event => event.stopPropagation()}
       onKeyUp={event => event.stopPropagation()}
       className="sidebar"
     >
-      <div className="layer-elements"><PanelLayerElements state={state}/></div>
-      <div className="properties"><PanelPropertiesEditor state={state}/></div>
-      {/*<div className="guides"><PanelGuides state={state}/></div>*/}
       <div className="layers"><PanelLayers state={state}/></div>
+      <div className="layer-elements"><PanelLayerElements state={state}/></div>
+      <div className="properties"><PanelElementEditor state={state}/></div>
+      {/*<div className="guides"><PanelGuides state={state}/></div>*/}
     </aside>
   );
 }
 
 Sidebar.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  state: PropTypes.object.isRequired
+  state: PropTypes.object.isRequired,
+  width: React.PropTypes.number.isRequired,
+  height: React.PropTypes.number.isRequired
 };

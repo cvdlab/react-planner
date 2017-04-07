@@ -2,7 +2,7 @@ import React, {PropTypes} from 'react';
 
 const STYLE = {
   padding: "0 20px",
-  overflowY: "scroll"
+  overflowY: "auto"
 };
 
 export default function ContentContainer({children, width, height}) {

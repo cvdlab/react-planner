@@ -95,7 +95,73 @@ function updateDrawingHole(state, layerID, x, y) {
       let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(0));
       let {x: x2, y:y2} = layer.vertices.get(line.vertices.get(1));
 
-      let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+      // I need min and max vertices on this line segment
+      let minVertex = Geometry.minVertex({x: x1, y: y1}, {x: x2, y: y2});
+      let maxVertex = Geometry.maxVertex({x: x1, y: y1}, {x: x2, y: y2});
+      let width = catalog.factoryElement(state.drawingSupport.get('type'), {}, {}).properties.get('width').get('length');
+
+
+      // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
+
+      // let width = hole.properties.get('width').get('length');
+      let lineLength = Geometry.pointsDistance(x1, y1, x2, y2);
+      let alpha = Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
+
+      let cosWithThreshold = (alpha) => {
+        let cos = Math.cos(alpha);
+        return cos < 0.0000001 ? 0 : cos;
+      };
+
+      let sinWithThreshold = (alpha) => {
+        let sin = Math.sin(alpha);
+        return sin < 0.0000001 ? 0 : sin;
+      };
+
+      let cosAlpha = cosWithThreshold(alpha);
+      let sinAlpha = sinWithThreshold(alpha);
+
+      let minLeftVertexHole = {
+        x: minVertex.x + width / 2 * cosAlpha,
+        y: minVertex.y + width / 2 * sinAlpha
+      };
+
+      let maxRightVertexHole = {
+        x: minVertex.x + lineLength * cosAlpha - width / 2 * cosAlpha,
+        y: minVertex.y + lineLength * sinAlpha - width / 2 * sinAlpha
+      };
+
+      let offset;
+      if (x < minLeftVertexHole.x) {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          minLeftVertexHole.x, minLeftVertexHole.y);
+      } else if (x > maxRightVertexHole.x) {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          maxRightVertexHole.x, maxRightVertexHole.y);
+      } else {
+
+        if (x === minLeftVertexHole.x && x === maxRightVertexHole.x) {
+
+          if (y < minLeftVertexHole.y) {
+            offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+              maxVertex.x, maxVertex.y,
+              minLeftVertexHole.x, minLeftVertexHole.y);
+            offset = minVertex.x === x1 && minVertex.y === y1 ? offset : 1 - offset;
+          } else if (y > maxRightVertexHole.y) {
+            offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+              maxVertex.x, maxVertex.y,
+              maxRightVertexHole.x, maxRightVertexHole.y);
+            offset = minVertex.x === x1 && minVertex.y === y1 ? offset : 1 - offset;
+          } else {
+            offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+          }
+        } else {
+          offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+        }
+      }
+
+      // let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
       let {hole} = addHole(layer, state.drawingSupport.get('type'), lineID, offset, catalog);
       select(layer, 'holes', hole.id);
     }
@@ -157,7 +223,84 @@ function updateDraggingHole(state, x, y) {
 
   ({x, y} = snap.point);
 
-  let offset = Geometry.pointPositionOnLineSegment(v0.x, v0.y, v1.x, v1.y, x, y);
+  // I need min and max vertices on this line segment
+  let minVertex = Geometry.minVertex(v0, v1);
+  let maxVertex = Geometry.maxVertex(v0, v1);
+
+  // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
+
+  let width = hole.properties.get('width').get('length');
+  let lineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+  let alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
+
+  let cosWithThreshold = (alpha) => {
+    let cos = Math.cos(alpha);
+    return cos < 0.0000001 ? 0 : cos;
+  };
+
+  let sinWithThreshold = (alpha) => {
+    let sin = Math.sin(alpha);
+    return sin < 0.0000001 ? 0 : sin;
+  };
+
+  let cosAlpha = cosWithThreshold(alpha);
+  let sinAlpha = sinWithThreshold(alpha);
+
+  let minLeftVertexHole = {
+    x: minVertex.x + width / 2 * cosAlpha,
+    y: minVertex.y + width / 2 * sinAlpha
+  };
+
+  let maxRightVertexHole = {
+    x: minVertex.x + lineLength * cosAlpha - width / 2 * cosAlpha,
+    y: minVertex.y + lineLength * sinAlpha - width / 2 * sinAlpha
+  };
+
+  // Now I need to verify if the snap vertex (with coordinates x and y) is on the line segment
+
+  let offset;
+
+  if (x < minLeftVertexHole.x) {
+    // Snap point is previous the the line
+    offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+      maxVertex.x, maxVertex.y,
+      minLeftVertexHole.x, minLeftVertexHole.y);
+  } else {
+    // Snap point is after the line or on the line
+    if (x > maxRightVertexHole.x) {
+      offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+        maxVertex.x, maxVertex.y,
+        maxRightVertexHole.x, maxRightVertexHole.y);
+    } else if (x === minLeftVertexHole.x && x === maxRightVertexHole.x) {
+      // I am on a vertical line, I need to check y coordinates
+      if (y < minLeftVertexHole.y) {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          minLeftVertexHole.x, minLeftVertexHole.y);
+
+        offset = minVertex === v0 ? offset : 1 - offset;
+
+      } else if (y > maxRightVertexHole.y) {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          maxRightVertexHole.x, maxRightVertexHole.y);
+
+        offset = minVertex === v0 ? offset : 1 - offset;
+
+      } else {
+        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+          maxVertex.x, maxVertex.y,
+          x, y);
+
+        offset = minVertex === v0 ? offset : 1 - offset;
+      }
+    } else {
+      offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y,
+        maxVertex.x, maxVertex.y,
+        x, y);
+    }
+  }
+
   hole = hole.set('offset', offset);
 
   return state.merge({

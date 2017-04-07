@@ -2,7 +2,7 @@
 
 import React, {PropTypes} from 'react';
 
-import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT} from 'react-svg-pan-zoom';
+import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO} from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
 
@@ -14,6 +14,8 @@ function mode2Tool(mode) {
       return TOOL_ZOOM_IN;
     case constants.MODE_2D_ZOOM_OUT:
       return TOOL_ZOOM_OUT;
+    case constants.MODE_IDLE:
+      return TOOL_AUTO;
     default:
       return TOOL_NONE;
   }

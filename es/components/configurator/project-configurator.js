@@ -107,23 +107,36 @@ var ProjectConfigurator = function (_Component) {
               } })
           ),
           React.createElement(
-            'div',
-            { style: { textAlign: "right" } },
+            'table',
+            { style: { float: 'right' } },
             React.createElement(
-              'div',
-              { style: { marginRight: "3px", display: "inline-block" } },
+              'tbody',
+              null,
               React.createElement(
-                CancelButton,
-                { size: 'large', onClick: function onClick(e) {
-                    return projectActions.rollback();
-                  } },
-                translator.t("Cancel")
+                'tr',
+                null,
+                React.createElement(
+                  'td',
+                  null,
+                  React.createElement(
+                    CancelButton,
+                    { size: 'large',
+                      onClick: function onClick(e) {
+                        return projectActions.rollback();
+                      } },
+                    translator.t("Cancel")
+                  )
+                ),
+                React.createElement(
+                  'td',
+                  null,
+                  React.createElement(
+                    FormSubmitButton,
+                    { size: 'large' },
+                    translator.t("Save")
+                  )
+                )
               )
-            ),
-            React.createElement(
-              FormSubmitButton,
-              { size: 'large' },
-              translator.t("Save")
             )
           )
         )

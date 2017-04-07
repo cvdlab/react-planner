@@ -10,10 +10,10 @@ export default function ({width, height, ...rest}) {
   let contentWidth = width - toolbarWidth - sidebarWidth;
 
   return (
-    <div style={{display: "flex", flexFlow: "row nowrap", height}} onWheel={event => event.preventDefault()}>
-      <Toolbar style={{width: toolbarWidth, height}} {...rest} />
-      <Content style={{width: contentWidth, height}} width={contentWidth} height={height} {...rest} />
-      <Sidebar style={{width: sidebarWidth, height}}{...rest} width={sidebarWidth} height={height} />
+    <div style={{display: "flex", flexFlow: "row nowrap", height}}>
+      <Toolbar width={toolbarWidth} height={height} {...rest} />
+      <Content width={contentWidth} height={height} {...rest} onWheel={event => event.preventDefault()} />
+      <Sidebar width={sidebarWidth} height={height} {...rest} />
     </div>
   );
 }

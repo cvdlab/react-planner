@@ -6,6 +6,9 @@ export const OPEN_CATALOG = 'OPEN_CATALOG';
 export const SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 export const UNSELECT_ALL = 'UNSELECT_ALL';
 export const SET_PROPERTIES = 'SET_PROPERTIES';
+export const SET_ITEMS_ATTRIBUTES = 'SET_ITEMS_ATTRIBUTES';
+export const SET_LINES_ATTRIBUTES = 'SET_LINES_ATTRIBUTES';
+export const SET_HOLES_ATTRIBUTES = 'SET_HOLES_ATTRIBUTES';
 export const REMOVE = 'REMOVE';
 export const UNDO = 'UNDO';
 export const ROLLBACK = 'ROLLBACK';
@@ -100,3 +103,5 @@ export const UNIT_METER = 'm';
 export const UNIT_INCH = 'in';
 export const UNIT_FOOT = 'ft';
 export const UNIT_MILE = 'mi';
+
+export const EPSILON = 1e-6;

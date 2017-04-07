@@ -1,9 +1,9 @@
 import { Seq, Map, List } from "immutable";
-import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG } from '../constants';
+import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG } from '../constants';
 
 import { State, Scene, Guide, Catalog } from "../models";
 
-import { removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, select, unselect, unselectAll as unselectAllOp, removeItem, loadLayerFromJSON, setPropertiesOnSelected } from '../utils/layer-operations';
+import { removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, setItemsAttributes as setItemsAttributesOp, setLinesAttributes as setLinesAttributesOp, setHolesAttributes as setHolesAttributesOp, select, unselect, unselectAll as unselectAllOp, removeItem, loadLayerFromJSON, setPropertiesOnSelected, setAttributesOnSelected } from '../utils/layer-operations';
 
 export default function (state, action) {
 
@@ -26,6 +26,15 @@ export default function (state, action) {
 
     case SET_PROPERTIES:
       return setProperties(state, action.properties);
+
+    case SET_ITEMS_ATTRIBUTES:
+      return setItemsAttributes(state, action.itemsAttributes);
+
+    case SET_LINES_ATTRIBUTES:
+      return setLinesAttributes(state, action.linesAttributes);
+
+    case SET_HOLES_ATTRIBUTES:
+      return setHolesAttributes(state, action.holesAttributes);
 
     case REMOVE:
       return remove(state);
@@ -67,6 +76,41 @@ function setProperties(state, properties) {
   var scene = state.scene;
   scene = scene.set('layers', scene.layers.map(function (layer) {
     return setPropertiesOnSelected(layer, properties);
+  }));
+  return state.merge({
+    scene: scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+function setItemsAttributes(state, attributes) {
+  var scene = state.scene;
+  scene = scene.set('layers', scene.layers.map(function (layer) {
+    return setAttributesOnSelected(layer, attributes, state.catalog);
+  }));
+  return state.merge({
+    scene: scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+function setLinesAttributes(state, attributes) {
+  var scene = state.scene;
+
+  scene = scene.set('layers', scene.layers.map(function (layer) {
+    return setAttributesOnSelected(layer, attributes, state.catalog);
+  }));
+
+  return state.merge({
+    scene: scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+function setHolesAttributes(state, attributes) {
+  var scene = state.scene;
+  scene = scene.set('layers', scene.layers.map(function (layer) {
+    return setAttributesOnSelected(layer, attributes, state.catalog);
   }));
   return state.merge({
     scene: scene,

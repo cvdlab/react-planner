@@ -6,6 +6,9 @@ export var OPEN_CATALOG = 'OPEN_CATALOG';
 export var SELECT_TOOL_EDIT = 'SELECT_TOOL_EDIT';
 export var UNSELECT_ALL = 'UNSELECT_ALL';
 export var SET_PROPERTIES = 'SET_PROPERTIES';
+export var SET_ITEMS_ATTRIBUTES = 'SET_ITEMS_ATTRIBUTES';
+export var SET_LINES_ATTRIBUTES = 'SET_LINES_ATTRIBUTES';
+export var SET_HOLES_ATTRIBUTES = 'SET_HOLES_ATTRIBUTES';
 export var REMOVE = 'REMOVE';
 export var UNDO = 'UNDO';
 export var ROLLBACK = 'ROLLBACK';
@@ -99,3 +102,5 @@ export var UNIT_METER = 'm';
 export var UNIT_INCH = 'in';
 export var UNIT_FOOT = 'ft';
 export var UNIT_MILE = 'mi';
+
+export var EPSILON = 1e-6;

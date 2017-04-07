@@ -1,7 +1,7 @@
 import buildWall from './wall-factory-3d';
 import React from 'react';
 
-function distanceFromTwoPoints(x0, y0, x1, y1) {
+function pointsDistance(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
 }
 
@@ -47,7 +47,7 @@ export default function WallFactory(name, info, textures) {
           x2 = _layer$vertices$get2.x,
           y2 = _layer$vertices$get2.y;
 
-      var length = distanceFromTwoPoints(x1, y1, x2, y2);
+      var length = pointsDistance(x1, y1, x2, y2);
       var path = 'M' + 0 + ' ' + -epsilon + '  L' + length + ' ' + -epsilon + '  L' + length + ' ' + epsilon + '  L' + 0 + ' ' + epsilon + '  z';
 
       return element.selected ? React.createElement(

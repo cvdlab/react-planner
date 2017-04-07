@@ -5,6 +5,14 @@ const WIDTH = 120;
 const DEPTH = 50;
 const HEIGHT = 90;
 
+const CHAIR_WIDTH = 55;
+const CHAIR_DEPTH = 55;
+const CHAIR_HEIGHT = 50;
+
+const CHAIR_TRANSLATION = 30;
+
+const TOTAL_DEPTH = DEPTH + CHAIR_DEPTH/2 - (CHAIR_TRANSLATION - CHAIR_DEPTH/2);
+
 export default {
   name: "school-desk-double",
   prototype: "items",
@@ -31,24 +39,26 @@ export default {
   render2D: function (element, layer, scene) {
 
     let angle = element.rotation + 90;
-    //console.log(angle);
 
-    if (angle>-180 && angle<0)
-      angle =  360;
-    else
-      angle = 0;
+    let textRotation = 0;
+    if (Math.sin(angle * Math.PI / 180) < 0) {
+      textRotation = 180;
+    }
 
     let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: "2px", fill: "#84e1ce"};
 
     return (
-      <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH + DEPTH/2}
+      <g transform={`translate(${-WIDTH / 2},${-TOTAL_DEPTH / 2})`}>
+        <rect key="1" x="0" y="0" width={WIDTH} height={TOTAL_DEPTH}
               style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}}/>
-        <line key="2" x1={WIDTH/2} x2={WIDTH/2} y1={DEPTH + DEPTH/2}  y2={1.5*DEPTH +DEPTH/2} style={arrow_style}/>
-        <line key="3" x1={.25*WIDTH} x2={WIDTH/2} y1={1.2*DEPTH+DEPTH/2} y2={1.5*DEPTH+DEPTH/2} style={arrow_style} />
-        <line key="4" x1={WIDTH/2} x2={.75*WIDTH} y1={1.5*DEPTH+DEPTH/2} y2={1.2*DEPTH+DEPTH/2} style={arrow_style} />
+        <line key="2" x1={WIDTH / 2} x2={WIDTH / 2} y1={DEPTH + DEPTH / 2} y2={1.5 * DEPTH + DEPTH / 2}
+              style={arrow_style}/>
+        <line key="3" x1={.25 * WIDTH} x2={WIDTH / 2} y1={1.2 * DEPTH + DEPTH / 2} y2={1.5 * DEPTH + DEPTH / 2}
+              style={arrow_style}/>
+        <line key="4" x1={WIDTH / 2} x2={.75 * WIDTH} y1={1.5 * DEPTH + DEPTH / 2} y2={1.2 * DEPTH + DEPTH / 2}
+              style={arrow_style}/>
         <text key="5" x="0" y="0"
-              transform={`translate(${WIDTH / 2}, ${(DEPTH+DEPTH/2) / 2}) scale(1,-1) rotate(${angle/2})`}
+              transform={`translate(${WIDTH / 2}, ${(TOTAL_DEPTH) / 2}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
           {element.type}
         </text>
@@ -60,50 +70,50 @@ export default {
 
     let makeChair = (altitude) => {
 
-      let WIDTH = 55;
-      let DEPTH = 55;
-      let HEIGHT = 50;
+      let WIDTH = CHAIR_WIDTH;
+      let DEPTH = CHAIR_DEPTH;
+      let HEIGHT = CHAIR_HEIGHT;
 
-      var chair = new Three.Object3D();
+      let chair = new Three.Object3D();
 
-      var geometry = new Three.CylinderGeometry(0.02, 0.02, 0.5, 32);
-      var material = new Three.MeshLambertMaterial({color: 0xd9d7d7});
+      let geometry = new Three.CylinderGeometry(0.02, 0.02, 0.5, 32);
+      let material = new Three.MeshLambertMaterial({color: 0xd9d7d7});
 
-      var p1 = new Three.Mesh(geometry, material);
+      let p1 = new Three.Mesh(geometry, material);
       p1.rotation.x += Math.PI / 2;
       p1.position.z += 0.5 / 2;
 
-      var p2 = new Three.Mesh(geometry, material);
+      let p2 = new Three.Mesh(geometry, material);
       p2.rotation.x += Math.PI / 2;
       p2.position.z += 0.5 / 2;
       p2.position.y += 0.4;
 
-      var p3 = new Three.Mesh(geometry, material);
+      let p3 = new Three.Mesh(geometry, material);
       p3.rotation.x += Math.PI / 2;
       p3.position.z += 0.5 / 2;
       p3.position.x += 0.4;
 
-      var p4 = new Three.Mesh(geometry, material);
+      let p4 = new Three.Mesh(geometry, material);
       p4.rotation.x += Math.PI / 2;
       p4.position.z += 0.5 / 2;
       p4.position.y += 0.4;
       p4.position.x += 0.4;
 
-      var p5 = new Three.Mesh(geometry, material);
+      let p5 = new Three.Mesh(geometry, material);
       p5.rotation.x += Math.PI / 2;
       p5.position.z += 0.5 * 3 / 2;
 
-      var p6 = new Three.Mesh(geometry, material);
+      let p6 = new Three.Mesh(geometry, material);
       p6.rotation.x += Math.PI / 2;
       p6.position.z += 0.5 * 3 / 2;
       p6.position.x += 0.4;
 
 //      material = new Three.MeshLambertMaterial({color: 0x9b8c75});
-      var texture = new Three.TextureLoader().load(require('./wood.jpg'));
-      var materialTexture = new Three.MeshLambertMaterial( { map: texture} );
+      let texture = new Three.TextureLoader().load(require('./wood.jpg'));
+      let materialTexture = new Three.MeshLambertMaterial({map: texture});
 
 
-      var roundedRectShape = new Three.Shape();
+      let roundedRectShape = new Three.Shape();
 
       let x = 0;
       let y = 0;
@@ -121,7 +131,7 @@ export default {
       roundedRectShape.lineTo(x + radius, y);
       roundedRectShape.quadraticCurveTo(x, y, x, y + radius);
 
-      var extrudeSettings = {
+      let extrudeSettings = {
         steps: 2,
         amount: 0.03,
         bevelEnabled: false,
@@ -130,15 +140,15 @@ export default {
         bevelSegments: 1
       };
 
-      var geometry50 = new Three.ExtrudeGeometry(roundedRectShape, extrudeSettings);
-      var plane = new Three.Mesh(geometry50, materialTexture);
+      let geometry50 = new Three.ExtrudeGeometry(roundedRectShape, extrudeSettings);
+      let plane = new Three.Mesh(geometry50, materialTexture);
 
 
       plane.position.x += -0.05;
       plane.position.y += -0.04;
       plane.position.z += 0.5;
 
-      var roundedRectShape2 = new Three.Shape();
+      let roundedRectShape2 = new Three.Shape();
 
       let x1 = 0;
       let y1 = 0;
@@ -156,7 +166,7 @@ export default {
       roundedRectShape2.lineTo(x1 + radius1, y1);
       roundedRectShape2.quadraticCurveTo(x1, y1, x1, y1 + radius1);
 
-      var extrudeSettings2 = {
+      let extrudeSettings2 = {
         steps: 2,
         amount: 0.03,
         bevelEnabled: false,
@@ -165,12 +175,12 @@ export default {
         bevelSegments: 1
       };
 
-      var geometry22 = new Three.ExtrudeGeometry(roundedRectShape2, extrudeSettings2);
-      var back = new Three.Mesh(geometry22, materialTexture);
+      let geometry22 = new Three.ExtrudeGeometry(roundedRectShape2, extrudeSettings2);
+      let back = new Three.Mesh(geometry22, materialTexture);
 
 
       //geometry = new Three.BoxGeometry( 0.38, 0.02, 0.15);
-      //var back = new Three.Mesh( geometry, material );
+      //let back = new Three.Mesh( geometry, material );
       back.rotation.x += Math.PI / 2;
       back.position.z += 0.5 * 12 / 8;
       back.position.y += 0.03;
@@ -211,76 +221,76 @@ export default {
 
     let newAltitude = element.properties.get('altitude').get('length');
 
-    var brown = new Three.MeshLambertMaterial( {color: 0x9b8c75} );
-    var grey = new Three.MeshLambertMaterial( {color: 0xd9d7d7} );
+    let brown = new Three.MeshLambertMaterial({color: 0x9b8c75});
+    let grey = new Three.MeshLambertMaterial({color: 0xd9d7d7});
 
-    var texture = new Three.TextureLoader().load(require('./wood.jpg'));
-    var materialTexture = new Three.MeshLambertMaterial( { map: texture} );
+    let texture = new Three.TextureLoader().load(require('./wood.jpg'));
+    let materialTexture = new Three.MeshLambertMaterial({map: texture});
 
 
-    var newDepth = .5;
-    var newWidth = .9;
-    var newHeight = 1;
-    var raggio = .03;
+    let newDepth = .5;
+    let newWidth = .9;
+    let newHeight = 1;
+    let raggio = .03;
 
-    var bancoDouble = new Three.Object3D();
+    let bancoDouble = new Three.Object3D();
 
-    var geometry = new Three.BoxGeometry( newWidth+newWidth/6, newHeight/20, newDepth+newDepth/4 );
+    let geometry = new Three.BoxGeometry(newWidth + newWidth / 6, newHeight / 20, newDepth + newDepth / 4);
 
-    var boxMaterials = [
-      new Three.MeshBasicMaterial( { map: texture} ),
-      new Three.MeshBasicMaterial( { map: texture} ),
-      new Three.MeshBasicMaterial( {color:0x669966}), //top
-      new Three.MeshBasicMaterial( { map: texture} ),
-      new Three.MeshBasicMaterial( { map: texture} ),
-      new Three.MeshBasicMaterial( { map: texture} )
+    let boxMaterials = [
+      new Three.MeshBasicMaterial({map: texture}),
+      new Three.MeshBasicMaterial({map: texture}),
+      new Three.MeshBasicMaterial({color: 0x669966}), //top
+      new Three.MeshBasicMaterial({map: texture}),
+      new Three.MeshBasicMaterial({map: texture}),
+      new Three.MeshBasicMaterial({map: texture})
     ];
 
-    var tMaterial = new Three.MeshFaceMaterial(boxMaterials);
+    let tMaterial = new Three.MeshFaceMaterial(boxMaterials);
 
-    var plane = new Three.Mesh( geometry, tMaterial);
+    let plane = new Three.Mesh(geometry, tMaterial);
     plane.position.y = newHeight;
     bancoDouble.add(plane);
 
-    var geometry_legs = new Three.CylinderGeometry( raggio, raggio, newHeight, 32 );
+    let geometry_legs = new Three.CylinderGeometry(raggio, raggio, newHeight, 32);
 
-    var geometry2 = new Three.BoxGeometry( newWidth, newHeight/20, newDepth );
-    var plane2 = new Three.Mesh( geometry2, materialTexture );
-    plane2.position.y = newHeight/2+newHeight/4;
+    let geometry2 = new Three.BoxGeometry(newWidth, newHeight / 20, newDepth);
+    let plane2 = new Three.Mesh(geometry2, materialTexture);
+    plane2.position.y = newHeight / 2 + newHeight / 4;
     bancoDouble.add(plane2);
 
-    var geometry3 = new Three.BoxGeometry( newWidth, newHeight/10, newDepth/20 );
-    var plane3 = new Three.Mesh( geometry3, materialTexture );
-    plane3.position.y = newHeight/2+newHeight/4+newHeight/16;
-    plane3.position.z = newDepth/3+newDepth/5;
+    let geometry3 = new Three.BoxGeometry(newWidth, newHeight / 10, newDepth / 20);
+    let plane3 = new Three.Mesh(geometry3, materialTexture);
+    plane3.position.y = newHeight / 2 + newHeight / 4 + newHeight / 16;
+    plane3.position.z = newDepth / 3 + newDepth / 5;
     bancoDouble.add(plane3);
 
-    var p1 = new Three.Mesh( geometry_legs, grey );
-    p1.position.x = newWidth/2;
-    p1.position.z = newDepth/2;
-    p1.position.y = newHeight/2;
-    p1.scale.set(.5,1,.75);
+    let p1 = new Three.Mesh(geometry_legs, grey);
+    p1.position.x = newWidth / 2;
+    p1.position.z = newDepth / 2;
+    p1.position.y = newHeight / 2;
+    p1.scale.set(.5, 1, .75);
     bancoDouble.add(p1);
 
-    var p2 = new Three.Mesh( geometry_legs, grey );
-    p2.position.x = newWidth/2;
-    p2.position.z = -newDepth/2;
-    p2.position.y = newHeight/2;
-    p2.scale.set(.5,1,.75);
+    let p2 = new Three.Mesh(geometry_legs, grey);
+    p2.position.x = newWidth / 2;
+    p2.position.z = -newDepth / 2;
+    p2.position.y = newHeight / 2;
+    p2.scale.set(.5, 1, .75);
     bancoDouble.add(p2);
 
-    var p3 = new Three.Mesh( geometry_legs, grey );
-    p3.position.x = -newWidth/2;
-    p3.position.z = newDepth/2;
-    p3.position.y = newHeight/2;
-    p3.scale.set(.5,1,.75);
+    let p3 = new Three.Mesh(geometry_legs, grey);
+    p3.position.x = -newWidth / 2;
+    p3.position.z = newDepth / 2;
+    p3.position.y = newHeight / 2;
+    p3.scale.set(.5, 1, .75);
     bancoDouble.add(p3);
 
-    var p4 = new Three.Mesh( geometry_legs, grey );
-    p4.position.x = -newWidth/2;
-    p4.position.z = -newDepth/2;
-    p4.position.y = newHeight/2;
-    p4.scale.set(.5,1,.75);
+    let p4 = new Three.Mesh(geometry_legs, grey);
+    p4.position.x = -newWidth / 2;
+    p4.position.z = -newDepth / 2;
+    p4.position.y = newHeight / 2;
+    p4.scale.set(.5, 1, .75);
     bancoDouble.add(p4);
 
 
@@ -299,9 +309,9 @@ export default {
     //   bancoDouble.add(bbox);
     // }
 
-    bancoDouble.rotation.y+=Math.PI;
-    bancoDouble.position.y+= newAltitude;
-    bancoDouble.scale.set(WIDTH / deltaX, HEIGHT / deltaY, DEPTH / deltaZ );
+    bancoDouble.rotation.y += Math.PI;
+    bancoDouble.position.y += newAltitude;
+    bancoDouble.scale.set(WIDTH / deltaX, HEIGHT / deltaY, DEPTH / deltaZ);
 
     let chair = makeChair(newAltitude);
     chair.position.z += 30;
@@ -324,10 +334,17 @@ export default {
       deskAndChairDouble.add(bbox);
     }
 
-    deskAndChairDouble.position.z-=DEPTH/4;
+    // deskAndChairDouble.position.z-=DEPTH/4;
+
+    deskAndChairDouble.position.z -= (CHAIR_DEPTH / 2 - (CHAIR_TRANSLATION - CHAIR_DEPTH / 2)) / 2;
+
+    let boundingBoxDeskAndChair = new Three.Box3().setFromObject(deskAndChairDouble);
+
+    let deltaZDeskAndChair = Math.abs(boundingBoxDeskAndChair.max.z - boundingBoxDeskAndChair.min.z);
+
+    deskAndChairDouble.scale.set(1, 1, TOTAL_DEPTH / deltaZDeskAndChair); //Fix Depth problem with the chair
 
     return Promise.resolve(deskAndChairDouble);
   }
 
 };
-

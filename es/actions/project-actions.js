@@ -1,4 +1,4 @@
-import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG } from '../constants';
+import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG } from '../constants';
 
 export function loadProject(sceneJSON) {
   return {
@@ -41,6 +41,41 @@ export function setProperties(properties) {
   return {
     type: SET_PROPERTIES,
     properties: properties
+  };
+}
+
+export function setItemsAttributes(itemsAttributes) {
+
+  itemsAttributes = itemsAttributes.set('rotation', parseFloat(itemsAttributes.get('rotation')));
+
+  return {
+    type: SET_ITEMS_ATTRIBUTES,
+    itemsAttributes: itemsAttributes
+  };
+}
+
+export function setLinesAttributes(linesAttributes) {
+
+  linesAttributes = linesAttributes.withMutations(function (attributes) {
+    attributes.setIn(['vertexOne', 'x'], parseFloat(linesAttributes.getIn(['vertexOne', 'x'])));
+    attributes.setIn(['vertexOne', 'y'], parseFloat(linesAttributes.getIn(['vertexOne', 'y'])));
+    attributes.setIn(['vertexTwo', 'x'], parseFloat(linesAttributes.getIn(['vertexTwo', 'x'])));
+    attributes.setIn(['vertexTwo', 'y'], parseFloat(linesAttributes.getIn(['vertexTwo', 'y'])));
+  });
+
+  return {
+    type: SET_LINES_ATTRIBUTES,
+    linesAttributes: linesAttributes
+  };
+}
+
+export function setHolesAttributes(holesAttributes) {
+
+  holesAttributes = holesAttributes.set('offset', parseFloat(holesAttributes.get('offset')));
+
+  return {
+    type: SET_HOLES_ATTRIBUTES,
+    holesAttributes: holesAttributes
   };
 }
 

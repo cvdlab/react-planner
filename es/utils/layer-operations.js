@@ -2,15 +2,14 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-import { List, Seq, Map, fromJS } from 'immutable';
-import { Layer, Vertex, Line, Hole, Area, ElementsSet, Image, Item } from '../models';
+/** lines features **/
+import { Map, List, fromJS } from 'immutable';
+import { Vertex } from '../models';
 import IDBroker from './id-broker';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
+import { EPSILON } from "../constants";
 
-var AREA_ELEMENT_TYPE = 'area';
-
-/** lines features **/
 export function addLine(layer, type, x0, y0, x1, y1, catalog) {
   var properties = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
 
@@ -109,13 +108,29 @@ export function splitLine(layer, lineID, x, y, catalog) {
 
 
     var splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+
     line.holes.forEach(function (holeID) {
       var hole = layer.holes.get(holeID);
-      if (hole.offset < splitPointOffset) {
-        var offset = hole.offset / splitPointOffset;
+
+      var minVertex = Geometry.minVertex({ x: x0, y: y0 }, { x: x1, y: y1 });
+
+      var holeOffset = hole.offset;
+      if (minVertex.x === x1 && minVertex.y === y1) {
+        splitPointOffset = 1 - splitPointOffset;
+        holeOffset = 1 - hole.offset;
+      }
+
+      if (holeOffset < splitPointOffset) {
+        var offset = holeOffset / splitPointOffset;
+        if (minVertex.x === x1 && minVertex.y === y1) {
+          offset = 1 - offset;
+        }
         addHole(layer, hole.type, line0.id, offset, catalog, hole.properties);
       } else {
-        var _offset = (hole.offset - splitPointOffset) / (1 - splitPointOffset);
+        var _offset = (holeOffset - splitPointOffset) / (1 - splitPointOffset);
+        if (minVertex.x === x1 && minVertex.y === y1) {
+          _offset = 1 - _offset;
+        }
         addHole(layer, hole.type, line1.id, _offset, catalog, hole.properties);
       }
     });
@@ -161,8 +176,25 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
 
         var _addLine3 = addLine(layer, type, x1, y1, x2, y2, catalog, properties),
             line = _addLine3.line;
-        //TODO: Add holes
 
+        if (holes) {
+          holes.forEach(function (holeWithOffsetPoint) {
+            var _holeWithOffsetPoint$ = holeWithOffsetPoint.offsetPosition,
+                xp = _holeWithOffsetPoint$.x,
+                yp = _holeWithOffsetPoint$.y;
+
+
+            if (Geometry.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
+
+              var newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
+
+              if (newOffset >= 0 && newOffset <= 1) {
+
+                addHole(layer, holeWithOffsetPoint.hole.type, line.id, newOffset, catalog, holeWithOffsetPoint.hole.properties);
+              }
+            }
+          });
+        }
 
         lines.push(line);
       });
@@ -193,8 +225,34 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       var intersection = Geometry.intersectionFromTwoLineSegment({ x: x0, y: y0 }, { x: x1, y: y1 }, v0, v1);
 
       if (intersection.type === "colinear") {
-        removeLine(layer, line.id);
-        points.push(v0, v1);
+        (function () {
+          if (!oldHoles) {
+            oldHoles = [];
+          }
+
+          var orderedVertices = Geometry.orderVertices([{ x: x0, y: y0 }, { x: x1, y: y1 }]);
+
+          layer.lines.get(line.id).holes.forEach(function (holeID) {
+            var hole = layer.holes.get(holeID);
+            var oldLineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+
+            var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
+
+            var offset = hole.offset;
+
+            if (orderedVertices[1].x === line.vertices.get(1).x && orderedVertices[1].y === line.vertices(1).y) {
+              offset = 1 - offset;
+            }
+
+            var xp = oldLineLength * offset * Math.cos(alpha) + v0.x;
+            var yp = oldLineLength * offset * Math.sin(alpha) + v0.y;
+
+            oldHoles.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
+          });
+
+          removeLine(layer, line.id);
+          points.push(v0, v1);
+        })();
       }
 
       if (intersection.type === "intersecting" && !hasCommonEndpoint) {
@@ -326,26 +384,79 @@ export function unselect(layer, prototype, ID) {
   });
 }
 
-export function setProperties(layer, prototype, ID, properties) {
+function opSetProperties(layer, prototype, ID, properties) {
   properties = fromJS(properties);
-  return layer.mergeIn([prototype, ID, 'properties'], properties);
+  layer.mergeIn([prototype, ID, 'properties'], properties);
+}
+
+function opSetItemsAttributes(layer, prototype, ID, itemsAttributes) {
+  itemsAttributes = fromJS(itemsAttributes);
+  layer.mergeIn([prototype, ID], itemsAttributes);
+}
+
+function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
+  var _linesAttributes$toJS = linesAttributes.toJS(),
+      vertexOne = _linesAttributes$toJS.vertexOne,
+      vertexTwo = _linesAttributes$toJS.vertexTwo;
+
+  layer.withMutations(function (layer) {
+
+    layer.mergeIn(['vertices', vertexOne.id], { x: vertexOne.x, y: vertexOne.y }).mergeIn(['vertices', vertexTwo.id], { x: vertexTwo.x, y: vertexTwo.y }).mergeDeepIn([prototype, ID, 'misc'], new Map({ '_unitLength': linesAttributes.get('lineLength').get('_unit') }));
+
+    mergeEqualsVertices(layer, vertexOne.id);
+    //check if second vertex has different coordinates than the first
+    if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) mergeEqualsVertices(layer, vertexTwo.id);
+  });
+
+  detectAndUpdateAreas(layer, catalog);
+}
+
+function opSetHolesAttributes(layer, prototype, ID, holesAttributes) {
+
+  var offset = holesAttributes.get('offset');
+
+  var misc = new Map({
+    _unitA: holesAttributes.get('offsetA').get('_unit'),
+    _unitB: holesAttributes.get('offsetB').get('_unit')
+  });
+
+  layer.mergeDeepIn([prototype, ID], new Map({
+    offset: offset,
+    misc: misc
+  }));
 }
 
 export function setPropertiesOnSelected(layer, properties) {
   return layer.withMutations(function (layer) {
     var selected = layer.selected;
     selected.lines.forEach(function (lineID) {
-      return setProperties(layer, 'lines', lineID, properties);
+      return opSetProperties(layer, 'lines', lineID, properties);
     });
     selected.holes.forEach(function (holeID) {
-      return setProperties(layer, 'holes', holeID, properties);
+      return opSetProperties(layer, 'holes', holeID, properties);
     });
     selected.areas.forEach(function (areaID) {
-      return setProperties(layer, 'areas', areaID, properties);
+      return opSetProperties(layer, 'areas', areaID, properties);
     });
     selected.items.forEach(function (itemID) {
-      return setProperties(layer, 'items', itemID, properties);
+      return opSetProperties(layer, 'items', itemID, properties);
     });
+  });
+}
+
+export function setAttributesOnSelected(layer, attributes, catalog) {
+  return layer.withMutations(function (layer) {
+    var selected = layer.selected;
+    selected.lines.forEach(function (lineID) {
+      return opSetLinesAttributes(layer, 'lines', lineID, attributes, catalog);
+    });
+    selected.holes.forEach(function (holeID) {
+      return opSetHolesAttributes(layer, 'holes', holeID, attributes, catalog);
+    });
+    selected.items.forEach(function (itemID) {
+      return opSetItemsAttributes(layer, 'items', itemID, attributes, catalog);
+    });
+    //selected.areas.forEach(areaID => opSetItemsAttributes(layer, 'areas', areaID, attributes, catalog));
   });
 }
 
@@ -460,7 +571,7 @@ export function detectAndUpdateAreas(layer, catalog) {
           var vertex = layerVertices.get(vertexId);
           return { x: vertex.x, y: vertex.y };
         });
-        addArea(layer, AREA_ELEMENT_TYPE, areaVerticesCoords, catalog);
+        addArea(layer, 'area', areaVerticesCoords, catalog);
       }
     });
   });

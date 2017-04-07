@@ -5,6 +5,10 @@ import { Seq } from 'immutable';
 import FormSelect from '../../components/style/form-select';
 import FormLabel from '../../components/style/form-label';
 
+var firstTdStyle = {
+  width: '6em'
+};
+
 export default function PropertyEnum(_ref) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
@@ -12,36 +16,44 @@ export default function PropertyEnum(_ref) {
 
 
   return React.createElement(
-    'div',
-    { style: { marginBottom: "3px" } },
+    'table',
+    { className: 'PropertyLengthMeasure', style: { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" } },
     React.createElement(
-      'div',
-      { style: { display: "inline-block", width: "30%" } },
+      'tbody',
+      null,
       React.createElement(
-        FormLabel,
+        'tr',
         null,
-        configs.label
-      )
-    ),
-    React.createElement(
-      'div',
-      { style: { display: "inline-block", width: "70%" } },
-      React.createElement(
-        FormSelect,
-        { value: value, onChange: function onChange(event) {
-            return onUpdate(event.target.value);
-          } },
-        Seq(configs.values).entrySeq().map(function (_ref2) {
-          var _ref3 = _slicedToArray(_ref2, 2),
-              key = _ref3[0],
-              value = _ref3[1];
+        React.createElement(
+          'td',
+          { style: firstTdStyle },
+          React.createElement(
+            FormLabel,
+            null,
+            configs.label
+          )
+        ),
+        React.createElement(
+          'td',
+          null,
+          React.createElement(
+            FormSelect,
+            { value: value, onChange: function onChange(event) {
+                return onUpdate(event.target.value);
+              } },
+            Seq(configs.values).entrySeq().map(function (_ref2) {
+              var _ref3 = _slicedToArray(_ref2, 2),
+                  key = _ref3[0],
+                  value = _ref3[1];
 
-          return React.createElement(
-            'option',
-            { key: key, value: key },
-            value
-          );
-        })
+              return React.createElement(
+                'option',
+                { key: key, value: key },
+                value
+              );
+            })
+          )
+        )
       )
     )
   );

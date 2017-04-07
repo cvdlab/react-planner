@@ -30,5 +30,6 @@ export default {
   "Configure layer": "Configura layer",
   "Properties: [{0}] {1}": "Proprietà: [{0}] {1}",
   "Get Screenshot" : "Cattura uno screenshot",
-  "Catalog" : "Catalogo"
+  "Catalog" : "Catalogo",
+  "Rotation" : "Rotazione"
 }

@@ -9,7 +9,7 @@ export default function PropertyString(_ref) {
 
   return React.createElement(
     'div',
-    { style: { marginBottom: "3px" } },
+    { className: 'PropertyString', style: { marginBottom: "3px" } },
     React.createElement(
       'div',
       { style: { display: "inline-block", width: "30%" } },

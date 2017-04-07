@@ -137,8 +137,6 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
   let promises = [];
 
   switch (modifiedPath[3]) {
-    case "layer":
-      break;
     case "vertices":
       break;
     case "holes":
@@ -390,7 +388,7 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
       return linesActions.selectLine(layer.id, line.id);
     });
 
-    if (!line.selected) {
+    if (!line.selected && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -412,7 +410,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 
     applyInteract(pivot, interactFunction);
 
-    if (!area.selected) {
+    if (!area.selected && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -437,7 +435,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
       }
     );
 
-    if (!item.selected) {
+    if (!item.selected && layer.opacity !== 1) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -463,13 +461,19 @@ function applyOpacity(object, opacity) {
       if (child.material instanceof Three.MultiMaterial) {
         child.material.materials.forEach(materialChild => {
           materialChild.transparent = true;
-          if (materialChild.opacity && materialChild.opacity > opacity) {
+          if (materialChild.maxOpacity) {
+            materialChild.opacity = Math.min(materialChild.maxOpacity, opacity);
+          } else if (materialChild.opacity && materialChild.opacity > opacity) {
+            materialChild.maxOpacity = materialChild.opacity;
             materialChild.opacity = opacity;
           }
         });
       } else {
         child.material.transparent = true;
-        if (child.material.opacity && child.material.opacity > opacity) {
+        if (child.material.maxOpacity) {
+          child.material.opacity = Math.min(child.material.maxOpacity, opacity);
+        } else if (child.material.opacity && child.material.opacity > opacity) {
+          child.material.maxOpacity = child.material.opacity;
           child.material.opacity = opacity;
         }
       }

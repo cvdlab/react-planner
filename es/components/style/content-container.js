@@ -4,7 +4,7 @@ import React, { PropTypes } from 'react';
 
 var STYLE = {
   padding: "0 20px",
-  overflowY: "scroll"
+  overflowY: "auto"
 };
 
 export default function ContentContainer(_ref) {

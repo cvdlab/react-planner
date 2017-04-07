@@ -2,8 +2,47 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-export function distanceFromTwoPoints(x0, y0, x1, y1) {
-  return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
+/** @description Determines the distance between two points
+ *  @param {number} x0 Vertex 0 x
+ *  @param {number} y0 Vertex 0 y
+ *  @param {number} x1 Vertex 1 x
+ *  @param {number} y1 Vertex 1 y
+ *  @return {number}
+ */
+import { toFixedFloat, fAbs } from './math.js';
+import { EPSILON } from "../constants";
+
+export function compareVertices(v0, v1) {
+  return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x;
+}
+
+export function minVertex(v0, v1) {
+  return compareVertices(v0, v1) > 0 ? v1 : v0;
+}
+
+export function maxVertex(v0, v1) {
+  return compareVertices(v0, v1) > 0 ? v0 : v1;
+}
+
+export function orderVertices(vertices) {
+  return vertices.sort(compareVertices);
+}
+
+export function pointsDistance(x0, y0, x1, y1) {
+  var diff_x = x0 - x1;
+  var diff_y = y0 - y1;
+
+  return Math.sqrt(diff_x * diff_x + diff_y * diff_y);
+}
+
+export function verticesDistance(v1, v2) {
+  var x0 = v1.x,
+      y0 = v1.y;
+  var x1 = v2.x,
+      y1 = v2.y;
+
+
+  return pointsDistance(x0, y0, x1, y1);
 }
 
 export function horizontalLine(y) {
@@ -31,7 +70,7 @@ export function linePassingThroughTwoPoints(x1, y1, x2, y2) {
 
 export function distancePointFromLine(a, b, c, x, y) {
   //https://en.wikipedia.org/wiki/Distance_from_a_point_to_a_line
-  return Math.abs(a * x + b * y + c) / Math.sqrt(a * a + b * b);
+  return fAbs(a * x + b * y + c) / Math.sqrt(a * a + b * b);
 }
 
 export function closestPointFromLine(a, b, c, x, y) {
@@ -72,8 +111,8 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
   var numA = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
   var numB = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
 
-  if (Math.abs(denom) <= EPSILON) {
-    if (Math.abs(numA) <= EPSILON && Math.abs(numB) <= EPSILON) {
+  if (fAbs(denom) <= EPSILON) {
+    if (fAbs(numA) <= EPSILON && fAbs(numB) <= EPSILON) {
       var _ret = function () {
 
         var comparator = function comparator(pa, pb) {
@@ -152,6 +191,23 @@ export function distancePointFromLineSegment(x1, y1, x2, y2, xp, yp) {
   return Math.sqrt(dx * dx + dy * dy);
 }
 
+/**
+ *
+ * @param x1 {number} x for first vertex of the segment
+ * @param y1 {number} y for first vertex of the segment
+ * @param x2 {number} x for second vertex of the segment
+ * @param y2 {number} y for second vertex of the segment
+ * @param xp {number} x for point we want to verify
+ * @param yp {number} y for point we want to verify
+ * @param maxDistance {number} the epsilon value used for comparisons
+ * @returns {boolean} true if the point lies on the line segment false otherwise
+ */
+export function isPointOnLineSegment(x1, y1, x2, y2, xp, yp) {
+  var maxDistance = arguments.length > 6 && arguments[6] !== undefined ? arguments[6] : EPSILON;
+
+  return distancePointFromLineSegment(x1, y1, x2, y2, xp, yp) <= maxDistance;
+}
+
 export function closestPointFromLineSegment(x1, y1, x2, y2, xp, yp) {
   if (x1 === x2) return { x: x1, y: yp };
   if (y1 === y2) return { x: xp, y: y1 };
@@ -169,8 +225,8 @@ export function closestPointFromLineSegment(x1, y1, x2, y2, xp, yp) {
 }
 
 export function pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp) {
-  var length = distanceFromTwoPoints(x1, y1, x2, y2);
-  var distance = distanceFromTwoPoints(x1, y1, xp, yp);
+  var length = pointsDistance(x1, y1, x2, y2);
+  var distance = pointsDistance(x1, y1, xp, yp);
 
   var offset = distance / length;
   if (x1 > x2) offset = mapRange(offset, 0, 1, 1, 0);
@@ -183,8 +239,7 @@ export function mapRange(value, low1, high1, low2, high2) {
 }
 
 export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
-  var length = distanceFromTwoPoints(x1, y1, x2, y2);
-  return -Math.asin((y1 - y2) / length) * 180 / Math.PI;
+  return -Math.atan2(y1 - y2, x2 - x1) * 180 / Math.PI;
 }
 
 export function samePoints(_ref, _ref2) {
@@ -194,5 +249,33 @@ export function samePoints(_ref, _ref2) {
       y2 = _ref2.y;
 
   var EPSILON = 10e-6;
-  return Math.abs(x1 - x2) <= EPSILON && Math.abs(y1 - y2) <= EPSILON;
+  return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
+}
+
+/** @description Extend line based on coordinates and new line length
+ *  @param {number} x1 Vertex 1 x
+ *  @param {number} y1 Vertex 1 y
+ *  @param {number} x2 Vertex 2 x
+ *  @param {number} y2 Vertex 2 y
+ *  @param {number} newDistance New line length
+ *  @return {object}
+ */
+export function extendLine(x1, y1, x2, y2, newDistance) {
+  var precision = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 6;
+
+  var rad = Math.atan2(y2 - y1, x2 - x1);
+
+  return {
+    x: toFixedFloat(x1 + Math.cos(rad) * newDistance, precision),
+    y: toFixedFloat(y1 + Math.sin(rad) * newDistance, precision)
+  };
+}
+
+export function roundVertex(vertex) {
+  var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 6;
+
+  vertex.set('x', toFixedFloat(vertex.get('x'), precision));
+  vertex.set('y', toFixedFloat(vertex.get('y'), precision));
+
+  return vertex;
 }

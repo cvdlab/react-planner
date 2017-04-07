@@ -11,7 +11,7 @@ class PointSnap extends Record({
     return {
       x: this.x,
       y: this.y,
-      distance: Geometry.distanceFromTwoPoints(this.x, this.y, x, y)
+      distance: Geometry.pointsDistance(this.x, this.y, x, y)
     };
   }
 }

@@ -6,13 +6,13 @@ import React, { PropTypes, Component } from 'react';
 import Button from './button';
 
 var STYLE = {
-  borderColor: "#000",
+  borderColor: "#415375",
   backgroundColor: "#415375",
   color: "#fff"
 };
 
 var STYLE_HOVER = {
-  borderColor: "#000",
+  borderColor: "#1f3149",
   backgroundColor: "#1f3149",
   color: "#fff"
 };

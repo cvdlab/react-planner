@@ -4,8 +4,8 @@ import If from '../../utils/react-if';
 import {Seq} from 'immutable';
 
 const STYLE_BOX = {
-  width: "200px",
-  height: "200px",
+  width: "220px",
+  height: "220px",
   padding: "10px",
   background: "#f7f7f9",
   border: "1px solid #e1e1e8",

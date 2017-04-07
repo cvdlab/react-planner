@@ -17,15 +17,17 @@ export default class Catalog {
     this.propertyTypes = {};
     this.unit = unit;
 
-    this.registerPropertyType('color', PropertyColor, PropertyColor);
-    this.registerPropertyType('enum', PropertyEnum, PropertyEnum);
-    this.registerPropertyType('string', PropertyString, PropertyString);
-    this.registerPropertyType('number', PropertyNumber, PropertyNumber);
-    this.registerPropertyType('length-measure', PropertyLengthMeasure, PropertyLengthMeasure);
-    this.registerPropertyType('toggle', PropertyToggle, PropertyToggle);
-    this.registerPropertyType('checkbox', PropertyCheckbox, PropertyCheckbox);
-    this.registerPropertyType('hidden', PropertyHidden, PropertyHidden);
-    this.registerPropertyType('read-only', PropertyReadOnly, PropertyReadOnly);
+    this.registerMultiplePropertyType([
+      ['color', PropertyColor, PropertyColor],
+      ['enum', PropertyEnum, PropertyEnum],
+      ['string', PropertyString, PropertyString],
+      ['number', PropertyNumber, PropertyNumber],
+      ['length-measure', PropertyLengthMeasure, PropertyLengthMeasure],
+      ['toggle', PropertyToggle, PropertyToggle],
+      ['checkbox', PropertyCheckbox, PropertyCheckbox],
+      ['hidden', PropertyHidden, PropertyHidden],
+      ['read-only', PropertyReadOnly, PropertyReadOnly]
+    ]);
   }
 
   getElement(type) {
@@ -55,6 +57,11 @@ export default class Catalog {
       Viewer: propertyViewer,
       Editor: propertyEditor
     }
+  }
+
+  registerMultiplePropertyType( propertyTypeArray )
+  {
+    propertyTypeArray.forEach( el => this.registerPropertyType( ...el ) );
   }
 
   validateElement(json) {
