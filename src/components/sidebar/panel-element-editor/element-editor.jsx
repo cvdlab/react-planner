@@ -259,7 +259,7 @@ export default class ElementEditor extends Component {
     } = this;
 
     return (
-      <form onSubmit={this.save}>
+      <form onSubmit={e => this.save(e)}>
 
         <AttributesEditor element={this.props.element}
                           onUpdate={this.updateAttribute}
