@@ -1,4 +1,4 @@
-import {Record, List, Map, fromJS, Seq} from 'immutable';
+import {Record, List, Map, fromJS} from 'immutable';
 import {MODE_IDLE} from './constants';
 
 let safeLoadMapList = (mapList, Model, defaultMap) => {
