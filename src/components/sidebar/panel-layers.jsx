@@ -51,8 +51,8 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions, trans
         <thead>
           <tr>
             <th colSpan="2"></th>
-            <th>Altitude</th>
-            <th>Name</th>
+            <th>{translator.t("Altitude")}</th>
+            <th>{translator.t("Name")}</th>
           </tr>
         </thead>
         <tbody>
