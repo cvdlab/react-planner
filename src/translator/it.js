@@ -1,13 +1,13 @@
 export default {
-  'New layer': 'Nuovo layer',
-  "Elements on layer {0}": "Elementi nel layer {0}",
+  'New layer': 'Nuovo livello',
+  "Elements on layer {0}": "Elementi nel livello {0}",
   "Layers": "Livelli",
   "Project config": "Configurazione progetto",
   "width": "Larghezza",
   "height": "Altezza",
   "Cancel": "Annulla",
   "Save" : "Salva",
-  "Layer config": "Configurazione layer",
+  "Layer config": "Configurazione livello",
   "name" : "Nome",
   "opacity": "Opacità",
   "altitude": "Quota",
@@ -27,9 +27,11 @@ export default {
   "Open catalog": "Apri catalogo",
   "Reset": "Annulla",
   "Unselect": "Deseleziona",
-  "Configure layer": "Configura layer",
+  "Configure layer": "Configura livello",
   "Properties: [{0}] {1}": "Proprietà: [{0}] {1}",
   "Get Screenshot" : "Cattura uno screenshot",
   "Catalog" : "Catalogo",
-  "Rotation" : "Rotazione"
+  "Rotation" : "Rotazione",
+  "Altitude": "Altezza",
+  "Name" : "Nome"
 }
