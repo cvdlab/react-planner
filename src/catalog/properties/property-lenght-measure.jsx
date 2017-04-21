@@ -1,5 +1,5 @@
 import React, {PropTypes} from 'react';
-import {UNIT_CENTIMETER, UNIT_FOOT, UNIT_INCH, UNIT_METER, UNIT_MILE, UNIT_MILLIMETER} from './../../constants';
+import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
 import convert from 'convert-units';
 import FormLabel from '../../components/style/form-label'
 import FormNumberInput from '../../components/style/form-number-input';
@@ -7,52 +7,45 @@ import FormSelect from '../../components/style/form-select';
 import {Map} from 'immutable';
 import * as math from '../../utils/math';
 
-let tableStyle = {
-  borderCollapse: 'collapse'
-};
-let firstTdStyle = {
-  width: '6em'
-};
+const propertyContainerStyle = { borderSpacing: "2px 0", marginBottom: 2 };
+const tableStyle = { borderCollapse: 'collapse' };
+const firstTdStyle = { width: '6em' };
+const secondTdStyle = { padding: 0 };
+const unitContainerStyle = { width:'5em'};
 
 export default function PropertyLengthMeasure({value, onUpdate, configs}, {catalog}) {
 
-  let length = value.get('length');
-  let _length, _unit;
-
-  if (value.has('_length') && value.has('_unit')) {
-    _length = value.get('_length');
-    _unit = value.get('_unit');
-  } else {
-    _length = length;
-    _unit = catalog.unit;
-  }
+  let _length = value.has('_length') ? value.get('_length') : value.get('length');
+  let _unit = value.has('_unit') ? value.get('_unit') : UNIT_CENTIMETER;
 
   let update = (lengthInput, unitInput) => {
 
-    let newLength = math.toFixedFloat(lengthInput);
-    let length = convert(newLength).from(unitInput).to(catalog.unit);
+    let newLength = toFixedFloat(lengthInput);
 
-    onUpdate(value.merge({length, _length : lengthInput, _unit: unitInput}));
+    onUpdate(
+      value.merge({
+        length : unitInput !== UNIT_CENTIMETER ? convert(newLength).from(unitInput).to(UNIT_CENTIMETER) : newLength,
+        _length : lengthInput,
+        _unit: unitInput
+      })
+    );
   };
 
   return (
-    <table className="PropertyLengthMeasure" style={{ borderSpacing: "2px 0", marginBottom: "2px" }}>
+    <table className="PropertyLengthMeasure" style={propertyContainerStyle}>
       <tbody>
         <tr>
           <td style={firstTdStyle}>{configs.label}:</td>
-          <td style={{padding: 0}}>
+          <td style={secondTdStyle}>
             <table style={tableStyle}>
               <tbody>
                 <tr>
                   <td><FormNumberInput value={_length} onChange={event => update(event.target.value, _unit)} min={configs.min} max={configs.max}/></td>
-                  <td style={{ width:'5em'}}>
+                  <td style={unitContainerStyle}>
                     <FormSelect value={_unit} onChange={event => update(_length, event.target.value)}>
-                      <option key={UNIT_METER} value={UNIT_METER}>{UNIT_METER}</option>
-                      <option key={UNIT_CENTIMETER} value={UNIT_CENTIMETER}>{UNIT_CENTIMETER}</option>
-                      <option key={UNIT_MILLIMETER} value={UNIT_MILLIMETER}>{UNIT_MILLIMETER}</option>
-                      <option key={UNIT_INCH} value={UNIT_INCH}>{UNIT_INCH}</option>
-                      <option key={UNIT_FOOT} value={UNIT_FOOT}>{UNIT_FOOT}</option>
-                      <option key={UNIT_MILE} value={UNIT_MILE}>{UNIT_MILE}</option>
+                      {
+                        UNITS_LENGTH.map( el => <option key={el} value={el}>{el}</option> )
+                      }
                     </FormSelect>
                   </td>
                 </tr>
