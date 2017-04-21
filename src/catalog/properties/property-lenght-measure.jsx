@@ -4,8 +4,8 @@ import convert from 'convert-units';
 import FormLabel from '../../components/style/form-label'
 import FormNumberInput from '../../components/style/form-number-input';
 import FormSelect from '../../components/style/form-select';
-import {Map} from 'immutable';
-import * as math from '../../utils/math';
+import { Map } from 'immutable';
+import { toFixedFloat } from '../../utils/math';
 
 const propertyContainerStyle = { borderSpacing: "2px 0", marginBottom: 2 };
 const tableStyle = { borderCollapse: 'collapse' };
