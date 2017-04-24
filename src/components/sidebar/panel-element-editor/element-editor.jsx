@@ -98,7 +98,7 @@ export default class ElementEditor extends Component {
     let mapped = {};
     for (let name in catalogElement.properties) {
       mapped[name] = new Map({
-        currentValue: element.properties.has(name) ? element.properties.get(name) : fromJS(curr.defaultValue),
+        currentValue: element.properties.has(name) ? element.properties.get(name) : fromJS(catalogElement.properties[name].defaultValue),
         configs: catalogElement.properties[name]
       });
     }
