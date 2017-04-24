@@ -61,7 +61,6 @@ module.exports = function (env) {
         }]
       }, {
         test: /\.(jpe?g|png|gif|mtl|obj)$/i,
-        include: /demo\/src\/catalog/,
         use: [{
           loader: 'file-loader',
           options: {
