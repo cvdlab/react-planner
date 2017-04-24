@@ -1,7 +1,5 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 import React, { PropTypes } from 'react';
 import Panel from './panel';
 import IconVisible from 'react-icons/lib/fa/eye';
@@ -9,33 +7,7 @@ import IconHide from 'react-icons/lib/fa/eye-slash';
 import IconAdd from 'react-icons/lib/ti/plus';
 import IconEdit from 'react-icons/lib/fa/pencil';
 
-var STYLE_LAYER_WRAPPER = {
-  display: "flex",
-  flexFlow: "row nowrap",
-  alignItems: "center",
-  background: "#3A3A3E",
-  borderBottom: "1px solid #000",
-  height: "30px",
-  padding: "5px 15px 5px 15px"
-};
-
-var STYLE_LAYER_ACTIVE = _extends({}, STYLE_LAYER_WRAPPER, {
-  background: "#415375"
-});
-
-var STYLE_ICON = {
-  width: "10%",
-  fontSize: "18px"
-};
-
-var STYLE_NAME = {
-  width: "90%",
-  verticalAlign: "center",
-  padding: "0 5px"
-};
-
 var STYLE_ADD_WRAPPER = {
-  display: "block",
   color: "#fff",
   textDecoration: "none",
   fontSize: "15px",
@@ -57,6 +29,17 @@ var STYLE_EDIT_BUTTON = {
   outline: "0px"
 };
 
+var iconColStyle = { width: '2em' };
+var tableStyle = {
+  width: '100%',
+  cursor: 'pointer',
+  overflowY: 'scroll',
+  maxHeight: '20em',
+  display: 'block',
+  padding: '0 1em',
+  marginLeft: '1px'
+};
+
 export default function PanelLayers(_ref, _ref2) {
   var _ref$state = _ref.state,
       scene = _ref$state.scene,
@@ -73,56 +56,83 @@ export default function PanelLayers(_ref, _ref2) {
   return React.createElement(
     Panel,
     { name: translator.t("Layers") },
-    scene.layers.entrySeq().map(function (_ref3) {
-      var _ref4 = _slicedToArray(_ref3, 2),
-          layerID = _ref4[0],
-          layer = _ref4[1];
-
-      var isCurrentLayer = layerID === scene.selectedLayer;
-      var style = isCurrentLayer ? STYLE_LAYER_ACTIVE : STYLE_LAYER_WRAPPER;
-      var icon = layer.visible || layerID === scene.selectedLayer ? React.createElement(IconVisible, null) : React.createElement(IconHide, { style: { color: "#a5a1a1" } });
-
-      var selectClick = function selectClick(event) {
-        return sceneActions.selectLayer(layerID);
-      };
-      var configureClick = function configureClick(event) {
-        return sceneActions.openLayerConfigurator(layer.id);
-      };
-
-      var swapVisibility = function swapVisibility(event) {
-        sceneActions.setLayerProperties(layerID, { visible: !layer.visible });
-        event.stopPropagation();
-      };
-
-      var iconRendered = isCurrentLayer ? React.createElement('div', { style: STYLE_ICON }) : React.createElement(
-        'div',
-        { style: STYLE_ICON, onClick: swapVisibility },
-        icon
-      );
-
-      return React.createElement(
-        'div',
-        { style: style, key: layerID, onClick: selectClick, onDoubleClick: configureClick },
-        iconRendered,
+    React.createElement(
+      'table',
+      { style: tableStyle },
+      React.createElement(
+        'thead',
+        null,
         React.createElement(
-          'div',
-          { style: STYLE_NAME },
-          layer.name,
-          ' [h:',
-          layer.altitude,
-          ']',
+          'tr',
+          null,
+          React.createElement('th', { colSpan: '2' }),
           React.createElement(
-            'button',
-            { onClick: configureClick, style: STYLE_EDIT_BUTTON, title: translator.t("Configure layer")
-            },
-            React.createElement(IconEdit, null)
+            'th',
+            null,
+            translator.t("Altitude")
+          ),
+          React.createElement(
+            'th',
+            null,
+            translator.t("Name")
           )
         )
-      );
-    }),
+      ),
+      React.createElement(
+        'tbody',
+        null,
+        scene.layers.entrySeq().map(function (_ref3) {
+          var _ref4 = _slicedToArray(_ref3, 2),
+              layerID = _ref4[0],
+              layer = _ref4[1];
+
+          var selectClick = function selectClick(e) {
+            return sceneActions.selectLayer(layerID);
+          };
+          var configureClick = function configureClick(e) {
+            return sceneActions.openLayerConfigurator(layer.id);
+          };
+
+          var swapVisibility = function swapVisibility(e) {
+            sceneActions.setLayerProperties(layerID, { visible: !layer.visible });
+            e.stopPropagation();
+          };
+
+          var isCurrentLayer = layerID === scene.selectedLayer;
+          var eyeStyle = !layer.visible ? { fontSize: '1.25em', color: "#a5a1a1" } : { fontSize: '1.25em' };
+
+          return React.createElement(
+            'tr',
+            { key: layerID, onClick: selectClick, onDoubleClick: configureClick },
+            React.createElement(
+              'td',
+              { style: iconColStyle },
+              !isCurrentLayer ? React.createElement(IconVisible, { onClick: swapVisibility, style: eyeStyle }) : null
+            ),
+            React.createElement(
+              'td',
+              { style: iconColStyle },
+              React.createElement(IconEdit, { onClick: configureClick, style: STYLE_EDIT_BUTTON, title: translator.t("Configure layer") })
+            ),
+            React.createElement(
+              'td',
+              { style: { width: '6em', textAlign: 'center' } },
+              '[ h : ',
+              layer.altitude,
+              ' ]'
+            ),
+            React.createElement(
+              'td',
+              null,
+              layer.name
+            )
+          );
+        })
+      )
+    ),
     React.createElement(
-      'a',
-      { href: 'javascript:;', style: STYLE_ADD_WRAPPER, key: 'add', onClick: addClick },
+      'div',
+      { style: STYLE_ADD_WRAPPER, onClick: addClick },
       React.createElement(IconAdd, null),
       React.createElement(
         'span',

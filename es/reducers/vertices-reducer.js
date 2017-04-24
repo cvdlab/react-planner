@@ -75,45 +75,43 @@ function endDraggingVertex(state, x, y, detectSnap) {
         var line = layer.lines.get(lineID);
 
         if (line) {
-          (function () {
 
-            var oldVertexID = void 0;
+          var oldVertexID = void 0;
 
-            if (line.vertices.get(0) === vertexID) {
-              // I need to invert vertices
-              oldVertexID = line.vertices.get(1);
-            } else {
-              oldVertexID = line.vertices.get(0);
+          if (line.vertices.get(0) === vertexID) {
+            // I need to invert vertices
+            oldVertexID = line.vertices.get(1);
+          } else {
+            oldVertexID = line.vertices.get(0);
+          }
+
+          var oldVertex = layer.vertices.get(oldVertexID);
+          var vertex = layer.vertices.get(vertexID);
+
+          var oldHoles = [];
+
+          var orderedVertices = orderVertices([oldVertex, vertex]);
+
+          line.holes.forEach(function (holeID) {
+            var hole = layer.holes.get(holeID);
+            var oldLineLength = pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
+
+            var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
+
+            var offset = hole.offset;
+
+            if (orderedVertices[1].x === line.vertices.get(1).x && orderedVertices[1].y === line.vertices(1).y) {
+              offset = 1 - offset;
             }
 
-            var oldVertex = layer.vertices.get(oldVertexID);
-            var vertex = layer.vertices.get(vertexID);
+            var xp = oldLineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
+            var yp = oldLineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
 
-            var oldHoles = [];
+            oldHoles.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
+          });
 
-            var orderedVertices = orderVertices([oldVertex, vertex]);
-
-            line.holes.forEach(function (holeID) {
-              var hole = layer.holes.get(holeID);
-              var oldLineLength = pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
-
-              var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
-
-              var offset = hole.offset;
-
-              if (orderedVertices[1].x === line.vertices.get(1).x && orderedVertices[1].y === line.vertices(1).y) {
-                offset = 1 - offset;
-              }
-
-              var xp = oldLineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
-              var yp = oldLineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
-
-              oldHoles.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
-            });
-
-            removeLine(layer, lineID);
-            addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties, oldHoles);
-          })();
+          removeLine(layer, lineID);
+          addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties, oldHoles);
         }
       });
 

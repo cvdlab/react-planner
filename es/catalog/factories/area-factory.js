@@ -12,6 +12,13 @@ export default function AreaFactory(name, info, textures) {
         label: "Color",
         type: "color",
         defaultValue: "#f5f4f4"
+      },
+      thickness: {
+        label: "Thickness",
+        type: "length-measure",
+        defaultValue: {
+          length: 0
+        }
       }
     },
     render2D: function render2D(element, layer, scene) {

@@ -8,7 +8,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import { Record, List, Map, fromJS, Seq } from 'immutable';
+import { Record, List, Map, fromJS } from 'immutable';
 import { MODE_IDLE } from './constants';
 
 var safeLoadMapList = function safeLoadMapList(mapList, Model, defaultMap) {

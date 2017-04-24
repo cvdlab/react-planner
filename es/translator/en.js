@@ -31,5 +31,7 @@ export default {
   "Properties: [{0}] {1}": "Properties: [{0}] {1}",
   "Get Screenshot": "Get Screenshot",
   "Catalog": "Catalog",
-  "Rotation": "Rotation"
+  "Rotation": "Rotation",
+  "Altitude": "Altitude",
+  "Name": "Name"
 };

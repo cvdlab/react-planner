@@ -103,4 +103,6 @@ export var UNIT_INCH = 'in';
 export var UNIT_FOOT = 'ft';
 export var UNIT_MILE = 'mi';
 
+export var UNITS_LENGTH = [UNIT_MILLIMETER, UNIT_CENTIMETER, UNIT_METER, UNIT_INCH, UNIT_FOOT, UNIT_MILE];
+
 export var EPSILON = 1e-6;
