@@ -79,7 +79,16 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
 
       let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
 
-      if (modifiedPath.length > 2) {
+      if (modifiedPath.length == 3) {
+        switch (diff.op) {
+          case 'replace': break;  //TODO?
+          case 'add': break;      //TODO?
+          case 'remove':
+            removeLayer( modifiedPath[2], planData );
+            break;
+        }
+      }
+      else if (modifiedPath.length > 3) {
 
         switch (diff.op) {
           case 'replace':
@@ -104,27 +113,28 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
         })
       }
 
-      // Now I have to ckeck the old selectedLayer
-      let oldLayerSelectedID = oldSceneData.selectedLayer;
-      // First of all I check if the new selected layer is not visible
-      if (!sceneData.layers.get(oldLayerSelectedID).visible) {
-        // I need to remove the objects for this layer
-        let layerGraph = planData.sceneGraph.layers[oldLayerSelectedID];
+      let layerGraph = sceneData.layers.get( oldSceneData.selectedLayer );
 
-        for (let lineID in layerGraph.lines) {
-          removeLine(planData, sceneData.layers.get(oldLayerSelectedID), lineID);
-        }
+      if( layerGraph )
+      {
+        if (!layerGraph.visible) {
+          // I need to remove the objects for this layer
 
-        for (let areaID in layerGraph.areas) {
-          removeArea(planData, sceneData.layers.get(oldLayerSelectedID), areaID);
-        }
+          for (let lineID in layerGraph.lines) {
+            removeLine(planData, layerGraph.id, lineID);
+          }
 
-        for (let itemID in layerGraph.items) {
-          removeItem(planData, sceneData.layers.get(oldLayerSelectedID), itemID);
-        }
+          for (let areaID in layerGraph.areas) {
+            removeArea(planData, layerGraph.id, areaID);
+          }
 
-        for (let holeID in layerGraph.holes) {
-          removeHole(planData, sceneData.layers.get(oldLayerSelectedID), holeID);
+          for (let itemID in layerGraph.items) {
+            removeItem(planData, layerGraph.id, itemID);
+          }
+
+          for (let holeID in layerGraph.holes) {
+            removeHole(planData, layerGraph.id, holeID);
+          }
         }
       }
     }
@@ -144,13 +154,13 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       let lineID = newHoleData.line;
       if (modifiedPath[5] === 'selected') {
         // I remove only the hole without removing the wall
-        removeHole(planData, layer, newHoleData.id);
+        removeHole(planData, layer.id, newHoleData.id);
         promises.push(addHole(sceneData, planData, layer, newHoleData.id, catalog, actions.holesActions));
       } else {
         layer.lines.get(lineID).holes.forEach(holeID => {
-          removeHole(planData, layer, holeID);
+          removeHole(planData, layer.id, holeID);
         });
-        removeLine(planData, layer, lineID);
+        removeLine(planData, layer.id, lineID);
         promises.push(addLine(sceneData, planData, layer, lineID, catalog, actions.linesActions));
         layer.lines.get(lineID).holes.forEach(holeID => {
           promises.push(addHole(sceneData, planData, layer, holeID, catalog, actions.holesActions));
@@ -158,15 +168,15 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       }
       break;
     case "lines":
-      removeLine(planData, layer, modifiedPath[4]);
+      removeLine(planData, layer.id, modifiedPath[4]);
       promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions));
       break;
     case "areas":
-      removeArea(planData, layer, modifiedPath[4]);
+      removeArea(planData, layer.id, modifiedPath[4]);
       promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, actions.areaActions));
       break;
     case "items":
-      removeItem(planData, layer, modifiedPath[4]);
+      removeItem(planData, layer.id, modifiedPath[4]);
       promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions));
       break;
 
@@ -175,19 +185,19 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         let layerGraph = planData.sceneGraph.layers[layer.id];
 
         for (let lineID in layerGraph.lines) {
-          removeLine(planData, layer, lineID);
+          removeLine(planData, layer.id, lineID);
         }
 
         for (let areaID in layerGraph.areas) {
-          removeArea(planData, layer, areaID);
+          removeArea(planData, layer.id, areaID);
         }
 
         for (let itemID in layerGraph.items) {
-          removeItem(planData, layer, itemID);
+          removeItem(planData, layer.id, itemID);
         }
 
         for (let holeID in layerGraph.holes) {
-          removeHole(planData, layer, holeID);
+          removeHole(planData, layer.id, holeID);
         }
 
       } else {
@@ -210,9 +220,9 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
       let lineID = modifiedPath[4];
       let oldLayer = oldSceneData.layers.get(layer.id);
       oldLayer.lines.get(lineID).holes.forEach(holeID => {
-        removeHole(planData, layer, holeID);
+        removeHole(planData, layer.id, holeID);
       });
-      removeLine(planData, layer, lineID);
+      removeLine(planData, layer.id, lineID);
       if (modifiedPath.length > 5) {
         // I removed an hole, so I should add the new line
         promises.push(addLine(sceneData, planData, layer, lineID, catalog, actions.linesActions));
@@ -224,13 +234,13 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
     case "areas":
       if (modifiedPath.length === 5) {
         // I am removing an entire area
-        removeArea(planData, layer, modifiedPath[4]);
+        removeArea(planData, layer.id, modifiedPath[4]);
       }
       break;
     case "items":
       if (modifiedPath.length === 5) {
         // I am removing an item
-        removeItem(planData, layer, modifiedPath[4]);
+        removeItem(planData, layer.id, modifiedPath[4]);
       }
       break;
   }
@@ -240,38 +250,61 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
   })
 }
 
-function removeHole(planData, layer, holeToRemoveID) {
-  let holeToRemove = planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
+function removeLayer( layerId, planData )
+{
+  let layerGraph = planData.sceneGraph.layers[ layerId ];
+
+  for (let lineID in layerGraph.lines) {
+    removeLine(planData, layerId, lineID);
+  }
+
+  for (let areaID in layerGraph.areas) {
+    removeArea(planData, layerId, areaID);
+  }
+
+  for (let itemID in layerGraph.items) {
+    removeItem(planData, layerId, itemID);
+  }
+
+  for (let holeID in layerGraph.holes) {
+    removeHole(planData, layerId, holeID);
+  }
+
+  delete planData.sceneGraph.layers[ layerId ];
+}
+
+function removeHole(planData, layerId, holeToRemoveID) {
+  let holeToRemove = planData.sceneGraph.layers[layerId].holes[holeToRemoveID];
   planData.plan.remove(holeToRemove);
   disposeObject(holeToRemove);
-  delete planData.sceneGraph.layers[layer.id].holes[holeToRemoveID];
+  delete planData.sceneGraph.layers[layerId].holes[holeToRemoveID];
   holeToRemove = null;
   updateBoundingBox(planData);
 }
 
-function removeLine(planData, layer, lineID) {
-  let line3D = planData.sceneGraph.layers[layer.id].lines[lineID];
+function removeLine(planData, layerId, lineID) {
+  let line3D = planData.sceneGraph.layers[layerId].lines[lineID];
   planData.plan.remove(line3D);
   disposeObject(line3D);
-  delete planData.sceneGraph.layers[layer.id].lines[lineID];
+  delete planData.sceneGraph.layers[layerId].lines[lineID];
   line3D = null;
   updateBoundingBox(planData);
 }
 
-function removeArea(planData, layer, areaID) {
-  let area3D = planData.sceneGraph.layers[layer.id].areas[areaID];
+function removeArea(planData, layerId, areaID) {
+  let area3D = planData.sceneGraph.layers[layerId].areas[areaID];
   planData.plan.remove(area3D);
   disposeObject(area3D);
-  delete planData.sceneGraph.layers[layer.id].areas[areaID];
+  delete planData.sceneGraph.layers[layerId].areas[areaID];
   area3D = null;
   updateBoundingBox(planData);
 }
 
-function removeItem(planData, layer, itemID) {
-  let item3D = planData.sceneGraph.layers[layer.id].items[itemID];
+function removeItem(planData, layerId, itemID) {
+  let item3D = planData.sceneGraph.layers[layerId].items[itemID];
   planData.plan.remove(item3D);
   disposeObject(item3D);
-  delete planData.sceneGraph.layers[layer.id].items[itemID];
+  delete planData.sceneGraph.layers[layerId].items[itemID];
   item3D = null;
   updateBoundingBox(planData);
 }
