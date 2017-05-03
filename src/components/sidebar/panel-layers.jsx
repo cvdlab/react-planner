@@ -4,6 +4,7 @@ import IconVisible from 'react-icons/lib/fa/eye';
 import IconHide from 'react-icons/lib/fa/eye-slash';
 import IconAdd from 'react-icons/lib/ti/plus';
 import IconEdit from 'react-icons/lib/fa/pencil';
+import IconTrash from 'react-icons/lib/fa/trash';
 
 const STYLE_ADD_WRAPPER = {
   color: "#fff",
@@ -31,7 +32,7 @@ const iconColStyle = { width:'2em' };
 const tableStyle = {
   width: '100%',
   cursor: 'pointer',
-  overflowY: 'scroll',
+  overflowY: 'auto',
   maxHeight: '20em',
   display: 'block',
   padding: '0 1em',
@@ -45,12 +46,14 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions, trans
     event.stopPropagation();
   };
 
+  let isLastLayer = scene.layers.size === 1;
+
   return (
     <Panel name={translator.t("Layers")}>
       <table style={tableStyle}>
         <thead>
           <tr>
-            <th colSpan="2"></th>
+            <th colSpan="3"></th>
             <th>{translator.t("Altitude")}</th>
             <th>{translator.t("Name")}</th>
           </tr>
@@ -60,6 +63,7 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions, trans
 
             let selectClick = e => sceneActions.selectLayer(layerID);
             let configureClick = e => sceneActions.openLayerConfigurator(layer.id);
+            let delLayer = e => { e.stopPropagation(); sceneActions.removeLayer(layerID); };
 
             let swapVisibility = e => {
               sceneActions.setLayerProperties(layerID, {visible: !layer.visible});
@@ -76,6 +80,9 @@ export default function PanelLayers({state: {scene, mode}}, {sceneActions, trans
                 </td>
                 <td style={iconColStyle}>
                   <IconEdit onClick={configureClick} style={STYLE_EDIT_BUTTON} title={translator.t("Configure layer")} />
+                </td>
+                <td style={iconColStyle}>
+                  { !isLastLayer ? <IconTrash onClick={delLayer} style={STYLE_EDIT_BUTTON} title={translator.t("Delete layer")} /> : null }
                 </td>
                 <td style={{ width:'6em', textAlign:'center'}}>
                   [ h : {layer.altitude} ]
