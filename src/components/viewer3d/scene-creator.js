@@ -119,22 +119,10 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
       {
         if (!layerGraph.visible) {
           // I need to remove the objects for this layer
-
-          for (let lineID in layerGraph.lines) {
-            removeLine(planData, layerGraph.id, lineID);
-          }
-
-          for (let areaID in layerGraph.areas) {
-            removeArea(planData, layerGraph.id, areaID);
-          }
-
-          for (let itemID in layerGraph.items) {
-            removeItem(planData, layerGraph.id, itemID);
-          }
-
-          for (let holeID in layerGraph.holes) {
-            removeHole(planData, layerGraph.id, holeID);
-          }
+          for (let lineID in layerGraph.lines) removeLine(planData, layerId, lineID);
+          for (let areaID in layerGraph.areas) removeArea(planData, layerId, areaID);
+          for (let itemID in layerGraph.items) removeItem(planData, layerId, itemID);
+          for (let holeID in layerGraph.holes) removeHole(planData, layerId, holeID);
         }
       }
     }
@@ -184,21 +172,10 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       if (!layer.visible) {
         let layerGraph = planData.sceneGraph.layers[layer.id];
 
-        for (let lineID in layerGraph.lines) {
-          removeLine(planData, layer.id, lineID);
-        }
-
-        for (let areaID in layerGraph.areas) {
-          removeArea(planData, layer.id, areaID);
-        }
-
-        for (let itemID in layerGraph.items) {
-          removeItem(planData, layer.id, itemID);
-        }
-
-        for (let holeID in layerGraph.holes) {
-          removeHole(planData, layer.id, holeID);
-        }
+        for (let lineID in layerGraph.lines) removeLine(planData, layerId, lineID);
+        for (let areaID in layerGraph.areas) removeArea(planData, layerId, areaID);
+        for (let itemID in layerGraph.items) removeItem(planData, layerId, itemID);
+        for (let holeID in layerGraph.holes) removeHole(planData, layerId, holeID);
 
       } else {
         promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog))
@@ -254,21 +231,10 @@ function removeLayer( layerId, planData )
 {
   let layerGraph = planData.sceneGraph.layers[ layerId ];
 
-  for (let lineID in layerGraph.lines) {
-    removeLine(planData, layerId, lineID);
-  }
-
-  for (let areaID in layerGraph.areas) {
-    removeArea(planData, layerId, areaID);
-  }
-
-  for (let itemID in layerGraph.items) {
-    removeItem(planData, layerId, itemID);
-  }
-
-  for (let holeID in layerGraph.holes) {
-    removeHole(planData, layerId, holeID);
-  }
+  for (let lineID in layerGraph.lines) removeLine(planData, layerId, lineID);
+  for (let areaID in layerGraph.areas) removeArea(planData, layerId, areaID);
+  for (let itemID in layerGraph.items) removeItem(planData, layerId, itemID);
+  for (let holeID in layerGraph.holes) removeHole(planData, layerId, holeID);
 
   delete planData.sceneGraph.layers[ layerId ];
 }
@@ -518,28 +484,23 @@ function applyOpacity(object, opacity) {
 function updateBoundingBox(planData) {
   let newBoundingBox = new Three.Box3().setFromObject(planData.plan);
   if (isFinite(newBoundingBox.max.x)
-    || isFinite(newBoundingBox.min.x)
-    || isFinite(newBoundingBox.max.y)
-    || isFinite(newBoundingBox.min.y)
-    || isFinite(newBoundingBox.max.z)
-    || isFinite(newBoundingBox.min.z)) {
+    && isFinite(newBoundingBox.min.x)
+    && isFinite(newBoundingBox.max.y)
+    && isFinite(newBoundingBox.min.y)
+    && isFinite(newBoundingBox.max.z)
+    && isFinite(newBoundingBox.min.z)) {
 
-    let newCenter = [
-      (newBoundingBox.max.x - newBoundingBox.min.x) / 2 + newBoundingBox.min.x,
-      (newBoundingBox.max.y - newBoundingBox.min.y) / 2 + newBoundingBox.min.y,
-      (newBoundingBox.max.z - newBoundingBox.min.z) / 2 + newBoundingBox.min.z];
+    let newCenter = new Three.Vector3(
+      ( newBoundingBox.max.x - newBoundingBox.min.x ) / 2 + newBoundingBox.min.x,
+      ( newBoundingBox.max.y - newBoundingBox.min.y ) / 2 + newBoundingBox.min.y,
+      ( newBoundingBox.max.z - newBoundingBox.min.z ) / 2 + newBoundingBox.min.z
+    );
 
-    planData.plan.position.x -= newCenter[0];
-    planData.plan.position.y -= newCenter[1];
-    planData.plan.position.z -= newCenter[2];
+    planData.plan.position.sub( newCenter );
+    planData.grid.position.sub( newCenter );
 
-    planData.grid.position.x -= newCenter[0];
-    planData.grid.position.y -= newCenter[1];
-    planData.grid.position.z -= newCenter[2];
-
-    // Update bounding box
-    newBoundingBox.min.sub(new Three.Vector3().fromArray(newCenter));
-    newBoundingBox.max.sub(new Three.Vector3().fromArray(newCenter));
+    newBoundingBox.min.sub( newCenter );
+    newBoundingBox.max.sub( newCenter );
 
     planData.boundingBox = newBoundingBox;
   }
@@ -551,34 +512,12 @@ function updateBoundingBox(planData) {
  * @returns {Array}
  */
 function minimizeChangePropertiesDiffs(diffArray) {
-
-  let minimizedDiffs = [];
-
-  let propertiesDiffs = [];
-
-  // Find all diffs for a changed property
-  diffArray.forEach(currentDiff => {
-    let splittedDiff = currentDiff.path.split("/");
-    if (splittedDiff[5] === 'properties') {
-      propertiesDiffs.push([currentDiff, splittedDiff[4]]);
-    } else {
-      minimizedDiffs.push(currentDiff);
+  let idsFound = {};
+  return diffArray.filter( diff => {
+    let split = diff.path.split('/');
+    if( split[5] == 'properties' ) {
+      return idsFound[ split[4] ] ? false : ( idsFound[ split[4] ] = 1 );
     }
-
+    return true;
   });
-
-  let sortedPropertiesDiffs = propertiesDiffs.sort((a, b) => {
-    return a[1] < b[1];
-  });
-
-  for (let i = 0; i < sortedPropertiesDiffs.length; i++) {
-    minimizedDiffs.push(sortedPropertiesDiffs[0][0]);
-    let futureIndex = i + 1;
-    while (futureIndex < sortedPropertiesDiffs.length && sortedPropertiesDiffs[i][1] === sortedPropertiesDiffs[futureIndex][1]) {
-      futureIndex++;
-    }
-    i = futureIndex - 1;
-  }
-
-  return minimizedDiffs;
 }
