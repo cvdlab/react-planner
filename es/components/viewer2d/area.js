@@ -28,22 +28,27 @@ export default function Area(_ref) {
   var renderedAreaSize = null;
 
   if (area.selected) {
-    var vertices = layer.vertices;
-    var polygon = area.vertices.map(function (vertexID) {
-      return vertices.get(vertexID);
-    }).map(function (vertex) {
-      return [vertex.x, vertex.y];
-    }).toArray();
+    var center;
 
-    var center = polylabel([polygon], 1.0);
-    var areaSize = (areapolygon(polygon, false) / 10000).toFixed(2);
-    renderedAreaSize = React.createElement(
-      'text',
-      { x: '0', y: '0', transform: 'translate(' + center[0] + ' ' + center[1] + ') scale(1, -1)', style: STYLE_TEXT },
-      areaSize,
-      ' m',
-      String.fromCharCode(0xb2)
-    );
+    (function () {
+      var vertices = layer.vertices;
+      var polygon = area.vertices.map(function (vertexID) {
+        return vertices.get(vertexID);
+      }).map(function (vertex) {
+        return [vertex.x, vertex.y];
+      }).toArray();
+
+      center = polylabel([polygon], 1.0);
+
+      var areaSize = (areapolygon(polygon, false) / 10000).toFixed(2);
+      renderedAreaSize = React.createElement(
+        'text',
+        { x: '0', y: '0', transform: 'translate(' + center[0] + ' ' + center[1] + ') scale(1, -1)', style: STYLE_TEXT },
+        areaSize,
+        ' m',
+        String.fromCharCode(0xb2)
+      );
+    })();
   }
 
   return React.createElement(

@@ -97,7 +97,6 @@ function removeLayer(state, layerID) {
   }
 
   return state.merge({
-    mode: MODE_CONFIGURING_LAYER,
     scene: scene,
     sceneHistory: state.sceneHistory.push(scene)
   });

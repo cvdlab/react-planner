@@ -6,6 +6,7 @@ import IconVisible from 'react-icons/lib/fa/eye';
 import IconHide from 'react-icons/lib/fa/eye-slash';
 import IconAdd from 'react-icons/lib/ti/plus';
 import IconEdit from 'react-icons/lib/fa/pencil';
+import IconTrash from 'react-icons/lib/fa/trash';
 
 var STYLE_ADD_WRAPPER = {
   color: "#fff",
@@ -33,7 +34,7 @@ var iconColStyle = { width: '2em' };
 var tableStyle = {
   width: '100%',
   cursor: 'pointer',
-  overflowY: 'scroll',
+  overflowY: 'auto',
   maxHeight: '20em',
   display: 'block',
   padding: '0 1em',
@@ -53,6 +54,8 @@ export default function PanelLayers(_ref, _ref2) {
     event.stopPropagation();
   };
 
+  var isLastLayer = scene.layers.size === 1;
+
   return React.createElement(
     Panel,
     { name: translator.t("Layers") },
@@ -65,7 +68,7 @@ export default function PanelLayers(_ref, _ref2) {
         React.createElement(
           'tr',
           null,
-          React.createElement('th', { colSpan: '2' }),
+          React.createElement('th', { colSpan: '3' }),
           React.createElement(
             'th',
             null,
@@ -92,6 +95,9 @@ export default function PanelLayers(_ref, _ref2) {
           var configureClick = function configureClick(e) {
             return sceneActions.openLayerConfigurator(layer.id);
           };
+          var delLayer = function delLayer(e) {
+            e.stopPropagation();sceneActions.removeLayer(layerID);
+          };
 
           var swapVisibility = function swapVisibility(e) {
             sceneActions.setLayerProperties(layerID, { visible: !layer.visible });
@@ -113,6 +119,11 @@ export default function PanelLayers(_ref, _ref2) {
               'td',
               { style: iconColStyle },
               React.createElement(IconEdit, { onClick: configureClick, style: STYLE_EDIT_BUTTON, title: translator.t("Configure layer") })
+            ),
+            React.createElement(
+              'td',
+              { style: iconColStyle },
+              !isLastLayer ? React.createElement(IconTrash, { onClick: delLayer, style: STYLE_EDIT_BUTTON, title: translator.t("Delete layer") }) : null
             ),
             React.createElement(
               'td',

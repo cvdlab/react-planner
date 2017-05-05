@@ -16,7 +16,8 @@ var unitContainerStyle = { width: '5em' };
 export default function PropertyLengthMeasure(_ref, _ref2) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
-      configs = _ref.configs;
+      configs = _ref.configs,
+      sourceElement = _ref.sourceElement;
   var catalog = _ref2.catalog;
 
 
@@ -97,7 +98,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
 PropertyLengthMeasure.propTypes = {
   value: PropTypes.instanceOf(Map).isRequired,
   onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired
+  configs: PropTypes.object.isRequired,
+  sourceElement: PropTypes.object
 };
 
 PropertyLengthMeasure.contextTypes = {

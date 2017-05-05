@@ -5,19 +5,18 @@ import { Seq } from 'immutable';
 import FormSelect from '../../components/style/form-select';
 import FormLabel from '../../components/style/form-label';
 
-var firstTdStyle = {
-  width: '6em'
-};
+var tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
+var firstTdStyle = { width: '6em' };
 
 export default function PropertyEnum(_ref) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
-      configs = _ref.configs;
-
+      configs = _ref.configs,
+      sourceElement = _ref.sourceElement;
 
   return React.createElement(
     'table',
-    { className: 'PropertyLengthMeasure', style: { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" } },
+    { className: 'PropertyEnum', style: tableStyle },
     React.createElement(
       'tbody',
       null,
@@ -62,5 +61,6 @@ export default function PropertyEnum(_ref) {
 PropertyEnum.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired
+  configs: PropTypes.object.isRequired,
+  sourceElement: PropTypes.object
 };

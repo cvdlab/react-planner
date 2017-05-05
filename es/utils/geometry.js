@@ -1,3 +1,5 @@
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 /** @description Determines the distance between two points
@@ -111,25 +113,33 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
 
   if (fAbs(denom) <= EPSILON) {
     if (fAbs(numA) <= EPSILON && fAbs(numB) <= EPSILON) {
+      var _ret = function () {
 
-      var comparator = function comparator(pa, pb) {
-        return pa.x === pb.x ? pa.y - pb.y : pa.x - pb.x;
-      };
-      var line0 = [p1, p2].sort(comparator);
-      var line1 = [p3.toJS(), p4.toJS()].sort(comparator);
+        var comparator = function comparator(pa, pb) {
+          return pa.x === pb.x ? pa.y - pb.y : pa.x - pb.x;
+        };
+        var line0 = [p1, p2].sort(comparator);
+        var line1 = [p3.toJS(), p4.toJS()].sort(comparator);
 
-      var _sort = [line0, line1].sort(function (lineA, lineB) {
-        return comparator(lineA[0], lineB[0]);
-      }),
-          _sort2 = _slicedToArray(_sort, 2),
-          lineSX = _sort2[0],
-          lineDX = _sort2[1];
+        var _sort = [line0, line1].sort(function (lineA, lineB) {
+          return comparator(lineA[0], lineB[0]);
+        }),
+            _sort2 = _slicedToArray(_sort, 2),
+            lineSX = _sort2[0],
+            lineDX = _sort2[1];
 
-      if (lineSX[1].x === lineDX[0].x) {
-        return { type: lineDX[0].y <= lineSX[1].y ? "colinear" : "none" };
-      } else {
-        return { type: lineDX[0].x <= lineSX[1].x ? "colinear" : "none" };
-      }
+        if (lineSX[1].x === lineDX[0].x) {
+          return {
+            v: { type: lineDX[0].y <= lineSX[1].y ? "colinear" : "none" }
+          };
+        } else {
+          return {
+            v: { type: lineDX[0].x <= lineSX[1].x ? "colinear" : "none" }
+          };
+        }
+      }();
+
+      if ((typeof _ret === "undefined" ? "undefined" : _typeof(_ret)) === "object") return _ret.v;
     }
     return { type: "parallel" };
   }

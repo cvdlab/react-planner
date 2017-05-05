@@ -28,10 +28,11 @@ export default {
   "Reset": "Annulla",
   "Unselect": "Deseleziona",
   "Configure layer": "Configura livello",
+  "Delete layer": "Elimina livello",
   "Properties: [{0}] {1}": "Proprietà: [{0}] {1}",
   "Get Screenshot": "Cattura uno screenshot",
   "Catalog": "Catalogo",
   "Rotation": "Rotazione",
-  "Altitude": "Altezza",
+  "Altitude": "Quota",
   "Name": "Nome"
 };

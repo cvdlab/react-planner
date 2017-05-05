@@ -2,18 +2,18 @@ import React, { PropTypes } from 'react';
 import FormLabel from '../../components/style/form-label';
 import FormColorInput from '../../components/style/form-color-input';
 
-var firstTdStyle = {
-  width: '6em'
-};
+var tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
+var firstTdStyle = { width: '6em' };
 
 export default function PropertyColor(_ref) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
-      configs = _ref.configs;
+      configs = _ref.configs,
+      sourceElement = _ref.sourceElement;
 
   return React.createElement(
     'table',
-    { className: 'PropertyColor', style: { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" } },
+    { className: 'PropertyColor', style: tableStyle },
     React.createElement(
       'tbody',
       null,
@@ -44,5 +44,6 @@ export default function PropertyColor(_ref) {
 PropertyColor.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired
+  configs: PropTypes.object.isRequired,
+  sourceElement: PropTypes.object
 };
