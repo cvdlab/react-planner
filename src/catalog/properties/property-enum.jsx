@@ -3,19 +3,15 @@ import {Seq} from 'immutable';
 import FormSelect from '../../components/style/form-select';
 import FormLabel from '../../components/style/form-label';
 
-let firstTdStyle = {
-  width: '6em'
-};
+const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
+const firstTdStyle = { width: '6em' };
 
-export default function PropertyEnum({value, onUpdate, configs}) {
-
+export default function PropertyEnum({value, onUpdate, configs, sourceElement}) {
   return (
-    <table className="PropertyLengthMeasure" style={{ width: "100%", borderSpacing: "2px 0", marginBottom: "2px" }}>
+    <table className="PropertyEnum" style={tableStyle}>
       <tbody>
         <tr>
-          <td style={firstTdStyle}>
-            <FormLabel>{configs.label}</FormLabel>
-          </td>
+          <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
           <td>
             <FormSelect value={value} onChange={event => onUpdate(event.target.value)}>
               {Seq(configs.values)
@@ -27,11 +23,11 @@ export default function PropertyEnum({value, onUpdate, configs}) {
       </tbody>
     </table>
   );
-
 }
 
 PropertyEnum.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
+  sourceElement: PropTypes.object
 };

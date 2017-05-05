@@ -1,22 +1,27 @@
 import React, {PropTypes} from 'react';
 import FormLabel from '../../components/style/form-label'
 
-export default function PropertyReadOnly({value, onUpdate, configs}) {
-  return (
-    <div className="PropertyReadOnly" style={{marginBottom: "3px"}}>
-      <div style={{display: "inline-block", width: "30%"}}>
-        <FormLabel>{configs.label}</FormLabel>
-      </div>
+const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
+const firstTdStyle = { width: '6em' };
 
-      <div style={{display: "inline-block", width: "70%"}}>
-        {value}
-      </div>
-    </div>
+export default function PropertyReadOnly({value, onUpdate, configs, sourceElement}) {
+  return (
+    <table className="PropertyReadOnly" style={tableStyle}>
+      <tbody>
+        <tr>
+          <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
+          <td>
+            <div>{value}</div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
   );
 }
 
 PropertyReadOnly.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired
+  configs: PropTypes.object.isRequired,
+  sourceElement: PropTypes.object
 };

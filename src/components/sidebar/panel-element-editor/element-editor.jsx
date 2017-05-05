@@ -279,18 +279,24 @@ export default class ElementEditor extends Component {
               configs={configs}
               onUpdate={value => this.updateProperty(propertyName, value)}
               state={appState}
+              sourceElement={this.props.element}
             />
           })
         }
 
         <table style={tableStyle}>
           <tbody>
-          <tr>
-            <td><DeleteButton size="small"
-                              onClick={e => projectActions.remove()}>{translator.t("Delete")}</DeleteButton></td>
-            <td><CancelButton size="small" onClick={e => this.reset()}>{translator.t("Reset")}</CancelButton></td>
-            <td><FormSubmitButton size="small">{translator.t("Save")}</FormSubmitButton></td>
-          </tr>
+            <tr>
+              <td>
+                <DeleteButton size="small" onClick={e => projectActions.remove()}>{translator.t("Delete")}</DeleteButton>
+              </td>
+              <td>
+                <CancelButton size="small" onClick={e => this.reset()}>{translator.t("Reset")}</CancelButton>
+              </td>
+              <td>
+                <FormSubmitButton size="small">{translator.t("Save")}</FormSubmitButton>
+              </td>
+            </tr>
           </tbody>
         </table>
 

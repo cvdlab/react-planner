@@ -5,7 +5,7 @@ import FormTextInput from '../../components/style/form-text-input';
 const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
 const firstTdStyle = { width: '6em' };
 
-export default function PropertyString({value, onUpdate, configs}) {
+export default function PropertyString({value, onUpdate, configs, sourceElement}) {
   return (
     <table className="PropertyString" style={tableStyle}>
       <tbody>
@@ -25,5 +25,6 @@ export default function PropertyString({value, onUpdate, configs}) {
 PropertyString.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired
+  configs: PropTypes.object.isRequired,
+  sourceElement: PropTypes.object
 };
