@@ -9,7 +9,8 @@ export default function PropertyToggle(_ref) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
       configs = _ref.configs,
-      sourceElement = _ref.sourceElement;
+      sourceElement = _ref.sourceElement,
+      internalState = _ref.internalState;
 
   return React.createElement(
     'table',
@@ -49,5 +50,6 @@ PropertyToggle.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object
+  sourceElement: PropTypes.object,
+  internalState: PropTypes.object
 };

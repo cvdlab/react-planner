@@ -17,7 +17,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
       configs = _ref.configs,
-      sourceElement = _ref.sourceElement;
+      sourceElement = _ref.sourceElement,
+      internalState = _ref.internalState;
   var catalog = _ref2.catalog;
 
 
@@ -99,7 +100,8 @@ PropertyLengthMeasure.propTypes = {
   value: PropTypes.instanceOf(Map).isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object
+  sourceElement: PropTypes.object,
+  internalState: PropTypes.object
 };
 
 PropertyLengthMeasure.contextTypes = {

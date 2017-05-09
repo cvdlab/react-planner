@@ -517,6 +517,10 @@ export function removeArea(layer, areaID) {
   return { layer: layer, area: area };
 }
 
+var sameSet = function sameSet(set1, set2) {
+  return set1.size == set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
+};
+
 export function detectAndUpdateAreas(layer, catalog) {
 
   var verticesArray = []; //array with vertices coords
@@ -547,10 +551,6 @@ export function detectAndUpdateAreas(layer, catalog) {
     }));
   });
 
-  var sameSet = function sameSet(set1, set2) {
-    return set1.isSuperset(set2) && set1.isSubset(set2) && set1.size === set2.size;
-  };
-
   layer = layer.withMutations(function (layer) {
     //remove areas
     layer.areas.forEach(function (area) {
@@ -561,15 +561,13 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     //add new areas
-    var layerVertices = layer.vertices;
     innerCyclesByVerticesID.forEach(function (cycle) {
       var areaInUse = layer.areas.some(function (area) {
         return sameSet(area.vertices, cycle);
       });
       if (!areaInUse) {
         var areaVerticesCoords = cycle.map(function (vertexId) {
-          var vertex = layerVertices.get(vertexId);
-          return { x: vertex.x, y: vertex.y };
+          return layer.vertices.get(vertexId);
         });
         addArea(layer, 'area', areaVerticesCoords, catalog);
       }
