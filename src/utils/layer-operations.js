@@ -414,6 +414,8 @@ export function removeArea(layer, areaID) {
   return {layer, area};
 }
 
+const sameSet = (set1, set2) => set1.size == set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
+
 export function detectAndUpdateAreas(layer, catalog) {
 
   let verticesArray = [];           //array with vertices coords
@@ -439,8 +441,6 @@ export function detectAndUpdateAreas(layer, catalog) {
   let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
     .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
 
-  let sameSet = (set1, set2) => set1.isSuperset(set2) && set1.isSubset(set2) && set1.size === set2.size;
-
   layer = layer.withMutations(layer => {
     //remove areas
     layer.areas.forEach(area => {
@@ -449,14 +449,10 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     //add new areas
-    let layerVertices = layer.vertices;
     innerCyclesByVerticesID.forEach(cycle => {
       let areaInUse = layer.areas.some(area => sameSet(area.vertices, cycle));
       if (!areaInUse) {
-        let areaVerticesCoords = cycle.map(vertexId => {
-          let vertex = layerVertices.get(vertexId);
-          return {x: vertex.x, y: vertex.y};
-        });
+        let areaVerticesCoords = cycle.map(vertexId => layer.vertices.get(vertexId) );
         addArea(layer, 'area', areaVerticesCoords, catalog)
       }
     });
