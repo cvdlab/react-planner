@@ -13,7 +13,7 @@ const firstTdStyle = { width: '6em' };
 const secondTdStyle = { padding: 0 };
 const unitContainerStyle = { width:'5em'};
 
-export default function PropertyLengthMeasure({value, onUpdate, configs, sourceElement}, {catalog}) {
+export default function PropertyLengthMeasure({value, onUpdate, configs, sourceElement, internalState}, {catalog}) {
 
   let _length = value.has('_length') ? value.get('_length') : value.get('length');
   let _unit = value.has('_unit') ? value.get('_unit') : UNIT_CENTIMETER;
@@ -63,7 +63,8 @@ PropertyLengthMeasure.propTypes = {
   value: PropTypes.instanceOf(Map).isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object
+  sourceElement: PropTypes.object,
+  internalState: PropTypes.object
 };
 
 PropertyLengthMeasure.contextTypes = {

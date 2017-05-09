@@ -280,6 +280,7 @@ export default class ElementEditor extends Component {
               onUpdate={value => this.updateProperty(propertyName, value)}
               state={appState}
               sourceElement={this.props.element}
+              internalState={this.state}
             />
           })
         }

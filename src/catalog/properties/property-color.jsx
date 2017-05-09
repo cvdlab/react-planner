@@ -5,7 +5,7 @@ import FormColorInput from '../../components/style/form-color-input';
 const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
 const firstTdStyle = { width: '6em' };
 
-export default function PropertyColor({value, onUpdate, configs, sourceElement}) {
+export default function PropertyColor({value, onUpdate, configs, sourceElement, internalState}) {
   return (
     <table className="PropertyColor" style={tableStyle}>
       <tbody>
@@ -26,5 +26,6 @@ PropertyColor.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object
+  sourceElement: PropTypes.object,
+  internalState: PropTypes.object
 };
