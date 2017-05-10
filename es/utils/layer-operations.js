@@ -225,34 +225,32 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       var intersection = Geometry.intersectionFromTwoLineSegment({ x: x0, y: y0 }, { x: x1, y: y1 }, v0, v1);
 
       if (intersection.type === "colinear") {
-        (function () {
-          if (!oldHoles) {
-            oldHoles = [];
+        if (!oldHoles) {
+          oldHoles = [];
+        }
+
+        var orderedVertices = Geometry.orderVertices([{ x: x0, y: y0 }, { x: x1, y: y1 }]);
+
+        layer.lines.get(line.id).holes.forEach(function (holeID) {
+          var hole = layer.holes.get(holeID);
+          var oldLineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+
+          var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
+
+          var offset = hole.offset;
+
+          if (orderedVertices[1].x === line.vertices.get(1).x && orderedVertices[1].y === line.vertices(1).y) {
+            offset = 1 - offset;
           }
 
-          var orderedVertices = Geometry.orderVertices([{ x: x0, y: y0 }, { x: x1, y: y1 }]);
+          var xp = oldLineLength * offset * Math.cos(alpha) + v0.x;
+          var yp = oldLineLength * offset * Math.sin(alpha) + v0.y;
 
-          layer.lines.get(line.id).holes.forEach(function (holeID) {
-            var hole = layer.holes.get(holeID);
-            var oldLineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+          oldHoles.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
+        });
 
-            var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
-
-            var offset = hole.offset;
-
-            if (orderedVertices[1].x === line.vertices.get(1).x && orderedVertices[1].y === line.vertices(1).y) {
-              offset = 1 - offset;
-            }
-
-            var xp = oldLineLength * offset * Math.cos(alpha) + v0.x;
-            var yp = oldLineLength * offset * Math.sin(alpha) + v0.y;
-
-            oldHoles.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
-          });
-
-          removeLine(layer, line.id);
-          points.push(v0, v1);
-        })();
+        removeLine(layer, line.id);
+        points.push(v0, v1);
       }
 
       if (intersection.type === "intersecting" && !hasCommonEndpoint) {
