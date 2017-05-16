@@ -20,7 +20,7 @@ export default function createArea(element, layer, scene, textures) {
     vertices.push(layer.vertices.get(vertexID));
   });
 
-  let color = parseInt(element.properties.get('patternColor').substring(1), 16);
+  let color = element.properties.get('patternColor');
   let textureName = element.properties.get('texture');
 
   let shape = new ThreeShape();
@@ -37,12 +37,12 @@ export default function createArea(element, layer, scene, textures) {
 
   let areaMaterial1 = new ThreeMeshPhongMaterial({
     side: ThreeFrontSide,
-    color: color
+    color
   });
 
   let areaMaterial2 = new ThreeMeshPhongMaterial({
     side: ThreeBackSide,
-    color: color
+    color
   });
 
   let shapeGeometry = new ThreeShapeGeometry(shape);
