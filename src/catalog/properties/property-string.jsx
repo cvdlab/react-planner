@@ -6,6 +6,17 @@ const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" 
 const firstTdStyle = { width: '6em' };
 
 export default function PropertyString({value, onUpdate, configs, sourceElement, internalState}) {
+
+  let update = (val) => {
+
+    if( configs.hook )
+    {
+      return configs.hook( val ).then( _val => { return onUpdate(_val); } );
+    }
+
+    return onUpdate( val );
+  };
+
   return (
     <table className="PropertyString" style={tableStyle}>
       <tbody>
@@ -14,7 +25,7 @@ export default function PropertyString({value, onUpdate, configs, sourceElement,
           <td>
             <FormTextInput
               value={value}
-              onChange={event => onUpdate(event.target.value)}/>
+              onChange={event => update(event.target.value)}/>
           </td>
         </tr>
       </tbody>

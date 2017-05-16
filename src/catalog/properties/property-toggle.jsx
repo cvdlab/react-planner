@@ -6,13 +6,24 @@ const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" 
 const firstTdStyle = { width: '6em' };
 
 export default function PropertyToggle({value, onUpdate, configs, sourceElement, internalState}) {
+
+  let update = (val) => {
+
+    if( configs.hook )
+    {
+      return configs.hook( val ).then( _val => { return onUpdate(_val); } );
+    }
+
+    return onUpdate( val );
+  };
+
   return (
     <table className="PropertyToggle" style={tableStyle}>
       <tbody>
         <tr>
           <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
           <td>
-            <Button onClick={e => onUpdate(!value)} size="small">{configs.actionName}</Button>
+            <Button onClick={e => update(!value)} size="small">{configs.actionName}</Button>
           </td>
         </tr>
       </tbody>

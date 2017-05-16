@@ -7,13 +7,19 @@ const firstTdStyle = { width: '6em' };
 
 export default function PropertyNumber({value, onUpdate, configs, sourceElement, internalState}) {
 
-  let update = (value) => {
-    let number = parseFloat(value);
+  let update = (val) => {
+    let number = parseFloat(val);
 
     if (isNaN(number)) {
       number = 0;
     }
-    return onUpdate(number);
+
+    if( configs.hook )
+    {
+      return configs.hook( number ).then( _val => { return onUpdate(_val); } );
+    }
+
+    return onUpdate( number );
   };
 
   return (

@@ -21,14 +21,18 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
   let update = (lengthInput, unitInput) => {
 
     let newLength = toFixedFloat(lengthInput);
+    let merged = value.merge({
+      length : unitInput !== UNIT_CENTIMETER ? convert(newLength).from(unitInput).to(UNIT_CENTIMETER) : newLength,
+      _length : lengthInput,
+      _unit: unitInput
+    });
 
-    onUpdate(
-      value.merge({
-        length : unitInput !== UNIT_CENTIMETER ? convert(newLength).from(unitInput).to(UNIT_CENTIMETER) : newLength,
-        _length : lengthInput,
-        _unit: unitInput
-      })
-    );
+    if( configs.hook )
+    {
+      return configs.hook( merged ).then( val => { return onUpdate(val); } );
+    }
+
+    return onUpdate( merged );
   };
 
   return (
