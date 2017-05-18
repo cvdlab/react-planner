@@ -25,11 +25,11 @@ class ReactPlanner extends Component {
     projectActions.initCatalog(catalog);
   }
 
-  componentWillReceiveProps(nextProps){
+  componentWillReceiveProps(nextProps) {
     let {stateExtractor, state, projectActions, catalog} = nextProps;
     let plannerState = stateExtractor(state);
     let catalogReady = plannerState.getIn(['catalog', 'ready']);
-    if(!catalogReady) {
+    if (!catalogReady) {
       projectActions.initCatalog(catalog);
     }
   }
@@ -51,6 +51,7 @@ ReactPlanner.propTypes = {
   height: PropTypes.number.isRequired,
   stateExtractor: PropTypes.func.isRequired,
   toolbarButtons: PropTypes.array,
+  sidebarComponents: PropTypes.array,
   customContents: PropTypes.object,
 };
 
@@ -71,6 +72,7 @@ ReactPlanner.defaultProps = {
   allowProjectFileSupport: true,
 
   toolbarButtons: [],
+  sidebarComponents: [],
   customContents: {},
 };
 
