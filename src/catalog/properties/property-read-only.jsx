@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import FormLabel from '../../components/style/form-label'
 
 const tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };

@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import ContentTitle from '../style/content-title';
 import ContentContainer from '../style/content-container';
 import FormLabel from '../style/form-label';

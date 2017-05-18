@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
 import convert from 'convert-units';
 import FormLabel from '../../components/style/form-label'

@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import {Seq} from 'immutable';
 import FormSelect from '../../components/style/form-select';
 import FormLabel from '../../components/style/form-label';

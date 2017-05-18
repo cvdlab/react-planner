@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import IconSave from 'react-icons/lib/md/camera-alt';
 import {ToolbarButton} from 'react-planner';
 
@@ -26,7 +27,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
     imageBrowserDownload(canvas.toDataURL());
   };
 
-  if (["MODE_3D_FIRST_PERSON", "MODE_3D_VIEW"].includes(mode)){
+  if (["MODE_3D_FIRST_PERSON", "MODE_3D_VIEW"].includes(mode)) {
     return (
       <ToolbarButton active={false} tooltip={translator.t("Get Screenshot")} onClick={saveScreenshotToFile}>
         <IconSave />

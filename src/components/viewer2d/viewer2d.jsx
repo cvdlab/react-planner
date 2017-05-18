@@ -1,6 +1,7 @@
 "use strict";
 
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO} from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
@@ -88,7 +89,7 @@ function extractElementData(node) {
 }
 
 export default function Viewer2D({state, width, height},
-  {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
+                                 {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
 
 
   let {viewer2D, mode, scene} = state;

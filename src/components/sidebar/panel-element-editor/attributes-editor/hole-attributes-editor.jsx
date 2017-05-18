@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
 
 export default function HoleAttributesEditor({element, onUpdate, attributeFormData}, {translator}) {

@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import IconAdd from 'react-icons/lib/fa/plus-circle';
 import If from '../../utils/react-if';
 import {Seq} from 'immutable';

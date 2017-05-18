@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import IconSave from 'react-icons/lib/fa/floppy-o';
 import ToolbarButton from './toolbar-button';
 import {browserDownload}  from '../../utils/browser';

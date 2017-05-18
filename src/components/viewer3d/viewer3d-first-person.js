@@ -1,6 +1,7 @@
 "use strict";
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import * as Three from 'three';
 import {parseData, updateScene} from './scene-creator';
@@ -300,16 +301,16 @@ export default class Viewer3DFirstPerson extends React.Component {
 }
 
 Viewer3DFirstPerson.propTypes = {
-  state: React.PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired
+  state: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
 
 Viewer3DFirstPerson.contextTypes = {
-  areaActions: React.PropTypes.object.isRequired,
-  holesActions: React.PropTypes.object.isRequired,
-  itemsActions: React.PropTypes.object.isRequired,
-  linesActions: React.PropTypes.object.isRequired,
-  projectActions: React.PropTypes.object.isRequired,
-  catalog: React.PropTypes.object
+  areaActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired,
+  catalog: PropTypes.object
 };

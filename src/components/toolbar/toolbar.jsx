@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import IconNewFile from 'react-icons/lib/fa/file-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import IconZoomPlus from 'react-icons/lib/ti/zoom-in';
@@ -52,15 +53,15 @@ const STYLE = {
 };
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
-                                  projectActions,
-                                  viewer2DActions,
-                                  editingActions,
-                                  viewer3DActions,
-                                  linesActions,
-                                  holesActions,
-                                  itemsActions,
-                                  translator,
-                                }) {
+  projectActions,
+  viewer2DActions,
+  editingActions,
+  viewer3DActions,
+  linesActions,
+  holesActions,
+  itemsActions,
+  translator,
+}) {
 
   let mode = state.get('mode');
 
@@ -140,8 +141,8 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired
 };
 

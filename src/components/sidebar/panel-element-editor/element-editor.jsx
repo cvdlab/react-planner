@@ -1,4 +1,5 @@
-import React, {PropTypes, Component} from 'react';
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
 import {Map, fromJS} from 'immutable';
 import FormSubmitButton from '../../style/form-submit-button';
 import CancelButton from '../../style/cancel-button';

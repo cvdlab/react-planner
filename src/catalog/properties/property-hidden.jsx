@@ -1,4 +1,5 @@
-import React, {PropTypes} from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 export default function PropertyHidden({value, onUpdate, configs, sourceElement, internalState}) {
   return null

@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import GuideHorizontalStreak from './guide-horizontal-streak';
 import GuideVerticalStreak from './guide-vertical-streak';
 
@@ -23,5 +24,5 @@ export default function Guides({scene}) {
 }
 
 Guides.propTypes = {
-  scene: React.PropTypes.object.isRequired
+  scene: PropTypes.object.isRequired
 };

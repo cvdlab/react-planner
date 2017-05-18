@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import Viewer2D from './viewer2d/viewer2d';
 import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
@@ -53,7 +54,7 @@ export default function Content({width, height, state, customContents}) {
 }
 
 Content.propTypes = {
-  state: React.PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired
+  state: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
