@@ -307,6 +307,8 @@ export default function Viewer2D({state, width, height},
       onMouseDown={onMouseDown}
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
+
+      miniaturePosition="none"
       toolbarPosition="right">
 
       <svg width={scene.width} height={scene.height}>
