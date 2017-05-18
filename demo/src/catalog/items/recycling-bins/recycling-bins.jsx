@@ -13,7 +13,7 @@ export default {
     tag: ['Furnishings'],
     group: "Items",
     title: "recycling bins",
-    description: "Crecycling-bins",
+    description: "Recycling-bins",
     image: require('./recycling-bins.png')
   },
 
