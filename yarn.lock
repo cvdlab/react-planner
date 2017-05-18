@@ -3515,9 +3515,9 @@ tar@~2.2.1:
     fstream "^1.0.2"
     inherits "2"
 
-three@0.84.0:
-  version "0.84.0"
-  resolved "https://registry.yarnpkg.com/three/-/three-0.84.0.tgz#95be85a55a0fa002aa625ed559130957dcffd918"
+three@0.85.2:
+  version "0.85.2"
+  resolved "https://registry.yarnpkg.com/three/-/three-0.85.2.tgz#8936f89c3668f7bf12f9b085ddf5dd409916ea27"
 
 through@~2.3.4:
   version "2.3.8"
