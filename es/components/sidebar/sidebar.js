@@ -49,7 +49,7 @@ export default function Sidebar(_ref) {
       React.createElement(PanelElementEditor, { state: state })
     ),
     sidebarComponents.map(function (Component, index) {
-      return React.createElement(Component, { mode: state.mode, key: index });
+      return React.createElement(Component, { state: state, key: index });
     })
   );
 }

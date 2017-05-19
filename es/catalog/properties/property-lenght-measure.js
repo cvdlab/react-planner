@@ -19,7 +19,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
       onUpdate = _ref.onUpdate,
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
-      internalState = _ref.internalState;
+      internalState = _ref.internalState,
+      state = _ref.state;
   var catalog = _ref2.catalog;
 
 
@@ -36,10 +37,12 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
     });
 
     if (configs.hook) {
-      return configs.hook(merged).then(function (val) {
+      return configs.hook(merged, sourceElement, internalState, state).then(function (val) {
         return onUpdate(val);
       });
     }
+
+    console.log(merged);
 
     return onUpdate(merged);
   };
@@ -76,7 +79,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
                   null,
                   React.createElement(FormNumberInput, { value: _length, onChange: function onChange(event) {
                       return update(event.target.value, _unit);
-                    }, min: configs.min, max: configs.max })
+                    },
+                    min: configs.min, max: configs.max })
                 ),
                 React.createElement(
                   'td',
@@ -109,7 +113,8 @@ PropertyLengthMeasure.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
-  internalState: PropTypes.object
+  internalState: PropTypes.object,
+  state: PropTypes.object.isRequired
 };
 
 PropertyLengthMeasure.contextTypes = {

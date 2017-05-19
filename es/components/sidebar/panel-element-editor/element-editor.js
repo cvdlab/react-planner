@@ -319,7 +319,8 @@ var ElementEditor = function (_Component) {
           } },
         React.createElement(AttributesEditor, { element: this.props.element,
           onUpdate: this.updateAttribute,
-          attributeFormData: attributesFormData }),
+          attributeFormData: attributesFormData,
+          state: appState }),
         propertiesFormData.entrySeq().map(function (_ref) {
           var _ref2 = _slicedToArray(_ref, 2),
               propertyName = _ref2[0],

@@ -11,7 +11,8 @@ export default function PropertyNumber(_ref) {
       onUpdate = _ref.onUpdate,
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
-      internalState = _ref.internalState;
+      internalState = _ref.internalState,
+      state = _ref.state;
 
 
   var update = function update(val) {
@@ -22,7 +23,7 @@ export default function PropertyNumber(_ref) {
     }
 
     if (configs.hook) {
-      return configs.hook(number).then(function (_val) {
+      return configs.hook(number, sourceElement, internalState, state).then(function (_val) {
         return onUpdate(_val);
       });
     }
@@ -69,5 +70,6 @@ PropertyNumber.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
-  internalState: PropTypes.object
+  internalState: PropTypes.object,
+  state: PropTypes.object.isRequired
 };

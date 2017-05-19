@@ -17,7 +17,8 @@ var inputStyle = {
 function LineAttributesEditor(_ref, _ref2) {
   var element = _ref.element,
       _onUpdate = _ref.onUpdate,
-      attributeFormData = _ref.attributeFormData;
+      attributeFormData = _ref.attributeFormData,
+      state = _ref.state;
   var translator = _ref2.translator;
 
   var vertexOne = attributeFormData.has('vertexOne') ? attributeFormData.get('vertexOne') : null;
@@ -47,7 +48,8 @@ function LineAttributesEditor(_ref, _ref2) {
             React.createElement(FormNumberInput, { value: vertexOne.get('x'),
               onChange: function onChange(event) {
                 return _onUpdate('vertexOne', { 'x': event.target.value });
-              }, style: inputStyle })
+              }, style: inputStyle,
+              state: state })
           )
         ),
         React.createElement(
@@ -64,7 +66,8 @@ function LineAttributesEditor(_ref, _ref2) {
             React.createElement(FormNumberInput, { value: vertexOne.get('y'),
               onChange: function onChange(event) {
                 return _onUpdate('vertexOne', { 'y': event.target.value });
-              }, style: inputStyle })
+              }, style: inputStyle,
+              state: state })
           )
         ),
         React.createElement(
@@ -81,7 +84,8 @@ function LineAttributesEditor(_ref, _ref2) {
             React.createElement(FormNumberInput, { value: vertexTwo.get('x'),
               onChange: function onChange(event) {
                 return _onUpdate('vertexTwo', { 'x': event.target.value });
-              }, style: inputStyle })
+              }, style: inputStyle,
+              state: state })
           )
         ),
         React.createElement(
@@ -98,7 +102,8 @@ function LineAttributesEditor(_ref, _ref2) {
             React.createElement(FormNumberInput, { value: vertexTwo.get('y'),
               onChange: function onChange(event) {
                 return _onUpdate('vertexTwo', { 'y': event.target.value });
-              }, style: inputStyle })
+              }, style: inputStyle,
+              state: state })
           )
         )
       )
@@ -108,7 +113,8 @@ function LineAttributesEditor(_ref, _ref2) {
       onUpdate: function onUpdate(mapped) {
         return _onUpdate('lineLength', mapped);
       },
-      configs: { label: 'Length', min: 0, max: Infinity }
+      configs: { label: 'Length', min: 0, max: Infinity },
+      state: state
     })
   );
 }
@@ -116,7 +122,8 @@ function LineAttributesEditor(_ref, _ref2) {
 LineAttributesEditor.propTypes = {
   element: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  attributeFormData: PropTypes.object.isRequired
+  attributeFormData: PropTypes.object.isRequired,
+  state: PropTypes.object.isRequired
 };
 
 LineAttributesEditor.contextTypes = {
