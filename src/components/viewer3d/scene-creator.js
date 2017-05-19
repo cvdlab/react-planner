@@ -81,10 +81,12 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
 
       if (modifiedPath.length == 3) {
         switch (diff.op) {
-          case 'replace': break;  //TODO?
-          case 'add': break;      //TODO?
+          case 'replace':
+            break;  //TODO?
+          case 'add':
+            break;      //TODO?
           case 'remove':
-            removeLayer( modifiedPath[2], planData );
+            removeLayer(modifiedPath[2], planData);
             break;
         }
       }
@@ -113,10 +115,9 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
         })
       }
 
-      let layerGraph = sceneData.layers.get( oldSceneData.selectedLayer );
+      let layerGraph = sceneData.layers.get(oldSceneData.selectedLayer);
 
-      if( layerGraph )
-      {
+      if (layerGraph) {
         if (!layerGraph.visible) {
           // I need to remove the objects for this layer
           for (let lineID in layerGraph.lines) removeLine(planData, layerId, lineID);
@@ -227,16 +228,15 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
   })
 }
 
-function removeLayer( layerId, planData )
-{
-  let layerGraph = planData.sceneGraph.layers[ layerId ];
+function removeLayer(layerId, planData) {
+  let layerGraph = planData.sceneGraph.layers[layerId];
 
   for (let lineID in layerGraph.lines) removeLine(planData, layerId, lineID);
   for (let areaID in layerGraph.areas) removeArea(planData, layerId, areaID);
   for (let itemID in layerGraph.items) removeItem(planData, layerId, itemID);
   for (let holeID in layerGraph.holes) removeHole(planData, layerId, holeID);
 
-  delete planData.sceneGraph.layers[ layerId ];
+  delete planData.sceneGraph.layers[layerId];
 }
 
 function removeHole(planData, layerId, holeToRemoveID) {
@@ -496,11 +496,11 @@ function updateBoundingBox(planData) {
       ( newBoundingBox.max.z - newBoundingBox.min.z ) / 2 + newBoundingBox.min.z
     );
 
-    planData.plan.position.sub( newCenter );
-    planData.grid.position.sub( newCenter );
+    planData.plan.position.sub(newCenter);
+    planData.grid.position.sub(newCenter);
 
-    newBoundingBox.min.sub( newCenter );
-    newBoundingBox.max.sub( newCenter );
+    newBoundingBox.min.sub(newCenter);
+    newBoundingBox.max.sub(newCenter);
 
     planData.boundingBox = newBoundingBox;
   }
@@ -513,10 +513,10 @@ function updateBoundingBox(planData) {
  */
 function minimizeChangePropertiesDiffs(diffArray) {
   let idsFound = {};
-  return diffArray.filter( diff => {
+  return diffArray.filter(diff => {
     let split = diff.path.split('/');
-    if( split[5] == 'properties' ) {
-      return idsFound[ split[4] ] ? false : ( idsFound[ split[4] ] = 1 );
+    if (split[5] == 'properties') {
+      return idsFound[split[4]] ? false : ( idsFound[split[4]] = 1 );
     }
     return true;
   });
