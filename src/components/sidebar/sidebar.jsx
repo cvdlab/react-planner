@@ -25,7 +25,7 @@ export default function Sidebar({state, width, height, sidebarComponents}) {
       <div className="layer-elements"><PanelLayerElements state={state}/></div>
       <div className="properties"><PanelElementEditor state={state}/></div>
       {/*<div className="guides"><PanelGuides state={state}/></div>*/}
-      {sidebarComponents.map((Component, index) => <Component mode={state.mode} key={index}/>)}
+      {sidebarComponents.map((Component, index) => <Component state={state} key={index}/>)}
     </aside>
   );
 }
