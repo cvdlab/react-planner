@@ -34,6 +34,8 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
       });
     }
 
+    console.log(merged);
+
     return onUpdate(merged);
   };
 
