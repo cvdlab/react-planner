@@ -5,14 +5,17 @@ import LineAttributesEditor from './line-attributes-editor';
 import HoleAttributesEditor from './hole-attributes-editor';
 
 
-export default function AttributesEditor({element, onUpdate, attributeFormData}) {
+export default function AttributesEditor({element, onUpdate, attributeFormData, state}) {
   switch (element.prototype) {
     case 'items':
-      return <ItemAttributesEditor element={element} onUpdate={onUpdate} attributeFormData={attributeFormData}/>;
+      return <ItemAttributesEditor element={element} onUpdate={onUpdate} attributeFormData={attributeFormData}
+                                   state={state}/>;
     case 'lines':
-      return <LineAttributesEditor element={element} onUpdate={onUpdate} attributeFormData={attributeFormData}/>;
+      return <LineAttributesEditor element={element} onUpdate={onUpdate} attributeFormData={attributeFormData}
+                                   state={state}/>;
     case 'holes':
-      return <HoleAttributesEditor element={element} onUpdate={onUpdate} attributeFormData={attributeFormData}/>;
+      return <HoleAttributesEditor element={element} onUpdate={onUpdate} attributeFormData={attributeFormData}
+                                   state={state}/>;
     case 'areas':
       return null;
 
@@ -24,5 +27,6 @@ export default function AttributesEditor({element, onUpdate, attributeFormData})
 AttributesEditor.propTypes = {
   element: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  attributeFormData: PropTypes.object.isRequired
+  attributeFormData: PropTypes.object.isRequired,
+  state: PropTypes.object.isRequired
 };
