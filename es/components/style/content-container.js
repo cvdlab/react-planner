@@ -1,6 +1,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 var STYLE = {
   padding: "0 20px",
@@ -13,7 +14,7 @@ export default function ContentContainer(_ref) {
       height = _ref.height;
 
   return React.createElement(
-    "div",
+    'div',
     { style: _extends({ width: width, height: height }, STYLE), onWheel: function onWheel(event) {
         return event.stopPropagation();
       } },

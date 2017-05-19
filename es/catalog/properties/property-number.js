@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import FormLabel from '../../components/style/form-label';
 import FormNumberInput from '../../components/style/form-number-input';
 
@@ -13,12 +14,19 @@ export default function PropertyNumber(_ref) {
       internalState = _ref.internalState;
 
 
-  var update = function update(value) {
-    var number = parseFloat(value);
+  var update = function update(val) {
+    var number = parseFloat(val);
 
     if (isNaN(number)) {
       number = 0;
     }
+
+    if (configs.hook) {
+      return configs.hook(number).then(function (_val) {
+        return onUpdate(_val);
+      });
+    }
+
     return onUpdate(number);
   };
 

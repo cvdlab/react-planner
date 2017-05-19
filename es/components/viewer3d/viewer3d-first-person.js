@@ -9,6 +9,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import * as Three from 'three';
 import { parseData, updateScene } from './scene-creator';
@@ -198,7 +199,7 @@ var Viewer3DFirstPerson = function (_React$Component) {
           raycaster.setFromCamera(mouseVector, camera);
 
           var intersects = raycaster.intersectObjects(toIntersect, true);
-          if (intersects.length > 0) {
+          if (intersects.length > 0 && !isNaN(intersects[0].distance)) {
             intersects[0].object.interact && intersects[0].object.interact();
           } else {
             _this2.context.projectActions.unselectAll();
@@ -331,16 +332,16 @@ export default Viewer3DFirstPerson;
 
 
 Viewer3DFirstPerson.propTypes = {
-  state: React.PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired
+  state: PropTypes.object.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
 
 Viewer3DFirstPerson.contextTypes = {
-  areaActions: React.PropTypes.object.isRequired,
-  holesActions: React.PropTypes.object.isRequired,
-  itemsActions: React.PropTypes.object.isRequired,
-  linesActions: React.PropTypes.object.isRequired,
-  projectActions: React.PropTypes.object.isRequired,
-  catalog: React.PropTypes.object
+  areaActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired,
+  catalog: PropTypes.object
 };

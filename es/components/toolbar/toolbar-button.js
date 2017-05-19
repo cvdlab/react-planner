@@ -6,7 +6,8 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import React, { Component, PropTypes } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
@@ -65,7 +66,7 @@ var ToolbarButton = function (_Component) {
   }
 
   _createClass(ToolbarButton, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       var _this2 = this;
 
@@ -75,7 +76,7 @@ var ToolbarButton = function (_Component) {
       var color = props.active || state.active ? '#1CA6FC' : '#C2C2C2';
 
       return React.createElement(
-        "div",
+        'div',
         { style: STYLE,
           onMouseEnter: function onMouseEnter(event) {
             return _this2.setState({ active: true });
@@ -84,14 +85,14 @@ var ToolbarButton = function (_Component) {
             return _this2.setState({ active: false });
           } },
         React.createElement(
-          "a",
-          { href: "javascript:;", style: { color: color, textDecoration: "none" }, onClick: props.onClick },
+          'a',
+          { href: 'javascript:;', style: { color: color, textDecoration: "none" }, onClick: props.onClick },
           props.children
         ),
         state.active ? React.createElement(
-          "div",
+          'div',
           { style: STYLE_TOOLTIP },
-          React.createElement("span", { style: STYLE_TOOLTIP_PIN }),
+          React.createElement('span', { style: STYLE_TOOLTIP_PIN }),
           props.tooltip
         ) : null
       );

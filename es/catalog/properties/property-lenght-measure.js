@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
 import convert from 'convert-units';
 import FormLabel from '../../components/style/form-label';
@@ -28,12 +29,19 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
   var update = function update(lengthInput, unitInput) {
 
     var newLength = toFixedFloat(lengthInput);
-
-    onUpdate(value.merge({
+    var merged = value.merge({
       length: unitInput !== UNIT_CENTIMETER ? convert(newLength).from(unitInput).to(UNIT_CENTIMETER) : newLength,
       _length: lengthInput,
       _unit: unitInput
-    }));
+    });
+
+    if (configs.hook) {
+      return configs.hook(merged).then(function (val) {
+        return onUpdate(val);
+      });
+    }
+
+    return onUpdate(merged);
   };
 
   return React.createElement(

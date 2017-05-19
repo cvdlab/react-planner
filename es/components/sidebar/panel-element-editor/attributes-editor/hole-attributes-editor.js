@@ -1,5 +1,6 @@
 export { HoleAttributesEditor as default };
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
 
 function HoleAttributesEditor(_ref, _ref2) {

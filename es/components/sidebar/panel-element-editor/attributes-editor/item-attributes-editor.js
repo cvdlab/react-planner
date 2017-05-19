@@ -1,4 +1,5 @@
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
 
 var tableStyle = {
@@ -33,7 +34,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          'X: '
+          'X:'
         ),
         React.createElement(
           'td',
@@ -49,7 +50,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          'Y: '
+          'Y:'
         ),
         React.createElement(
           'td',
@@ -66,14 +67,15 @@ export default function ItemAttributesEditor(_ref, _ref2) {
           'td',
           { style: firstTdStyle },
           translator.t("Rotation"),
-          ': '
+          ':'
         ),
         React.createElement(
           'td',
           null,
           React.createElement(FormNumberInput, { value: renderedR, onChange: function onChange(event) {
               return onUpdate('rotation', event.target.value);
-            }, style: inputStyle })
+            },
+            style: inputStyle })
         )
       )
     )

@@ -1,6 +1,6 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import { pointsDistance, angleBetweenTwoPointsAndOrigin } from '../../utils/geometry';
-import { MODE_IDLE } from '../../constants';
 import Ruler from './ruler';
 
 export default function Line(_ref) {

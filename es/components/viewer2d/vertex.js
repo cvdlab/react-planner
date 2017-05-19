@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 var STYLE = { fill: "#0096fd", stroke: "#fff", cursor: "move" };
 
@@ -10,16 +11,16 @@ export default function Vertex(_ref) {
 
 
   return React.createElement(
-    "g",
+    'g',
     {
-      transform: "translate(" + x + ", " + y + ")",
-      "data-element-root": true,
-      "data-prototype": vertex.prototype,
-      "data-id": vertex.id,
-      "data-selected": vertex.selected,
-      "data-layer": layer.id
+      transform: 'translate(' + x + ', ' + y + ')',
+      'data-element-root': true,
+      'data-prototype': vertex.prototype,
+      'data-id': vertex.id,
+      'data-selected': vertex.selected,
+      'data-layer': layer.id
     },
-    React.createElement("circle", { cx: "0", cy: "0", r: "7", style: STYLE })
+    React.createElement('circle', { cx: '0', cy: '0', r: '7', style: STYLE })
   );
 }
 

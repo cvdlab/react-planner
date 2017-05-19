@@ -1,6 +1,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import IconNewFile from 'react-icons/lib/fa/file-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
 import IconZoomPlus from 'react-icons/lib/ti/zoom-in';
@@ -178,8 +179,8 @@ export default function Toolbar(_ref, _ref2) {
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired
 };
 

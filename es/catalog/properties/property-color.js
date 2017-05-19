@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import FormLabel from '../../components/style/form-label';
 import FormColorInput from '../../components/style/form-color-input';
 
@@ -11,6 +12,18 @@ export default function PropertyColor(_ref) {
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
       internalState = _ref.internalState;
+
+
+  var update = function update(val) {
+
+    if (configs.hook) {
+      return configs.hook(val).then(function (_val) {
+        return onUpdate(_val);
+      });
+    }
+
+    return onUpdate(val);
+  };
 
   return React.createElement(
     'table',
@@ -34,7 +47,7 @@ export default function PropertyColor(_ref) {
           'td',
           null,
           React.createElement(FormColorInput, { value: value, onChange: function onChange(event) {
-              return onUpdate(event.target.value);
+              return update(event.target.value);
             } })
         )
       )

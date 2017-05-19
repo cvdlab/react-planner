@@ -1,8 +1,7 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import PanelElementEditor from './panel-element-editor/panel-element-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
@@ -16,17 +15,16 @@ var STYLE = {
 };
 
 export default function Sidebar(_ref) {
-  var _extends2;
-
   var state = _ref.state,
       width = _ref.width,
-      height = _ref.height;
+      height = _ref.height,
+      sidebarComponents = _ref.sidebarComponents;
 
 
   return React.createElement(
     'aside',
     {
-      style: _extends((_extends2 = { width: width }, _defineProperty(_extends2, 'width', width), _defineProperty(_extends2, 'height', height), _extends2), STYLE),
+      style: _extends({ width: width, height: height }, STYLE),
       onKeyDown: function onKeyDown(event) {
         return event.stopPropagation();
       },
@@ -49,12 +47,15 @@ export default function Sidebar(_ref) {
       'div',
       { className: 'properties' },
       React.createElement(PanelElementEditor, { state: state })
-    )
+    ),
+    sidebarComponents.map(function (Component, index) {
+      return React.createElement(Component, { mode: state.mode, key: index });
+    })
   );
 }
 
 Sidebar.propTypes = {
   state: PropTypes.object.isRequired,
-  width: React.PropTypes.number.isRequired,
-  height: React.PropTypes.number.isRequired
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };

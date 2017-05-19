@@ -1,5 +1,6 @@
 export { LineAttributesEditor as default };
-import React, { PropTypes, Component } from 'react';
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
 
@@ -38,12 +39,13 @@ function LineAttributesEditor(_ref, _ref2) {
           React.createElement(
             'td',
             { style: firstTdStyle },
-            'X1: '
+            'X1:'
           ),
           React.createElement(
             'td',
             null,
-            React.createElement(FormNumberInput, { value: vertexOne.get('x'), onChange: function onChange(event) {
+            React.createElement(FormNumberInput, { value: vertexOne.get('x'),
+              onChange: function onChange(event) {
                 return _onUpdate('vertexOne', { 'x': event.target.value });
               }, style: inputStyle })
           )
@@ -54,12 +56,13 @@ function LineAttributesEditor(_ref, _ref2) {
           React.createElement(
             'td',
             { style: firstTdStyle },
-            'Y1: '
+            'Y1:'
           ),
           React.createElement(
             'td',
             null,
-            React.createElement(FormNumberInput, { value: vertexOne.get('y'), onChange: function onChange(event) {
+            React.createElement(FormNumberInput, { value: vertexOne.get('y'),
+              onChange: function onChange(event) {
                 return _onUpdate('vertexOne', { 'y': event.target.value });
               }, style: inputStyle })
           )
@@ -70,12 +73,13 @@ function LineAttributesEditor(_ref, _ref2) {
           React.createElement(
             'td',
             { style: firstTdStyle },
-            'X2: '
+            'X2:'
           ),
           React.createElement(
             'td',
             null,
-            React.createElement(FormNumberInput, { value: vertexTwo.get('x'), onChange: function onChange(event) {
+            React.createElement(FormNumberInput, { value: vertexTwo.get('x'),
+              onChange: function onChange(event) {
                 return _onUpdate('vertexTwo', { 'x': event.target.value });
               }, style: inputStyle })
           )
@@ -86,12 +90,13 @@ function LineAttributesEditor(_ref, _ref2) {
           React.createElement(
             'td',
             { style: firstTdStyle },
-            'Y2: '
+            'Y2:'
           ),
           React.createElement(
             'td',
             null,
-            React.createElement(FormNumberInput, { value: vertexTwo.get('y'), onChange: function onChange(event) {
+            React.createElement(FormNumberInput, { value: vertexTwo.get('y'),
+              onChange: function onChange(event) {
                 return _onUpdate('vertexTwo', { 'y': event.target.value });
               }, style: inputStyle })
           )

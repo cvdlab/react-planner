@@ -1,6 +1,7 @@
 "use strict";
 
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
@@ -331,6 +332,8 @@ export default function Viewer2D(_ref, _ref2) {
       onMouseDown: onMouseDown,
       onMouseMove: onMouseMove,
       onMouseUp: onMouseUp,
+
+      miniaturePosition: 'none',
       toolbarPosition: 'right' },
     React.createElement(
       'svg',

@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import IconLoad from 'react-icons/lib/fa/folder-open-o';
 import ToolbarButton from './toolbar-button';
 import { browserUpload } from '../../utils/browser';

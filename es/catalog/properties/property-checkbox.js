@@ -1,4 +1,5 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
+import PropTypes from 'prop-types';
 import FormLabel from '../../components/style/form-label';
 
 var tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
@@ -10,6 +11,18 @@ export default function PropertyCheckbox(_ref) {
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
       internalState = _ref.internalState;
+
+
+  var update = function update(val) {
+
+    if (configs.hook) {
+      return configs.hook(val).then(function (_val) {
+        return onUpdate(_val);
+      });
+    }
+
+    return onUpdate(val);
+  };
 
   return React.createElement(
     'table',
@@ -33,7 +46,7 @@ export default function PropertyCheckbox(_ref) {
           'td',
           null,
           React.createElement('input', { type: 'checkbox', checked: value, onChange: function onChange(e) {
-              return onUpdate(!value);
+              return update(!value);
             } })
         )
       )
