@@ -15,7 +15,8 @@ var inputStyle = {
 export default function ItemAttributesEditor(_ref, _ref2) {
   var element = _ref.element,
       onUpdate = _ref.onUpdate,
-      attributeFormData = _ref.attributeFormData;
+      attributeFormData = _ref.attributeFormData,
+      state = _ref.state;
   var translator = _ref2.translator;
 
   var renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;
@@ -41,7 +42,8 @@ export default function ItemAttributesEditor(_ref, _ref2) {
           null,
           React.createElement(FormNumberInput, { value: renderedX, onChange: function onChange(event) {
               return onUpdate('x', event.target.value);
-            }, style: inputStyle })
+            }, style: inputStyle,
+            state: state })
         )
       ),
       React.createElement(
@@ -57,7 +59,8 @@ export default function ItemAttributesEditor(_ref, _ref2) {
           null,
           React.createElement(FormNumberInput, { value: renderedY, onChange: function onChange(event) {
               return onUpdate('y', event.target.value);
-            }, style: inputStyle })
+            }, style: inputStyle,
+            state: state })
         )
       ),
       React.createElement(
@@ -75,7 +78,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
           React.createElement(FormNumberInput, { value: renderedR, onChange: function onChange(event) {
               return onUpdate('rotation', event.target.value);
             },
-            style: inputStyle })
+            style: inputStyle, state: state })
         )
       )
     )
@@ -85,7 +88,8 @@ export default function ItemAttributesEditor(_ref, _ref2) {
 ItemAttributesEditor.propTypes = {
   element: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
-  attributeFormData: PropTypes.object.isRequired
+  attributeFormData: PropTypes.object.isRequired,
+  state: PropTypes.object.isRequired
 };
 
 ItemAttributesEditor.contextTypes = {

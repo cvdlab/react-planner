@@ -38,5 +38,8 @@ export default function FormNumberInput(_ref) {
     }
   };
 
-  return React.createElement(FormTextInput, _extends({ onChange: onChangeCustom, autoComplete: 'off' }, rest));
+  var textProps = _extends({}, rest);
+  delete textProps.state;
+
+  return React.createElement(FormTextInput, _extends({ onChange: onChangeCustom, autoComplete: 'off' }, textProps));
 }

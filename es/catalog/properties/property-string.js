@@ -11,13 +11,14 @@ export default function PropertyString(_ref) {
       onUpdate = _ref.onUpdate,
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
-      internalState = _ref.internalState;
+      internalState = _ref.internalState,
+      state = _ref.state;
 
 
   var update = function update(val) {
 
     if (configs.hook) {
-      return configs.hook(val).then(function (_val) {
+      return configs.hook(val, sourceElement, internalState, state).then(function (_val) {
         return onUpdate(_val);
       });
     }
@@ -62,5 +63,6 @@ PropertyString.propTypes = {
   onUpdate: PropTypes.func.isRequired,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
-  internalState: PropTypes.object
+  internalState: PropTypes.object,
+  state: PropTypes.object.isRequired
 };
