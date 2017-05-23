@@ -22,6 +22,7 @@ import FormSelect from './components/style/form-select';
 import FormSlider from './components/style/form-slider';
 import FormSubmitButton from './components/style/form-submit-button';
 import FormTextInput from './components/style/form-text-input';
+import * as ReactPlannerConstants from './constants';
 import {VERSION} from './version';
 
 let ElementsFactories = {WallFactory, AreaFactory};
@@ -43,5 +44,6 @@ export {
   ReactPlanner,
   Plugins,
   ElementsFactories,
-  StyleComponents
+  StyleComponents,
+  ReactPlannerConstants
 };
