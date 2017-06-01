@@ -8,6 +8,8 @@ import {
   MODE_ROTATING_ITEM
 } from '../../constants';
 
+const typeId = { display: 'inline-block', top: '-.3em', position: 'relative', paddingLeft: '.25em' };
+
 export default function PanelLayerElement({state: {scene, mode}}, {editingActions, translator}) {
 
   if (![MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN,
@@ -22,37 +24,33 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
     return (<div {...props} style={{...style, backgroundColor: 'blue'}}></div>)
   };
 
-
   return (
     <Panel name={translator.t("Elements on layer {0}", layer.name)}>
-      <div key={1} style={{background: "#3a3a3e", padding: "5px 15px 5px 15px"}}>
-        <div style={{height: "100px", overflowY: "auto"}} onWheel={e => e.stopPropagation()}>
+      <div key={1} style={{background: "#3a3a3e"}}>
+        <div style={{height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer'}} onWheel={e => e.stopPropagation()}>
           {layer.lines.entrySeq().map(([lineID, line]) => {
             return (
-              <div key={lineID} style={{cursor: "pointer"}}
-                   onClick={event => editingActions.selectLine(layer.id, line.id)}>
+              <div key={lineID} onClick={e => editingActions.selectLine(layer.id, line.id)}>
                 <input type="checkbox" checked={line.selected} readOnly/>
-                {line.type} {line.id}
+                <div style={typeId}>{line.type} {line.id}</div>
               </div>
             )
           })}
 
           {layer.holes.entrySeq().map(([holeID, hole]) => {
             return (
-              <div key={holeID} style={{cursor: "pointer"}}
-                   onClick={event => editingActions.selectHole(layer.id, hole.id)}>
+              <div key={holeID} onClick={e => editingActions.selectHole(layer.id, hole.id)}>
                 <input type="checkbox" checked={hole.selected} readOnly/>
-                {hole.type} {hole.id}
+                <div style={typeId}>{hole.type} {hole.id}</div>
               </div>
             )
           })}
 
           {layer.items.entrySeq().map(([itemID, item]) => {
             return (
-              <div key={itemID} style={{cursor: "pointer"}}
-                   onClick={event => editingActions.selectItem(layer.id, item.id)}>
+              <div key={itemID} onClick={e => editingActions.selectItem(layer.id, item.id)}>
                 <input type="checkbox" checked={item.selected} readOnly/>
-                {item.type} {item.id}
+                <div style={typeId}>{item.type} {item.id}</div>
               </div>
             )
           })}
