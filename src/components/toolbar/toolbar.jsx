@@ -133,7 +133,7 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
                      onClick={event => projectActions.openProjectConfigurator()}>
         <IconConfigure />
       </ToolbarButton>
-      {toolbarButtons.map((Component, index) => <Component mode={mode} key={index}/>)}
+      {toolbarButtons.map((Component, index) => <Component mode={mode} state={state} key={index}/>)}
     </aside>
   )
 }
