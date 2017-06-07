@@ -26,6 +26,16 @@ import FormTextInput from './components/style/form-text-input';
 import * as ReactPlannerConstants from './constants';
 import {VERSION} from './version';
 
+import ReactPlannerAreasReducer from './reducers/areas-reducer';
+import ReactPlannerHolesReducer from './reducers/holes-reducer';
+import ReactPlannerItemsReducer from './reducers/items-reducer';
+import ReactPlannerLinesReducer from './reducers/lines-reducer';
+import ReactPlannerProjectReducer from './reducers/project-reducer';
+import ReactPlannerSceneReducer from './reducers/scene-reducer';
+import ReactPlannerVerticesReducer from './reducers/vertices-reducer';
+import ReactPlannerViewer2dReducer from './reducers/viewer2d-reducer';
+import ReactPlannerViewer3dReducer from './reducers/viewer3d-reducer';
+
 let ElementsFactories = {WallFactory, AreaFactory};
 let StyleComponents = {
   Button, CancelButton, ContentContainer, ContentTitle, DeleteButton, FormBlock,
@@ -33,6 +43,18 @@ let StyleComponents = {
 };
 
 console.info(`react-planner ${VERSION} started`); //MIT LICENSE COMPLIANT
+
+let ReactPlannerReducers = {
+  ReactPlannerAreasReducer,
+  ReactPlannerHolesReducer,
+  ReactPlannerItemsReducer,
+  ReactPlannerLinesReducer,
+  ReactPlannerProjectReducer,
+  ReactPlannerSceneReducer,
+  ReactPlannerVerticesReducer,
+  ReactPlannerViewer2dReducer,
+  ReactPlannerViewer3dReducer
+};
 
 export {
   Catalog,
@@ -47,5 +69,6 @@ export {
   Plugins,
   ElementsFactories,
   StyleComponents,
-  ReactPlannerConstants
+  ReactPlannerConstants,
+  ReactPlannerReducers
 };
