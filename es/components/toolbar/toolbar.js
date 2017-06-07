@@ -172,7 +172,7 @@ export default function Toolbar(_ref, _ref2) {
       React.createElement(IconConfigure, null)
     ),
     toolbarButtons.map(function (Component, index) {
-      return React.createElement(Component, { mode: mode, key: index });
+      return React.createElement(Component, { mode: mode, state: state, key: index });
     })
   );
 }

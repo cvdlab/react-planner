@@ -70,6 +70,7 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
 
 export function updateScene(planData, sceneData, oldSceneData, diffArray, actions, catalog) {
 
+  console.log(diffArray, minimizeChangePropertiesDiffs(diffArray));
   minimizeChangePropertiesDiffs(diffArray).forEach(function (diff) {
 
     /* First of all I need to find the object I need to update */
@@ -508,8 +509,11 @@ function minimizeChangePropertiesDiffs(diffArray) {
   var idsFound = {};
   return diffArray.filter(function (diff) {
     var split = diff.path.split('/');
-    if (split[5] == 'properties') {
+    if (split[5] === 'properties') {
       return idsFound[split[4]] ? false : idsFound[split[4]] = 1;
+    } else if (split[5] === "misc") {
+      // Remove misc changes
+      return false;
     }
     return true;
   });
