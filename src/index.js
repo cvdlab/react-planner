@@ -2,10 +2,11 @@ import Catalog from './catalog/catalog';
 import Translator from './translator/translator';
 import ToolbarButton from './components/toolbar/toolbar-button';
 import Ruler from './components/viewer2d/ruler';
-import * as Models from './models'
+import * as Models from './models';
 import State2DViewer from './components/viewer2d/state';
 import reducer from './reducers/reducer';
 import ReactPlanner from './react-planner';
+import Content from './components/content';
 import Plugins from './plugins/plugins';
 import WallFactory from './catalog/factories/wall-factory';
 import AreaFactory from './catalog/factories/area-factory';
@@ -42,6 +43,7 @@ export {
   State2DViewer,
   reducer,
   ReactPlanner,
+  Content as ReactPlannerContent,
   Plugins,
   ElementsFactories,
   StyleComponents,
