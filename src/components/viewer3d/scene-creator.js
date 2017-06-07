@@ -70,7 +70,6 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
 
 export function updateScene(planData, sceneData, oldSceneData, diffArray, actions, catalog) {
 
-  console.log(diffArray, minimizeChangePropertiesDiffs(diffArray));
   minimizeChangePropertiesDiffs(diffArray).forEach(diff => {
 
     /* First of all I need to find the object I need to update */
