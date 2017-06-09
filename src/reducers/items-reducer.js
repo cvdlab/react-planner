@@ -207,7 +207,6 @@ function selectItem(state, layerID, itemID) {
   });
 
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
-      let item = layer.getIn(['items', itemID]);
       select(layer, 'items', itemID);
     })
   );
