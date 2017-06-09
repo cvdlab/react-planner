@@ -5,19 +5,17 @@ import Ruler from './ruler';
 
 export default function Line({line, layer, scene, catalog}) {
 
-  let {unit} = scene;
-
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
   if (vertex0.id === vertex1.id) return null; //avoid 0-length lines
   if (vertex0.x === vertex1.x && vertex0.y === vertex1.y) return null;
 
-  let x1, y1, x2, y2;
-  if (vertex0.x <= vertex1.x) {
-    ({x: x1, y: y1} = vertex0);
-    ({x: x2, y: y2} = vertex1);
-  } else {
+  let {x: x1, y: y1} = vertex0;
+  let {x: x2, y: y2} = vertex1;
+
+  if( x1 >= x2 ) {
+    //then swap vertex
     ({x: x1, y: y1} = vertex1);
     ({x: x2, y: y2} = vertex0);
   }
@@ -40,6 +38,8 @@ export default function Line({line, layer, scene, catalog}) {
       data-layer={layer.id}
     > {renderedHole} </g>;
   });
+
+  let {unit} = scene;
 
   let renderedLine = catalog.getElement(line.type).render2D(line, layer);
   let renderedRuler = line.selected ? <Ruler unit={unit} length={length} transform="translate(0, 15)"/> : null;
