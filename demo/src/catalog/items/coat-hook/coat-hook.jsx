@@ -58,101 +58,76 @@ export default {
 
   render3D: function (element, layer, scene) {
 
+    let newAltitude = element.properties.get('altitude').get('length');
 
-  let newAltitude = element.properties.get('altitude').get('length');
+    let attaccapanni = new Three.Object3D();
 
-  var attaccapanni = new Three.Object3D();
+    let newWidth = 2.15;
+    let newDepth = .04;
+    let newHeight = .1;
+    let raggio = .0125;
 
-    var newWidth = 2.15;
-    var newDepth = .04;
-    var newHeight = .1;
-    var raggio = .0125;
+    let texture = new Three.TextureLoader().load(require('./wood.jpg'));
+    let materialTexture = new Three.MeshLambertMaterial( { map: texture} );
 
-    var texture = new Three.TextureLoader().load(require('./wood.jpg'));
-    var materialTexture = new Three.MeshLambertMaterial( { map: texture} );
-
-
-    var geometry = new Three.BoxGeometry( newWidth, 1.5*newHeight, newDepth );
-    //var material = new Three.MeshLambertMaterial( {color: 0x9b8c75} );
-    var plane = new Three.Mesh( geometry, materialTexture );
+    let geometry = new Three.BoxGeometry( newWidth, 1.5*newHeight, newDepth );
+    //let material = new Three.MeshLambertMaterial( {color: 0x9b8c75} );
+    let plane = new Three.Mesh( geometry, materialTexture );
     plane.position.y = newHeight/2;
     attaccapanni.add(plane);
 
-    var geometry_legs = new Three.CylinderGeometry( raggio, raggio, newHeight/1.7, 32 );
-    var material_legs = new Three.MeshLambertMaterial( {color: 0xd9d7d7} );
-    var p1 = new Three.Mesh( geometry_legs, material_legs );
+    let geometry_legs = new Three.CylinderGeometry( raggio, raggio, newHeight/1.7, 32 );
+    let material_legs = new Three.MeshLambertMaterial( {color: 0xd9d7d7} );
+    let p1 = new Three.Mesh( geometry_legs, material_legs );
     p1.rotation.x+=Math.PI/2;
     p1.position.set(1,0.05,0.05);
     attaccapanni.add(p1);
 
-    var p2 = new Three.Mesh( geometry_legs, material_legs );
+    let p2 = new Three.Mesh( geometry_legs, material_legs );
     p2.rotation.x+=Math.PI/2;
     p2.position.set(-.95,0.05,0.05);
     attaccapanni.add(p2);
 
-    var geometrySphereUp = new Three.SphereGeometry( 0.035, 32, 32 );
-    var sphere = new Three.Mesh( geometrySphereUp, material_legs );
+    let geometrySphereUp = new Three.SphereGeometry( 0.035, 32, 32 );
+    let sphere = new Three.Mesh( geometrySphereUp, material_legs );
     sphere.position.set(1,0.05,0.08);
     sphere.scale.set(1,1,.5);
     attaccapanni.add(sphere);
 
-    var sphere2 = new Three.Mesh( geometrySphereUp, material_legs );
+    let sphere2 = new Three.Mesh( geometrySphereUp, material_legs );
     sphere2.position.set(-.95,0.05,0.08);
     sphere2.scale.set(1,1,.5);
     attaccapanni.add(sphere2);
 
 
-    var newHeight2 = .2;
+    let newHeight2 = .2;
 
-    var CustomSinCurve = Three.Curve.create(
-
-      function ( scale ) { //custom curve constructor
-
-        this.scale = ( scale === undefined ) ? 1 : scale;
-
-      },
-
-      function ( t ) { //getPoint: t is between 0-1
-
-        var tx = t/6 ;
-        var ty = Math.sin(Math.PI * t )/8;
-        var tz = 0;
-
-        return new Three.Vector3( tx, ty, tz ).multiplyScalar( this.scale );
-
-      }
-
-    );
-
-    var path = new CustomSinCurve( 1 );
-    var geometry2 = new Three.TubeGeometry( path, 32, .0125, 8, false );
-    var mesh = new Three.Mesh( geometry2, material_legs );
-    mesh.position.set(-.95,-.14,.152);
-    mesh.rotation.y-=Math.PI/2;
-    mesh.rotation.x+=Math.PI+Math.PI/7.5;
-    attaccapanni.add( mesh );
+    let curve = new Three.CatmullRomCurve3( [
+      new Three.Vector3( .05, 0.125, 0 ),
+      new Three.Vector3( .125, .025, 0 ),
+      new Three.Vector3( -.05, -.075, 0 ),
+    ] );
 
 
+    for(let i=-0.95;i<=1.05;i+=0.15){
 
-    for(var i=-0.95;i<=1.05;i+=0.15){
-
-      var geometry_legs2 = new Three.CylinderGeometry( raggio, raggio, newHeight2, 32 );
-      var p3 = new Three.Mesh( geometry_legs2, material_legs );
+      let geometry_legs2 = new Three.CylinderGeometry( raggio, raggio, newHeight2, 32 );
+      let p3 = new Three.Mesh( geometry_legs2, material_legs );
       p3.position.set(i,-0.05,0);
       attaccapanni.add(p3);
 
-      var geometry3 = new Three.TubeGeometry( path, 32, .0125, 16, false );
-      var mesh3 = new Three.Mesh( geometry3, material_legs );
-      mesh3.position.set(i,-.14,.152);
+      let geometry3 = new Three.TubeGeometry( curve, 32, .015, 16, false );
+      let mesh3 = new Three.Mesh( geometry3, material_legs );
+      mesh3.position.set(i,-.05,.045);
       mesh3.rotation.y-=Math.PI/2;
       mesh3.rotation.x+=Math.PI+Math.PI/7.5;
+      mesh3.rotation.z+=Math.PI/2;
       attaccapanni.add( mesh3 );
 
-      var geometrySphere = new Three.SphereGeometry( 0.035, 32, 32 );
-      var sphereTop = new Three.Mesh( geometrySphere, material_legs );
+      let geometrySphere = new Three.SphereGeometry( 0.035, 32, 32 );
+      let sphereTop = new Three.Mesh( geometrySphere, material_legs );
       sphereTop.position.set(i,-0.142,0.15);
       sphereTop.rotation.x+=Math.PI/2+Math.PI/3;
-//      sphereTop.scale.set(1,.5,.5);
       attaccapanni.add(sphereTop);
 
     }
