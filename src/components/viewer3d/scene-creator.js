@@ -515,8 +515,11 @@ function minimizeChangePropertiesDiffs(diffArray) {
   let idsFound = {};
   return diffArray.filter(diff => {
     let split = diff.path.split('/');
-    if (split[5] == 'properties') {
+    if (split[5] === 'properties') {
       return idsFound[split[4]] ? false : ( idsFound[split[4]] = 1 );
+    } else if (split[5] === "misc") {
+      // Remove misc changes
+      return false;
     }
     return true;
   });
