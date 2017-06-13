@@ -151,11 +151,11 @@ export default {
 
     let geometry = new Three.LatheGeometry(points, 200, 0, Math.PI);
     let material = new Three.MeshLambertMaterial({map: etichettaImage});
-    let etichetta = new Three.Mesh(geometry, material);
+    let label = new Three.Mesh(geometry, material);
 
-    etichetta.rotation.y = 60;
-    etichetta.position.y = -0.1;
-    body.add(etichetta);
+    label.rotation.y = 60;
+    label.position.y = -0.1;
+    body.add(label);
 
     let shape2 = new Three.Shape();
     shape2.moveTo(0.02, 0.06);
