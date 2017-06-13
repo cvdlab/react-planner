@@ -60,12 +60,12 @@ export default {
 
     let newAltitude = element.properties.get('altitude').get('length');
 
-    let attaccapanni = new Three.Object3D();
+    let coatHook = new Three.Object3D();
 
     let newWidth = 2.15;
     let newDepth = .04;
     let newHeight = .1;
-    let raggio = .0125;
+    let radius = .0125;
 
     let texture = new Three.TextureLoader().load(require('./wood.jpg'));
     let materialTexture = new Three.MeshLambertMaterial( { map: texture} );
@@ -74,30 +74,30 @@ export default {
     //let material = new Three.MeshLambertMaterial( {color: 0x9b8c75} );
     let plane = new Three.Mesh( geometry, materialTexture );
     plane.position.y = newHeight/2;
-    attaccapanni.add(plane);
+    coatHook.add(plane);
 
-    let geometry_legs = new Three.CylinderGeometry( raggio, raggio, newHeight/1.7, 32 );
+    let geometry_legs = new Three.CylinderGeometry( radius, radius, newHeight/1.7, 32 );
     let material_legs = new Three.MeshLambertMaterial( {color: 0xd9d7d7} );
     let p1 = new Three.Mesh( geometry_legs, material_legs );
     p1.rotation.x+=Math.PI/2;
     p1.position.set(1,0.05,0.05);
-    attaccapanni.add(p1);
+    coatHook.add(p1);
 
     let p2 = new Three.Mesh( geometry_legs, material_legs );
     p2.rotation.x+=Math.PI/2;
     p2.position.set(-.95,0.05,0.05);
-    attaccapanni.add(p2);
+    coatHook.add(p2);
 
     let geometrySphereUp = new Three.SphereGeometry( 0.035, 32, 32 );
     let sphere = new Three.Mesh( geometrySphereUp, material_legs );
     sphere.position.set(1,0.05,0.08);
     sphere.scale.set(1,1,.5);
-    attaccapanni.add(sphere);
+    coatHook.add(sphere);
 
     let sphere2 = new Three.Mesh( geometrySphereUp, material_legs );
     sphere2.position.set(-.95,0.05,0.08);
     sphere2.scale.set(1,1,.5);
-    attaccapanni.add(sphere2);
+    coatHook.add(sphere2);
 
 
     let newHeight2 = .2;
@@ -111,10 +111,10 @@ export default {
 
     for(let i=-0.95;i<=1.05;i+=0.15){
 
-      let geometry_legs2 = new Three.CylinderGeometry( raggio, raggio, newHeight2, 32 );
+      let geometry_legs2 = new Three.CylinderGeometry( radius, radius, newHeight2, 32 );
       let p3 = new Three.Mesh( geometry_legs2, material_legs );
       p3.position.set(i,-0.05,0);
-      attaccapanni.add(p3);
+      coatHook.add(p3);
 
       let geometry3 = new Three.TubeGeometry( curve, 32, .015, 16, false );
       let mesh3 = new Three.Mesh( geometry3, material_legs );
@@ -122,18 +122,18 @@ export default {
       mesh3.rotation.y-=Math.PI/2;
       mesh3.rotation.x+=Math.PI+Math.PI/7.5;
       mesh3.rotation.z+=Math.PI/2;
-      attaccapanni.add( mesh3 );
+      coatHook.add( mesh3 );
 
       let geometrySphere = new Three.SphereGeometry( 0.035, 32, 32 );
       let sphereTop = new Three.Mesh( geometrySphere, material_legs );
       sphereTop.position.set(i,-0.142,0.15);
       sphereTop.rotation.x+=Math.PI/2+Math.PI/3;
-      attaccapanni.add(sphereTop);
+      coatHook.add(sphereTop);
 
     }
 
 
-    let value = new Three.Box3().setFromObject(attaccapanni);
+    let value = new Three.Box3().setFromObject(coatHook);
 
     let deltaX = Math.abs(value.max.x - value.min.x);
     let deltaY = Math.abs(value.max.y - value.min.y);
@@ -141,18 +141,18 @@ export default {
 
 
     if (element.selected) {
-      let bbox = new Three.BoxHelper(attaccapanni, 0x99c3fb);
+      let bbox = new Three.BoxHelper(coatHook, 0x99c3fb);
       bbox.material.linewidth = 5;
       bbox.renderOrder = 1000;
       bbox.material.depthTest = false;
-      attaccapanni.add(bbox);
+      coatHook.add(bbox);
     }
 
-    attaccapanni.rotation.y+= Math.PI;
-    attaccapanni.position.y+= HEIGHT/1.5 +newAltitude;
-    attaccapanni.scale.set(WIDTH / deltaX, HEIGHT / deltaY, DEPTH / deltaZ);
+    coatHook.rotation.y+= Math.PI;
+    coatHook.position.y+= HEIGHT/1.5 +newAltitude;
+    coatHook.scale.set(WIDTH / deltaX, HEIGHT / deltaY, DEPTH / deltaZ);
 
-    return Promise.resolve(attaccapanni);
+    return Promise.resolve(coatHook);
   }
 
 };
