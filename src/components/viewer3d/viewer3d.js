@@ -216,6 +216,14 @@ export default class Scene3DViewer extends React.Component {
         camera.updateMatrix();
         camera.updateMatrixWorld();
 
+        scene3D.traverse( function ( object ) {
+
+          if ( object instanceof Three.LOD ) {
+            object.update( camera );
+          }
+
+        } );
+
         this.renderer.render(scene3D, camera);
         requestAnimationFrame(render);
       }
