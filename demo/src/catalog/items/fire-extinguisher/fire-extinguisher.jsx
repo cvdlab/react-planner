@@ -1,8 +1,8 @@
 import * as Three from 'three';
 import React from 'react';
 
-const RADIUS =  15;
-const HEIGHT =  60;
+const RADIUS = 15;
+const HEIGHT = 60;
 
 //colors
 const black = new Three.MeshLambertMaterial({color: 0x000000});
@@ -22,9 +22,9 @@ function makeObjectMaxLOD() {
   body.position.set(0, 1, 0);
 
   const bodyGeometry2 = new Three.CylinderGeometry(0.11, 0.11, 0.03, 32);
-  const fermo = new Three.Mesh(bodyGeometry2, black);
-  fermo.position.set(0, -0.2, 0);
-  body.add(fermo);
+  const lock = new Three.Mesh(bodyGeometry2, black);
+  lock.position.set(0, -0.2, 0);
+  body.add(lock);
 
   const geometrySphereUp = new Three.SphereGeometry(0.1, 32, 32);
   const sphereUp = new Three.Mesh(geometrySphereUp, red);
@@ -32,16 +32,16 @@ function makeObjectMaxLOD() {
   body.add(sphereUp);
 
   const cylinderGeometry = new Three.CylinderGeometry(0.015, 0.025, 0.05, 32);
-  const bocchetta_p1 = new Three.Mesh(cylinderGeometry, black);
-  bocchetta_p1.position.z = -0.13;
-  bocchetta_p1.position.y = -0.23;
-  body.add(bocchetta_p1);
+  const vent_p1 = new Three.Mesh(cylinderGeometry, black);
+  vent_p1.position.z = -0.13;
+  vent_p1.position.y = -0.23;
+  body.add(vent_p1);
 
   const cylinderGeometry1 = new Three.CylinderGeometry(0.01, 0.01, 0.02, 32);
-  const bocchetta_p2 = new Three.Mesh(cylinderGeometry1, grey);
-  bocchetta_p2.position.z = -0.13;
-  bocchetta_p2.position.y = -0.2;
-  body.add(bocchetta_p2);
+  const vent_p2 = new Three.Mesh(cylinderGeometry1, grey);
+  vent_p2.position.z = -0.13;
+  vent_p2.position.y = -0.2;
+  body.add(vent_p2);
 
   const cylinderGeometry2 = new Three.CylinderGeometry(0.015, 0.02, 0.04, 32);
   const cylinder2 = new Three.Mesh(cylinderGeometry2, black);
@@ -66,14 +66,14 @@ function makeObjectMaxLOD() {
   body.add(cylinder5);
 
   const textureLoader = new Three.TextureLoader();
-  const indicatoreImage = textureLoader.load(require('./estintoreIndicatore.png'));
+  const gageImage = textureLoader.load(require('./gage-image.png'));
 
   const geometry2 = new Three.PlaneGeometry(0.04, 0.04);
-  const material2 = new Three.MeshLambertMaterial({map: indicatoreImage, transparent: true});
-  const indicatore = new Three.Mesh(geometry2, material2);
-  indicatore.position.set(-0.0255, 0.38, 0);
-  indicatore.rotation.y = -Math.PI / 2;
-  body.add(indicatore);
+  const material2 = new Three.MeshLambertMaterial({map: gageImage, transparent: true});
+  const gage = new Three.Mesh(geometry2, material2);
+  gage.position.set(-0.0255, 0.38, 0);
+  gage.rotation.y = -Math.PI / 2;
+  body.add(gage);
 
   const cylinderGeometry6 = new Three.CylinderGeometry(0.005, 0.005, 0.03, 32);
   const cylinder6 = new Three.Mesh(cylinderGeometry6, grey);
@@ -89,12 +89,12 @@ function makeObjectMaxLOD() {
   cylinder7.rotation.y += Math.PI / 2;
   body.add(cylinder7);
 
-  const etichettaImage = textureLoader.load(require('./etichettaEstintore.png'));
-  etichettaImage.wrapS = Three.RepeatWrapping;
-  etichettaImage.wrapT = Three.RepeatWrapping;
-  etichettaImage.repeat.set(1, 1);
-  etichettaImage.offset.x = 0; // 0.0 - 1.0
-  etichettaImage.offset.y = 0; // 0.0 - 1.0
+  const labelImage = textureLoader.load(require('./label-image.png'));
+  labelImage.wrapS = Three.RepeatWrapping;
+  labelImage.wrapT = Three.RepeatWrapping;
+  labelImage.repeat.set(1, 1);
+  labelImage.offset.x = 0; // 0.0 - 1.0
+  labelImage.offset.y = 0; // 0.0 - 1.0
 
   const points = [
     new Three.Vector2(.1, .666),
@@ -102,12 +102,12 @@ function makeObjectMaxLOD() {
   ];
 
   const geometry = new Three.LatheGeometry(points, 200, 0, Math.PI);
-  const material = new Three.MeshLambertMaterial({map: etichettaImage});
-  const etichetta = new Three.Mesh(geometry, material);
+  const material = new Three.MeshLambertMaterial({map: labelImage});
+  const label = new Three.Mesh(geometry, material);
 
-  etichetta.rotation.y = 60;
-  etichetta.position.y -= .75;
-  body.add(etichetta);
+  label.rotation.y = 60;
+  label.position.y -= .75;
+  body.add(label);
 
   const shape2 = new Three.Shape();
   shape2.moveTo(0.02, 0.06);
@@ -130,10 +130,10 @@ function makeObjectMaxLOD() {
 
   const geometry4 = new Three.ExtrudeGeometry(shape2, extrudeSettings);
   const material4 = new Three.MeshLambertMaterial({color: 0xff0000});
-  const valvola_p1 = new Three.Mesh(geometry4, material4);
-  valvola_p1.rotation.y = -Math.PI / 2;
-  valvola_p1.position.set(0.01, 0.35, -0.035);
-  body.add(valvola_p1);
+  const valve_p1 = new Three.Mesh(geometry4, material4);
+  valve_p1.rotation.y = -Math.PI / 2;
+  valve_p1.position.set(0.01, 0.35, -0.035);
+  body.add(valve_p1);
 
   const shape3 = new Three.Shape();
   shape3.moveTo(0.02, 0.06);
@@ -153,22 +153,22 @@ function makeObjectMaxLOD() {
   };
 
   const geometry5 = new Three.ExtrudeGeometry(shape3, extrudeSettings2);
-  const valvola_p2 = new Three.Mesh(geometry5, red);
-  valvola_p2.rotation.y = -Math.PI / 2;
-  valvola_p2.position.set(0.01, 0.34, -0.035);
-  body.add(valvola_p2);
+  const valve_p2 = new Three.Mesh(geometry5, red);
+  valve_p2.rotation.y = -Math.PI / 2;
+  valve_p2.position.set(0.01, 0.34, -0.035);
+  body.add(valve_p2);
 
   const geometry6 = new Three.TorusGeometry(0.0075, 0.00125, 16, 32, 1200);
-  const sicura_p1 = new Three.Mesh(geometry6, yellow);
-  sicura_p1.rotation.x = -Math.PI / 2;
-  sicura_p1.position.set(-0.023, 0.41, 0.02);
-  body.add(sicura_p1);
+  const safetyValve_p1 = new Three.Mesh(geometry6, yellow);
+  safetyValve_p1.rotation.x = -Math.PI / 2;
+  safetyValve_p1.position.set(-0.023, 0.41, 0.02);
+  body.add(safetyValve_p1);
 
   const cylinderGeometry8 = new Three.CylinderGeometry(0.001, 0.001, 0.03, 32);
-  const sicura_p2 = new Three.Mesh(cylinderGeometry8, yellow);
-  sicura_p2.position.set(0, 0.41, 0.02);
-  sicura_p2.rotation.z += Math.PI / 2;
-  body.add(sicura_p2);
+  const safetyValve_p2 = new Three.Mesh(cylinderGeometry8, yellow);
+  safetyValve_p2.position.set(0, 0.41, 0.02);
+  safetyValve_p2.rotation.z += Math.PI / 2;
+  body.add(safetyValve_p2);
 
   const cylinderGeometry9 = new Three.CylinderGeometry(0.0025, 0.0025, 0.026, 32);
   const cylinder9 = new Three.Mesh(cylinderGeometry9, grey);
@@ -196,16 +196,16 @@ function makeObjectMaxLOD() {
 
 }
 
-function makeObjectMiddleLOD(){
+function makeObjectMiddleLOD() {
 
   let bodyGeometry21 = new Three.CylinderGeometry(0.1, 0.1, 0.5, 8);
   let body1 = new Three.Mesh(bodyGeometry21, red);
   body1.position.set(0, 1, 0);
 
   let bodyGeometry22 = new Three.CylinderGeometry(0.11, 0.11, 0.03, 8);
-  let fermo2 = new Three.Mesh(bodyGeometry22, black);
-  fermo2.position.set(0, -0.2, 0);
-  body1.add(fermo2);
+  let lock2 = new Three.Mesh(bodyGeometry22, black);
+  lock2.position.set(0, -0.2, 0);
+  body1.add(lock2);
 
   let geometrySphereUp1 = new Three.SphereGeometry(0.095, 32, 8);
   let sphereUp1 = new Three.Mesh(geometrySphereUp1, red);
@@ -216,7 +216,7 @@ function makeObjectMiddleLOD(){
 
 }
 
-function makeObjectMinLOD(){
+function makeObjectMinLOD() {
   let bodyGeometry0 = new Three.CylinderGeometry(0.1, 0.1, 0.475, 6);
   let body0 = new Three.Mesh(bodyGeometry0, red);
   body0.position.set(0, .95, 0);
@@ -229,10 +229,10 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Security', 'Optional'],
+    tag: ['Security'],
     group: "Items",
     title: "Fire extinguisher",
-    description: "Estintore",
+    description: "Fire extinguisher",
     image: require('./fire-extinguisher.png')
   },
 
@@ -259,14 +259,15 @@ export default {
     let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: "2px", fill: "#84e1ce"};
 
     return (
-      <g transform={`translate(${-RADIUS / (RADIUS/2)},${-(RADIUS+5) /(RADIUS/2) })`}>
-        <ellipse key="1" cx="0" cy="0" rx={RADIUS+5} ry={RADIUS}
+      <g transform={`translate(${-RADIUS / (RADIUS / 2)},${-(RADIUS + 5) / (RADIUS / 2) })`}>
+        <ellipse key="1" cx="0" cy="0" rx={RADIUS + 5} ry={RADIUS}
                  style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#ff0000"}}/>
-        <line key="2" x1={0} x2={0} y1={RADIUS}  y2={2*RADIUS} style={arrow_style}/>
-        <line key="3" x1={-RADIUS/2+.15*RADIUS} x2={-RADIUS/2+RADIUS/2} y1={1.2*RADIUS} y2={2*RADIUS} style={arrow_style} />
-        <line key="4" x1={0} x2={-RADIUS/2+.85*RADIUS} y1={2*RADIUS} y2={1.2*RADIUS} style={arrow_style} />
+        <line key="2" x1={0} x2={0} y1={RADIUS} y2={2 * RADIUS} style={arrow_style}/>
+        <line key="3" x1={-RADIUS / 2 + .15 * RADIUS} x2={-RADIUS / 2 + RADIUS / 2} y1={1.2 * RADIUS} y2={2 * RADIUS}
+              style={arrow_style}/>
+        <line key="4" x1={0} x2={-RADIUS / 2 + .85 * RADIUS} y1={2 * RADIUS} y2={1.2 * RADIUS} style={arrow_style}/>
         <text key="5" cx={RADIUS} cy={RADIUS}
-              transform={ `translate(${RADIUS/8}, ${0}) scale(1,-1) rotate(${textRotation})`}
+              transform={ `translate(${RADIUS / 8}, ${0}) scale(1,-1) rotate(${textRotation})`}
               style={{textAnchor: "middle", fontSize: "11px"}}>
           {element.type}
         </text>
@@ -280,7 +281,7 @@ export default {
 
     /**************** LOD max ***********************/
 
-    console.log(element.x,element.y);
+    console.log(element.x, element.y);
 
     let fireExtinguisher2 = new Three.Object3D();
 
@@ -292,9 +293,9 @@ export default {
     let deltaY = Math.abs(value.max.y - value.min.y);
     let deltaZ = Math.abs(value.max.z - value.min.z);
 
-    fireExtinguisher2.rotation.y+= -Math.PI/2;
-    fireExtinguisher2.position.y+=-HEIGHT/1.25+newAltitude;
-    fireExtinguisher2.scale.set( RADIUS / deltaX, RADIUS / deltaX, HEIGHT / deltaY );
+    fireExtinguisher2.rotation.y += -Math.PI / 2;
+    fireExtinguisher2.position.y += -HEIGHT / 1.25 + newAltitude;
+    fireExtinguisher2.scale.set(RADIUS / deltaX, RADIUS / deltaX, HEIGHT / deltaY);
 
     /**************** LOD middle ***********************/
 
@@ -303,8 +304,8 @@ export default {
 
     fireExtinguisher1.add(objectMiddleLOD.clone());
 
-    fireExtinguisher1.position.y+=-HEIGHT/1.25+newAltitude;
-    fireExtinguisher1.scale.set( RADIUS / deltaX, RADIUS / deltaX, HEIGHT / deltaY );
+    fireExtinguisher1.position.y += -HEIGHT / 1.25 + newAltitude;
+    fireExtinguisher1.scale.set(RADIUS / deltaX, RADIUS / deltaX, HEIGHT / deltaY);
 
 
     /**************** LOD min ***********************/
@@ -313,16 +314,16 @@ export default {
 
     fireExtinguisher0.add(objectMinLOD.clone());
 
-    fireExtinguisher0.position.y+=-HEIGHT/1.35 + newAltitude;
-    fireExtinguisher0.scale.set( RADIUS / deltaX, RADIUS / deltaX, HEIGHT / deltaY );
+    fireExtinguisher0.position.y += -HEIGHT / 1.35 + newAltitude;
+    fireExtinguisher0.scale.set(RADIUS / deltaX, RADIUS / deltaX, HEIGHT / deltaY);
 
     /*** add all Level of Detail ***/
 
     let lod = new Three.LOD();
 
-    lod.addLevel(fireExtinguisher2,200);
-    lod.addLevel(fireExtinguisher1,900);
-    lod.addLevel(fireExtinguisher0,1200);
+    lod.addLevel(fireExtinguisher2, 200);
+    lod.addLevel(fireExtinguisher1, 900);
+    lod.addLevel(fireExtinguisher0, 1200);
     lod.updateMatrix();
     lod.matrixAutoUpdate = false;
 
