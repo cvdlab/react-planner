@@ -281,8 +281,6 @@ export default {
 
     /**************** LOD max ***********************/
 
-    console.log(element.x, element.y);
-
     let fireExtinguisher2 = new Three.Object3D();
 
     fireExtinguisher2.add(objectMaxLOD.clone());
@@ -291,7 +289,6 @@ export default {
 
     let deltaX = Math.abs(value.max.x - value.min.x);
     let deltaY = Math.abs(value.max.y - value.min.y);
-    let deltaZ = Math.abs(value.max.z - value.min.z);
 
     fireExtinguisher2.rotation.y += -Math.PI / 2;
     fireExtinguisher2.position.y += -HEIGHT / 1.25 + newAltitude;
