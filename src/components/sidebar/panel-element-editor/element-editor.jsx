@@ -308,7 +308,10 @@ export default class ElementEditor extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    this.setState({attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state)});
+    this.setState({
+      attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state),
+      propertiesFormData: this.initPropData(nextProps.element, nextProps.layer, nextProps.state)
+    });
   }
 
 
