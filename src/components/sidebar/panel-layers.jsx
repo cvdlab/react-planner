@@ -9,6 +9,7 @@ import IconTrash from 'react-icons/lib/fa/trash';
 import FormTextInput from '../style/form-text-input';
 import FormNumberInput from '../style/form-number-input';
 import FormSubmitButton from '../style/form-submit-button';
+import FormSlider from '../style/form-slider';
 import CancelButton from '../style/cancel-button';
 
 import {
@@ -201,9 +202,11 @@ export default class PanelLayers extends Component
               <tr>
                 <td style={firstTdStyle}>{this.context.translator.t("opacity")}:</td>
                 <td>
-                  <FormNumberInput
-                    value={this.state.editingLayer.get('opacity')}
-                    onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({opacity:e.target.value}) })}
+                  <FormSlider
+                    min={0}
+                    max={100}
+                    value={Math.round( this.state.editingLayer.get('opacity') * 100)}
+                    onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({opacity:(e.target.value / 100)}) })}
                   />
                 </td>
               </tr>
