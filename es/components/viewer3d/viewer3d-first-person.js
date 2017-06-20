@@ -241,6 +241,10 @@ var Viewer3DFirstPerson = function (_React$Component) {
           var controlObjectPosition = _this2.controls.getObject().position;
           pointLight.position.set(controlObjectPosition.x, controlObjectPosition.y, controlObjectPosition.z);
 
+          for (var elemID in _this2.planData.sceneGraph.LODs) {
+            _this2.planData.sceneGraph.LODs[elemID].update(camera);
+          }
+
           _this2.renderer.clear(); // clear buffers
           _this2.renderer.render(scene3D, camera); // render scene 1
           _this2.renderer.clearDepth(); // clear depth buffer

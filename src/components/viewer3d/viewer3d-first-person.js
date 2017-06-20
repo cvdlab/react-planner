@@ -224,6 +224,10 @@ export default class Viewer3DFirstPerson extends React.Component {
         let controlObjectPosition = this.controls.getObject().position;
         pointLight.position.set(controlObjectPosition.x, controlObjectPosition.y, controlObjectPosition.z);
 
+        for (let elemID in this.planData.sceneGraph.LODs) {
+          this.planData.sceneGraph.LODs[elemID].update(camera);
+        }
+
         this.renderer.clear();                     // clear buffers
         this.renderer.render(scene3D, camera);     // render scene 1
         this.renderer.clearDepth();                // clear depth buffer

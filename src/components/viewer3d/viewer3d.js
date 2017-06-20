@@ -216,6 +216,10 @@ export default class Scene3DViewer extends React.Component {
         camera.updateMatrix();
         camera.updateMatrixWorld();
 
+        for (let elemID in planData.sceneGraph.LODs) {
+          planData.sceneGraph.LODs[elemID].update(camera)
+        }
+
         this.renderer.render(scene3D, camera);
         requestAnimationFrame(render);
       }

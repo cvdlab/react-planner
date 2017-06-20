@@ -42,8 +42,6 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
       });
     }
 
-    console.log(merged);
-
     return onUpdate(merged);
   };
 

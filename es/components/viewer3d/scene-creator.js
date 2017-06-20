@@ -10,7 +10,8 @@ export function parseData(sceneData, actions, catalog) {
     unit: sceneData.unit,
     layers: {},
     width: sceneData.width,
-    height: sceneData.height
+    height: sceneData.height,
+    LODs: {}
   };
 
   planData.plan = new Three.Object3D();
@@ -255,6 +256,8 @@ function removeHole(planData, layerId, holeToRemoveID) {
   planData.plan.remove(holeToRemove);
   disposeObject(holeToRemove);
   delete planData.sceneGraph.layers[layerId].holes[holeToRemoveID];
+  delete planData.sceneGraph.LODs[holeToRemoveID];
+
   holeToRemove = null;
   updateBoundingBox(planData);
 }
@@ -264,6 +267,7 @@ function removeLine(planData, layerId, lineID) {
   planData.plan.remove(line3D);
   disposeObject(line3D);
   delete planData.sceneGraph.layers[layerId].lines[lineID];
+  delete planData.sceneGraph.LODs[lineID];
   line3D = null;
   updateBoundingBox(planData);
 }
@@ -273,6 +277,7 @@ function removeArea(planData, layerId, areaID) {
   planData.plan.remove(area3D);
   disposeObject(area3D);
   delete planData.sceneGraph.layers[layerId].areas[areaID];
+  delete planData.sceneGraph.LODs[areaID];
   area3D = null;
   updateBoundingBox(planData);
 }
@@ -282,6 +287,7 @@ function removeItem(planData, layerId, itemID) {
   planData.plan.remove(item3D);
   disposeObject(item3D);
   delete planData.sceneGraph.layers[layerId].items[itemID];
+  delete planData.sceneGraph.LODs[itemID];
   item3D = null;
   updateBoundingBox(planData);
 }
@@ -320,6 +326,10 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
 
   // Create the hole object
   return catalog.getElement(holeData.type).render3D(holeData, layer, sceneData).then(function (object) {
+
+    if (object instanceof Three.LOD) {
+      planData.sceneGraph.LODs[holeID] = object;
+    }
 
     var pivot = new Three.Object3D();
     pivot.add(object);
@@ -380,6 +390,10 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
 
   return catalog.getElement(line.type).render3D(line, layer, sceneData).then(function (line3D) {
 
+    if (line3D instanceof Three.LOD) {
+      planData.sceneGraph.LODs[line.id] = line3D;
+    }
+
     var pivot = new Three.Object3D();
     pivot.add(line3D);
 
@@ -407,6 +421,11 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
   };
 
   return catalog.getElement(area.type).render3D(area, layer, sceneData).then(function (area3D) {
+
+    if (area3D instanceof Three.LOD) {
+      planData.sceneGraph.LODs[areaID] = area3D;
+    }
+
     var pivot = new Three.Object3D();
     pivot.add(area3D);
     pivot.position.y = layer.altitude;
@@ -425,6 +444,10 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
   var item = layer.items.get(itemID);
 
   return catalog.getElement(item.type).render3D(item, layer, sceneData).then(function (item3D) {
+
+    if (item3D instanceof Three.LOD) {
+      planData.sceneGraph.LODs[itemID] = item3D;
+    }
 
     var pivot = new Three.Object3D();
     pivot.add(item3D);
@@ -508,8 +531,11 @@ function minimizeChangePropertiesDiffs(diffArray) {
   var idsFound = {};
   return diffArray.filter(function (diff) {
     var split = diff.path.split('/');
-    if (split[5] == 'properties') {
+    if (split[5] === 'properties') {
       return idsFound[split[4]] ? false : idsFound[split[4]] = 1;
+    } else if (split[5] === "misc") {
+      // Remove misc changes
+      return false;
     }
     return true;
   });

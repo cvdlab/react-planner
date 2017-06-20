@@ -9,6 +9,8 @@ import PropTypes from 'prop-types';
 import Panel from './panel';
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 
+var typeId = { display: 'inline-block', top: '-.3em', position: 'relative', paddingLeft: '.25em' };
+
 export default function PanelLayerElement(_ref, _ref2) {
   var _ref$state = _ref.state,
       scene = _ref$state.scene,
@@ -33,10 +35,10 @@ export default function PanelLayerElement(_ref, _ref2) {
     { name: translator.t("Elements on layer {0}", layer.name) },
     React.createElement(
       'div',
-      { key: 1, style: { background: "#3a3a3e", padding: "5px 15px 5px 15px" } },
+      { key: 1, style: { background: "#3a3a3e" } },
       React.createElement(
         'div',
-        { style: { height: "100px", overflowY: "auto" }, onWheel: function onWheel(e) {
+        { style: { height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer' }, onWheel: function onWheel(e) {
             return e.stopPropagation();
           } },
         layer.lines.entrySeq().map(function (_ref4) {
@@ -46,14 +48,17 @@ export default function PanelLayerElement(_ref, _ref2) {
 
           return React.createElement(
             'div',
-            { key: lineID, style: { cursor: "pointer" },
-              onClick: function onClick(event) {
+            { key: lineID, onClick: function onClick(e) {
                 return editingActions.selectLine(layer.id, line.id);
               } },
             React.createElement('input', { type: 'checkbox', checked: line.selected, readOnly: true }),
-            line.type,
-            ' ',
-            line.id
+            React.createElement(
+              'div',
+              { style: typeId },
+              line.type,
+              ' ',
+              line.id
+            )
           );
         }),
         layer.holes.entrySeq().map(function (_ref6) {
@@ -63,14 +68,17 @@ export default function PanelLayerElement(_ref, _ref2) {
 
           return React.createElement(
             'div',
-            { key: holeID, style: { cursor: "pointer" },
-              onClick: function onClick(event) {
+            { key: holeID, onClick: function onClick(e) {
                 return editingActions.selectHole(layer.id, hole.id);
               } },
             React.createElement('input', { type: 'checkbox', checked: hole.selected, readOnly: true }),
-            hole.type,
-            ' ',
-            hole.id
+            React.createElement(
+              'div',
+              { style: typeId },
+              hole.type,
+              ' ',
+              hole.id
+            )
           );
         }),
         layer.items.entrySeq().map(function (_ref8) {
@@ -80,14 +88,17 @@ export default function PanelLayerElement(_ref, _ref2) {
 
           return React.createElement(
             'div',
-            { key: itemID, style: { cursor: "pointer" },
-              onClick: function onClick(event) {
+            { key: itemID, onClick: function onClick(e) {
                 return editingActions.selectItem(layer.id, item.id);
               } },
             React.createElement('input', { type: 'checkbox', checked: item.selected, readOnly: true }),
-            item.type,
-            ' ',
-            item.id
+            React.createElement(
+              'div',
+              { style: typeId },
+              item.type,
+              ' ',
+              item.id
+            )
           );
         })
       )
