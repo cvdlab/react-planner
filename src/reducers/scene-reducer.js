@@ -3,8 +3,6 @@ import {
   SELECT_LAYER,
   SET_LAYER_PROPERTIES,
   MODE_IDLE,
-  OPEN_LAYER_CONFIGURATOR,
-  MODE_CONFIGURING_LAYER,
   REMOVE_LAYER
 } from '../constants';
 import {Layer, Scene} from '../models';
@@ -21,9 +19,6 @@ export default function (state, action) {
 
     case SET_LAYER_PROPERTIES:
       return setLayerProperties(state, action.layerID, action.properties);
-
-    case OPEN_LAYER_CONFIGURATOR:
-      return openLayerConfigurator(state, action.layerID);
 
     case REMOVE_LAYER:
       return removeLayer(state, action.layerID);
@@ -46,7 +41,7 @@ function addLayer(state, name, altitude) {
   });
 
   return state.merge({
-    mode: MODE_CONFIGURING_LAYER,
+    mode: MODE_IDLE,
     scene,
     sceneHistory: state.sceneHistory.push(scene)
   })
@@ -80,13 +75,6 @@ function setLayerProperties(state, layerID, properties) {
     sceneHistory: state.sceneHistory.push(scene),
     mode: MODE_IDLE
   });
-}
-
-function openLayerConfigurator(state, layerID) {
-  return state.merge({
-    scene: state.scene.set('selectedLayer', layerID),
-    mode: MODE_CONFIGURING_LAYER
-  })
 }
 
 function removeLayer(state, layerID) {
