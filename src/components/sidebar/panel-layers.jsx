@@ -49,7 +49,7 @@ const buttonLayerStyle = { display:'table-cell' };
 const newLayerLableStyle = { margin: '0.5em 0', fontSize : '1.3em', cursor:'pointer', textAlign:'center' };
 const newLayerLableHoverStyle = { ...newLayerLableStyle, ...styleHoverColor };
 const layerInputTableStyle = {width:'100%', borderSpacing: "2px 0", padding: '5px 15px'};
-const inputTableButtonStyle = {width:'calc( 100% + 2px )', marginTop:'0.5em', borderSpacing:'0'};
+const inputTableButtonStyle = {float:'right', marginTop:'0.5em', borderSpacing:'0'};
 
 export default class PanelLayers extends Component
 {
