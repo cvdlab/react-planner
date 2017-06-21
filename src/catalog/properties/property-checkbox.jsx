@@ -4,6 +4,7 @@ import FormLabel from '../../components/style/form-label'
 
 const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
 const firstTdStyle = {width: '6em'};
+const checkboxStyle = {margin: 0};
 
 export default function PropertyCheckbox({value, onUpdate, configs, sourceElement, internalState, state}) {
 
@@ -24,7 +25,7 @@ export default function PropertyCheckbox({value, onUpdate, configs, sourceElemen
       <tr>
         <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
-          <input type="checkbox" checked={value} onChange={e => update(!value)}/>
+          <input style={checkboxStyle} type="checkbox" checked={value} onChange={e => update(!value)}/>
         </td>
       </tr>
       </tbody>
