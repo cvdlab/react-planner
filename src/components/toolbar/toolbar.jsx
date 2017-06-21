@@ -104,7 +104,7 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
         <ToolbarButton
           active={[MODE_3D_FIRST_PERSON].includes(mode)}
           tooltip={translator.t("3D First Person")}
-          onClick={event => ToolbarButtonviewer3DActions.selectTool3DFirstPerson()}>
+          onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
             <Icon3DFirstPerson />
         </ToolbarButton>
     },
