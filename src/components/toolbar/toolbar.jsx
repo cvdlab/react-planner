@@ -44,7 +44,7 @@ const Icon3D = () => <p style={{
   margin: "0px"
 }}>3D</p>;
 
-const ASIDE_STYLE = { backgroundColor: '#28292D', padding: "10px" };
+const ASIDE_STYLE = {backgroundColor: '#28292D', padding: "10px"};
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
   projectActions,
@@ -63,109 +63,122 @@ export default function Toolbar({state, width, height, toolbarButtons, allowProj
 
   let sorter = [
     {
-      index: 0, condition: allowProjectFileSupport, dom: () =>
-        <ToolbarButton
-          active={false}
-          tooltip={translator.t("New project")}
-          onClick={event => projectActions.newProject()}>
-            <IconNewFile />
-        </ToolbarButton>
-    },
-    { index: 1, condition: allowProjectFileSupport, dom: () => <ToolbarSaveButton state={state}/> },
-    { index: 2, condition: allowProjectFileSupport, dom: () => <ToolbarLoadButton state={state}/> },
-    { index: 3, condition: true, dom: () =>
-        <ToolbarButton
-          active={[MODE_VIEWING_CATALOG].includes(mode)}
-          tooltip={translator.t("Open catalog")}
-          onClick={event => projectActions.openCatalog()}>
-          <IconCatalog />
-        </ToolbarButton>
+      index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
+      active={false}
+      tooltip={translator.t("New project")}
+      onClick={event => projectActions.newProject()}>
+      <IconNewFile />
+    </ToolbarButton>
     },
     {
-      index: 4, condition: true, dom: () =>
-        <ToolbarButton
-          active={[MODE_3D_VIEW].includes(mode)}
-          tooltip={translator.t("3D View")}
-          onClick={event => viewer3DActions.selectTool3DView()}>
-          <Icon3D />
-        </ToolbarButton>
+      index: 1, condition: allowProjectFileSupport,
+      dom: <ToolbarSaveButton state={state}/>
     },
     {
-      index: 5, condition: true, dom: () =>
-        <ToolbarButton
-          active={[MODE_IDLE].includes(mode)}
-          tooltip={translator.t("2D View")}
-          onClick={event => projectActions.rollback()}>
-            {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
-        </ToolbarButton>
+      index: 2, condition: allowProjectFileSupport,
+      dom: <ToolbarLoadButton state={state}/>
     },
     {
-      index: 6, condition: true, dom: () =>
-        <ToolbarButton
-          active={[MODE_3D_FIRST_PERSON].includes(mode)}
-          tooltip={translator.t("3D First Person")}
-          onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
-            <Icon3DFirstPerson />
-        </ToolbarButton>
+      index: 3, condition: true,
+      dom: <ToolbarButton
+        active={[MODE_VIEWING_CATALOG].includes(mode)}
+        tooltip={translator.t("Open catalog")}
+        onClick={event => projectActions.openCatalog()}>
+        <IconCatalog />
+      </ToolbarButton>
     },
     {
-      index: 7, condition: mode3DCondition, dom: () =>
-        <ToolbarButton
-          active={[MODE_2D_ZOOM_IN].includes(mode)}
-          tooltip={translator.t("Zoom in")}
-          onClick={event => viewer2DActions.selectToolZoomIn()}>
-            <IconZoomPlus />
-        </ToolbarButton>
+      index: 4, condition: true, dom: <ToolbarButton
+      active={[MODE_3D_VIEW].includes(mode)}
+      tooltip={translator.t("3D View")}
+      onClick={event => viewer3DActions.selectTool3DView()}>
+      <Icon3D />
+    </ToolbarButton>
     },
     {
-      index: 8, condition: mode3DCondition, dom: () =>
-        <ToolbarButton
-          active={[MODE_2D_ZOOM_OUT].includes(mode)}
-          tooltip={translator.t("Zoom out")}
-          onClick={event => viewer2DActions.selectToolZoomOut()}>
-            <IconZoomMinus />
-        </ToolbarButton>
+      index: 5, condition: true, dom: <ToolbarButton
+      active={[MODE_IDLE].includes(mode)}
+      tooltip={translator.t("2D View")}
+      onClick={event => projectActions.rollback()}>
+      {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
+    </ToolbarButton>
     },
     {
-      index: 9, condition: mode3DCondition, dom: () =>
-        <ToolbarButton
-          active={[MODE_2D_PAN].includes(mode)}
-          tooltip={translator.t("Pan")}
-          onClick={event => viewer2DActions.selectToolPan()}>
-            <IconPan />
-        </ToolbarButton>
+      index: 6, condition: true, dom: <ToolbarButton
+      active={[MODE_3D_FIRST_PERSON].includes(mode)}
+      tooltip={translator.t("3D First Person")}
+      onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
+      <Icon3DFirstPerson />
+    </ToolbarButton>
     },
     {
-      index: 10, condition: true, dom: () =>
-        <ToolbarButton
-          active={false}
-          tooltip={translator.t("Undo (CTRL-Z)")}
-          onClick={event => projectActions.undo()}>
-            <IconUndo />
-        </ToolbarButton>
+      index: 7, condition: mode3DCondition, dom: <ToolbarButton
+      active={[MODE_2D_ZOOM_IN].includes(mode)}
+      tooltip={translator.t("Zoom in")}
+      onClick={event => viewer2DActions.selectToolZoomIn()}>
+      <IconZoomPlus />
+    </ToolbarButton>
     },
     {
-      index: 11, condition: true, dom: () =>
-        <ToolbarButton
-          active={[MODE_CONFIGURING_PROJECT].includes(mode)}
-          tooltip={translator.t("Configure project")}
-          onClick={event => projectActions.openProjectConfigurator()}>
-            <IconConfigure />
-        </ToolbarButton>
+      index: 8, condition: mode3DCondition, dom: <ToolbarButton
+      active={[MODE_2D_ZOOM_OUT].includes(mode)}
+      tooltip={translator.t("Zoom out")}
+      onClick={event => viewer2DActions.selectToolZoomOut()}>
+      <IconZoomMinus />
+    </ToolbarButton>
+    },
+    {
+      index: 9, condition: mode3DCondition, dom: <ToolbarButton
+      active={[MODE_2D_PAN].includes(mode)}
+      tooltip={translator.t("Pan")}
+      onClick={event => viewer2DActions.selectToolPan()}>
+      <IconPan />
+    </ToolbarButton>
+    },
+    {
+      index: 10, condition: true, dom: <ToolbarButton
+      active={false}
+      tooltip={translator.t("Undo (CTRL-Z)")}
+      onClick={event => projectActions.undo()}>
+      <IconUndo />
+    </ToolbarButton>
+    },
+    {
+      index: 11, condition: true, dom: <ToolbarButton
+      active={[MODE_CONFIGURING_PROJECT].includes(mode)}
+      tooltip={translator.t("Configure project")}
+      onClick={event => projectActions.openProjectConfigurator()}>
+      <IconConfigure />
+    </ToolbarButton>
     }
   ];
 
-  sorter = sorter.sort( ( a, b ) => { return ( a.index || 0 ) - ( b.index || 0 ) } );
+  sorter = sorter.concat(toolbarButtons.map((Component, index) => {
+    return {
+      condition: true,
+      dom: <Component mode={mode} state={state} key={index}/>
+    };
+  }));
+
+  sorter.sort((a, b) => {
+    if (a.index === undefined || a.index === null) {
+      a.index = Number.MAX_SAFE_INTEGER;
+    }
+
+    if (b.index === undefined || b.index === null) {
+      b.index = Number.MAX_SAFE_INTEGER;
+    }
+
+    return a.index - b.index;
+  });
 
   return (
     <aside style={{...ASIDE_STYLE, maxWidth: width, maxHeight: height}} className="toolbar">
 
-      {
-        sorter.map( ( el, ind ) => { /*console.log( el, ind );*/ return ( <If key={ind} condition={el.condition}>{ el.dom() }</If> ) } )
-      }
-      {
-        toolbarButtons.map((Component, index) => <Component mode={mode} state={state} key={index}/>)
-      }
+      {sorter.map((el, ind) => {
+        return (<If key={ind} condition={el.condition}>{ el.dom }</If>)
+      })}
+
     </aside>
   )
 }
