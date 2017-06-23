@@ -331,9 +331,9 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
     let offset = holeData.offset;
 
     if (vertex0.x > vertex1.x) {
-      let app = vertex0;
+      let tmp = vertex0;
       vertex0 = vertex1;
-      vertex1 = app;
+      vertex1 = tmp;
       offset = 1 - offset;
     }
 
@@ -376,9 +376,9 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
   if (vertex0.x > vertex1.x) {
-    let app = vertex0;
+    let tmp = vertex0;
     vertex0 = vertex1;
-    vertex1 = app;
+    vertex1 = tmp;
   }
 
   return catalog.getElement(line.type).render3D(line, layer, sceneData).then(line3D => {

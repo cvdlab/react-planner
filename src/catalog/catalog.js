@@ -59,9 +59,8 @@ export default class Catalog {
     }
   }
 
-  registerMultiplePropertyType( propertyTypeArray )
-  {
-    propertyTypeArray.forEach( el => this.registerPropertyType( ...el ) );
+  registerMultiplePropertyType(propertyTypeArray) {
+    propertyTypeArray.forEach(el => this.registerPropertyType(...el));
   }
 
   validateElement(json) {

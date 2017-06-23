@@ -33,7 +33,8 @@ export default function PanelGuides({state: {scene, mode}}) {
         })}
       </div>
 
-      <a href="javascript:;" style={STYLE_ADD_WRAPPER} key="add" onClick={() => alert('Sorry, but this feature is not supported yet')}>
+      <a href="javascript:;" style={STYLE_ADD_WRAPPER} key="add"
+         onClick={() => alert('Sorry, but this feature is not supported yet')}>
         <IconAdd />
         <span style={STYLE_ADD_LABEL}>New Guide</span>
       </a>

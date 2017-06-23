@@ -8,7 +8,7 @@ import {
   MODE_ROTATING_ITEM
 } from '../../constants';
 
-const typeId = { display: 'inline-block', top: '-.3em', position: 'relative', paddingLeft: '.25em' };
+const typeId = {display: 'inline-block', top: '-.3em', position: 'relative', paddingLeft: '.25em'};
 
 export default function PanelLayerElement({state: {scene, mode}}, {editingActions, translator}) {
 
@@ -27,7 +27,8 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
   return (
     <Panel name={translator.t("Elements on layer {0}", layer.name)}>
       <div key={1} style={{background: "#3a3a3e"}}>
-        <div style={{height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer'}} onWheel={e => e.stopPropagation()}>
+        <div style={{height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer'}}
+             onWheel={e => e.stopPropagation()}>
           {layer.lines.entrySeq().map(([lineID, line]) => {
             return (
               <div key={lineID} onClick={e => editingActions.selectLine(layer.id, line.id)}>
