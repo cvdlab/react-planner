@@ -183,6 +183,17 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       }
 
       break;
+
+    case "opacity":
+    case "altitude":
+      let layerGraph = planData.sceneGraph.layers[layer.id];
+      for (let lineID in layerGraph.lines) removeLine(planData, layer.id, lineID);
+      for (let areaID in layerGraph.areas) removeArea(planData, layer.id, areaID);
+      for (let itemID in layerGraph.items) removeItem(planData, layer.id, itemID);
+      for (let holeID in layerGraph.holes) removeHole(planData, layer.id, holeID);
+
+      promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog));
+
   }
   Promise.all(promises).then(values => {
     updateBoundingBox(planData);
