@@ -38,7 +38,8 @@ export default function PanelLayerElement(_ref, _ref2) {
       { key: 1, style: { background: "#3a3a3e" } },
       React.createElement(
         'div',
-        { style: { height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer' }, onWheel: function onWheel(e) {
+        { style: { height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer' },
+          onWheel: function onWheel(e) {
             return e.stopPropagation();
           } },
         layer.lines.entrySeq().map(function (_ref4) {

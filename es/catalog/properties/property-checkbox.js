@@ -4,6 +4,7 @@ import FormLabel from '../../components/style/form-label';
 
 var tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
 var firstTdStyle = { width: '6em' };
+var checkboxStyle = { margin: 0 };
 
 export default function PropertyCheckbox(_ref) {
   var value = _ref.value,
@@ -46,7 +47,7 @@ export default function PropertyCheckbox(_ref) {
         React.createElement(
           'td',
           null,
-          React.createElement('input', { type: 'checkbox', checked: value, onChange: function onChange(e) {
+          React.createElement('input', { style: checkboxStyle, type: 'checkbox', checked: value, onChange: function onChange(e) {
               return update(!value);
             } })
         )

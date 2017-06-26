@@ -1,4 +1,4 @@
-import { ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES, MODE_IDLE, OPEN_LAYER_CONFIGURATOR, MODE_CONFIGURING_LAYER, REMOVE_LAYER } from '../constants';
+import { ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES, MODE_IDLE, REMOVE_LAYER } from '../constants';
 import { Layer, Scene } from '../models';
 import IDBroker from '../utils/id-broker';
 import { unselectAll } from '../utils/layer-operations';
@@ -13,9 +13,6 @@ export default function (state, action) {
 
     case SET_LAYER_PROPERTIES:
       return setLayerProperties(state, action.layerID, action.properties);
-
-    case OPEN_LAYER_CONFIGURATOR:
-      return openLayerConfigurator(state, action.layerID);
 
     case REMOVE_LAYER:
       return removeLayer(state, action.layerID);
@@ -38,7 +35,6 @@ function addLayer(state, name, altitude) {
   });
 
   return state.merge({
-    mode: MODE_CONFIGURING_LAYER,
     scene: scene,
     sceneHistory: state.sceneHistory.push(scene)
   });
@@ -71,15 +67,7 @@ function setLayerProperties(state, layerID, properties) {
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene),
-    mode: MODE_IDLE
-  });
-}
-
-function openLayerConfigurator(state, layerID) {
-  return state.merge({
-    scene: state.scene.set('selectedLayer', layerID),
-    mode: MODE_CONFIGURING_LAYER
+    sceneHistory: state.sceneHistory.push(scene)
   });
 }
 

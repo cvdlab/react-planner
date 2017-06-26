@@ -6,11 +6,10 @@ import React from 'react';
 import ReactRange from '@mapbox/react-range';
 import FormTextInput from './form-text-input';
 
-var STYLE_INPUT = {
-  display: "block",
-  width: "100%",
-  height: "30px"
-};
+var sliderContainerStyle = { display: 'inline-block', width: '80%', marginRight: '5%' };
+var sliderStyle = { display: 'block', width: '100%', height: '30px' };
+var textContainerStyle = { display: 'inline-block', width: '15%', float: 'right' };
+var textStyle = { height: '34px', textAlign: 'center' };
 
 export default function FormNumberInput(_ref) {
   var value = _ref.value,
@@ -22,13 +21,13 @@ export default function FormNumberInput(_ref) {
     null,
     React.createElement(
       'div',
-      { style: { display: "inline-block", width: "85%", marginRight: "5%" } },
-      React.createElement(ReactRange, _extends({ type: 'range', style: STYLE_INPUT, onChange: onChange, value: value }, rest))
+      { style: sliderContainerStyle },
+      React.createElement(ReactRange, _extends({ type: 'range', style: sliderStyle, onChange: onChange, value: value }, rest))
     ),
     React.createElement(
       'div',
-      { style: { display: "inline-block", width: "10%" } },
-      React.createElement(FormTextInput, { value: value, onChange: onChange })
+      { style: textContainerStyle },
+      React.createElement(FormTextInput, { value: value, onChange: onChange, style: textStyle })
     )
   );
 }

@@ -11,10 +11,11 @@ import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
 import IconCatalog from 'react-icons/lib/fa/plus';
 import IconUndo from 'react-icons/lib/md/undo';
 import IconConfigure from 'react-icons/lib/md/settings';
+import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
-
 import If from "../../utils/react-if";
+import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
 
 var Icon2D = function Icon2D() {
   return React.createElement(
@@ -42,13 +43,7 @@ var Icon3D = function Icon3D() {
   );
 };
 
-import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
-
-import ToolbarButton from './toolbar-button';
-var STYLE = {
-  backgroundColor: '#28292D',
-  padding: "10px"
-};
+var ASIDE_STYLE = { backgroundColor: '#28292D', padding: "10px" };
 
 export default function Toolbar(_ref, _ref2) {
   var state = _ref.state,
@@ -68,28 +63,28 @@ export default function Toolbar(_ref, _ref2) {
 
   var mode = state.get('mode');
 
-  return React.createElement(
-    'aside',
-    { style: _extends({}, STYLE, { maxWidth: width, maxHeight: height }), className: 'toolbar' },
-    React.createElement(
-      If,
-      { condition: allowProjectFileSupport },
-      React.createElement(
-        'div',
-        null,
-        React.createElement(
-          ToolbarButton,
-          { active: false, tooltip: translator.t("New project"),
-            onClick: function onClick(event) {
-              return projectActions.newProject();
-            } },
-          React.createElement(IconNewFile, null)
-        ),
-        React.createElement(ToolbarSaveButton, { state: state }),
-        React.createElement(ToolbarLoadButton, { state: state })
-      )
-    ),
-    React.createElement(
+  var mode3DCondition = ![MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode);
+
+  var sorter = [{
+    index: 0, condition: allowProjectFileSupport, dom: React.createElement(
+      ToolbarButton,
+      {
+        active: false,
+        tooltip: translator.t("New project"),
+        onClick: function onClick(event) {
+          return projectActions.newProject();
+        } },
+      React.createElement(IconNewFile, null)
+    )
+  }, {
+    index: 1, condition: allowProjectFileSupport,
+    dom: React.createElement(ToolbarSaveButton, { state: state })
+  }, {
+    index: 2, condition: allowProjectFileSupport,
+    dom: React.createElement(ToolbarLoadButton, { state: state })
+  }, {
+    index: 3, condition: true,
+    dom: React.createElement(
       ToolbarButton,
       {
         active: [MODE_VIEWING_CATALOG].includes(mode),
@@ -98,81 +93,125 @@ export default function Toolbar(_ref, _ref2) {
           return projectActions.openCatalog();
         } },
       React.createElement(IconCatalog, null)
-    ),
-    React.createElement(
+    )
+  }, {
+    index: 4, condition: true, dom: React.createElement(
       ToolbarButton,
-      { active: [MODE_3D_VIEW].includes(mode), tooltip: translator.t("3D View"),
+      {
+        active: [MODE_3D_VIEW].includes(mode),
+        tooltip: translator.t("3D View"),
         onClick: function onClick(event) {
           return viewer3DActions.selectTool3DView();
         } },
       React.createElement(Icon3D, null)
-    ),
-    React.createElement(
+    )
+  }, {
+    index: 5, condition: true, dom: React.createElement(
       ToolbarButton,
-      { active: [MODE_IDLE].includes(mode), tooltip: translator.t("2D View"),
+      {
+        active: [MODE_IDLE].includes(mode),
+        tooltip: translator.t("2D View"),
         onClick: function onClick(event) {
           return projectActions.rollback();
         } },
       [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, null) : React.createElement(IconPointer, null)
-    ),
-    React.createElement(
+    )
+  }, {
+    index: 6, condition: true, dom: React.createElement(
       ToolbarButton,
-      { active: [MODE_3D_FIRST_PERSON].includes(mode), tooltip: translator.t("3D First Person"),
+      {
+        active: [MODE_3D_FIRST_PERSON].includes(mode),
+        tooltip: translator.t("3D First Person"),
         onClick: function onClick(event) {
           return viewer3DActions.selectTool3DFirstPerson();
         } },
       React.createElement(Icon3DFirstPerson, null)
-    ),
-    React.createElement(
-      If,
-      { condition: ![MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) },
-      React.createElement(
-        'div',
-        null,
-        React.createElement(
-          ToolbarButton,
-          { active: [MODE_2D_ZOOM_IN].includes(mode), tooltip: translator.t("Zoom in"),
-            onClick: function onClick(event) {
-              return viewer2DActions.selectToolZoomIn();
-            } },
-          React.createElement(IconZoomPlus, null)
-        ),
-        React.createElement(
-          ToolbarButton,
-          { active: [MODE_2D_ZOOM_OUT].includes(mode), tooltip: translator.t("Zoom out"),
-            onClick: function onClick(event) {
-              return viewer2DActions.selectToolZoomOut();
-            } },
-          React.createElement(IconZoomMinus, null)
-        ),
-        React.createElement(
-          ToolbarButton,
-          { active: [MODE_2D_PAN].includes(mode), tooltip: translator.t("Pan"),
-            onClick: function onClick(event) {
-              return viewer2DActions.selectToolPan();
-            } },
-          React.createElement(IconPan, null)
-        )
-      )
-    ),
-    React.createElement(
+    )
+  }, {
+    index: 7, condition: mode3DCondition, dom: React.createElement(
       ToolbarButton,
-      { active: false, tooltip: translator.t("Undo (CTRL-Z)"),
+      {
+        active: [MODE_2D_ZOOM_IN].includes(mode),
+        tooltip: translator.t("Zoom in"),
+        onClick: function onClick(event) {
+          return viewer2DActions.selectToolZoomIn();
+        } },
+      React.createElement(IconZoomPlus, null)
+    )
+  }, {
+    index: 8, condition: mode3DCondition, dom: React.createElement(
+      ToolbarButton,
+      {
+        active: [MODE_2D_ZOOM_OUT].includes(mode),
+        tooltip: translator.t("Zoom out"),
+        onClick: function onClick(event) {
+          return viewer2DActions.selectToolZoomOut();
+        } },
+      React.createElement(IconZoomMinus, null)
+    )
+  }, {
+    index: 9, condition: mode3DCondition, dom: React.createElement(
+      ToolbarButton,
+      {
+        active: [MODE_2D_PAN].includes(mode),
+        tooltip: translator.t("Pan"),
+        onClick: function onClick(event) {
+          return viewer2DActions.selectToolPan();
+        } },
+      React.createElement(IconPan, null)
+    )
+  }, {
+    index: 10, condition: true, dom: React.createElement(
+      ToolbarButton,
+      {
+        active: false,
+        tooltip: translator.t("Undo (CTRL-Z)"),
         onClick: function onClick(event) {
           return projectActions.undo();
         } },
       React.createElement(IconUndo, null)
-    ),
-    React.createElement(
+    )
+  }, {
+    index: 11, condition: true, dom: React.createElement(
       ToolbarButton,
-      { active: [MODE_CONFIGURING_PROJECT].includes(mode), tooltip: translator.t("Configure project"),
+      {
+        active: [MODE_CONFIGURING_PROJECT].includes(mode),
+        tooltip: translator.t("Configure project"),
         onClick: function onClick(event) {
           return projectActions.openProjectConfigurator();
         } },
       React.createElement(IconConfigure, null)
-    ),
-    toolbarButtons.map(function (Component, index) {
-      return React.createElement(Component, { mode: mode, state: state, key: index });
+    )
+  }];
+
+  sorter = sorter.concat(toolbarButtons.map(function (Component, index) {
+    return {
+      condition: true,
+      dom: React.createElement(Component, { mode: mode, state: state, key: index })
+    };
+  }));
+
+  sorter.sort(function (a, b) {
+    if (a.index === undefined || a.index === null) {
+      a.index = Number.MAX_SAFE_INTEGER;
+    }
+
+    if (b.index === undefined || b.index === null) {
+      b.index = Number.MAX_SAFE_INTEGER;
+    }
+
+    return a.index - b.index;
+  });
+
+  return React.createElement(
+    'aside',
+    { style: _extends({}, ASIDE_STYLE, { maxWidth: width, maxHeight: height }), className: 'toolbar' },
+    sorter.map(function (el, ind) {
+      return React.createElement(
+        If,
+        { key: ind, condition: el.condition },
+        el.dom
+      );
     })
   );
 }

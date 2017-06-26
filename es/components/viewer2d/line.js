@@ -8,7 +8,6 @@ export default function Line(_ref) {
       layer = _ref.layer,
       scene = _ref.scene,
       catalog = _ref.catalog;
-  var unit = scene.unit;
 
 
   var vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -17,17 +16,16 @@ export default function Line(_ref) {
   if (vertex0.id === vertex1.id) return null; //avoid 0-length lines
   if (vertex0.x === vertex1.x && vertex0.y === vertex1.y) return null;
 
-  var x1 = void 0,
-      y1 = void 0,
-      x2 = void 0,
-      y2 = void 0;
-  if (vertex0.x <= vertex1.x) {
-    x1 = vertex0.x;
-    y1 = vertex0.y;
-    x2 = vertex1.x;
-    y2 = vertex1.y;
-  } else {
+  var x1 = vertex0.x,
+      y1 = vertex0.y;
+  var x2 = vertex1.x,
+      y2 = vertex1.y;
+
+
+  if (x1 >= x2) {
     x1 = vertex1.x;
+    //then swap vertex
+
     y1 = vertex1.y;
     x2 = vertex0.x;
     y2 = vertex0.y;
@@ -57,6 +55,9 @@ export default function Line(_ref) {
       ' '
     );
   });
+
+  var unit = scene.unit;
+
 
   var renderedLine = catalog.getElement(line.type).render2D(line, layer);
   var renderedRuler = line.selected ? React.createElement(Ruler, { unit: unit, length: length, transform: 'translate(0, 15)' }) : null;

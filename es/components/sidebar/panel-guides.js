@@ -60,7 +60,8 @@ export default function PanelGuides(_ref) {
     ),
     React.createElement(
       'a',
-      { href: 'javascript:;', style: STYLE_ADD_WRAPPER, key: 'add', onClick: function onClick() {
+      { href: 'javascript:;', style: STYLE_ADD_WRAPPER, key: 'add',
+        onClick: function onClick() {
           return alert('Sorry, but this feature is not supported yet');
         } },
       React.createElement(IconAdd, null),

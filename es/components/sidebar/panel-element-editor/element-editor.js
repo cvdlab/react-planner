@@ -393,7 +393,10 @@ var ElementEditor = function (_Component) {
   }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      this.setState({ attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state) });
+      this.setState({
+        attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state),
+        propertiesFormData: this.initPropData(nextProps.element, nextProps.layer, nextProps.state)
+      });
     }
   }]);
 

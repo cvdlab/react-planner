@@ -117,6 +117,11 @@ export default function Viewer2D(_ref, _ref2) {
 
   var onMouseMove = function onMouseMove(viewerEvent) {
     var event = viewerEvent.originalEvent;
+
+    var evt = new Event('mousemove-planner-event');
+    evt.viewerEvent = viewerEvent;
+    document.dispatchEvent(evt);
+
     event.preventDefault();
 
     var _mapCursorPosition = mapCursorPosition(viewerEvent),
@@ -167,44 +172,55 @@ export default function Viewer2D(_ref, _ref2) {
 
   var onMouseDown = function onMouseDown(viewerEvent) {
     var event = viewerEvent.originalEvent;
+
+    var evt = new Event('mousedown-planner-event');
+    evt.viewerEvent = viewerEvent;
+    document.dispatchEvent(evt);
+
     event.preventDefault();
 
     var _mapCursorPosition2 = mapCursorPosition(viewerEvent),
         x = _mapCursorPosition2.x,
         y = _mapCursorPosition2.y;
 
-    switch (mode) {
-      case constants.MODE_IDLE:
+    if (mode === constants.MODE_IDLE) {
+      var elementData = extractElementData(event.target);
+      if (!elementData || !elementData.selected) return;
 
-        var elementData = extractElementData(event.target);
-        if (!(elementData && elementData.selected)) return;
+      switch (elementData.prototype) {
+        case 'lines':
+          linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
+          event.stopPropagation();
+          break;
 
-        switch (elementData ? elementData.prototype : 'none') {
-          case 'lines':
-            linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
-            event.stopPropagation();
-            break;
+        case 'vertices':
+          verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
+          event.stopPropagation();
+          break;
 
-          case 'vertices':
-            verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
-            event.stopPropagation();
-            break;
+        case 'items':
+          if (elementData.part === 'rotation-anchor') itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);else itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
+          event.stopPropagation();
+          break;
 
-          case 'items':
-            if (elementData.part === 'rotation-anchor') itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);else itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
-            event.stopPropagation();
-            break;
+        case 'holes':
+          holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
+          event.stopPropagation();
+          break;
 
-          case 'holes':
-            holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
-            event.stopPropagation();
-            break;
-        }
+        default:
+          break;
+      }
     }
   };
 
   var onMouseUp = function onMouseUp(viewerEvent) {
     var event = viewerEvent.originalEvent;
+
+    var evt = new Event('mouseup-planner-event');
+    evt.viewerEvent = viewerEvent;
+    document.dispatchEvent(evt);
+
     event.preventDefault();
 
     var _mapCursorPosition3 = mapCursorPosition(viewerEvent),
@@ -235,6 +251,7 @@ export default function Viewer2D(_ref, _ref2) {
             break;
 
           case 'items':
+            //console.log( 'AAA', event, elementData );
             itemsActions.selectItem(elementData.layer, elementData.id);
             event.stopPropagation();
             break;

@@ -26,6 +26,8 @@ import FormTextInput from './components/style/form-text-input';
 import * as ReactPlannerConstants from './constants';
 import { VERSION } from './version';
 
+import * as ReactPlannerActions from './actions/actions';
+
 import ReactPlannerAreasReducer from './reducers/areas-reducer';
 import ReactPlannerHolesReducer from './reducers/holes-reducer';
 import ReactPlannerItemsReducer from './reducers/items-reducer';
@@ -56,4 +58,4 @@ var ReactPlannerReducers = {
   ReactPlannerViewer3dReducer: ReactPlannerViewer3dReducer
 };
 
-export { Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Content as ReactPlannerContent, Plugins, ElementsFactories, StyleComponents, ReactPlannerConstants, ReactPlannerReducers };
+export { Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Content as ReactPlannerContent, Plugins, ElementsFactories, StyleComponents, ReactPlannerConstants, ReactPlannerReducers, ReactPlannerActions };

@@ -40,6 +40,7 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
   var promises = [];
 
   planData.sceneGraph.layers[layer.id] = {
+    id: layer.id,
     lines: {},
     holes: {},
     areas: {},
@@ -71,7 +72,7 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
 
 export function updateScene(planData, sceneData, oldSceneData, diffArray, actions, catalog) {
 
-  minimizeChangePropertiesDiffs(diffArray).forEach(function (diff) {
+  filterDiffs(diffArray, sceneData, oldSceneData).forEach(function (diff) {
 
     /* First of all I need to find the object I need to update */
     var modifiedPath = diff.path.split("/");
@@ -80,7 +81,7 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
 
       var layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
 
-      if (modifiedPath.length == 3) {
+      if (modifiedPath.length === 3) {
         switch (diff.op) {
           case 'replace':
             break; //TODO?
@@ -91,7 +92,6 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
             break;
         }
       } else if (modifiedPath.length > 3) {
-
         switch (diff.op) {
           case 'replace':
             replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
@@ -115,19 +115,19 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
         });
       }
 
-      var layerGraph = sceneData.layers.get(oldSceneData.selectedLayer);
+      var layerGraph = planData.sceneGraph.layers[oldSceneData.selectedLayer];
 
       if (layerGraph) {
         if (!layerGraph.visible) {
           // I need to remove the objects for this layer
           for (var lineID in layerGraph.lines) {
-            removeLine(planData, layerId, lineID);
+            removeLine(planData, layerGraph.id, lineID);
           }for (var areaID in layerGraph.areas) {
-            removeArea(planData, layerId, areaID);
+            removeArea(planData, layerGraph.id, areaID);
           }for (var itemID in layerGraph.items) {
-            removeItem(planData, layerId, itemID);
+            removeItem(planData, layerGraph.id, itemID);
           }for (var holeID in layerGraph.holes) {
-            removeHole(planData, layerId, holeID);
+            removeHole(planData, layerGraph.id, holeID);
           }
         }
       }
@@ -176,22 +176,36 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
 
     case "visible":
       if (!layer.visible) {
-        var layerGraph = planData.sceneGraph.layers[layer.id];
+        var _layerGraph = planData.sceneGraph.layers[layer.id];
 
-        for (var _lineID in layerGraph.lines) {
-          removeLine(planData, layerId, _lineID);
-        }for (var areaID in layerGraph.areas) {
-          removeArea(planData, layerId, areaID);
-        }for (var itemID in layerGraph.items) {
-          removeItem(planData, layerId, itemID);
-        }for (var holeID in layerGraph.holes) {
-          removeHole(planData, layerId, holeID);
+        for (var _lineID in _layerGraph.lines) {
+          removeLine(planData, layer.id, _lineID);
+        }for (var areaID in _layerGraph.areas) {
+          removeArea(planData, layer.id, areaID);
+        }for (var itemID in _layerGraph.items) {
+          removeItem(planData, layer.id, itemID);
+        }for (var holeID in _layerGraph.holes) {
+          removeHole(planData, layer.id, holeID);
         }
       } else {
         promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog));
       }
 
       break;
+
+    case "opacity":
+    case "altitude":
+      var layerGraph = planData.sceneGraph.layers[layer.id];
+      for (var _lineID2 in layerGraph.lines) {
+        removeLine(planData, layer.id, _lineID2);
+      }for (var _areaID in layerGraph.areas) {
+        removeArea(planData, layer.id, _areaID);
+      }for (var _itemID in layerGraph.items) {
+        removeItem(planData, layer.id, _itemID);
+      }for (var _holeID in layerGraph.holes) {
+        removeHole(planData, layer.id, _holeID);
+      }promises = promises.concat(createLayerObjects(layer, planData, sceneData, actions, catalog));
+
   }
   Promise.all(promises).then(function (values) {
     updateBoundingBox(planData);
@@ -264,6 +278,7 @@ function removeHole(planData, layerId, holeToRemoveID) {
 
 function removeLine(planData, layerId, lineID) {
   var line3D = planData.sceneGraph.layers[layerId].lines[lineID];
+
   planData.plan.remove(line3D);
   disposeObject(line3D);
   delete planData.sceneGraph.layers[layerId].lines[lineID];
@@ -342,9 +357,9 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
     var offset = holeData.offset;
 
     if (vertex0.x > vertex1.x) {
-      var app = vertex0;
+      var tmp = vertex0;
       vertex0 = vertex1;
-      vertex1 = app;
+      vertex1 = tmp;
       offset = 1 - offset;
     }
 
@@ -383,9 +398,9 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
   var vertex1 = layer.vertices.get(line.vertices.get(1));
 
   if (vertex0.x > vertex1.x) {
-    var app = vertex0;
+    var tmp = vertex0;
     vertex0 = vertex1;
-    vertex1 = app;
+    vertex1 = tmp;
   }
 
   return catalog.getElement(line.type).render3D(line, layer, sceneData).then(function (line3D) {
@@ -523,11 +538,53 @@ function updateBoundingBox(planData) {
 }
 
 /**
- * Reduces the number of change properties diffs
- * @param diffArray the array of the diffs
+ * Filter the array of diffs
+ * @param diffArray
+ * @param sceneData
+ * @param oldSceneData
  * @returns {Array}
  */
-function minimizeChangePropertiesDiffs(diffArray) {
+function filterDiffs(diffArray, sceneData, oldSceneData) {
+  return minimizeRemoveDiffsWhenSwitchingLayers(minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData), sceneData, oldSceneData);
+}
+
+/**
+ * Reduces the number of remove diffs when switching an hidden layer
+ * @param diffArray the array of the diffs
+ * @param sceneData
+ * @param oldSceneData
+ * @returns {Array}
+ */
+function minimizeRemoveDiffsWhenSwitchingLayers(diffArray, sceneData, oldSceneData) {
+
+  var foundDiff = void 0;
+  var i = void 0;
+  for (i = 0; i < diffArray.length && !foundDiff; i++) {
+    if (diffArray[i].path === "/selectedLayer") {
+      foundDiff = diffArray[i];
+    }
+  }
+
+  if (foundDiff) {
+    if (!sceneData.layers.get(oldSceneData.selectedLayer).visible) {
+      return diffArray.filter(function (diff) {
+
+        return !(diff.path.endsWith("/selected") && diff.path.startsWith("/layers/" + oldSceneData.selectedLayer)) && !(diff.op === "remove" && diff.path.includes(oldSceneData.selectedLayer));
+      });
+    }
+  }
+
+  return diffArray;
+}
+
+/**
+ * Reduces the number of change properties diffs
+ * @param diffArray the array of the diffs
+ * @param sceneData
+ * @param oldSceneData
+ * @returns {Array}
+ */
+function minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData) {
   var idsFound = {};
   return diffArray.filter(function (diff) {
     var split = diff.path.split('/');

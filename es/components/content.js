@@ -5,7 +5,6 @@ import Viewer3D from './viewer3d/viewer3d';
 import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import CatalogList from './catalog-view/catalog-list';
 import ProjectConfigurator from './configurator/project-configurator';
-import LayerConfigurator from './configurator/layer-configurator';
 
 import * as constants from '../constants';
 
@@ -44,9 +43,6 @@ export default function Content(_ref) {
 
     case constants.MODE_CONFIGURING_PROJECT:
       return React.createElement(ProjectConfigurator, { width: width, height: height, state: state });
-
-    case constants.MODE_CONFIGURING_LAYER:
-      return React.createElement(LayerConfigurator, { width: width, height: height, state: state });
 
     default:
       if (customContents.hasOwnProperty(mode)) {
