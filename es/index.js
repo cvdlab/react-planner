@@ -26,7 +26,7 @@ import FormTextInput from './components/style/form-text-input';
 import * as ReactPlannerConstants from './constants';
 import { VERSION } from './version';
 
-import * as ReactPlannerActions from './actions/actions';
+import ReactPlannerActions from './actions/actions';
 
 import ReactPlannerAreasReducer from './reducers/areas-reducer';
 import ReactPlannerHolesReducer from './reducers/holes-reducer';
