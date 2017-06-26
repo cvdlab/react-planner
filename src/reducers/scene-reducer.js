@@ -41,7 +41,6 @@ function addLayer(state, name, altitude) {
   });
 
   return state.merge({
-    mode: MODE_IDLE,
     scene,
     sceneHistory: state.sceneHistory.push(scene)
   })
@@ -72,8 +71,7 @@ function setLayerProperties(state, layerID, properties) {
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene),
-    mode: MODE_IDLE
+    sceneHistory: state.sceneHistory.push(scene)
   });
 }
 
