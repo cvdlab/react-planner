@@ -53,6 +53,7 @@ ReactPlanner.propTypes = {
   stateExtractor: PropTypes.func.isRequired,
   toolbarButtons: PropTypes.array,
   sidebarComponents: PropTypes.array,
+  footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
 };
 
@@ -74,9 +75,9 @@ ReactPlanner.defaultProps = {
 
   toolbarButtons: [],
   sidebarComponents: [],
+  footerbarComponents: [],
   customContents: {},
 };
-
 
 //redux connect
 function mapStateToProps(reduxState) {
@@ -84,6 +85,7 @@ function mapStateToProps(reduxState) {
     state: reduxState
   }
 }
+
 function mapDispatchToProps(dispatch) {
   return objectsMap(actions, actionNamespace => bindActionCreators(actions[actionNamespace], dispatch));
 }
