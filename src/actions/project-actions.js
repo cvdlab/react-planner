@@ -15,6 +15,8 @@ import {
   OPEN_PROJECT_CONFIGURATOR,
   SET_PROJECT_PROPERTIES,
   INIT_CATALOG,
+  UPDATE_MOUSE_COORDS,
+  UPDATE_ZOOM_SCALE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -133,4 +135,18 @@ export function initCatalog(catalog) {
     type: INIT_CATALOG,
     catalog
   }
+}
+
+export function updateMouseCoord(coords = { x, y }) {
+  return {
+    type: UPDATE_MOUSE_COORDS,
+    coords
+  };
+}
+
+export function updateZoomScale(scale) {
+  return {
+    type: UPDATE_ZOOM_SCALE,
+    scale
+  };
 }

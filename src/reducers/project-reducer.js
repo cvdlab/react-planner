@@ -17,7 +17,9 @@ import {
   ROLLBACK,
   SET_PROJECT_PROPERTIES,
   OPEN_PROJECT_CONFIGURATOR,
-  INIT_CATALOG
+  INIT_CATALOG,
+  UPDATE_MOUSE_COORDS,
+  UPDATE_ZOOM_SCALE
 } from '../constants';
 
 import {State, Scene, Guide, Catalog} from "../models";
@@ -42,7 +44,6 @@ import {
 export default function (state, action) {
 
   switch (action.type) {
-
     case NEW_PROJECT:
       return newProject(state);
 
@@ -88,6 +89,12 @@ export default function (state, action) {
     case INIT_CATALOG:
       return initCatalog(state, action.catalog);
 
+    case UPDATE_MOUSE_COORDS:
+      return updateMouseCoord( state, action.coords );
+
+    case UPDATE_ZOOM_SCALE:
+      return updateZoomScale( state, action.scale );
+
     default:
       return state;
 
@@ -106,7 +113,6 @@ function newProject(state) {
 function loadProject(state, sceneJSON) {
   return new State({scene: sceneJSON, catalog: state.catalog.toJS()});
 }
-
 
 function setProperties(state, properties) {
   let scene = state.scene;
@@ -231,7 +237,6 @@ function setProjectProperties(state, properties) {
   });
 }
 
-
 function openProjectConfigurator(state) {
   return state.merge({
     mode: MODE_CONFIGURING_PROJECT,
@@ -240,4 +245,12 @@ function openProjectConfigurator(state) {
 
 function initCatalog(state, catalog) {
   return state.set('catalog', new Catalog(catalog));
+}
+
+function updateMouseCoord(state, coords) {
+  return state.set('mouse', new Map(coords));
+}
+
+function updateZoomScale( state, scale ) {
+  return state.set('zoom', scale);
 }

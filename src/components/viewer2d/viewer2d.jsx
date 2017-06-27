@@ -103,12 +103,14 @@ export default function Viewer2D({state, width, height},
   let onMouseMove = viewerEvent => {
     let event = viewerEvent.originalEvent;
 
-    var evt = new Event('mousemove-planner-event' );
+    var evt = new Event('mousemove-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
     event.preventDefault();
     let {x, y} = mapCursorPosition(viewerEvent);
+
+    projectActions.updateMouseCoord({x, y});
 
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
@@ -289,7 +291,11 @@ export default function Viewer2D({state, width, height},
     }
   };
 
-  let onChangeValue = (value) => viewer2DActions.updateCameraView(value);
+  let onChangeValue = (value) => {
+    projectActions.updateZoomScale(value.a);
+    return viewer2DActions.updateCameraView(value)
+  };
+
   let onChangeTool = (tool) => {
     switch (tool) {
       case TOOL_NONE:
