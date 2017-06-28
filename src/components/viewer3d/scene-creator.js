@@ -412,7 +412,7 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
       return linesActions.selectLine(layer.id, line.id);
     });
 
-    if (!line.selected && layer.opacity !== 1) {
+    if (!line.selected) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -439,7 +439,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 
     applyInteract(pivot, interactFunction);
 
-    if (!area.selected && layer.opacity !== 1) {
+    if (!area.selected) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -447,9 +447,12 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 }
 
 function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
+
   let item = layer.items.get(itemID);
 
   return catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
+
+    console.log("item = ", item3D, item3D.position);
 
     if (item3D instanceof Three.LOD) {
       planData.sceneGraph.LODs[itemID] = item3D
@@ -468,7 +471,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
       }
     );
 
-    if (!item.selected && layer.opacity !== 1) {
+    if (!item.selected) {
       applyOpacity(pivot, layer.opacity);
     }
 
@@ -490,6 +493,7 @@ function applyInteract(object, interactFunction) {
 // Apply opacity to children of an Object3D
 function applyOpacity(object, opacity) {
   object.traverse(function (child) {
+
     if (child instanceof Three.Mesh) {
       if (child.material instanceof Three.MultiMaterial) {
         child.material.materials.forEach(materialChild => {
