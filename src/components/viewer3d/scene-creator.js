@@ -372,9 +372,11 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
       return holesActions.selectHole(layer.id, holeData.id)
     });
 
-    if (!holeData.selected) {
-      applyOpacity(pivot, layer.opacity);
+    let opacity = layer.opacity;
+    if (holeData.selected) {
+      opacity = 1;
     }
+    applyOpacity(pivot, opacity);
 
   });
 }
@@ -412,9 +414,11 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
       return linesActions.selectLine(layer.id, line.id);
     });
 
-    if (!line.selected) {
-      applyOpacity(pivot, layer.opacity);
+    let opacity = layer.opacity;
+    if (line.selected) {
+      opacity = 1;
     }
+    applyOpacity(pivot, opacity);
 
   });
 }
@@ -439,9 +443,12 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 
     applyInteract(pivot, interactFunction);
 
-    if (!area.selected) {
-      applyOpacity(pivot, layer.opacity);
+    let opacity = layer.opacity;
+    if (area.selected) {
+      opacity = 1;
     }
+
+    applyOpacity(pivot, opacity);
 
   });
 }
@@ -469,9 +476,12 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
       }
     );
 
-    if (!item.selected) {
-      applyOpacity(pivot, layer.opacity);
+    let opacity = layer.opacity;
+    if (item.selected) {
+      opacity = 1;
     }
+
+    applyOpacity(pivot, opacity);
 
     planData.plan.add(pivot);
     planData.sceneGraph.layers[layer.id].items[item.id] = pivot;
@@ -503,7 +513,7 @@ function applyOpacity(object, opacity) {
             materialChild.opacity = opacity;
           }
         });
-      } else if(child.material instanceof Array) {
+      } else if (child.material instanceof Array) {
         child.material.forEach(material => {
           material.transparent = true;
           if (material.maxOpacity) {
