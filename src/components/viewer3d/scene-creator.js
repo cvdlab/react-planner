@@ -452,8 +452,6 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
 
   return catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
 
-    console.log("item = ", item3D, item3D.position);
-
     if (item3D instanceof Three.LOD) {
       planData.sceneGraph.LODs[itemID] = item3D
     }
@@ -503,6 +501,16 @@ function applyOpacity(object, opacity) {
           } else if (materialChild.opacity && materialChild.opacity > opacity) {
             materialChild.maxOpacity = materialChild.opacity;
             materialChild.opacity = opacity;
+          }
+        });
+      } else if(child.material instanceof Array) {
+        child.material.forEach(material => {
+          material.transparent = true;
+          if (material.maxOpacity) {
+            material.opacity = Math.min(material.maxOpacity, opacity);
+          } else if (material.opacity && material.opacity > opacity) {
+            material.maxOpacity = material.opacity;
+            material.opacity = opacity;
           }
         });
       } else {
