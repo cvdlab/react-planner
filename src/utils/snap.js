@@ -1,5 +1,11 @@
-import {List, Record} from 'immutable';
+import {Map, List, Record} from 'immutable';
 import * as Geometry from './geometry';
+
+export const SNAP_POINT = 'SNAP_POINT';
+export const SNAP_LINE = 'SNAP_LINE';
+export const SNAP_SEGMENT = 'SNAP_SEGMENT';
+
+export const SNAP_MASK = new Map({ SNAP_POINT : true, SNAP_LINE : true, SNAP_SEGMENT : true });
 
 class PointSnap extends Record({
   type: "point",
@@ -44,10 +50,20 @@ class LineSegmentSnap extends Record({
   }
 }
 
-export function nearestSnap(snapElements, x, y) {
+export function nearestSnap(snapElements, x, y, snapMask) {
 
   return snapElements
     .valueSeq()
+    .filter(snap => {
+      switch( snap.type )
+      {
+        case 'point': return snapMask.get(SNAP_POINT);
+        case 'line': return snapMask.get(SNAP_LINE);
+        case 'line-segment': return snapMask.get(SNAP_SEGMENT);
+        default: return false;
+      }
+
+    })
     .map(snap => {
       return {snap, point: snap.nearestPoint(x, y)}
     })

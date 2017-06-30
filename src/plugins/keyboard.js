@@ -1,5 +1,6 @@
 import { MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW } from '../constants';
 import { rollback, undo, remove, toggleSnap } from '../actions/project-actions';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../utils/snap';
 
 const KEY_DELETE = 46;
 const KEY_BACKSPACE = 8;
@@ -36,7 +37,7 @@ export default function keyboard() {
           }
         case KEY_ALT:
           {
-            store.dispatch(toggleSnap(0));
+            store.dispatch(toggleSnap(state.snapMask.merge({ SNAP_POINT: false, SNAP_LINE: false, SNAP_SEGMENT: false, tempSnapConfiguartion: state.snapMask.toJS() })));
             break;
           }
       }
@@ -45,10 +46,12 @@ export default function keyboard() {
 
     window.addEventListener('keyup', event => {
 
+      let state = stateExtractor(store.getState());
+
       switch (event.keyCode) {
         case KEY_ALT:
           {
-            store.dispatch(toggleSnap(1));
+            store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
             break;
           }
       }
