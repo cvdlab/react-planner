@@ -12,6 +12,7 @@ import IconConfigure from 'react-icons/lib/md/settings';
 import If from '../../utils/react-if';
 import { VERSION } from '../../version';
 import FooterToggleButton from './footer-toggle-button';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../../utils/snap';
 
 const footerBarStyle = {
   position: 'absolute',
@@ -67,22 +68,39 @@ export default class FooterBar extends Component {
     return (
       <div style={footerBarStyle}>
 
-        <div style={leftTextStyle}>
+        <div style={leftTextStyle} title="Mouse Coordinates">
           <div style={coordStyle}>X : {x.toFixed(3)}</div>
           <div style={coordStyle}>Y : {y.toFixed(3)}</div>
         </div>
 
-        <div style={leftTextStyle}>Zoom: {zoom.toFixed(3)}X</div>
+        <div style={leftTextStyle} title="Scene Zoom Level">Zoom: {zoom.toFixed(3)}X</div>
 
         {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
 
         <div id="footerToggleArea" style={leftTextStyle}>
           <FooterToggleButton
             state={this.state}
-            toggleOn={() => { this.context.projectActions.toggleSnap(1) }}
-            toggleOff={() => { this.context.projectActions.toggleSnap(0) }}
-            text="Snap"
-            initialToggleState={this.props.state.snapMask ? true : false}
+            toggleOn={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT:true})) }}
+            toggleOff={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT:false})) }}
+            text="Snap PT"
+            toggleState={this.props.state.snapMask.get(SNAP_POINT)}
+            title="Snap to Point"
+          />
+          <FooterToggleButton
+            state={this.state}
+            toggleOn={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE:true})) }}
+            toggleOff={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE:false})) }}
+            text="Snap LN"
+            toggleState={this.props.state.snapMask.get(SNAP_LINE)}
+            title="Snap to Line"
+          />
+          <FooterToggleButton
+            state={this.state}
+            toggleOn={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT:true})) }}
+            toggleOff={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT:false})) }}
+            text="Snap SEG"
+            toggleState={this.props.state.snapMask.get(SNAP_SEGMENT)}
+            title="Snap to Segment"
           />
         </div>
 
