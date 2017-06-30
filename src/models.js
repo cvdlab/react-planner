@@ -283,6 +283,8 @@ export class State extends Record({
 
   zoom: 0,
 
+  snapMask: 1,
+
   snapElements: new List(),
   activeSnapElement: null,
 
@@ -306,6 +308,8 @@ export class State extends Record({
       mouse: new Map({ x: 0, y: 0 }),
 
       zoom: 0,
+
+      snapMask: 1,
 
       drawingSupport: new Map(json.drawingSupport || {}),
       draggingSupport: new Map(json.draggingSupport || {}),

@@ -1,4 +1,4 @@
-import {Seq, Map, List} from "immutable";
+import { Seq, Map, List } from "immutable";
 import {
   LOAD_PROJECT,
   NEW_PROJECT,
@@ -19,10 +19,11 @@ import {
   OPEN_PROJECT_CONFIGURATOR,
   INIT_CATALOG,
   UPDATE_MOUSE_COORDS,
-  UPDATE_ZOOM_SCALE
+  UPDATE_ZOOM_SCALE,
+  TOGGLE_SNAP
 } from '../constants';
 
-import {State, Scene, Guide, Catalog} from "../models";
+import { State, Scene, Guide, Catalog } from "../models";
 
 import {
   removeLine,
@@ -90,10 +91,13 @@ export default function (state, action) {
       return initCatalog(state, action.catalog);
 
     case UPDATE_MOUSE_COORDS:
-      return updateMouseCoord( state, action.coords );
+      return updateMouseCoord(state, action.coords);
 
     case UPDATE_ZOOM_SCALE:
-      return updateZoomScale( state, action.scale );
+      return updateZoomScale(state, action.scale);
+
+    case TOGGLE_SNAP:
+      return toggleSnap(state, action.mask);
 
     default:
       return state;
@@ -111,7 +115,7 @@ function newProject(state) {
 }
 
 function loadProject(state, sceneJSON) {
-  return new State({scene: sceneJSON, catalog: state.catalog.toJS()});
+  return new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
 }
 
 function setProperties(state, properties) {
@@ -168,7 +172,7 @@ function remove(state) {
   let catalog = state.catalog;
 
   scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
-    let {lines: selectedLines, holes: selectedHoles, items: selectedItems} = layer.selected;
+    let { lines: selectedLines, holes: selectedHoles, items: selectedItems } = layer.selected;
     unselectAllOp(layer);
     selectedLines.forEach(lineID => removeLine(layer, lineID));
     selectedHoles.forEach(holeID => removeHole(layer, holeID));
@@ -251,6 +255,10 @@ function updateMouseCoord(state, coords) {
   return state.set('mouse', new Map(coords));
 }
 
-function updateZoomScale( state, scale ) {
+function updateZoomScale(state, scale) {
   return state.set('zoom', scale);
+}
+
+function toggleSnap(state, mask) {
+  return state.set('snapMask', mask);
 }

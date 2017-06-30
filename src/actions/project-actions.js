@@ -16,7 +16,8 @@ import {
   SET_PROJECT_PROPERTIES,
   INIT_CATALOG,
   UPDATE_MOUSE_COORDS,
-  UPDATE_ZOOM_SCALE
+  UPDATE_ZOOM_SCALE,
+  TOGGLE_SNAP
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -148,5 +149,12 @@ export function updateZoomScale(scale) {
   return {
     type: UPDATE_ZOOM_SCALE,
     scale
+  };
+}
+
+export function toggleSnap(mask) {
+  return {
+    type: TOGGLE_SNAP,
+    mask
   };
 }
