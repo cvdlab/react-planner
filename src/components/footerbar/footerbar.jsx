@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IconNewFile from 'react-icons/lib/fa/file-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
@@ -10,27 +10,30 @@ import IconCatalog from 'react-icons/lib/fa/plus';
 import IconUndo from 'react-icons/lib/md/undo';
 import IconConfigure from 'react-icons/lib/md/settings';
 import If from '../../utils/react-if';
-import {VERSION} from '../../version';
+import { VERSION } from '../../version';
+import FooterToggleButton from './footer-toggle-button';
 
 const footerBarStyle = {
-  position:'absolute',
-  bottom:0,
-  height:'20px',
-  lineHeight:'14px',
-  fontSize:'12px',
-  color:'#FFF',
-  backgroundColor:'#005faf',
-  padding:'3px 1em',
-  width:'100%',
-  margin:0,
-  boxSizing:'border-box'
+  position: 'absolute',
+  bottom: 0,
+  height: '20px',
+  lineHeight: '14px',
+  fontSize: '12px',
+  color: '#FFF',
+  backgroundColor: '#005faf',
+  padding: '3px 1em',
+  width: '100%',
+  margin: 0,
+  boxSizing: 'border-box',
+  cursor: 'default',
+  userSelect: 'none'
 };
 
 export const leftTextStyle = {
   position: 'relative',
   borderRight: '1px solid #FFF',
   float: 'left',
-  padding:'0 1em',
+  padding: '0 1em',
   display: 'inline-block'
 };
 
@@ -38,23 +41,20 @@ export const rightTextStyle = {
   position: 'relative',
   borderLeft: '1px solid #FFF',
   float: 'right',
-  padding:'0 1em',
+  padding: '0 1em',
   display: 'inline-block'
 };
 
 const coordStyle = {
-  display:'inline-block',
-  width:'6em',
+  display: 'inline-block',
+  width: '6em',
   margin: 0,
   padding: 0
 };
 
-export default class FooterBar extends Component
-{
-
-  constructor( props )
-  {
-    super( props );
+export default class FooterBar extends Component {
+  constructor(props) {
+    super(props);
 
     this.state = {};
   }
@@ -67,16 +67,26 @@ export default class FooterBar extends Component
     return (
       <div style={footerBarStyle}>
 
-          <div style={leftTextStyle}>
-            <div style={coordStyle}>X : { x.toFixed(3) }</div>
-            <div style={coordStyle}>Y : { y.toFixed(3) }</div>
-          </div>
+        <div style={leftTextStyle}>
+          <div style={coordStyle}>X : {x.toFixed(3)}</div>
+          <div style={coordStyle}>Y : {y.toFixed(3)}</div>
+        </div>
 
-          <div style={leftTextStyle}>Zoom: {zoom.toFixed(3)}X</div>
+        <div style={leftTextStyle}>Zoom: {zoom.toFixed(3)}X</div>
 
-          {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index}/>)}
+        {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
 
-          <div style={rightTextStyle}>React-Planner {VERSION}</div>
+        <div id="footerToggleArea" style={leftTextStyle}>
+          <FooterToggleButton
+            state={this.state}
+            toggleOn={() => { this.context.projectActions.toggleSnap(1) }}
+            toggleOff={() => { this.context.projectActions.toggleSnap(0) }}
+            text="Snap"
+            initialToggleState={this.props.state.snapMask ? true : false}
+          />
+        </div>
+
+        <div style={rightTextStyle}>React-Planner {VERSION}</div>
 
       </div>
     );
