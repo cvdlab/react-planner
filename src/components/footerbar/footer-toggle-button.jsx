@@ -26,7 +26,7 @@ export default class FooterToggleButton extends Component {
 
     this.state = {
       over: false,
-      active: this.props.initialToggleState || false
+      active: this.props.toggleState || false
     };
   }
 
@@ -38,9 +38,18 @@ export default class FooterToggleButton extends Component {
     this.setState({ active: isActive });
 
     if (isActive)
+    {
       this.props.toggleOn();
+    }
     else
+    {
       this.props.toggleOff();
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if( nextProps.toggleState != this.props.toggleState  )
+      this.state.active = nextProps.toggleState;
   }
 
   render() {
@@ -51,6 +60,7 @@ export default class FooterToggleButton extends Component {
         onMouseOver={e => this.toggleOver(e)}
         onMouseOut={e => this.toggleOut(e)}
         onClick={e => this.toggle(e)}
+        title={this.props.title}
       >
         {this.props.text}
       </div>
@@ -63,7 +73,8 @@ FooterToggleButton.propTypes = {
   toggleOn: PropTypes.func.isRequired,
   toggleOff: PropTypes.func.isRequired,
   text: PropTypes.string.isRequired,
-  initialToggleState: PropTypes.bool
+  toggleState: PropTypes.bool,
+  title: PropTypes.string
 };
 
 FooterToggleButton.contextTypes = {
