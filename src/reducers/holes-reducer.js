@@ -22,7 +22,7 @@ import {
   addHole,
   removeHole,
 } from '../utils/layer-operations';
-import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
+import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap, SNAP_POINT, SNAP_LINE, SNAP_SEGMENT} from '../utils/snap';
 
 export default function (state, action) {
   switch (action.type) {
@@ -79,7 +79,8 @@ function updateDrawingHole(state, layerID, x, y) {
   let catalog = state.catalog;
 
   //calculate snap and overwrite coords if needed
-  let snap = nearestSnap(state.snapElements, x, y);
+  //force snap to segment
+  let snap = nearestSnap(state.snapElements, x, y, state.snapMask.merge({SNAP_SEGMENT:true}));
   if (snap) ({x, y} = snap.point);
 
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
@@ -205,7 +206,8 @@ function beginDraggingHole(state, layerID, holeID, x, y) {
 function updateDraggingHole(state, x, y) {
 
   //calculate snap and overwrite coords if needed
-  let snap = nearestSnap(state.snapElements, x, y);
+  //force snap to segment
+  let snap = nearestSnap(state.snapElements, x, y, state.snapMask.merge({SNAP_SEGMENT:true}));
   if (!snap) return state;
 
   let {draggingSupport, scene} = state;

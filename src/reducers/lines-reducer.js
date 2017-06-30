@@ -28,7 +28,7 @@ import {
   detectAndUpdateAreas,
 } from '../utils/layer-operations';
 import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
-import {sceneSnapElements, vertexSnapElements} from '../utils/snap-scene';
+import {sceneSnapElements} from '../utils/snap-scene';
 
 export default function (state, action) {
   switch (action.type) {
@@ -36,22 +36,22 @@ export default function (state, action) {
       return selectToolDrawingLine(state, action.sceneComponentType);
 
     case BEGIN_DRAWING_LINE:
-      return beginDrawingLine(state, action.layerID, action.x, action.y, action.detectSnap);
+      return beginDrawingLine(state, action.layerID, action.x, action.y);
 
     case UPDATE_DRAWING_LINE:
-      return updateDrawingLine(state, action.x, action.y, action.detectSnap);
+      return updateDrawingLine(state, action.x, action.y);
 
     case END_DRAWING_LINE:
-      return endDrawingLine(state, action.x, action.y, action.detectSnap);
+      return endDrawingLine(state, action.x, action.y);
 
     case BEGIN_DRAGGING_LINE:
-      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y, action.detectSnap);
+      return beginDraggingLine(state, action.layerID, action.lineID, action.x, action.y);
 
     case UPDATE_DRAGGING_LINE:
-      return updateDraggingLine(state, action.x, action.y, action.detectSnap);
+      return updateDraggingLine(state, action.x, action.y);
 
     case END_DRAGGING_LINE:
-      return endDraggingLine(state, action.x, action.y, action.detectSnap);
+      return endDraggingLine(state, action.x, action.y);
 
     case SELECT_LINE:
       return selectLine(state, action.layerID, action.lineID);
@@ -71,14 +71,14 @@ function selectToolDrawingLine(state, sceneComponentType) {
 }
 
 /** lines operations **/
-function beginDrawingLine(state, layerID, x, y, detectSnap) {
+function beginDrawingLine(state, layerID, x, y) {
   let catalog = state.catalog;
 
-  let snapElements = sceneSnapElements(state.scene);
+  let snapElements = sceneSnapElements(state.scene, new List(), state.snapMask);
   let snap = null;
 
-  if (detectSnap) {
-    snap = nearestSnap(snapElements, x, y);
+  if (state.snapMask && !state.snapMask.isEmpty()) {
+    snap = nearestSnap(snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
 
     snapElements = snapElements.withMutations(snapElements => {
@@ -108,13 +108,11 @@ function beginDrawingLine(state, layerID, x, y, detectSnap) {
   });
 }
 
-function updateDrawingLine(state, x, y, detectSnap) {
-
-  let catalog = state.catalog;
+function updateDrawingLine(state, x, y) {
 
   let snap = null;
-  if (detectSnap) {
-    snap = nearestSnap(state.snapElements, x, y);
+  if (state.snapMask && !state.snapMask.isEmpty()) {
+    snap = nearestSnap(state.snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
   }
 
@@ -133,11 +131,12 @@ function updateDrawingLine(state, x, y, detectSnap) {
   });
 }
 
-function endDrawingLine(state, x, y, detectSnap) {
+function endDrawingLine(state, x, y) {
+
   let catalog = state.catalog;
 
-  if (detectSnap) {
-    let snap = nearestSnap(state.snapElements, x, y);
+  if (state.snapMask && !state.snapMask.isEmpty()) {
+    let snap = nearestSnap(state.snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
   }
 
@@ -164,11 +163,9 @@ function endDrawingLine(state, x, y, detectSnap) {
   });
 }
 
-function beginDraggingLine(state, layerID, lineID, x, y, detectSnap) {
+function beginDraggingLine(state, layerID, lineID, x, y) {
 
-  let catalog = state.catalog;
-
-  let snapElements = sceneSnapElements(state.scene);
+  let snapElements = sceneSnapElements(state.scene, new List(), state.snapMask);
 
   let layer = state.scene.layers.get(layerID);
   let line = layer.lines.get(lineID);
@@ -191,8 +188,7 @@ function beginDraggingLine(state, layerID, lineID, x, y, detectSnap) {
   })
 }
 
-function updateDraggingLine(state, x, y, detectSnap) {
-  let catalog = state.catalog;
+function updateDraggingLine(state, x, y) {
 
   let draggingSupport = state.draggingSupport;
   let snapElements = state.snapElements;
@@ -209,9 +205,9 @@ function updateDraggingLine(state, x, y, detectSnap) {
 
   let activeSnapElement = null;
   let curSnap0 = null, curSnap1 = null;
-  if (detectSnap) {
-    curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y);
-    curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y);
+  if (state.snapMask && !state.snapMask.isEmpty()) {
+    curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y, state.snapMask);
+    curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y, state.snapMask);
   }
 
   let deltaX = 0, deltaY = 0;
@@ -254,7 +250,7 @@ function updateDraggingLine(state, x, y, detectSnap) {
   });
 }
 
-function endDraggingLine(state, x, y, detectSnap) {
+function endDraggingLine(state, x, y) {
   let catalog = state.catalog;
   let {draggingSupport} = state;
   let layerID = draggingSupport.get('layerID');
@@ -293,10 +289,10 @@ function endDraggingLine(state, x, y, detectSnap) {
       let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
       let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
 
-      if (detectSnap) {
+      if (state.snapMask && !state.snapMask.isEmpty()) {
 
-        let curSnap0 = nearestSnap(state.snapElements, newVertex0X, newVertex0Y);
-        let curSnap1 = nearestSnap(state.snapElements, newVertex1X, newVertex1Y);
+        let curSnap0 = nearestSnap(state.snapElements, newVertex0X, newVertex0Y, state.snapMask);
+        let curSnap1 = nearestSnap(state.snapElements, newVertex1X, newVertex1Y, state.snapMask);
 
         let deltaX = 0, deltaY = 0;
         if (curSnap0 && curSnap1) {

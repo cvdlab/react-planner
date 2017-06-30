@@ -19,22 +19,22 @@ import {orderVertices, pointsDistance} from "../utils/geometry";
 export default function (state, action) {
   switch (action.type) {
     case BEGIN_DRAGGING_VERTEX:
-      return beginDraggingVertex(state, action.layerID, action.vertexID, action.x, action.y, action.detectSnap);
+      return beginDraggingVertex(state, action.layerID, action.vertexID, action.x, action.y);
 
     case UPDATE_DRAGGING_VERTEX:
-      return updateDraggingVertex(state, action.x, action.y, action.detectSnap);
+      return updateDraggingVertex(state, action.x, action.y);
 
     case END_DRAGGING_VERTEX:
-      return endDraggingVertex(state, action.x, action.y, action.detectSnap);
+      return endDraggingVertex(state, action.x, action.y);
 
     default:
       return state;
   }
 }
 
-function beginDraggingVertex(state, layerID, vertexID, x, y, detectSnap) {
+function beginDraggingVertex(state, layerID, vertexID, x, y) {
 
-  let snapElements = sceneSnapElements(state.scene);
+  let snapElements = sceneSnapElements(state.scene, new List(), state.snapMask);
 
   return state.merge({
     mode: MODE_DRAGGING_VERTEX,
@@ -45,12 +45,12 @@ function beginDraggingVertex(state, layerID, vertexID, x, y, detectSnap) {
   });
 }
 
-function updateDraggingVertex(state, x, y, detectSnap) {
+function updateDraggingVertex(state, x, y) {
   let {draggingSupport, snapElements, scene} = state;
 
   let snap = null;
-  if (detectSnap) {
-    snap = nearestSnap(snapElements, x, y);
+  if (state.snapMask && !state.snapMask.isEmpty()) {
+    snap = nearestSnap(snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
   }
 
@@ -62,7 +62,7 @@ function updateDraggingVertex(state, x, y, detectSnap) {
   });
 }
 
-function endDraggingVertex(state, x, y, detectSnap) {
+function endDraggingVertex(state, x, y) {
   let catalog = state.catalog;
 
   let {draggingSupport} = state;

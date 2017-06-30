@@ -1,23 +1,23 @@
 import {BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX} from '../constants'
 
-export function beginDraggingVertex(layerID, vertexID, x, y, detectSnap) {
+export function beginDraggingVertex(layerID, vertexID, x, y, snapMask) {
   return {
     type: BEGIN_DRAGGING_VERTEX,
-    layerID, vertexID, x, y, detectSnap
+    layerID, vertexID, x, y, snapMask
   }
 }
 
-export function updateDraggingVertex(x, y, detectSnap) {
+export function updateDraggingVertex(x, y, snapMask) {
   return {
     type: UPDATE_DRAGGING_VERTEX,
-    x, y, detectSnap
+    x, y, snapMask
   }
 }
 
-export function endDraggingVertex(x, y, detectSnap) {
+export function endDraggingVertex(x, y, snapMask) {
   return {
     type: END_DRAGGING_VERTEX,
-    x, y, detectSnap
+    x, y, snapMask
 
   }
 }
