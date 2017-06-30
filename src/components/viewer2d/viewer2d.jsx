@@ -114,7 +114,7 @@ export default function Viewer2D({state, width, height},
 
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
-        linesActions.updateDrawingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.updateDrawingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -134,12 +134,12 @@ export default function Viewer2D({state, width, height},
         break;
 
       case constants.MODE_DRAGGING_LINE:
-        linesActions.updateDraggingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.updateDraggingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
-        verticesActions.updateDraggingVertex(x, y, !event.getModifierState("Alt"));
+        verticesActions.updateDraggingVertex(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -171,12 +171,12 @@ export default function Viewer2D({state, width, height},
 
       switch ( elementData.prototype ) {
         case 'lines':
-          linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
+          linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
           event.stopPropagation();
           break;
 
         case 'vertices':
-          verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
+          verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, state.snapMask);
           event.stopPropagation();
           break;
 
@@ -245,12 +245,12 @@ export default function Viewer2D({state, width, height},
         break;
 
       case constants.MODE_WAITING_DRAWING_LINE:
-        linesActions.beginDrawingLine(layerID, x, y, !event.getModifierState("Alt"));
+        linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_LINE:
-        linesActions.endDrawingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.endDrawingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -265,12 +265,12 @@ export default function Viewer2D({state, width, height},
         break;
 
       case constants.MODE_DRAGGING_LINE:
-        linesActions.endDraggingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.endDraggingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
-        verticesActions.endDraggingVertex(x, y, !event.getModifierState("Alt"));
+        verticesActions.endDraggingVertex(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
