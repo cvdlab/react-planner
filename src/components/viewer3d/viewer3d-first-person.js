@@ -192,6 +192,8 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     document.addEventListener('mousedown', this.firstPersonMouseDown, false);
 
+    this.renderer.domElement.style.display = 'block';
+
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(this.renderer.domElement);
     this.renderer.autoClear = false;

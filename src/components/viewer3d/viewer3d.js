@@ -107,6 +107,7 @@ export default class Scene3DViewer extends React.Component {
 
     this.renderer.domElement.addEventListener('mousedown', this.mouseDownEvent);
     this.renderer.domElement.addEventListener('mouseup', this.mouseUpEvent);
+    this.renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(this.renderer.domElement);
