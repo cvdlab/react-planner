@@ -4,10 +4,11 @@ import PropTypes from 'prop-types';
 /**
  * @return {null}
  */
-export default function If({condition, children}) {
-  return condition ? children : null;
+export default function If({condition, style, children}) {
+  return condition ? ( Array.isArray(children) ? <div style={style}>{children}</div> : children ) : null;
 }
 
 If.propTypes = {
-  condition: PropTypes.bool.isRequired
+  condition: PropTypes.bool.isRequired,
+  style: PropTypes.object
 };
