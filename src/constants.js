@@ -182,8 +182,37 @@ export const MODE_FITTING_IMAGE = 'MODE_FITTING_IMAGE';
 export const MODE_VIEWING_CATALOG = 'MODE_VIEWING_CATALOG';
 export const MODE_CONFIGURING_PROJECT = 'MODE_CONFIGURING_PROJECT';
 
+//Thinking about it...
+//https://developer.mozilla.org/it/docs/Web/JavaScript/Reference/Global_Objects/Proxy
+/*
+let MODE_DEF = [
+  'IDLE',
+  '2D_ZOOM_IN',
+  '2D_ZOOM_OUT',
+  '2D_PAN',
+  '3D_VIEW',
+  '3D_FIRST_PERSON',
+  'WAITING_DRAWING_LINE',
+  'DRAGGING_LINE',
+  'DRAGGING_VERTEX',
+  'DRAGGING_ITEM',
+  'DRAGGING_HOLE',
+  'DRAWING_LINE',
+  'DRAWING_HOLE',
+  'DRAWING_ITEM',
+  'ROTATING_ITEM',
+  'UPLOADING_IMAGE',
+  'FITTING_IMAGE',
+  'VIEWING_CATALOG',
+  'CONFIGURING_PROJECT',
+];
+
+export const MODE = new Proxy( MODE_DEF, { get: (target, name) => { return target.indexOf(name) !== -1 ? name : null } } );
+*/
+
 export const MODE_SNAPPING = [
   MODE_IDLE,
+  MODE_WAITING_DRAWING_LINE,
   MODE_DRAGGING_LINE,
   MODE_DRAGGING_VERTEX,
   MODE_DRAGGING_ITEM,
