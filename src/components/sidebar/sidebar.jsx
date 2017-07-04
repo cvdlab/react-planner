@@ -6,10 +6,11 @@ import PanelGuides from './panel-guides';
 import PanelLayerElements from './panel-layer-elements';
 
 const STYLE = {
-  backgroundColor: "#28292D",
-  display: "block",
-  overflowY: "auto",
-  overflowX: "hidden"
+  backgroundColor: '#28292D',
+  display: 'block',
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  paddingBottom: '20px'
 };
 
 export default function Sidebar({state, width, height, sidebarComponents}) {

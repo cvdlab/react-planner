@@ -44,7 +44,11 @@ const Icon3D = () => <p style={{
   margin: "0px"
 }}>3D</p>;
 
-const ASIDE_STYLE = {backgroundColor: '#28292D', padding: "10px"};
+const ASIDE_STYLE = {
+  backgroundColor: '#28292D',
+  padding: '10px',
+  overflowY: 'hidden'
+};
 
 export default function Toolbar({state, width, height, toolbarButtons, allowProjectFileSupport}, {
   projectActions,

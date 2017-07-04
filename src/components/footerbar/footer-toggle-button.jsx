@@ -8,7 +8,7 @@ const toggleButtonStyle = {
   cursor: 'pointer',
   userSelect: 'none',
   border: '1px solid transparent',
-  margin: '-1px 2px 0 2px',
+  margin: '-1px 5px 0 5px',
   borderRadius: '2px',
   display: 'inline-block'
 };
