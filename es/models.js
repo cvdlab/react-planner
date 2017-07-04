@@ -10,6 +10,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import { Record, List, Map, fromJS } from 'immutable';
 import { MODE_IDLE } from './constants';
+import { SNAP_MASK } from './utils/snap';
 
 var safeLoadMapList = function safeLoadMapList(mapList, Model, defaultMap) {
   return mapList ? new Map(mapList).map(function (m) {
@@ -378,6 +379,12 @@ export var State = function (_Record12) {
 
       viewer2D: new Map(json.viewer2D || {}),
 
+      mouse: new Map({ x: 0, y: 0 }),
+
+      zoom: 0,
+
+      snapMask: SNAP_MASK,
+
       drawingSupport: new Map(json.drawingSupport || {}),
       draggingSupport: new Map(json.draggingSupport || {}),
       rotatingSupport: new Map(json.rotatingSupport || {}),
@@ -396,6 +403,12 @@ export var State = function (_Record12) {
   catalog: new Catalog(),
 
   viewer2D: new Map(),
+
+  mouse: new Map(),
+
+  zoom: 0,
+
+  snapMask: SNAP_MASK,
 
   snapElements: new List(),
   activeSnapElement: null,

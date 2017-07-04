@@ -4,7 +4,7 @@ import { SELECT_TOOL_DRAWING_HOLE, UPDATE_DRAWING_HOLE, END_DRAWING_HOLE, BEGIN_
 
 import * as Geometry from '../utils/geometry';
 import { select, unselect, unselectAll, addHole, removeHole } from '../utils/layer-operations';
-import { nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap } from '../utils/snap';
+import { nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap, SNAP_POINT, SNAP_LINE, SNAP_SEGMENT } from '../utils/snap';
 
 export default function (state, action) {
   switch (action.type) {
@@ -68,7 +68,8 @@ function updateDrawingHole(state, layerID, x, y) {
   var catalog = state.catalog;
 
   //calculate snap and overwrite coords if needed
-  var snap = nearestSnap(state.snapElements, x, y);
+  //force snap to segment
+  var snap = nearestSnap(state.snapElements, x, y, state.snapMask.merge({ SNAP_SEGMENT: true }));
   if (snap) {
     ;
 
@@ -204,7 +205,8 @@ function beginDraggingHole(state, layerID, holeID, x, y) {
 function updateDraggingHole(state, x, y) {
 
   //calculate snap and overwrite coords if needed
-  var snap = nearestSnap(state.snapElements, x, y);
+  //force snap to segment
+  var snap = nearestSnap(state.snapElements, x, y, state.snapMask.merge({ SNAP_SEGMENT: true }));
   if (!snap) return state;
 
   var draggingSupport = state.draggingSupport,

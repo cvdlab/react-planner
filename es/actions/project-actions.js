@@ -1,4 +1,4 @@
-import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG } from '../constants';
+import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP } from '../constants';
 
 export function loadProject(sceneJSON) {
   return {
@@ -114,5 +114,28 @@ export function initCatalog(catalog) {
   return {
     type: INIT_CATALOG,
     catalog: catalog
+  };
+}
+
+export function updateMouseCoord() {
+  var coords = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : { x: x, y: y };
+
+  return {
+    type: UPDATE_MOUSE_COORDS,
+    coords: coords
+  };
+}
+
+export function updateZoomScale(scale) {
+  return {
+    type: UPDATE_ZOOM_SCALE,
+    scale: scale
+  };
+}
+
+export function toggleSnap(mask) {
+  return {
+    type: TOGGLE_SNAP,
+    mask: mask
   };
 }

@@ -6,11 +6,17 @@ import PropTypes from 'prop-types';
  */
 export default function If(_ref) {
   var condition = _ref.condition,
+      style = _ref.style,
       children = _ref.children;
 
-  return condition ? children : null;
+  return condition ? Array.isArray(children) ? React.createElement(
+    'div',
+    { style: style },
+    children
+  ) : children : null;
 }
 
 If.propTypes = {
-  condition: PropTypes.bool.isRequired
+  condition: PropTypes.bool.isRequired,
+  style: PropTypes.object
 };

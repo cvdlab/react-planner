@@ -43,7 +43,11 @@ var Icon3D = function Icon3D() {
   );
 };
 
-var ASIDE_STYLE = { backgroundColor: '#28292D', padding: "10px" };
+var ASIDE_STYLE = {
+  backgroundColor: '#28292D',
+  padding: '10px',
+  overflowY: 'hidden'
+};
 
 export default function Toolbar(_ref, _ref2) {
   var state = _ref.state,

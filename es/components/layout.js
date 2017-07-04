@@ -6,6 +6,7 @@ import React from 'react';
 import Toolbar from './toolbar/toolbar';
 import Content from './content';
 import Sidebar from './sidebar/sidebar';
+import FooterBar from './footerbar/footerbar';
 
 export default function (_ref) {
   var width = _ref.width,
@@ -23,6 +24,7 @@ export default function (_ref) {
     React.createElement(Content, _extends({ width: contentWidth, height: height }, rest, { onWheel: function onWheel(event) {
         return event.preventDefault();
       } })),
-    React.createElement(Sidebar, _extends({ width: sidebarWidth, height: height }, rest))
+    React.createElement(Sidebar, _extends({ width: sidebarWidth, height: height }, rest)),
+    React.createElement(FooterBar, rest)
   );
 }

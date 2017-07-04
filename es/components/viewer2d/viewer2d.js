@@ -128,9 +128,11 @@ export default function Viewer2D(_ref, _ref2) {
         x = _mapCursorPosition.x,
         y = _mapCursorPosition.y;
 
+    projectActions.updateMouseCoord({ x: x, y: y });
+
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
-        linesActions.updateDrawingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.updateDrawingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -150,12 +152,12 @@ export default function Viewer2D(_ref, _ref2) {
         break;
 
       case constants.MODE_DRAGGING_LINE:
-        linesActions.updateDraggingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.updateDraggingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
-        verticesActions.updateDraggingVertex(x, y, !event.getModifierState("Alt"));
+        verticesActions.updateDraggingVertex(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -189,12 +191,12 @@ export default function Viewer2D(_ref, _ref2) {
 
       switch (elementData.prototype) {
         case 'lines':
-          linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
+          linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
           event.stopPropagation();
           break;
 
         case 'vertices':
-          verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, !event.getModifierState("Alt"));
+          verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, state.snapMask);
           event.stopPropagation();
           break;
 
@@ -264,12 +266,12 @@ export default function Viewer2D(_ref, _ref2) {
         break;
 
       case constants.MODE_WAITING_DRAWING_LINE:
-        linesActions.beginDrawingLine(layerID, x, y, !event.getModifierState("Alt"));
+        linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_LINE:
-        linesActions.endDrawingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.endDrawingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -284,12 +286,12 @@ export default function Viewer2D(_ref, _ref2) {
         break;
 
       case constants.MODE_DRAGGING_LINE:
-        linesActions.endDraggingLine(x, y, !event.getModifierState("Alt"));
+        linesActions.endDraggingLine(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
-        verticesActions.endDraggingVertex(x, y, !event.getModifierState("Alt"));
+        verticesActions.endDraggingVertex(x, y, state.snapMask);
         event.stopPropagation();
         break;
 
@@ -311,8 +313,10 @@ export default function Viewer2D(_ref, _ref2) {
   };
 
   var onChangeValue = function onChangeValue(value) {
+    projectActions.updateZoomScale(value.a);
     return viewer2DActions.updateCameraView(value);
   };
+
   var onChangeTool = function onChangeTool(tool) {
     switch (tool) {
       case TOOL_NONE:

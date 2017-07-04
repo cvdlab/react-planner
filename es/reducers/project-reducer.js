@@ -1,5 +1,5 @@
 import { Seq, Map, List } from "immutable";
-import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG } from '../constants';
+import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP } from '../constants';
 
 import { State, Scene, Guide, Catalog } from "../models";
 
@@ -8,7 +8,6 @@ import { removeLine, removeHole, detectAndUpdateAreas, setProperties as setPrope
 export default function (state, action) {
 
   switch (action.type) {
-
     case NEW_PROJECT:
       return newProject(state);
 
@@ -53,6 +52,15 @@ export default function (state, action) {
 
     case INIT_CATALOG:
       return initCatalog(state, action.catalog);
+
+    case UPDATE_MOUSE_COORDS:
+      return updateMouseCoord(state, action.coords);
+
+    case UPDATE_ZOOM_SCALE:
+      return updateZoomScale(state, action.scale);
+
+    case TOGGLE_SNAP:
+      return toggleSnap(state, action.mask);
 
     default:
       return state;
@@ -224,4 +232,16 @@ function openProjectConfigurator(state) {
 
 function initCatalog(state, catalog) {
   return state.set('catalog', new Catalog(catalog));
+}
+
+function updateMouseCoord(state, coords) {
+  return state.set('mouse', new Map(coords));
+}
+
+function updateZoomScale(state, scale) {
+  return state.set('zoom', scale);
+}
+
+function toggleSnap(state, mask) {
+  return state.set('snapMask', mask);
 }

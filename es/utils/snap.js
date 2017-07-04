@@ -8,8 +8,14 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-import { List, Record } from 'immutable';
+import { Map, List, Record } from 'immutable';
 import * as Geometry from './geometry';
+
+export var SNAP_POINT = 'SNAP_POINT';
+export var SNAP_LINE = 'SNAP_LINE';
+export var SNAP_SEGMENT = 'SNAP_SEGMENT';
+
+export var SNAP_MASK = new Map({ SNAP_POINT: true, SNAP_LINE: true, SNAP_SEGMENT: true });
 
 var PointSnap = function (_Record) {
   _inherits(PointSnap, _Record);
@@ -91,9 +97,20 @@ var LineSegmentSnap = function (_Record3) {
   related: new List()
 }));
 
-export function nearestSnap(snapElements, x, y) {
+export function nearestSnap(snapElements, x, y, snapMask) {
 
-  return snapElements.valueSeq().map(function (snap) {
+  return snapElements.valueSeq().filter(function (snap) {
+    switch (snap.type) {
+      case 'point':
+        return snapMask.get(SNAP_POINT);
+      case 'line':
+        return snapMask.get(SNAP_LINE);
+      case 'line-segment':
+        return snapMask.get(SNAP_SEGMENT);
+      default:
+        return false;
+    }
+  }).map(function (snap) {
     return { snap: snap, point: snap.nearestPoint(x, y) };
   }).filter(function (_ref) {
     var radius = _ref.snap.radius,
