@@ -312,37 +312,40 @@ function opSetItemsAttributes(layer, prototype, ID, itemsAttributes) {
 
 function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
 
-  let {vertexOne, vertexTwo} = linesAttributes.toJS();
+  let lAttr = linesAttributes.toJS();
+  let {vertexOne, vertexTwo, lineLength} = lAttr;
 
-  layer.withMutations(layer => {
+  delete lAttr['vertexOne'];
+  delete lAttr['vertexTwo'];
+  delete lAttr['lineLength'];
 
-    layer
-      .mergeIn(['vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
-      .mergeIn(['vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y})
-      .mergeDeepIn([prototype, ID, 'misc'], new Map({'_unitLength': linesAttributes.get('lineLength').get('_unit')}));
+  layer = layer
+    .mergeIn([prototype, ID], fromJS(lAttr))  //all the others attributes
+    .mergeIn(['vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
+    .mergeIn(['vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y})
+    .mergeDeepIn([prototype, ID, 'misc'], new Map({'_unitLength': lineLength._unit}));
 
-    mergeEqualsVertices(layer, vertexOne.id);
-    //check if second vertex has different coordinates than the first
-    if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) mergeEqualsVertices(layer, vertexTwo.id);
-
-  });
+  layer = mergeEqualsVertices(layer, vertexOne.id);
+  //check if second vertex has different coordinates than the first
+  if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) layer = mergeEqualsVertices(layer, vertexTwo.id);
 
   detectAndUpdateAreas(layer, catalog);
 }
 
 function opSetHolesAttributes(layer, prototype, ID, holesAttributes) {
 
-  let offset = holesAttributes.get('offset');
+  let hAttr = holesAttributes.toJS();
+  let {offsetA, offsetB, offset} = hAttr;
 
-  let misc = new Map({
-    _unitA: holesAttributes.get('offsetA').get('_unit'),
-    _unitB: holesAttributes.get('offsetB').get('_unit')
-  });
+  delete hAttr['offsetA'];
+  delete hAttr['offsetB'];
+  delete hAttr['offset'];
 
-  layer.mergeDeepIn([prototype, ID], new Map({
-    offset,
-    misc
-  }));
+  let misc = new Map({ _unitA: offsetA._unit, _unitB: offsetB._unit });
+
+  layer
+    .mergeIn([prototype, ID], fromJS(hAttr))  //all the others attributes
+    .mergeDeepIn([prototype, ID], new Map({ offset, misc }));
 }
 
 
