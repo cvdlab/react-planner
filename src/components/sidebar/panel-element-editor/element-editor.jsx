@@ -117,104 +117,152 @@ export default class ElementEditor extends Component {
         break;
       }
       case 'lines': {
-        if (attributeName === 'lineLength') {
-          let v_0 = attributesFormData.get('vertexOne');
-          let v_1 = attributesFormData.get('vertexTwo');
+        switch(attributeName)
+        {
+          case 'lineLength':
+          {
+            let v_0 = attributesFormData.get('vertexOne');
+            let v_1 = attributesFormData.get('vertexTwo');
 
-          let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
+            let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
 
-          let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2);
+            let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2);
 
-          attributesFormData = attributesFormData.withMutations(attr => {
-            attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
-            attr.set('lineLength', value);
-          });
-        }
-        else {
-          attributesFormData = attributesFormData.withMutations(attr => {
-            attr.set(attributeName, attr.get(attributeName).merge(value));
+            attributesFormData = attributesFormData.withMutations(attr => {
+              attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
+              attr.set('lineLength', value);
+            });
+            break;
+          }
+          case 'vertexOne':
+          case 'vertexTwo':
+          {
+            attributesFormData = attributesFormData.withMutations(attr => {
+              attr.set(attributeName, attr.get(attributeName).merge(value));
 
-            let newDistance = geometry.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
+              let newDistance = geometry.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
 
-            attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
-              'length': newDistance,
-              '_length': convert(newDistance).from(this.context.catalog.unit).to(attr.get('lineLength').get('_unit'))
-            }));
-          });
+              attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
+                'length': newDistance,
+                '_length': convert(newDistance).from(this.context.catalog.unit).to(attr.get('lineLength').get('_unit'))
+              }));
+            });
+            break;
+          }
+          default:
+          {
+            attributesFormData = attributesFormData.set(attributeName, value);
+            break;
+          }
         }
         break;
       }
       case 'holes': {
-        let offset;
-        let line = this.props.layer.lines.get(this.props.element.line);
+        switch( attributeName )
+        {
+          case 'offsetA':
+          {
+            let offset;
+            let line = this.props.layer.lines.get(this.props.element.line);
 
-        let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
-          this.props.layer.vertices.get(line.vertices.get(1))]);
+            let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
+              this.props.layer.vertices.get(line.vertices.get(1))]);
 
-        let {x: x0, y: y0} = orderedVertices[0];
-        let {x: x1, y: y1} = orderedVertices[1];
+            let {x: x0, y: y0} = orderedVertices[0];
+            let {x: x1, y: y1} = orderedVertices[1];
 
-        let alpha = Math.atan2(y1 - y0, x1 - x0);
-        let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+            let alpha = Math.atan2(y1 - y0, x1 - x0);
+            let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
 
-        let lengthValue = value.get('length');
-        lengthValue = Math.max(lengthValue, 0);
-        lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
+            let lengthValue = value.get('length');
+            lengthValue = Math.max(lengthValue, 0);
+            lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
 
-        if (attributeName === 'offsetA') {
+            let xp = (lengthValue +
+              this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
+            let yp = (lengthValue +
+              this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
 
-          let xp = (lengthValue +
-            this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
-          let yp = (lengthValue +
-            this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
+            offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-          offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let endAt = math.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
 
-          let endAt = math.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+            let offsetB = new Map({
+              length: endAt,
+              _length: convert(endAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetB').get('_unit')),
+              _unit: attributesFormData.get('offsetB').get('_unit')
+            });
 
-          let offsetB = new Map({
-            length: endAt,
-            _length: convert(endAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetB').get('_unit')),
-            _unit: attributesFormData.get('offsetB').get('_unit')
-          });
+            attributesFormData = attributesFormData.set('offsetB', offsetB).set('offset', offset);
 
-          attributesFormData = attributesFormData.set('offsetB', offsetB).set('offset', offset);
+            let offsetAttribute = new Map({
+              length: math.toFixedFloat(lengthValue, 2),
+              _unit: value.get('_unit'),
+              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+            });
 
-        } else if (attributeName === 'offsetB') {
+            attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
 
-          let xp = x1 - (lengthValue +
-            this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
-          let yp = y1 - (lengthValue +
-            this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha);
+            break;
+          }
+          case 'offsetB':
+          {
+            let offset;
+            let line = this.props.layer.lines.get(this.props.element.line);
 
-          offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
+              this.props.layer.vertices.get(line.vertices.get(1))]);
 
-          let startAt = math.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+            let {x: x0, y: y0} = orderedVertices[0];
+            let {x: x1, y: y1} = orderedVertices[1];
 
-          let offsetA = new Map({
-            length: startAt,
-            _length: convert(startAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetA').get('_unit')),
-            _unit: attributesFormData.get('offsetA').get('_unit')
-          });
+            let alpha = Math.atan2(y1 - y0, x1 - x0);
+            let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
 
-          attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
-        }
+            let lengthValue = value.get('length');
+            lengthValue = Math.max(lengthValue, 0);
+            lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
 
-        let offsetAttribute = new Map({
-          length: math.toFixedFloat(lengthValue, 2),
-          _unit: value.get('_unit'),
-          _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
-        });
+            let xp = x1 - (lengthValue +
+              this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
+            let yp = y1 - (lengthValue +
+              this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha);
 
-        attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
+            offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+
+            let startAt = math.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+
+            let offsetA = new Map({
+              length: startAt,
+              _length: convert(startAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetA').get('_unit')),
+              _unit: attributesFormData.get('offsetA').get('_unit')
+            });
+
+            attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
+
+            let offsetAttribute = new Map({
+              length: math.toFixedFloat(lengthValue, 2),
+              _unit: value.get('_unit'),
+              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+            });
+
+            attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
+
+            break;
+          }
+          default:
+          {
+            attributesFormData = attributesFormData.set(attributeName, value);
+            break;
+          }
+        };
         break;
       }
       default:
         break;
     }
 
-    this
-      .setState({attributesFormData});
+    this.setState({attributesFormData});
   }
 
   updateProperty(propertyName, value) {
@@ -313,8 +361,6 @@ export default class ElementEditor extends Component {
       propertiesFormData: this.initPropData(nextProps.element, nextProps.layer, nextProps.state)
     });
   }
-
-
 }
 
 ElementEditor.propTypes = {
