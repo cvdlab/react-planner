@@ -33,7 +33,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
             return (
               <div key={lineID} onClick={e => editingActions.selectLine(layer.id, line.id)}>
                 <input type="checkbox" checked={line.selected} readOnly/>
-                <div style={typeId}>{line.type} {line.id}</div>
+                <div style={typeId}>{line.type} {line.name}</div>
               </div>
             )
           })}
@@ -42,7 +42,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
             return (
               <div key={holeID} onClick={e => editingActions.selectHole(layer.id, hole.id)}>
                 <input type="checkbox" checked={hole.selected} readOnly/>
-                <div style={typeId}>{hole.type} {hole.id}</div>
+                <div style={typeId}>{hole.type} {hole.name}</div>
               </div>
             )
           })}
@@ -51,7 +51,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
             return (
               <div key={itemID} onClick={e => editingActions.selectItem(layer.id, item.id)}>
                 <input type="checkbox" checked={item.selected} readOnly/>
-                <div style={typeId}>{item.type} {item.id}</div>
+                <div style={typeId}>{item.type} {item.name}</div>
               </div>
             )
           })}
