@@ -2,6 +2,7 @@
 import {Map, List, fromJS} from 'immutable';
 import {Vertex} from '../models';
 import IDBroker from './id-broker';
+import NameGenerator from './name-generator';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
 import {EPSILON} from "../constants";
@@ -18,6 +19,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
 
     line = catalog.factoryElement(type, {
       id: lineID,
+      name: NameGenerator.generateName('lines', catalog.get('elements').get(type).get('info').get('title')),
       vertices: new List([v0.id, v1.id]),
       type
     }, properties);
@@ -209,15 +211,19 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
 /** vertices features **/
 export function addVertex(layer, x, y, relatedPrototype, relatedID) {
   let vertex = layer.vertices.find(vertex => Geometry.samePoints(vertex, {x, y}));
+
   if (vertex) {
     vertex = vertex.update(relatedPrototype, related => related.push(relatedID));
-  } else {
+  }
+  else {
     vertex = new Vertex({
       id: IDBroker.acquireID(),
+      name: 'Vertex',
       x, y,
       [relatedPrototype]: new List([relatedID])
     });
   }
+
   layer = layer.setIn(['vertices', vertex.id], vertex);
   return {layer, vertex};
 }
@@ -394,6 +400,7 @@ export function addArea(layer, type, verticesCoords, catalog) {
 
     area = catalog.factoryElement(type, {
       id: areaID,
+      name: NameGenerator.generateName('areas', catalog.get('elements').get(type).get('info').get('title')),
       type,
       prototype: "areas",
       vertices: new List(vertices)
@@ -473,6 +480,7 @@ export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
 
     hole = catalog.factoryElement(type, {
       id: holeID,
+      name: NameGenerator.generateName('holes', catalog.get('elements').get(type).get('info').get('title')),
       type,
       offset,
       line: lineID
@@ -508,6 +516,7 @@ export function addItem(layer, type, x, y, width, height, rotation, catalog) {
 
     item = catalog.factoryElement(type, {
       id: itemID,
+      name: NameGenerator.generateName('items', catalog.get('elements').get(type).get('info').get('title')),
       type,
       height,
       width,
