@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
+import FormTextInput from '../../../style/form-text-input';
 import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
 
 let tableStyle = {
@@ -14,6 +15,8 @@ let inputStyle = {
 };
 
 export default function LineAttributesEditor({element, onUpdate, attributeFormData, state}, {translator}) {
+
+  let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let vertexOne = attributeFormData.has('vertexOne') ? attributeFormData.get('vertexOne') : null;
   let vertexTwo = attributeFormData.has('vertexTwo') ? attributeFormData.get('vertexTwo') : null;
   let lineLength = attributeFormData.has('lineLength') ? attributeFormData.get('lineLength') : null;
@@ -21,6 +24,10 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
   return <div>
     <table style={tableStyle}>
       <tbody>
+      <tr>
+        <td style={firstTdStyle}>Nome:</td>
+        <td><FormTextInput value={name} onChange={event => onUpdate('name', event.target.value)} style={inputStyle}/></td>
+      </tr>
       <tr>
         <td style={firstTdStyle}>X1:</td>
         <td><FormNumberInput value={vertexOne.get('x')}

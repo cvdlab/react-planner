@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
+import FormTextInput from '../../../style/form-text-input';
 
 let tableStyle = {
   width: '100%'
@@ -13,12 +14,17 @@ let inputStyle = {
 }
 
 export default function ItemAttributesEditor({element, onUpdate, attributeFormData, state}, {translator}) {
+  let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;
   let renderedY = attributeFormData.has('y') ? attributeFormData.get('y') : element.y;
   let renderedR = attributeFormData.has('rotation') ? attributeFormData.get('rotation') : element.rotation;
 
   return <table style={tableStyle}>
     <tbody>
+    <tr>
+      <td style={firstTdStyle}>Nome:</td>
+      <td><FormTextInput value={name} onChange={event => onUpdate('name', event.target.value)} style={inputStyle}/></td>
+    </tr>
     <tr>
       <td style={firstTdStyle}>X:</td>
       <td><FormNumberInput value={renderedX} onChange={event => onUpdate('x', event.target.value)} style={inputStyle}
