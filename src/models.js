@@ -10,8 +10,8 @@ let safeLoadMapList = (mapList, Model, defaultMap) => {
 
 
 export class Guide extends Record({
-  id: "",
-  type: "",
+  id: '',
+  type: '',
   properties: Map()
 }, 'Guide') {
   constructor(json = {}) {
@@ -62,10 +62,11 @@ export class ElementsSet extends Record({
 
 
 export class Vertex extends Record({
-  id: "",
+  id: '',
   x: -1,
   y: -1,
-  prototype: "vertices",
+  prototype: 'vertices',
+  name:'',
   selected: false,
   lines: new List(),
   areas: new List(),
@@ -81,9 +82,10 @@ export class Vertex extends Record({
 }
 
 export class Line extends Record({
-  id: "",
-  type: "",
-  prototype: "lines",
+  id: '',
+  type: '',
+  prototype: 'lines',
+  name:'',
   vertices: new List(),
   holes: new List(),
   selected: false,
@@ -101,11 +103,12 @@ export class Line extends Record({
 }
 
 export class Hole extends Record({
-  id: "",
-  type: "",
-  prototype: "holes",
+  id: '',
+  type: '',
+  prototype: 'holes',
+  name:'',
   offset: -1,
-  line: "",
+  line: '',
   selected: false,
   properties: new Map(),
   misc: new Map()
@@ -119,9 +122,10 @@ export class Hole extends Record({
 }
 
 export class Area extends Record({
-  id: "",
-  type: "",
-  prototype: "areas",
+  id: '',
+  type: '',
+  prototype: 'areas',
+  name:'',
   vertices: new List(),
   selected: false,
   properties: new Map(),
@@ -137,9 +141,10 @@ export class Area extends Record({
 }
 
 export class Item extends Record({
-  id: "",
+  id: '',
   prototype: 'items',
-  type: "",
+  name:'',
+  type: '',
   properties: new Map(),
   selected: false,
   x: 0,
@@ -156,11 +161,11 @@ export class Item extends Record({
 }
 
 export class Layer extends Record({
-  id: "",
+  id: '',
   altitude: 0,
   order: 0,
   opacity: 1,
-  name: "",
+  name:'',
   visible: true,
   vertices: new Map(),
   lines: new Map(),
@@ -189,7 +194,7 @@ export const DefaultLayers = new Map({
 
 
 export class Scene extends Record({
-  unit: "cm",
+  unit: 'cm',
   layers: new Map(),
   guides: new Map(),
   selectedLayer: null,
@@ -212,8 +217,8 @@ export class Scene extends Record({
 }
 
 export class CatalogElement extends Record({
-  name: "",
-  prototype: "",
+  name:'',
+  prototype: '',
   info: new Map(),
   properties: new Map(),
 }, 'CatalogElement') {
