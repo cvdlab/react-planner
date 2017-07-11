@@ -89,7 +89,7 @@ function extractElementData(node) {
 }
 
 export default function Viewer2D({state, width, height},
-                                 {editingActions, viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
+                                 {viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
 
 
   let {viewer2D, mode, scene} = state;
@@ -299,7 +299,7 @@ export default function Viewer2D({state, width, height},
   let onChangeTool = (tool) => {
     switch (tool) {
       case TOOL_NONE:
-        editingActions.selectToolEdit();
+        projectActions.selectToolEdit();
         break;
 
       case TOOL_PAN:
@@ -354,7 +354,6 @@ Viewer2D.propTypes = {
 
 Viewer2D.contextTypes = {
   viewer2DActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
   verticesActions: PropTypes.object.isRequired,

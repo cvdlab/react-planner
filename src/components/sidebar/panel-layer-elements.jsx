@@ -12,7 +12,7 @@ const typeId = {display: 'inline-block', top: '-.35em', position: 'relative', pa
 const typeIdSelected = {...typeId, color: 'rgb(28, 166, 252)'};
 const contentArea = {height: '100px', overflowY: 'auto', padding: '0.25em 1.15em', cursor: 'pointer'};
 
-export default function PanelLayerElement({state: {scene, mode}}, {editingActions, translator}) {
+export default function PanelLayerElement({state: {scene, mode}}, {linesActions, holesActions, itemsActions, translator}) {
 
   if (![MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN,
       MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -28,7 +28,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
             onWheel={e => e.stopPropagation()}>
         {layer.lines.entrySeq().map(([lineID, line]) => {
           return (
-            <div key={lineID} onClick={e => editingActions.selectLine(layer.id, line.id)}>
+            <div key={lineID} onClick={e => linesActions.selectLine(layer.id, line.id)}>
               <input type='checkbox' checked={line.selected} readOnly/>
               <div style={ line.selected ? typeIdSelected : typeId }>{line.type} {line.name}</div>
             </div>
@@ -37,7 +37,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
 
         {layer.holes.entrySeq().map(([holeID, hole]) => {
           return (
-            <div key={holeID} onClick={e => editingActions.selectHole(layer.id, hole.id)}>
+            <div key={holeID} onClick={e => holesActions.selectHole(layer.id, hole.id)}>
               <input type='checkbox' checked={hole.selected} readOnly/>
               <div style={ hole.selected ? typeIdSelected : typeId }>{hole.type} {hole.name}</div>
             </div>
@@ -46,7 +46,7 @@ export default function PanelLayerElement({state: {scene, mode}}, {editingAction
 
         {layer.items.entrySeq().map(([itemID, item]) => {
           return (
-            <div key={itemID} onClick={e => editingActions.selectItem(layer.id, item.id)}>
+            <div key={itemID} onClick={e => itemsActions.selectItem(layer.id, item.id)}>
               <input type='checkbox' checked={item.selected} readOnly/>
               <div style={ item.selected ? typeIdSelected : typeId }>{item.type} {item.name}</div>
             </div>
@@ -63,7 +63,8 @@ PanelLayerElement.propTypes = {
 };
 
 PanelLayerElement.contextTypes = {
-  sceneActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired,
+  translator: PropTypes.object.isRequired
 };
