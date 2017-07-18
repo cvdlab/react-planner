@@ -1,21 +1,19 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
-import { VERSION } from '../../version';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../../utils/snap';
-import { MODE_SNAPPING } from '../../constants';
+import {VERSION} from '../../version';
+import {SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK} from '../../utils/snap';
+import {MODE_SNAPPING} from '../../constants';
 
 const footerBarStyle = {
   position: 'absolute',
   bottom: 0,
-  height: '20px',
   lineHeight: '14px',
   fontSize: '12px',
   color: '#FFF',
   backgroundColor: '#005faf',
   padding: '3px 1em',
-  width: '100%',
   margin: 0,
   boxSizing: 'border-box',
   cursor: 'default',
@@ -55,12 +53,12 @@ export default class FooterBar extends Component {
 
   render() {
 
-    let { x, y } = this.props.state.get('mouse').toJS();
+    let {x, y} = this.props.state.get('mouse').toJS();
     let zoom = this.props.state.get('zoom');
     let mode = this.props.state.get('mode');
 
     return (
-      <div style={footerBarStyle}>
+      <div style={{...footerBarStyle, width: this.props.width, height: this.props.height}}>
 
         <If condition={MODE_SNAPPING.includes(mode)}>
           <div style={leftTextStyle}>
@@ -73,24 +71,36 @@ export default class FooterBar extends Component {
           <div style={leftTextStyle}>
             <FooterToggleButton
               state={this.state}
-              toggleOn={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT:true})) }}
-              toggleOff={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT:false})) }}
+              toggleOn={() => {
+                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT: true}))
+              }}
+              toggleOff={() => {
+                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT: false}))
+              }}
               text="Snap PT"
               toggleState={this.props.state.snapMask.get(SNAP_POINT)}
               title="Snap to Point"
             />
             <FooterToggleButton
               state={this.state}
-              toggleOn={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE:true})) }}
-              toggleOff={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE:false})) }}
+              toggleOn={() => {
+                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE: true}))
+              }}
+              toggleOff={() => {
+                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE: false}))
+              }}
               text="Snap LN"
               toggleState={this.props.state.snapMask.get(SNAP_LINE)}
               title="Snap to Line"
             />
             <FooterToggleButton
               state={this.state}
-              toggleOn={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT:true})) }}
-              toggleOff={() => { this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT:false})) }}
+              toggleOn={() => {
+                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT: true}))
+              }}
+              toggleOff={() => {
+                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT: false}))
+              }}
               text="Snap SEG"
               toggleState={this.props.state.snapMask.get(SNAP_SEGMENT)}
               title="Snap to Segment"
@@ -98,7 +108,7 @@ export default class FooterBar extends Component {
           </div>
         </If>
 
-        {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
+        {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index}/>)}
 
         <div style={rightTextStyle}>React-Planner {VERSION}</div>
 
