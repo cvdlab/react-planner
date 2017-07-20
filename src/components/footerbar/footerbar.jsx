@@ -119,7 +119,9 @@ export default class FooterBar extends Component {
 
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,
-  footerbarComponents: PropTypes.array.isRequired
+  footerbarComponents: PropTypes.array.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
 
 FooterBar.contextTypes = {
