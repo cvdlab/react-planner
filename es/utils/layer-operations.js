@@ -6,6 +6,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 import { Map, List, fromJS } from 'immutable';
 import { Vertex } from '../models';
 import IDBroker from './id-broker';
+import NameGenerator from './name-generator';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
 import { EPSILON } from "../constants";
@@ -34,6 +35,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog) {
 
     line = catalog.factoryElement(type, {
       id: lineID,
+      name: NameGenerator.generateName('lines', catalog.get('elements').get(type).get('info').get('title')),
       vertices: new List([v0.id, v1.id]),
       type: type
     }, properties);
@@ -269,6 +271,7 @@ export function addVertex(layer, x, y, relatedPrototype, relatedID) {
   var vertex = layer.vertices.find(function (vertex) {
     return Geometry.samePoints(vertex, { x: x, y: y });
   });
+
   if (vertex) {
     vertex = vertex.update(relatedPrototype, function (related) {
       return related.push(relatedID);
@@ -276,9 +279,11 @@ export function addVertex(layer, x, y, relatedPrototype, relatedID) {
   } else {
     vertex = new Vertex(_defineProperty({
       id: IDBroker.acquireID(),
+      name: 'Vertex',
       x: x, y: y
     }, relatedPrototype, new List([relatedID])));
   }
+
   layer = layer.setIn(['vertices', vertex.id], vertex);
   return { layer: layer, vertex: vertex };
 }
@@ -393,35 +398,43 @@ function opSetItemsAttributes(layer, prototype, ID, itemsAttributes) {
 }
 
 function opSetLinesAttributes(layer, prototype, ID, linesAttributes, catalog) {
-  var _linesAttributes$toJS = linesAttributes.toJS(),
-      vertexOne = _linesAttributes$toJS.vertexOne,
-      vertexTwo = _linesAttributes$toJS.vertexTwo;
 
-  layer.withMutations(function (layer) {
+  var lAttr = linesAttributes.toJS();
+  var vertexOne = lAttr.vertexOne,
+      vertexTwo = lAttr.vertexTwo,
+      lineLength = lAttr.lineLength;
 
-    layer.mergeIn(['vertices', vertexOne.id], { x: vertexOne.x, y: vertexOne.y }).mergeIn(['vertices', vertexTwo.id], { x: vertexTwo.x, y: vertexTwo.y }).mergeDeepIn([prototype, ID, 'misc'], new Map({ '_unitLength': linesAttributes.get('lineLength').get('_unit') }));
 
-    mergeEqualsVertices(layer, vertexOne.id);
-    //check if second vertex has different coordinates than the first
-    if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) mergeEqualsVertices(layer, vertexTwo.id);
-  });
+  delete lAttr['vertexOne'];
+  delete lAttr['vertexTwo'];
+  delete lAttr['lineLength'];
+
+  layer = layer.mergeIn([prototype, ID], fromJS(lAttr)) //all the others attributes
+  .mergeIn(['vertices', vertexOne.id], { x: vertexOne.x, y: vertexOne.y }).mergeIn(['vertices', vertexTwo.id], { x: vertexTwo.x, y: vertexTwo.y }).mergeDeepIn([prototype, ID, 'misc'], new Map({ '_unitLength': lineLength._unit }));
+
+  layer = mergeEqualsVertices(layer, vertexOne.id);
+  //check if second vertex has different coordinates than the first
+  if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) layer = mergeEqualsVertices(layer, vertexTwo.id);
 
   detectAndUpdateAreas(layer, catalog);
 }
 
 function opSetHolesAttributes(layer, prototype, ID, holesAttributes) {
 
-  var offset = holesAttributes.get('offset');
+  var hAttr = holesAttributes.toJS();
+  var offsetA = hAttr.offsetA,
+      offsetB = hAttr.offsetB,
+      offset = hAttr.offset;
 
-  var misc = new Map({
-    _unitA: holesAttributes.get('offsetA').get('_unit'),
-    _unitB: holesAttributes.get('offsetB').get('_unit')
-  });
 
-  layer.mergeDeepIn([prototype, ID], new Map({
-    offset: offset,
-    misc: misc
-  }));
+  delete hAttr['offsetA'];
+  delete hAttr['offsetB'];
+  delete hAttr['offset'];
+
+  var misc = new Map({ _unitA: offsetA._unit, _unitB: offsetB._unit });
+
+  layer.mergeIn([prototype, ID], fromJS(hAttr)) //all the others attributes
+  .mergeDeepIn([prototype, ID], new Map({ offset: offset, misc: misc }));
 }
 
 export function setPropertiesOnSelected(layer, properties) {
@@ -490,6 +503,7 @@ export function addArea(layer, type, verticesCoords, catalog) {
 
     area = catalog.factoryElement(type, {
       id: areaID,
+      name: NameGenerator.generateName('areas', catalog.get('elements').get(type).get('info').get('title')),
       type: type,
       prototype: "areas",
       vertices: new List(vertices)
@@ -586,6 +600,7 @@ export function addHole(layer, type, lineID, offset, catalog) {
 
     hole = catalog.factoryElement(type, {
       id: holeID,
+      name: NameGenerator.generateName('holes', catalog.get('elements').get(type).get('info').get('title')),
       type: type,
       offset: offset,
       line: lineID
@@ -625,6 +640,7 @@ export function addItem(layer, type, x, y, width, height, rotation, catalog) {
 
     item = catalog.factoryElement(type, {
       id: itemID,
+      name: NameGenerator.generateName('items', catalog.get('elements').get(type).get('info').get('title')),
       type: type,
       height: height,
       width: width,

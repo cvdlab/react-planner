@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17,13 +19,11 @@ import { MODE_SNAPPING } from '../../constants';
 var footerBarStyle = {
   position: 'absolute',
   bottom: 0,
-  height: '20px',
   lineHeight: '14px',
   fontSize: '12px',
   color: '#FFF',
   backgroundColor: '#005faf',
   padding: '3px 1em',
-  width: '100%',
   margin: 0,
   boxSizing: 'border-box',
   cursor: 'default',
@@ -80,7 +80,7 @@ var FooterBar = function (_Component) {
 
       return React.createElement(
         'div',
-        { style: footerBarStyle },
+        { style: _extends({}, footerBarStyle, { width: this.props.width, height: this.props.height }) },
         React.createElement(
           If,
           { condition: MODE_SNAPPING.includes(mode) },
@@ -169,13 +169,14 @@ export default FooterBar;
 
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,
-  footerbarComponents: PropTypes.array.isRequired
+  footerbarComponents: PropTypes.array.isRequired,
+  width: PropTypes.number.isRequired,
+  height: PropTypes.number.isRequired
 };
 
 FooterBar.contextTypes = {
   projectActions: PropTypes.object.isRequired,
   viewer2DActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
   viewer3DActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,

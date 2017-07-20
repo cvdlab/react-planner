@@ -17,14 +17,19 @@ export default function (_ref) {
   var sidebarWidth = 300;
   var contentWidth = width - toolbarWidth - sidebarWidth;
 
+  var footerBarHeight = 20;
+  var toolbarHeight = height - footerBarHeight;
+  var contentHeight = height - footerBarHeight;
+  var sidebarHeight = height - footerBarHeight;
+
   return React.createElement(
     'div',
     { style: { display: "flex", flexFlow: "row nowrap", height: height } },
-    React.createElement(Toolbar, _extends({ width: toolbarWidth, height: height }, rest)),
-    React.createElement(Content, _extends({ width: contentWidth, height: height }, rest, { onWheel: function onWheel(event) {
+    React.createElement(Toolbar, _extends({ width: toolbarWidth, height: toolbarHeight }, rest)),
+    React.createElement(Content, _extends({ width: contentWidth, height: contentHeight }, rest, { onWheel: function onWheel(event) {
         return event.preventDefault();
       } })),
-    React.createElement(Sidebar, _extends({ width: sidebarWidth, height: height }, rest)),
-    React.createElement(FooterBar, rest)
+    React.createElement(Sidebar, _extends({ width: sidebarWidth, height: sidebarHeight }, rest)),
+    React.createElement(FooterBar, _extends({ width: width, height: footerBarHeight }, rest))
   );
 }

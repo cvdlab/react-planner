@@ -2,20 +2,22 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 
-var typeId = { display: 'inline-block', top: '-.3em', position: 'relative', paddingLeft: '.25em' };
+var typeId = { display: 'inline-block', top: '-.35em', position: 'relative', paddingLeft: '.25em' };
+var typeIdSelected = _extends({}, typeId, { color: 'rgb(28, 166, 252)' });
+var contentArea = { height: '100px', overflowY: 'auto', padding: '0.25em 1.15em', cursor: 'pointer' };
 
 export default function PanelLayerElement(_ref, _ref2) {
   var _ref$state = _ref.state,
       scene = _ref$state.scene,
       mode = _ref$state.mode;
-  var editingActions = _ref2.editingActions,
+  var linesActions = _ref2.linesActions,
+      holesActions = _ref2.holesActions,
+      itemsActions = _ref2.itemsActions,
       translator = _ref2.translator;
 
 
@@ -23,86 +25,75 @@ export default function PanelLayerElement(_ref, _ref2) {
 
   var layer = scene.layers.get(scene.selectedLayer);
 
-  var renderTrackHorizontal = function renderTrackHorizontal(_ref3) {
-    var style = _ref3.style,
-        props = _objectWithoutProperties(_ref3, ['style']);
-
-    return React.createElement('div', _extends({}, props, { style: _extends({}, style, { backgroundColor: 'blue' }) }));
-  };
-
   return React.createElement(
     Panel,
-    { name: translator.t("Elements on layer {0}", layer.name) },
+    { name: translator.t('Elements on layer {0}', layer.name) },
     React.createElement(
       'div',
-      { key: 1, style: { background: "#3a3a3e" } },
-      React.createElement(
-        'div',
-        { style: { height: "100px", overflowY: "auto", padding: '0.25em 1.15em', cursor: 'pointer' },
-          onWheel: function onWheel(e) {
-            return e.stopPropagation();
-          } },
-        layer.lines.entrySeq().map(function (_ref4) {
-          var _ref5 = _slicedToArray(_ref4, 2),
-              lineID = _ref5[0],
-              line = _ref5[1];
+      { style: contentArea,
+        onWheel: function onWheel(e) {
+          return e.stopPropagation();
+        } },
+      layer.lines.entrySeq().map(function (_ref3) {
+        var _ref4 = _slicedToArray(_ref3, 2),
+            lineID = _ref4[0],
+            line = _ref4[1];
 
-          return React.createElement(
+        return React.createElement(
+          'div',
+          { key: lineID, onClick: function onClick(e) {
+              return linesActions.selectLine(layer.id, line.id);
+            } },
+          React.createElement('input', { type: 'checkbox', checked: line.selected, readOnly: true }),
+          React.createElement(
             'div',
-            { key: lineID, onClick: function onClick(e) {
-                return editingActions.selectLine(layer.id, line.id);
-              } },
-            React.createElement('input', { type: 'checkbox', checked: line.selected, readOnly: true }),
-            React.createElement(
-              'div',
-              { style: typeId },
-              line.type,
-              ' ',
-              line.id
-            )
-          );
-        }),
-        layer.holes.entrySeq().map(function (_ref6) {
-          var _ref7 = _slicedToArray(_ref6, 2),
-              holeID = _ref7[0],
-              hole = _ref7[1];
+            { style: line.selected ? typeIdSelected : typeId },
+            line.type,
+            ' ',
+            line.name
+          )
+        );
+      }),
+      layer.holes.entrySeq().map(function (_ref5) {
+        var _ref6 = _slicedToArray(_ref5, 2),
+            holeID = _ref6[0],
+            hole = _ref6[1];
 
-          return React.createElement(
+        return React.createElement(
+          'div',
+          { key: holeID, onClick: function onClick(e) {
+              return holesActions.selectHole(layer.id, hole.id);
+            } },
+          React.createElement('input', { type: 'checkbox', checked: hole.selected, readOnly: true }),
+          React.createElement(
             'div',
-            { key: holeID, onClick: function onClick(e) {
-                return editingActions.selectHole(layer.id, hole.id);
-              } },
-            React.createElement('input', { type: 'checkbox', checked: hole.selected, readOnly: true }),
-            React.createElement(
-              'div',
-              { style: typeId },
-              hole.type,
-              ' ',
-              hole.id
-            )
-          );
-        }),
-        layer.items.entrySeq().map(function (_ref8) {
-          var _ref9 = _slicedToArray(_ref8, 2),
-              itemID = _ref9[0],
-              item = _ref9[1];
+            { style: hole.selected ? typeIdSelected : typeId },
+            hole.type,
+            ' ',
+            hole.name
+          )
+        );
+      }),
+      layer.items.entrySeq().map(function (_ref7) {
+        var _ref8 = _slicedToArray(_ref7, 2),
+            itemID = _ref8[0],
+            item = _ref8[1];
 
-          return React.createElement(
+        return React.createElement(
+          'div',
+          { key: itemID, onClick: function onClick(e) {
+              return itemsActions.selectItem(layer.id, item.id);
+            } },
+          React.createElement('input', { type: 'checkbox', checked: item.selected, readOnly: true }),
+          React.createElement(
             'div',
-            { key: itemID, onClick: function onClick(e) {
-                return editingActions.selectItem(layer.id, item.id);
-              } },
-            React.createElement('input', { type: 'checkbox', checked: item.selected, readOnly: true }),
-            React.createElement(
-              'div',
-              { style: typeId },
-              item.type,
-              ' ',
-              item.id
-            )
-          );
-        })
-      )
+            { style: item.selected ? typeIdSelected : typeId },
+            item.type,
+            ' ',
+            item.name
+          )
+        );
+      })
     )
   );
 }
@@ -112,7 +103,8 @@ PanelLayerElement.propTypes = {
 };
 
 PanelLayerElement.contextTypes = {
-  sceneActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired,
   translator: PropTypes.object.isRequired
 };
