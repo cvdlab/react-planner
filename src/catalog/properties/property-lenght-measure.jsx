@@ -16,7 +16,8 @@ const unitContainerStyle = {width: '5em'};
 
 export default function PropertyLengthMeasure({value, onUpdate, configs, sourceElement, internalState, state}, {catalog}) {
 
-  let _length = value.has('_length') ? value.get('_length') : value.get('length');
+  let length = value.has('length') ? value.get('length') : 0;
+  let _length = value.has('_length') ? value.get('_length') : length;
   let _unit = value.has('_unit') ? value.get('_unit') : UNIT_CENTIMETER;
 
   let update = (lengthInput, unitInput) => {
