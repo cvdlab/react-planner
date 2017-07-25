@@ -9,7 +9,6 @@ import {
   UPDATE_DRAGGING_LINE,
   END_DRAGGING_LINE,
   SELECT_LINE,
-
   MODE_IDLE,
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
@@ -261,22 +260,23 @@ function endDraggingLine(state, x, y) {
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  let orderedVertices = Geometry.orderVertices([vertex0, vertex1]);
-  let lineLength = Geometry.pointsDistance(orderedVertices[0].x, orderedVertices[0].y,
-    orderedVertices[1].x, orderedVertices[1].y);
+  let maxV = Geometry.maxVertex(vertex0, vertex1);
+  let minV = Geometry.minVertex(vertex0, vertex1);
 
-  let alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
+  let lineLength = Geometry.verticesDistance(minV,maxV);
+  let alpha = Math.atan2(maxV.y - minV.y, maxV.x - minV.x);
 
   let holesWithOffsetPosition = [];
   layer.lines.get(lineID).holes.forEach(holeID => {
     let hole = layer.holes.get(holeID);
+    let pointOnLine = lineLength * hole.offset;
 
-    let offset = hole.offset;
+    let offsetPosition = {
+      x: pointOnLine * Math.cos(alpha) + minV.x,
+      y: pointOnLine * Math.sin(alpha) + minV.y
+    };
 
-    let xp = lineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
-    let yp = lineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
-
-    holesWithOffsetPosition.push({hole, offsetPosition: {x: xp, y: yp}});
+    holesWithOffsetPosition.push({hole, offsetPosition});
   });
 
   return state.withMutations(state => {

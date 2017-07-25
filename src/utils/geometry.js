@@ -94,8 +94,6 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
   let {x: x3, y: y3} = p3;
   let {x: x4, y: y4} = p4;
 
-  let EPSILON = 10e-6;
-
   let denom = ((y4 - y3) * (x2 - x1)) - ((x4 - x3) * (y2 - y1));
   let numA = ((x4 - x3) * (y1 - y3)) - ((y4 - y3) * (x1 - x3));
   let numB = ((x2 - x1) * (y1 - y3)) - ((y2 - y1) * (x1 - x3));
@@ -216,7 +214,6 @@ export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
 }
 
 export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
-  let EPSILON = 10e-6;
   return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
 }
 

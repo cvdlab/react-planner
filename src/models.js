@@ -200,9 +200,7 @@ export class Scene extends Record({
   selectedLayer: null,
   width: 3000,
   height: 2000,
-
   meta: new Map()   //additional info
-
 }, 'Scene') {
   constructor(json = {}) {
     let layers = safeLoadMapList(json.layers, Layer, DefaultLayers);
@@ -250,11 +248,7 @@ export class Catalog extends Record({
     }
 
     let element = this.elements.get(type);
-
-    initialProperties = new Map(initialProperties);
-
-    let properties = element.properties
-      .map((value, key) => initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue'));
+    let properties = element.properties.map((value, key) => initialProperties[key] || value.get('defaultValue'));
 
     switch (element.prototype) {
       case 'lines':
@@ -277,27 +271,18 @@ export class Catalog extends Record({
 
 export class State extends Record({
   mode: MODE_IDLE,
-
   scene: new Scene(),
   sceneHistory: new List([new Scene()]),
-
   catalog: new Catalog(),
-
   viewer2D: new Map(),
-
-  mouse: new Map(),
-
+  mouse: new Map({ x: 0, y: 0 }),
   zoom: 0,
-
   snapMask: SNAP_MASK,
-
   snapElements: new List(),
   activeSnapElement: null,
-
   drawingSupport: new Map(),
   draggingSupport: new Map(),
   rotatingSupport: new Map(),
-
   misc: new Map()   //additional info
 }, 'State') {
   constructor(json = {}) {
@@ -306,21 +291,11 @@ export class State extends Record({
       ...json,
       scene,
       sceneHistory: json.sceneHistory ? json.sceneHistory : new List([scene]),
-
       catalog: new Catalog(json.catalog || {}),
-
       viewer2D: new Map(json.viewer2D || {}),
-
-      mouse: new Map({ x: 0, y: 0 }),
-
-      zoom: 0,
-
-      snapMask: SNAP_MASK,
-
       drawingSupport: new Map(json.drawingSupport || {}),
       draggingSupport: new Map(json.draggingSupport || {}),
       rotatingSupport: new Map(json.rotatingSupport || {}),
-
       misc: json.misc ? fromJS(json.misc) : new Map()
     })
   }
