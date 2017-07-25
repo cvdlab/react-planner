@@ -114,7 +114,6 @@ FooterToggleButton.propTypes = {
 FooterToggleButton.contextTypes = {
   projectActions: PropTypes.object.isRequired,
   viewer2DActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
   viewer3DActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,

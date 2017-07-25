@@ -92,8 +92,7 @@ export default function Viewer2D(_ref, _ref2) {
   var state = _ref.state,
       width = _ref.width,
       height = _ref.height;
-  var editingActions = _ref2.editingActions,
-      viewer2DActions = _ref2.viewer2DActions,
+  var viewer2DActions = _ref2.viewer2DActions,
       linesActions = _ref2.linesActions,
       holesActions = _ref2.holesActions,
       verticesActions = _ref2.verticesActions,
@@ -320,7 +319,7 @@ export default function Viewer2D(_ref, _ref2) {
   var onChangeTool = function onChangeTool(tool) {
     switch (tool) {
       case TOOL_NONE:
-        editingActions.selectToolEdit();
+        projectActions.selectToolEdit();
         break;
 
       case TOOL_PAN:
@@ -376,7 +375,6 @@ Viewer2D.propTypes = {
 
 Viewer2D.contextTypes = {
   viewer2DActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,
   verticesActions: PropTypes.object.isRequired,

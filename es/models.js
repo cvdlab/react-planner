@@ -33,8 +33,8 @@ export var Guide = function (_Record) {
 
   return Guide;
 }(Record({
-  id: "",
-  type: "",
+  id: '',
+  type: '',
   properties: Map()
 }, 'Guide'));
 
@@ -99,10 +99,11 @@ export var Vertex = function (_Record3) {
 
   return Vertex;
 }(Record({
-  id: "",
+  id: '',
   x: -1,
   y: -1,
-  prototype: "vertices",
+  prototype: 'vertices',
+  name: '',
   selected: false,
   lines: new List(),
   areas: new List(),
@@ -126,9 +127,10 @@ export var Line = function (_Record4) {
 
   return Line;
 }(Record({
-  id: "",
-  type: "",
-  prototype: "lines",
+  id: '',
+  type: '',
+  prototype: 'lines',
+  name: '',
   vertices: new List(),
   holes: new List(),
   selected: false,
@@ -151,11 +153,12 @@ export var Hole = function (_Record5) {
 
   return Hole;
 }(Record({
-  id: "",
-  type: "",
-  prototype: "holes",
+  id: '',
+  type: '',
+  prototype: 'holes',
+  name: '',
   offset: -1,
-  line: "",
+  line: '',
   selected: false,
   properties: new Map(),
   misc: new Map()
@@ -177,9 +180,10 @@ export var Area = function (_Record6) {
 
   return Area;
 }(Record({
-  id: "",
-  type: "",
-  prototype: "areas",
+  id: '',
+  type: '',
+  prototype: 'areas',
+  name: '',
   vertices: new List(),
   selected: false,
   properties: new Map(),
@@ -201,9 +205,10 @@ export var Item = function (_Record7) {
 
   return Item;
 }(Record({
-  id: "",
+  id: '',
   prototype: 'items',
-  type: "",
+  name: '',
+  type: '',
   properties: new Map(),
   selected: false,
   x: 0,
@@ -232,11 +237,11 @@ export var Layer = function (_Record8) {
 
   return Layer;
 }(Record({
-  id: "",
+  id: '',
   altitude: 0,
   order: 0,
   opacity: 1,
-  name: "",
+  name: '',
   visible: true,
   vertices: new Map(),
   lines: new Map(),
@@ -269,7 +274,7 @@ export var Scene = function (_Record9) {
 
   return Scene;
 }(Record({
-  unit: "cm",
+  unit: 'cm',
   layers: new Map(),
   guides: new Map(),
   selectedLayer: null,
@@ -296,8 +301,8 @@ export var CatalogElement = function (_Record10) {
 
   return CatalogElement;
 }(Record({
-  name: "",
-  prototype: "",
+  name: '',
+  prototype: '',
   info: new Map(),
   properties: new Map()
 }, 'CatalogElement'));

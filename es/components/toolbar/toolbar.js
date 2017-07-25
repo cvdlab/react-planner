@@ -57,7 +57,6 @@ export default function Toolbar(_ref, _ref2) {
       allowProjectFileSupport = _ref.allowProjectFileSupport;
   var projectActions = _ref2.projectActions,
       viewer2DActions = _ref2.viewer2DActions,
-      editingActions = _ref2.editingActions,
       viewer3DActions = _ref2.viewer3DActions,
       linesActions = _ref2.linesActions,
       holesActions = _ref2.holesActions,
@@ -230,7 +229,6 @@ Toolbar.propTypes = {
 Toolbar.contextTypes = {
   projectActions: PropTypes.object.isRequired,
   viewer2DActions: PropTypes.object.isRequired,
-  editingActions: PropTypes.object.isRequired,
   viewer3DActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   holesActions: PropTypes.object.isRequired,

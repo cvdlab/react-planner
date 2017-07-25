@@ -82,6 +82,7 @@ Your contributions (issues and pull request) are very appreciated!
 - [enricomarino](https://github.com/enricomarino)
 - [federicospini](https://github.com/federicospini)
 - [alessiocarrafa](https://github.com/alessiocarrafa)
+- [stefanoperrone](https://github.com/stefanoperrone)
 
 Developed @ [CVDLAB][cvdlab]
 

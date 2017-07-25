@@ -24,7 +24,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
   var catalog = _ref2.catalog;
 
 
-  var _length = value.has('_length') ? value.get('_length') : value.get('length');
+  var length = value.has('length') ? value.get('length') : 0;
+  var _length = value.has('_length') ? value.get('_length') : length;
   var _unit = value.has('_unit') ? value.get('_unit') : UNIT_CENTIMETER;
 
   var update = function update(lengthInput, unitInput) {

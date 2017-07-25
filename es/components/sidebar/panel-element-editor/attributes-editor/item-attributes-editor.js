@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
+import FormTextInput from '../../../style/form-text-input';
 
 var tableStyle = {
   width: '100%'
@@ -19,6 +20,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
       state = _ref.state;
   var translator = _ref2.translator;
 
+  var name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   var renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;
   var renderedY = attributeFormData.has('y') ? attributeFormData.get('y') : element.y;
   var renderedR = attributeFormData.has('rotation') ? attributeFormData.get('rotation') : element.rotation;
@@ -29,6 +31,22 @@ export default function ItemAttributesEditor(_ref, _ref2) {
     React.createElement(
       'tbody',
       null,
+      React.createElement(
+        'tr',
+        null,
+        React.createElement(
+          'td',
+          { style: firstTdStyle },
+          'Nome:'
+        ),
+        React.createElement(
+          'td',
+          null,
+          React.createElement(FormTextInput, { value: name, onChange: function onChange(event) {
+              return onUpdate('name', event.target.value);
+            }, style: inputStyle })
+        )
+      ),
       React.createElement(
         'tr',
         null,
