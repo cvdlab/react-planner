@@ -47,10 +47,11 @@ export function openCatalog() {
   }
 }
 
-export function changeCatalogPage(newPage) {
+export function changeCatalogPage(newPage, oldPage) {
   return {
     type: CHANGE_CATALOG_PAGE,
-    newPage
+    newPage,
+    oldPage
   };
 }
 
@@ -154,7 +155,7 @@ export function initCatalog(catalog) {
   }
 }
 
-export function updateMouseCoord(coords = { x, y }) {
+export function updateMouseCoord(coords = {x, y}) {
   return {
     type: UPDATE_MOUSE_COORDS,
     coords

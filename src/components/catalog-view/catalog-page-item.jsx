@@ -52,7 +52,7 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default class CatalogItem extends Component {
+export default class CatalogPageItem extends Component {
 
   constructor(props) {
     super(props);
@@ -60,7 +60,7 @@ export default class CatalogItem extends Component {
   }
 
   changePage(newPage) {
-    this.context.projectActions.changeCatalogPage(newPage)
+    this.context.projectActions.changeCatalogPage(newPage, this.props.oldPage.name)
   }
 
   render() {
@@ -70,18 +70,18 @@ export default class CatalogItem extends Component {
     return (
       <div
         style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={e => this.changePage(page)}
+        onClick={e => this.changePage(page.name)}
         onMouseEnter={e => this.setState({hover: true})}
         onMouseLeave={e => this.setState({hover: false})}
       >
         {hover ?
           <div style={CONTAINER_DIV}>
-            <b style={STYLE_TITLE_HOVERED}>{page}</b>
+            <b style={STYLE_TITLE_HOVERED}>{page.label}</b>
             <IconNext style={STYLE_NEXT_HOVER}/>
           </div>
           :
           <div style={CONTAINER_DIV}>
-            <b style={STYLE_TITLE}>{page}</b>
+            <b style={STYLE_TITLE}>{page.label}</b>
           </div>}
 
       </div>
@@ -89,10 +89,11 @@ export default class CatalogItem extends Component {
   }
 }
 
-CatalogItem.propTypes = {
-  page: PropTypes.string.isRequired,
+CatalogPageItem.propTypes = {
+  page: PropTypes.object.isRequired,
+  oldPage: PropTypes.object.isRequired,
 };
 
-CatalogItem.contextTypes = {
+CatalogPageItem.contextTypes = {
   projectActions: PropTypes.object.isRequired
 };

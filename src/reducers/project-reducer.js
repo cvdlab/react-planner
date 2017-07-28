@@ -56,7 +56,7 @@ export default function (state, action) {
 
     case CHANGE_CATALOG_PAGE:
       return state.setIn(['catalog', 'page'], action.newPage)
-        .updateIn(['catalog', 'path'], path => path.push(action.newPage));
+        .updateIn(['catalog', 'path'], path => path.push(action.oldPage));
 
     case GO_BACK_TO_CATALOG_PAGE:
       let path = state.catalog.path;
