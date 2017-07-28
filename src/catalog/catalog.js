@@ -14,6 +14,7 @@ export default class Catalog {
 
   constructor(unit = UNIT_CENTIMETER) {
     this.elements = {};
+    this.categories = {};
     this.propertyTypes = {};
     this.unit = unit;
 
@@ -35,6 +36,13 @@ export default class Catalog {
       return this.elements[type];
     }
     throw new Error(`Element ${type} does not exist in catalog`);
+  }
+
+  getCategory(categoryName) {
+    if (this.hasCategory(categoryName)) {
+      return this.categories[categoryName];
+    }
+    throw new Error(`Category ${categoryName} does not exist in catalog`);
   }
 
   getPropertyType(type) {
@@ -90,6 +98,36 @@ export default class Catalog {
 
   hasElement(type) {
     return this.elements.hasOwnProperty(type);
+  }
+
+  registerCategory(name, label) {
+    if (this.validateCategory(name, label)) {
+      this.categories[name] = {name, label, categories: [], elements: []};
+    }
+  }
+
+  addToCategory(name, child) {
+    if (this.hasElement(child.name)) {
+      this.categories[name].elements.push(child);
+    } else if (this.hasCategory(child.name)) {
+      this.categories[name].categories.push(child);
+    } else {
+      throw new Error(`child ${child} is either category nor element`);
+    }
+  }
+
+  validateCategory(name, label) {
+    if (name === "") {
+      throw new Error(`Category has empty name`);
+    } else if (this.categories[name]) {
+      throw new Error(`Category has already been registered`);
+    }
+
+    return true;
+  }
+
+  hasCategory(categoryName) {
+    return this.categories.hasOwnProperty(categoryName);
   }
 
 }
