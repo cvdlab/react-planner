@@ -231,13 +231,13 @@ export class CatalogElement extends Record({
 
 export class Catalog extends Record({
   ready: false,
-  page: "",
+  page: "root",
   elements: new Map(),
 }, 'Catalog') {
   constructor(json = {}) {
     let elements = safeLoadMapList(json.elements, CatalogElement);
     super({
-      page: json.page || "",
+      page: json.page || "root",
       elements,
       ready: !elements.isEmpty()
     })
