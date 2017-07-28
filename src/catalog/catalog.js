@@ -14,7 +14,7 @@ export default class Catalog {
 
   constructor(unit = UNIT_CENTIMETER) {
     this.elements = {};
-    this.categories = {};
+    this.categories = {root: {name: 'root', label: '', elements: [], categories: []}};
     this.propertyTypes = {};
     this.unit = unit;
 
@@ -56,6 +56,7 @@ export default class Catalog {
     json.properties = json.properties || {};
     if (this.validateElement(json)) {
       this.elements[json.name] = json;
+      this.categories.root.elements.push(this.elements[json.name]);
     }
   }
 
@@ -103,17 +104,31 @@ export default class Catalog {
   registerCategory(name, label) {
     if (this.validateCategory(name, label)) {
       this.categories[name] = {name, label, categories: [], elements: []};
+      this.categories.root.categories.push(this.categories[name]);
     }
   }
 
   addToCategory(name, child) {
     if (this.hasElement(child.name)) {
       this.categories[name].elements.push(child);
+      this.categories.root.elements.splice(this.categories.root.elements.indexOf(child), 1);
     } else if (this.hasCategory(child.name)) {
       this.categories[name].categories.push(child);
+      this.categories.root.categories.splice(this.categories.root.categories.indexOf(child), 1);
     } else {
       throw new Error(`child ${child} is either category nor element`);
     }
+  }
+
+  categoryHasElement(categoryName, elementName) {
+    let i;
+    for (i = 0; i < this.categories[categoryName].elements.length; i++) {
+      if (this.categories[categoryName].elements[i].name === elementName) {
+        return true;
+      }
+    }
+
+    return false;
   }
 
   validateCategory(name, label) {
