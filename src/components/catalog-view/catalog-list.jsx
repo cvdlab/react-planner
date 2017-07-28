@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CatalogItem from './catalog-item';
+import CatalogPageItem from './catalog-page-item';
 import {Seq} from 'immutable'
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
@@ -12,14 +13,20 @@ const STYLE_ITEMS = {
 
 
 export default function CatalogList({width, height, state}, {catalog, translator}) {
+
+  let page = state.catalog.page;
+  let currentCategory = catalog.getCategory(page);
+  let categoriesToDisplay = currentCategory.categories;
+  let elementsToDisplay = currentCategory.elements;
+
   return (
     <ContentContainer width={width} height={height}>
       <ContentTitle>{translator.t('Catalog')}</ContentTitle>
       <div style={STYLE_ITEMS}>
-        {Seq(catalog.elements)
-          .entrySeq()
-          .filter(([name, element]) => element.prototype !== 'areas')
-          .map(([name, element]) => <CatalogItem key={name} element={element}/>)}
+        {categoriesToDisplay.map(category => <CatalogPageItem key={category.name} page={category} oldPage={catalog.categories[page]}/>)}
+        {elementsToDisplay
+          .filter(element => element.prototype !== 'areas')
+          .map(element => <CatalogItem key={element.name} element={element}/>)}
       </div>
     </ContentContainer>
   )
