@@ -66,7 +66,7 @@ export class Vertex extends Record({
   x: -1,
   y: -1,
   prototype: 'vertices',
-  name:'',
+  name: '',
   selected: false,
   lines: new List(),
   areas: new List(),
@@ -85,7 +85,7 @@ export class Line extends Record({
   id: '',
   type: '',
   prototype: 'lines',
-  name:'',
+  name: '',
   vertices: new List(),
   holes: new List(),
   selected: false,
@@ -106,7 +106,7 @@ export class Hole extends Record({
   id: '',
   type: '',
   prototype: 'holes',
-  name:'',
+  name: '',
   offset: -1,
   line: '',
   selected: false,
@@ -125,7 +125,7 @@ export class Area extends Record({
   id: '',
   type: '',
   prototype: 'areas',
-  name:'',
+  name: '',
   vertices: new List(),
   selected: false,
   properties: new Map(),
@@ -143,7 +143,7 @@ export class Area extends Record({
 export class Item extends Record({
   id: '',
   prototype: 'items',
-  name:'',
+  name: '',
   type: '',
   properties: new Map(),
   selected: false,
@@ -165,7 +165,7 @@ export class Layer extends Record({
   altitude: 0,
   order: 0,
   opacity: 1,
-  name:'',
+  name: '',
   visible: true,
   vertices: new Map(),
   lines: new Map(),
@@ -215,7 +215,7 @@ export class Scene extends Record({
 }
 
 export class CatalogElement extends Record({
-  name:'',
+  name: '',
   prototype: '',
   info: new Map(),
   properties: new Map(),
@@ -231,11 +231,13 @@ export class CatalogElement extends Record({
 
 export class Catalog extends Record({
   ready: false,
+  page: "",
   elements: new Map(),
 }, 'Catalog') {
   constructor(json = {}) {
     let elements = safeLoadMapList(json.elements, CatalogElement);
     super({
+      page: json.page || "",
       elements,
       ready: !elements.isEmpty()
     })
@@ -275,7 +277,7 @@ export class State extends Record({
   sceneHistory: new List([new Scene()]),
   catalog: new Catalog(),
   viewer2D: new Map(),
-  mouse: new Map({ x: 0, y: 0 }),
+  mouse: new Map({x: 0, y: 0}),
   zoom: 0,
   snapMask: SNAP_MASK,
   snapElements: new List(),
