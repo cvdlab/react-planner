@@ -1,4 +1,4 @@
-import { Seq, Map, List } from "immutable";
+import {Seq, Map, List} from "immutable";
 import {
   LOAD_PROJECT,
   NEW_PROJECT,
@@ -20,10 +20,10 @@ import {
   INIT_CATALOG,
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
-  TOGGLE_SNAP
+  TOGGLE_SNAP, CHANGE_CATALOG_PAGE
 } from '../constants';
 
-import { State, Scene, Guide, Catalog } from "../models";
+import {State, Scene, Guide, Catalog} from "../models";
 
 import {
   removeLine,
@@ -53,6 +53,9 @@ export default function (state, action) {
 
     case OPEN_CATALOG:
       return openCatalog(state);
+
+    case CHANGE_CATALOG_PAGE:
+      return state.setIn(['catalog', 'page'], action.newPage);
 
     case SELECT_TOOL_EDIT:
       return state.set('mode', MODE_IDLE);
@@ -115,7 +118,7 @@ function newProject(state) {
 }
 
 function loadProject(state, sceneJSON) {
-  return new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
+  return new State({scene: sceneJSON, catalog: state.catalog.toJS()});
 }
 
 function setProperties(state, properties) {
@@ -172,7 +175,7 @@ function remove(state) {
   let catalog = state.catalog;
 
   scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
-    let { lines: selectedLines, holes: selectedHoles, items: selectedItems } = layer.selected;
+    let {lines: selectedLines, holes: selectedHoles, items: selectedItems} = layer.selected;
     unselectAllOp(layer);
     selectedLines.forEach(lineID => removeLine(layer, lineID));
     selectedHoles.forEach(holeID => removeHole(layer, holeID));

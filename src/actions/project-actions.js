@@ -17,7 +17,8 @@ import {
   INIT_CATALOG,
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
-  TOGGLE_SNAP
+  TOGGLE_SNAP,
+  CHANGE_CATALOG_PAGE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -43,6 +44,13 @@ export function openCatalog() {
   return {
     type: OPEN_CATALOG
   }
+}
+
+export function changeCatalogPage(newPage) {
+  return {
+    type: CHANGE_CATALOG_PAGE,
+    newPage
+  };
 }
 
 export function selectToolEdit() {
