@@ -20,7 +20,7 @@ import {
   INIT_CATALOG,
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
-  TOGGLE_SNAP, CHANGE_CATALOG_PAGE
+  TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE
 } from '../constants';
 
 import {State, Scene, Guide, Catalog} from "../models";
@@ -55,7 +55,14 @@ export default function (state, action) {
       return openCatalog(state);
 
     case CHANGE_CATALOG_PAGE:
-      return state.setIn(['catalog', 'page'], action.newPage);
+      return state.setIn(['catalog', 'page'], action.newPage)
+        .updateIn(['catalog', 'path'], path => path.push(action.newPage));
+
+    case GO_BACK_TO_CATALOG_PAGE:
+      let path = state.catalog.path;
+      let pageIndex = state.catalog.path.findIndex(page => page === action.newPage);
+      return state.setIn(['catalog', 'page'], action.newPage)
+        .updateIn(['catalog', 'path'], path => path.take(pageIndex - 1));
 
     case SELECT_TOOL_EDIT:
       return state.set('mode', MODE_IDLE);

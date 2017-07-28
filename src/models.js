@@ -232,12 +232,12 @@ export class CatalogElement extends Record({
 export class Catalog extends Record({
   ready: false,
   page: "root",
+  path: new List(['root']),
   elements: new Map(),
 }, 'Catalog') {
   constructor(json = {}) {
     let elements = safeLoadMapList(json.elements, CatalogElement);
     super({
-      page: json.page || "root",
       elements,
       ready: !elements.isEmpty()
     })

@@ -18,7 +18,8 @@ import {
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
   TOGGLE_SNAP,
-  CHANGE_CATALOG_PAGE
+  CHANGE_CATALOG_PAGE,
+  GO_BACK_TO_CATALOG_PAGE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -49,6 +50,13 @@ export function openCatalog() {
 export function changeCatalogPage(newPage) {
   return {
     type: CHANGE_CATALOG_PAGE,
+    newPage
+  };
+}
+
+export function goBackToCatalogPage(newPage) {
+  return {
+    type: GO_BACK_TO_CATALOG_PAGE,
     newPage
   };
 }
