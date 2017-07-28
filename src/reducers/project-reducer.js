@@ -67,13 +67,13 @@ export default function (state, action) {
       return setProperties(state, action.properties);
 
     case SET_ITEMS_ATTRIBUTES:
-      return setItemsAttributes(state, action.itemsAttributes)
+      return setItemsAttributes(state, action.itemsAttributes);
 
     case SET_LINES_ATTRIBUTES:
-      return setLinesAttributes(state, action.linesAttributes)
+      return setLinesAttributes(state, action.linesAttributes);
 
     case SET_HOLES_ATTRIBUTES:
-      return setHolesAttributes(state, action.holesAttributes)
+      return setHolesAttributes(state, action.holesAttributes);
 
     case REMOVE:
       return remove(state);
