@@ -62,7 +62,7 @@ export default function (state, action) {
       let path = state.catalog.path;
       let pageIndex = state.catalog.path.findIndex(page => page === action.newPage);
       return state.setIn(['catalog', 'page'], action.newPage)
-        .updateIn(['catalog', 'path'], path => path.take(pageIndex - 1));
+        .updateIn(['catalog', 'path'], path => path.take(pageIndex));
 
     case SELECT_TOOL_EDIT:
       return state.set('mode', MODE_IDLE);
