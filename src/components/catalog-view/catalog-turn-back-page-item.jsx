@@ -20,20 +20,6 @@ const STYLE_BOX_HOVER = {
   background: '#1ca6fc'
 };
 
-const STYLE_TITLE = {
-  width: '100%',
-  position: 'absolute',
-  textAlign: 'center',
-  display: 'block',
-  marginBottom: '.5em',
-  textTransform: 'capitalize'
-};
-
-const STYLE_TITLE_HOVERED = {
-  ...STYLE_TITLE,
-  opacity: 0.1
-};
-
 const STYLE_BACK_HOVER = {
   position: 'absolute',
   color: '#1ca6fc',
@@ -60,7 +46,7 @@ export default class CatalogTurnBackPageItem extends Component {
   }
 
   changePage(newPage) {
-    this.context.projectActions.goBackToCatalogPage(this.props.page.name)
+    this.context.projectActions.goBackToCatalogPage(newPage)
   }
 
   render() {
