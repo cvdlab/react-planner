@@ -14,7 +14,7 @@ export default class Catalog {
 
   constructor(unit = UNIT_CENTIMETER) {
     this.elements = {};
-    this.categories = {root: {name: 'root', label: '', elements: [], categories: []}};
+    this.categories = {root: {name: 'root', label: '/', elements: [], categories: []}};
     this.propertyTypes = {};
     this.unit = unit;
 
