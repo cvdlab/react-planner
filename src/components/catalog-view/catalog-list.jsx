@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import CatalogItem from './catalog-item';
 import CatalogPageItem from './catalog-page-item';
-import {Seq} from 'immutable'
+import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 
@@ -19,11 +19,18 @@ export default function CatalogList({width, height, state}, {catalog, translator
   let categoriesToDisplay = currentCategory.categories;
   let elementsToDisplay = currentCategory.elements;
 
+  let pathSize = state.catalog.path.size;
+
+  let turnBackButton = pathSize > 0 ? (
+    <CatalogTurnBackPageItem page={catalog.categories[state.catalog.path.get(pathSize - 1)]}/>) : null;
+
   return (
     <ContentContainer width={width} height={height}>
       <ContentTitle>{translator.t('Catalog')}</ContentTitle>
       <div style={STYLE_ITEMS}>
-        {categoriesToDisplay.map(category => <CatalogPageItem key={category.name} page={category} oldPage={catalog.categories[page]}/>)}
+        {turnBackButton}
+        {categoriesToDisplay.map(category => <CatalogPageItem key={category.name} page={category}
+                                                              oldPage={catalog.categories[page]}/>)}
         {elementsToDisplay
           .filter(element => element.prototype !== 'areas')
           .map(element => <CatalogItem key={element.name} element={element}/>)}

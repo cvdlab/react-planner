@@ -232,7 +232,7 @@ export class CatalogElement extends Record({
 export class Catalog extends Record({
   ready: false,
   page: "root",
-  path: new List(['root']),
+  path: new List(),
   elements: new Map(),
 }, 'Catalog') {
   constructor(json = {}) {
