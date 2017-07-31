@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import IconBack from 'react-icons/lib/md/navigate-before';
+import IconBack from 'react-icons/lib/md/keyboard-backspace';
 
 const STYLE_BOX = {
   width: '14em',
@@ -34,7 +34,7 @@ const STYLE_TITLE_HOVERED = {
   opacity: 0.1
 };
 
-const STYLE_NEXT_HOVER = {
+const STYLE_BACK_HOVER = {
   position: 'absolute',
   color: '#1ca6fc',
   fontSize: '5em',
@@ -76,7 +76,7 @@ export default class CatalogTurnBackPageItem extends Component {
       >
 
         <div style={CONTAINER_DIV}>
-          <IconBack style={STYLE_NEXT_HOVER}/>
+          <IconBack style={STYLE_BACK_HOVER}/>
         </div>
 
       </div>
