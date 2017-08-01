@@ -127,6 +127,7 @@ export class Area extends Record({
   prototype: 'areas',
   name: '',
   vertices: new List(),
+  holes: new List(),
   selected: false,
   properties: new Map(),
   misc: new Map()
