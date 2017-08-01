@@ -14,8 +14,7 @@ export default function Line({line, layer, scene, catalog}) {
   let {x: x1, y: y1} = vertex0;
   let {x: x2, y: y2} = vertex1;
 
-  if( x1 >= x2 ) {
-    //then swap vertex
+  if (x1 > x2) {
     ({x: x1, y: y1} = vertex1);
     ({x: x2, y: y2} = vertex0);
   }

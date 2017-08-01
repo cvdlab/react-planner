@@ -210,7 +210,7 @@ export function mapRange(value, low1, high1, low2, high2) {
 }
 
 export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
-  return -(Math.atan2(y1 - y2, x2-x1)) * 180 / Math.PI;
+  return -(Math.atan2(y1 - y2, x2 - x1)) * 180 / Math.PI;
 }
 
 export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
