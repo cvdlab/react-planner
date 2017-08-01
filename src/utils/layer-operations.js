@@ -7,6 +7,8 @@ import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
 import {EPSILON} from "../constants";
 
+const flatten = list => list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), [] );
+
 export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
   let line;
 
@@ -426,6 +428,50 @@ export function removeArea(layer, areaID) {
 
 const sameSet = (set1, set2) => set1.size == set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 
+//https://github.com/MartyWallace/PolyK
+function ContainsPoint (polygon, pointX, pointY) {
+  var p = polygon
+  var px = pointX
+  var py = pointY
+  var n = p.length >> 1
+  var ax
+  var ay = p[2 * n - 3] - py
+  var bx = p[2 * n - 2] - px
+  var by = p[2 * n - 1] - py
+
+  // var lup = by > ay;
+  for (var ii = 0; ii < n; ii++) {
+    ax = bx
+    ay = by
+    bx = p[2 * ii] - px
+    by = p[2 * ii + 1] - py
+    if (ay === by) continue
+    var lup = by > ay
+  }
+
+  var depth = 0
+  for (var i = 0; i < n; i++) {
+    ax = bx
+    ay = by
+    bx = p[2 * i] - px
+    by = p[2 * i + 1] - py
+    if (ay < 0 && by < 0) continue  // both "up" or both "down"
+    if (ay > 0 && by > 0) continue  // both "up" or both "down"
+    if (ax < 0 && bx < 0) continue   // both points on the left
+
+    if (ay === by && Math.min(ax, bx) <= 0) return true
+    if (ay === by) continue
+
+    var lx = ax + (bx - ax) * (-ay) / (by - ay)
+    if (lx === 0) return true      // point on edge
+    if (lx > 0) depth++
+    if (ay === 0 && lup && by > ay) depth--  // hit vertex, both up
+    if (ay === 0 && !lup && by < ay) depth-- // hit vertex, both down
+    lup = by > ay
+  }
+  return (depth & 1) === 1
+}
+
 export function detectAndUpdateAreas(layer, catalog) {
 
   let verticesArray = [];           //array with vertices coords
@@ -441,15 +487,38 @@ export function detectAndUpdateAreas(layer, catalog) {
     verticesArrayIndex_to_vertexID[latestVertexIndex] = vertex.id;
   });
 
-  layer.lines.forEach(line => {
-    let vertices = line.vertices.map(vertexID => vertexID_to_verticesArrayIndex[vertexID]).toArray();
-    linesArray.push(vertices);
-  });
+  linesArray = layer.lines.map(line => line.vertices.map(vertexID => vertexID_to_verticesArrayIndex[vertexID]).toArray());
 
   let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
 
+  //prendo le coordinate di tutti i vertici dei cicli
+  let coordICBVAI = innerCyclesByVerticesArrayIndex.map( cycle => cycle.map( vertexIndex => verticesArray[vertexIndex] ) );
+
+  //calcolo i cicli
+  let cycleContaining = coordICBVAI.map(( el, ind1 ) => {
+    let arr = flatten( el );
+    let toRet = [];
+    coordICBVAI.forEach(( comp, ind2 ) => { if( ind1 !== ind2 && ContainsPoint( arr, comp[0][0], comp[0][1]) ) toRet.push(ind2); });
+    return toRet;
+  });
+
+  //elimino i cicli nidificati
+  let uniqueCycleContaining = [];
+
+  for( let x = 0; x < cycleContaining.length; x++ )
+  {
+    let inCycle = cycleContaining[x];
+    for( let y = 0; y < inCycle.length; y++ )
+    {
+      let rifCycle = inCycle[y];
+      uniqueCycleContaining[x] = inCycle.filter(val => !cycleContaining[rifCycle].includes(val));
+    }
+  }
+
   let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
     .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
+
+  let areasID = [];
 
   layer = layer.withMutations(layer => {
     //remove areas
@@ -459,13 +528,22 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     //add new areas
-    innerCyclesByVerticesID.forEach(cycle => {
-      let areaInUse = layer.areas.some(area => sameSet(area.vertices, cycle));
-      if (!areaInUse) {
+    innerCyclesByVerticesID.forEach( ( cycle, ind ) => {
+      let areaInUse = layer.areas.find(area => sameSet(area.vertices, cycle));
+
+      if (areaInUse) areasID[ ind ] = areaInUse.id;
+      else {
         let areaVerticesCoords = cycle.map(vertexId => layer.vertices.get(vertexId) );
-        addArea(layer, 'area', areaVerticesCoords, catalog)
+        let { area } = addArea(layer, 'area', areaVerticesCoords, catalog);
+        areasID[ ind ] = area.id;
       }
     });
+
+    for( let x = 0; x < uniqueCycleContaining.length; x++ )
+    {
+      let area = layer.areas.get( areasID[ x ] );
+      area = area.set('holes', new List( uniqueCycleContaining[x] ? uniqueCycleContaining[x].map( el => areasID[ el ] ) : [] ));
+    }
   });
 
   return {layer};
