@@ -14,7 +14,7 @@ import {
   addLineAvoidingIntersections,
   mergeEqualsVertices
 } from '../utils/layer-operations';
-import {orderVertices, pointsDistance} from "../utils/geometry";
+import {orderVertices, pointsDistance, samePoints} from "../utils/geometry";
 
 export default function (state, action) {
   switch (action.type) {
@@ -113,12 +113,16 @@ function endDraggingVertex(state, x, y) {
           oldHoles.push({hole, offsetPosition: {x: xp, y: yp}});
         });
 
+        mergeEqualsVertices(layer, vertexID);
         removeLine(layer, lineID);
-        addLineAvoidingIntersections(layer, line.type,
-          oldVertex.x, oldVertex.y,
-          vertex.x, vertex.y,
-          catalog,
-          line.properties, oldHoles);
+
+        if (!samePoints(oldVertex, vertex)) {
+          addLineAvoidingIntersections(layer, line.type,
+            oldVertex.x, oldVertex.y,
+            vertex.x, vertex.y,
+            catalog,
+            line.properties, oldHoles);
+        }
       }
     });
 
