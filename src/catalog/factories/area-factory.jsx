@@ -5,34 +5,43 @@ export default function AreaFactory(name, info, textures) {
 
   let areaElement = {
     name,
-    prototype: "areas",
+    prototype: 'areas',
     info,
     properties: {
       patternColor: {
-        label: "Color",
-        type: "color",
-        defaultValue: "#f5f4f4"
+        label: 'Color',
+        type: 'color',
+        defaultValue: '#f5f4f4'
       },
       thickness: {
-        label: "Thickness",
-        type: "length-measure",
+        label: 'Thickness',
+        type: 'length-measure',
         defaultValue: {
           length: 0,
         }
       }
     },
     render2D: function (element, layer, scene) {
-      let path = "";
-      let first = true;
+      let path = '';
 
-      element.vertices.valueSeq()
-        .map(vertexID => layer.vertices.get(vertexID))
-        .forEach((vertex, vertexID) => {
-          path += `${first ? 'M' : 'L'} ${vertex.x} ${vertex.y} `;
-          first = false;
+      ///print area path
+      element.vertices.forEach((vertexID, ind) => {
+        let vertex = layer.vertices.get(vertexID);
+        path += ( ind ? 'L' : 'M' ) + vertex.x + ' ' + vertex.y + ' ';
+      });
+
+      //add holes
+      element.holes.forEach(areaID => {
+        let area = layer.areas.get( areaID );
+
+        area.vertices.reverse().forEach((vertexID, ind) => {
+          let vertex = layer.vertices.get(vertexID);
+          path += ( ind ? 'L' : 'M' ) + vertex.x + ' ' + vertex.y + ' ';
         });
 
-      let fill = element.selected ? "#99c3fb" : element.properties.get('patternColor');
+      });
+
+      let fill = element.selected ? '#99c3fb' : element.properties.get('patternColor');
 
       return (<path d={path} fill={fill}/>);
     },
@@ -54,8 +63,8 @@ export default function AreaFactory(name, info, textures) {
     }
 
     areaElement.properties.texture = {
-      label: "Floor",
-      type: "enum",
+      label: 'Floor',
+      type: 'enum',
       defaultValue: 'none',
       values: textureValues
     };
