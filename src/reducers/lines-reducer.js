@@ -24,10 +24,11 @@ import {
   unselect,
   addLineAvoidingIntersections,
   unselectAll,
-  detectAndUpdateAreas,
+  detectAndUpdateAreas, mergeEqualsVertices,
 } from '../utils/layer-operations';
 import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
 import {sceneSnapElements} from '../utils/snap-scene';
+import {samePoints} from "../utils/geometry";
 
 export default function (state, action) {
   switch (action.type) {
@@ -319,10 +320,18 @@ function endDraggingLine(state, x, y) {
         newVertex1X += deltaX;
         newVertex1Y += deltaY;
       }
+
+      mergeEqualsVertices(layer, line.vertices.get(0));
+      mergeEqualsVertices(layer, line.vertices.get(1));
+
       removeLine(layer, lineID);
-      addLineAvoidingIntersections(layer, line.type,
-        newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
-        catalog, line.properties, holesWithOffsetPosition);
+
+      if(!samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
+        addLineAvoidingIntersections(layer, line.type,
+          newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
+          catalog, line.properties, holesWithOffsetPosition);
+      }
+
       detectAndUpdateAreas(layer, catalog);
     }));
 
