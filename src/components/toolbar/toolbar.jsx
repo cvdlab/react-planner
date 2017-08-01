@@ -88,7 +88,7 @@ export default function Toolbar(
       index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
       active={false}
       tooltip={translator.t('New project')}
-      onClick={event => projectActions.newProject()}>
+      onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
       <IconNewFile />
     </ToolbarButton>
     },
