@@ -20,16 +20,25 @@ export default function CatalogList({width, height, state}, {catalog, translator
   let categoriesToDisplay = currentCategory.categories;
   let elementsToDisplay = currentCategory.elements;
 
-  let breadcrumbsNames = [];
 
-  state.catalog.path.forEach(pathName => {
-    breadcrumbsNames.push({
-      name: catalog.getCategory(pathName).label,
-      action: () => projectActions.goBackToCatalogPage(pathName)
+  let breadcrumbComponent = null;
+
+  if (page !== 'root') {
+
+    let breadcrumbsNames = [];
+
+    state.catalog.path.forEach(pathName => {
+      breadcrumbsNames.push({
+        name: catalog.getCategory(pathName).label,
+        action: () => projectActions.goBackToCatalogPage(pathName)
+      });
     });
-  });
 
-  breadcrumbsNames.push({name: currentCategory.label, action: ""});
+    breadcrumbsNames.push({name: currentCategory.label, action: ""});
+
+    breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
+
+  }
 
   let pathSize = state.catalog.path.size;
 
@@ -39,7 +48,7 @@ export default function CatalogList({width, height, state}, {catalog, translator
   return (
     <ContentContainer width={width} height={height}>
       <ContentTitle>{translator.t('Catalog')}</ContentTitle>
-      <CatalogBreadcrumb names={breadcrumbsNames}/>
+      {breadcrumbComponent}
       <div style={STYLE_ITEMS}>
         {turnBackButton}
         {categoriesToDisplay.map(category => <CatalogPageItem key={category.name} page={category}
