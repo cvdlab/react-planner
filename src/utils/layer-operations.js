@@ -541,8 +541,7 @@ export function detectAndUpdateAreas(layer, catalog) {
 
     for( let x = 0; x < uniqueCycleContaining.length; x++ )
     {
-      let area = layer.areas.get( areasID[ x ] );
-      area = area.set('holes', new List( uniqueCycleContaining[x] ? uniqueCycleContaining[x].map( el => areasID[ el ] ) : [] ));
+      layer = layer.setIn( [ 'areas', areasID[ x ], 'holes' ], new List( uniqueCycleContaining[x] ? uniqueCycleContaining[x].map( el => areasID[ el ] ) : [] ) );
     }
   });
 
