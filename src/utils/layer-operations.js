@@ -5,7 +5,6 @@ import IDBroker from './id-broker';
 import NameGenerator from './name-generator';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
-import {EPSILON} from "../constants";
 
 const flatten = list => list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
 
@@ -432,12 +431,12 @@ const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2)
 function ContainsPoint(polygon, pointX, pointY) {
   let n = polygon.length >> 1;
 
-  console.log(`polygon = ${polygon} -- point=(${pointX},${pointY}) -- polygon length = ${polygon.length} and n = ${n}`);
-
   let ax, lup;
   let ay = polygon[2 * n - 3] - pointY;
   let bx = polygon[2 * n - 2] - pointX;
   let by = polygon[2 * n - 1] - pointY;
+
+  if (bx === 0 && by === 0) return false; // point on edge
 
   // let lup = by > ay;
   for (let ii = 0; ii < n; ii++) {
@@ -445,6 +444,7 @@ function ContainsPoint(polygon, pointX, pointY) {
     ay = by;
     bx = polygon[2 * ii] - pointX;
     by = polygon[2 * ii + 1] - pointY;
+    if (bx === 0 && by === 0) return false; // point on edge
     if (ay === by) continue;
     lup = by > ay;
   }
@@ -455,7 +455,6 @@ function ContainsPoint(polygon, pointX, pointY) {
     ay = by;
     bx = polygon[2 * i] - pointX;
     by = polygon[2 * i + 1] - pointY;
-    if (bx === 0 && by === 0) return false; // point on edge
     if (ay < 0 && by < 0) continue;  // both "up" or both "down"
     if (ay > 0 && by > 0) continue;  // both "up" or both "down"
     if (ax < 0 && bx < 0) continue;   // both points on the left
@@ -500,10 +499,8 @@ export function detectAndUpdateAreas(layer, catalog) {
     let arr = flatten(el);
     let toRet = [];
     coordICBVAI.forEach((comp, ind2) => {
-      if (ind1 !== ind2) {
-        let containsPoint = ContainsPoint(arr, comp[0][0], comp[0][1]);
-        console.log(containsPoint);
-        if (containsPoint) toRet.push(ind2);
+      if (ind1 !== ind2 && ContainsPoint(arr, comp[0][0], comp[0][1])) {
+        toRet.push(ind2);
       }
     });
     return toRet;
