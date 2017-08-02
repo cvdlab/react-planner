@@ -22,10 +22,8 @@ export default function Line(_ref) {
       y2 = vertex1.y;
 
 
-  if (x1 >= x2) {
+  if (x1 > x2) {
     x1 = vertex1.x;
-    //then swap vertex
-
     y1 = vertex1.y;
     x2 = vertex0.x;
     y2 = vertex0.y;

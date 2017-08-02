@@ -12,45 +12,46 @@ import PropTypes from 'prop-types';
 //http://www.cssportal.com/css-tooltip-generator/
 
 var STYLE = {
-  width: "30px",
-  height: "30px",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  marginBottom: "5px",
-  fontSize: "25px",
-  position: "relative"
+  width: '30px',
+  height: '30px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  marginBottom: '5px',
+  fontSize: '25px',
+  position: 'relative',
+  cursor: 'pointer'
 };
 
 var STYLE_TOOLTIP = {
-  position: "absolute",
-  width: "140px",
-  color: "#FFFFFF",
-  background: "#000000",
-  height: "30px",
-  lineHeight: "30px",
-  textAlign: "center",
-  visibility: "visible",
-  borderRadius: "6px",
-  opacity: "0.8",
-  left: "100%",
-  top: "50%",
-  marginTop: "-15px",
-  marginLeft: "15px",
-  zIndex: "999",
-  fontSize: "12px"
+  position: 'absolute',
+  width: '140px',
+  color: '#FFFFFF',
+  background: '#000000',
+  height: '30px',
+  lineHeight: '30px',
+  textAlign: 'center',
+  visibility: 'visible',
+  borderRadius: '6px',
+  opacity: '0.8',
+  left: '100%',
+  top: '50%',
+  marginTop: '-15px',
+  marginLeft: '15px',
+  zIndex: '999',
+  fontSize: '12px'
 };
 
 var STYLE_TOOLTIP_PIN = {
-  position: "absolute",
-  top: "50%",
-  right: "100%",
-  marginTop: "-8px",
-  width: "0",
-  height: "0",
-  borderRight: "8px solid #000000",
-  borderTop: "8px solid transparent",
-  borderBottom: "8px solid transparent"
+  position: 'absolute',
+  top: '50%',
+  right: '100%',
+  marginTop: '-8px',
+  width: '0',
+  height: '0',
+  borderRight: '8px solid #000000',
+  borderTop: '8px solid transparent',
+  borderBottom: '8px solid transparent'
 };
 
 var ToolbarButton = function (_Component) {
@@ -78,15 +79,15 @@ var ToolbarButton = function (_Component) {
       return React.createElement(
         'div',
         { style: STYLE,
-          onMouseEnter: function onMouseEnter(event) {
+          onMouseOver: function onMouseOver(event) {
             return _this2.setState({ active: true });
           },
-          onMouseLeave: function onMouseLeave(event) {
+          onMouseOut: function onMouseOut(event) {
             return _this2.setState({ active: false });
           } },
         React.createElement(
-          'a',
-          { href: 'javascript:;', style: { color: color, textDecoration: "none" }, onClick: props.onClick },
+          'div',
+          { style: { color: color }, onClick: props.onClick },
           props.children
         ),
         state.active ? React.createElement(
@@ -107,6 +108,6 @@ export default ToolbarButton;
 
 ToolbarButton.propTypes = {
   active: PropTypes.bool.isRequired,
-  onClick: PropTypes.func.isRequired,
-  tooltip: PropTypes.string.isRequired
+  tooltip: PropTypes.string.isRequired,
+  onClick: PropTypes.func.isRequired
 };

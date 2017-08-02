@@ -103,8 +103,6 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
       y4 = p4.y;
 
 
-  var EPSILON = 10e-6;
-
   var denom = (y4 - y3) * (x2 - x1) - (x4 - x3) * (y2 - y1);
   var numA = (x4 - x3) * (y1 - y3) - (y4 - y3) * (x1 - x3);
   var numB = (x2 - x1) * (y1 - y3) - (y2 - y1) * (x1 - x3);
@@ -238,7 +236,6 @@ export function samePoints(_ref, _ref2) {
   var x2 = _ref2.x,
       y2 = _ref2.y;
 
-  var EPSILON = 10e-6;
   return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
 }
 

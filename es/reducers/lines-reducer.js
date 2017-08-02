@@ -3,9 +3,10 @@ import { List, Map } from 'immutable';
 import { SELECT_TOOL_DRAWING_LINE, BEGIN_DRAWING_LINE, UPDATE_DRAWING_LINE, END_DRAWING_LINE, BEGIN_DRAGGING_LINE, UPDATE_DRAGGING_LINE, END_DRAGGING_LINE, SELECT_LINE, MODE_IDLE, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAGGING_LINE } from '../constants';
 
 import * as Geometry from '../utils/geometry';
-import { addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections, unselectAll, detectAndUpdateAreas } from '../utils/layer-operations';
+import { addLine, replaceLineVertex, removeLine, select, unselect, addLineAvoidingIntersections, unselectAll, detectAndUpdateAreas, mergeEqualsVertices } from '../utils/layer-operations';
 import { nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap } from '../utils/snap';
 import { sceneSnapElements } from '../utils/snap-scene';
+import { samePoints } from "../utils/geometry";
 
 export default function (state, action) {
   switch (action.type) {
@@ -288,21 +289,23 @@ function endDraggingLine(state, x, y) {
   var vertex0 = layer.vertices.get(line.vertices.get(0));
   var vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  var orderedVertices = Geometry.orderVertices([vertex0, vertex1]);
-  var lineLength = Geometry.pointsDistance(orderedVertices[0].x, orderedVertices[0].y, orderedVertices[1].x, orderedVertices[1].y);
+  var maxV = Geometry.maxVertex(vertex0, vertex1);
+  var minV = Geometry.minVertex(vertex0, vertex1);
 
-  var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
+  var lineLength = Geometry.verticesDistance(minV, maxV);
+  var alpha = Math.atan2(maxV.y - minV.y, maxV.x - minV.x);
 
   var holesWithOffsetPosition = [];
   layer.lines.get(lineID).holes.forEach(function (holeID) {
     var hole = layer.holes.get(holeID);
+    var pointOnLine = lineLength * hole.offset;
 
-    var offset = hole.offset;
+    var offsetPosition = {
+      x: pointOnLine * Math.cos(alpha) + minV.x,
+      y: pointOnLine * Math.sin(alpha) + minV.y
+    };
 
-    var xp = lineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
-    var yp = lineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
-
-    holesWithOffsetPosition.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
+    holesWithOffsetPosition.push({ hole: hole, offsetPosition: offsetPosition });
   });
 
   return state.withMutations(function (state) {
@@ -347,8 +350,16 @@ function endDraggingLine(state, x, y) {
           newVertex1X += deltaX;
           newVertex1Y += deltaY;
         }
+
+        mergeEqualsVertices(layer, line.vertices.get(0));
+        mergeEqualsVertices(layer, line.vertices.get(1));
+
         removeLine(layer, lineID);
-        addLineAvoidingIntersections(layer, line.type, newVertex0X, newVertex0Y, newVertex1X, newVertex1Y, catalog, line.properties, holesWithOffsetPosition);
+
+        if (!samePoints({ newVertex0X: newVertex0X, newVertex0Y: newVertex0Y }, { newVertex1X: newVertex1X, newVertex1Y: newVertex1Y })) {
+          addLineAvoidingIntersections(layer, line.type, newVertex0X, newVertex0Y, newVertex1X, newVertex1Y, catalog, line.properties, holesWithOffsetPosition);
+        }
+
         detectAndUpdateAreas(layer, catalog);
       });
     });

@@ -185,6 +185,7 @@ export var Area = function (_Record6) {
   prototype: 'areas',
   name: '',
   vertices: new List(),
+  holes: new List(),
   selected: false,
   properties: new Map(),
   misc: new Map()
@@ -280,9 +281,7 @@ export var Scene = function (_Record9) {
   selectedLayer: null,
   width: 3000,
   height: 2000,
-
   meta: new Map() //additional info
-
 }, 'Scene'));
 
 export var CatalogElement = function (_Record10) {
@@ -335,11 +334,8 @@ export var Catalog = function (_Record11) {
       }
 
       var element = this.elements.get(type);
-
-      initialProperties = new Map(initialProperties);
-
       var properties = element.properties.map(function (value, key) {
-        return initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue');
+        return initialProperties[key] || value.get('defaultValue');
       });
 
       switch (element.prototype) {
@@ -364,6 +360,8 @@ export var Catalog = function (_Record11) {
   return Catalog;
 }(Record({
   ready: false,
+  page: "root",
+  path: new List(),
   elements: new Map()
 }, 'Catalog'));
 
@@ -379,21 +377,11 @@ export var State = function (_Record12) {
     return _possibleConstructorReturn(this, (State.__proto__ || Object.getPrototypeOf(State)).call(this, _extends({}, json, {
       scene: scene,
       sceneHistory: json.sceneHistory ? json.sceneHistory : new List([scene]),
-
       catalog: new Catalog(json.catalog || {}),
-
       viewer2D: new Map(json.viewer2D || {}),
-
-      mouse: new Map({ x: 0, y: 0 }),
-
-      zoom: 0,
-
-      snapMask: SNAP_MASK,
-
       drawingSupport: new Map(json.drawingSupport || {}),
       draggingSupport: new Map(json.draggingSupport || {}),
       rotatingSupport: new Map(json.rotatingSupport || {}),
-
       misc: json.misc ? fromJS(json.misc) : new Map()
     })));
   }
@@ -401,26 +389,17 @@ export var State = function (_Record12) {
   return State;
 }(Record({
   mode: MODE_IDLE,
-
   scene: new Scene(),
   sceneHistory: new List([new Scene()]),
-
   catalog: new Catalog(),
-
   viewer2D: new Map(),
-
-  mouse: new Map(),
-
+  mouse: new Map({ x: 0, y: 0 }),
   zoom: 0,
-
   snapMask: SNAP_MASK,
-
   snapElements: new List(),
   activeSnapElement: null,
-
   drawingSupport: new Map(),
   draggingSupport: new Map(),
   rotatingSupport: new Map(),
-
   misc: new Map() //additional info
 }, 'State'));

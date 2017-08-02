@@ -4,18 +4,18 @@ import polylabel from 'polylabel';
 import areapolygon from 'area-polygon';
 
 var STYLE_TEXT = {
-  textAnchor: "middle",
-  fontSize: "12px",
-  fontFamily: "'Courier New', Courier, monospace",
-  pointerEvents: "none",
-  fontWeight: "bold",
+  textAnchor: 'middle',
+  fontSize: '12px',
+  fontFamily: '"Courier New", Courier, monospace',
+  pointerEvents: 'none',
+  fontWeight: 'bold',
 
   //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
-  WebkitTouchCallout: "none", /* iOS Safari */
-  WebkitUserSelect: "none", /* Chrome/Safari/Opera */
-  MozUserSelect: "none", /* Firefox */
-  MsUserSelect: "none", /* Internet Explorer/Edge */
-  userSelect: "none"
+  WebkitTouchCallout: 'none', /* iOS Safari */
+  WebkitUserSelect: 'none', /* Chrome/Safari/Opera */
+  MozUserSelect: 'none', /* Firefox */
+  MsUserSelect: 'none', /* Internet Explorer/Edge */
+  userSelect: 'none'
 };
 
 export default function Area(_ref) {
@@ -29,19 +29,34 @@ export default function Area(_ref) {
   var renderedAreaSize = null;
 
   if (area.selected) {
-    var vertices = layer.vertices;
-    var polygon = area.vertices.map(function (vertexID) {
-      return vertices.get(vertexID);
-    }).map(function (vertex) {
-      return [vertex.x, vertex.y];
-    }).toArray();
+    var polygon = area.vertices.toArray().map(function (vertexID) {
+      var _layer$vertices$get = layer.vertices.get(vertexID),
+          x = _layer$vertices$get.x,
+          y = _layer$vertices$get.y;
 
+      return [x, y];
+    });
     var center = polylabel([polygon], 1.0);
-    var areaSize = (areapolygon(polygon, false) / 10000).toFixed(2);
+    var areaSize = areapolygon(polygon, false);
+
+    //subtract holes area
+    area.holes.forEach(function (areaID) {
+      var hole = layer.areas.get(areaID);
+      var holePolygon = hole.vertices.toArray().map(function (vertexID) {
+        var _layer$vertices$get2 = layer.vertices.get(vertexID),
+            x = _layer$vertices$get2.x,
+            y = _layer$vertices$get2.y;
+
+        return [x, y];
+      });
+
+      areaSize -= areapolygon(holePolygon, false);
+    });
+
     renderedAreaSize = React.createElement(
       'text',
       { x: '0', y: '0', transform: 'translate(' + center[0] + ' ' + center[1] + ') scale(1, -1)', style: STYLE_TEXT },
-      areaSize,
+      (areaSize / 10000).toFixed(2),
       ' m',
       String.fromCharCode(0xb2)
     );

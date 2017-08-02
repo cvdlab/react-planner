@@ -23,6 +23,7 @@ var Catalog = function () {
     _classCallCheck(this, Catalog);
 
     this.elements = {};
+    this.categories = { root: { name: 'root', label: '/', elements: [], categories: [] } };
     this.propertyTypes = {};
     this.unit = unit;
 
@@ -38,6 +39,14 @@ var Catalog = function () {
       throw new Error('Element ' + type + ' does not exist in catalog');
     }
   }, {
+    key: 'getCategory',
+    value: function getCategory(categoryName) {
+      if (this.hasCategory(categoryName)) {
+        return this.categories[categoryName];
+      }
+      throw new Error('Category ' + categoryName + ' does not exist in catalog');
+    }
+  }, {
     key: 'getPropertyType',
     value: function getPropertyType(type) {
       if (this.propertyTypes.hasOwnProperty(type)) {
@@ -51,6 +60,7 @@ var Catalog = function () {
       json.properties = json.properties || {};
       if (this.validateElement(json)) {
         this.elements[json.name] = json;
+        this.categories.root.elements.push(this.elements[json.name]);
       }
     }
   }, {
@@ -101,6 +111,55 @@ var Catalog = function () {
     key: 'hasElement',
     value: function hasElement(type) {
       return this.elements.hasOwnProperty(type);
+    }
+  }, {
+    key: 'registerCategory',
+    value: function registerCategory(name, label) {
+      if (this.validateCategory(name, label)) {
+        this.categories[name] = { name: name, label: label, categories: [], elements: [] };
+        this.categories.root.categories.push(this.categories[name]);
+      }
+    }
+  }, {
+    key: 'addToCategory',
+    value: function addToCategory(name, child) {
+      if (this.hasElement(child.name)) {
+        this.categories[name].elements.push(child);
+        this.categories.root.elements.splice(this.categories.root.elements.indexOf(child), 1);
+      } else if (this.hasCategory(child.name)) {
+        this.categories[name].categories.push(child);
+        this.categories.root.categories.splice(this.categories.root.categories.indexOf(child), 1);
+      } else {
+        throw new Error('child ' + child + ' is either category nor element');
+      }
+    }
+  }, {
+    key: 'categoryHasElement',
+    value: function categoryHasElement(categoryName, elementName) {
+      var i = void 0;
+      for (i = 0; i < this.categories[categoryName].elements.length; i++) {
+        if (this.categories[categoryName].elements[i].name === elementName) {
+          return true;
+        }
+      }
+
+      return false;
+    }
+  }, {
+    key: 'validateCategory',
+    value: function validateCategory(name, label) {
+      if (name === "") {
+        throw new Error('Category has empty name');
+      } else if (this.categories[name]) {
+        throw new Error('Category has already been registered');
+      }
+
+      return true;
+    }
+  }, {
+    key: 'hasCategory',
+    value: function hasCategory(categoryName) {
+      return this.categories.hasOwnProperty(categoryName);
     }
   }]);
 

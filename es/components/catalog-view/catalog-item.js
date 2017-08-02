@@ -1,5 +1,7 @@
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+var _STYLE_DESCRIPTION;
+
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -8,33 +10,42 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IconAdd from 'react-icons/lib/fa/plus-circle';
-import If from '../../utils/react-if';
 import { Seq } from 'immutable';
 
 var STYLE_BOX = {
-  width: "13.75em",
-  height: "13.75em",
-  padding: "0.625em",
-  background: "#f7f7f9",
-  border: "1px solid #e1e1e8",
-  margin: "0.3em",
-  cursor: "pointer",
-  position: "relative",
-  boxShadow: "0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)",
-  borderRadius: "2px"
+  width: '14em',
+  height: '14em',
+  padding: '0.625em',
+  background: '#f7f7f9',
+  border: '1px solid #e1e1e8',
+  margin: '0.3em',
+  cursor: 'pointer',
+  position: 'relative',
+  boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
+  borderRadius: '2px'
 };
 
 var STYLE_BOX_HOVER = _extends({}, STYLE_BOX, {
-  background: "#1ca6fc"
+  background: '#1ca6fc'
 });
 
+var STYLE_TITLE = {
+  width: '100%',
+  textAlign: 'center',
+  display: 'block',
+  marginBottom: '.5em',
+  textTransform: 'capitalize'
+};
+
 var STYLE_IMAGE = {
-  background: "#222",
-  marginBottom: "5px",
-  border: "solid 1px #e6e6e6",
+  background: '#222',
+  marginBottom: '5px',
+  border: 'solid 1px #e6e6e6',
   width: '100%',
   height: '8em',
   backgroundSize: 'contain',
@@ -45,37 +56,31 @@ var STYLE_IMAGE = {
 
 var STYLE_PLUS_HOVER = {
   marginTop: '1.5em',
-  color: "#1ca6fc",
-  fontSize: "2em",
-  opacity: "0.7",
+  color: '#1ca6fc',
+  fontSize: '2em',
+  opacity: '0.7',
   width: '100%'
 };
 
-var STYLE_DESCRIPTION = {
-  fontSize: "0.75em"
-};
-
-var STYLE_ICON = {
-  position: "absolute",
-  bottom: "5px",
-  right: "10px"
-};
+var STYLE_DESCRIPTION = (_STYLE_DESCRIPTION = {
+  display: 'block'
+}, _defineProperty(_STYLE_DESCRIPTION, 'display', '-webkit-box'), _defineProperty(_STYLE_DESCRIPTION, 'height', '2em'), _defineProperty(_STYLE_DESCRIPTION, 'margin', '0 auto'), _defineProperty(_STYLE_DESCRIPTION, 'fontSize', '0.75em'), _defineProperty(_STYLE_DESCRIPTION, 'fontStyle', 'italic'), _defineProperty(_STYLE_DESCRIPTION, 'lineHeight', '1em'), _defineProperty(_STYLE_DESCRIPTION, 'WebkitLineClamp', '2'), _defineProperty(_STYLE_DESCRIPTION, 'WebkitBoxOrient', 'vertical'), _defineProperty(_STYLE_DESCRIPTION, 'overflow', 'hidden'), _defineProperty(_STYLE_DESCRIPTION, 'textOverflow', 'ellipsis'), _STYLE_DESCRIPTION);
 
 var STYLE_TAGS = {
-  listStyle: "none",
-  margin: "0px",
-  padding: "0px",
-  fontSize: "11px",
-  marginBottom: "3px"
+  listStyle: 'none',
+  margin: '0px',
+  padding: '0px',
+  fontSize: '11px',
+  marginBottom: '3px'
 };
 
 var STYLE_TAG = {
-  display: "inline-block",
-  background: "#337ab7",
-  color: "#fff",
-  padding: "1px 4px",
-  marginRight: "3px",
-  borderRadius: "3px"
+  display: 'inline-block',
+  background: '#337ab7',
+  color: '#fff',
+  padding: '1px 4px',
+  marginRight: '3px',
+  borderRadius: '3px'
 };
 
 var CatalogItem = function (_Component) {
@@ -94,21 +99,16 @@ var CatalogItem = function (_Component) {
     key: 'select',
     value: function select() {
       var element = this.props.element;
-      var _context = this.context,
-          linesActions = _context.linesActions,
-          holesActions = _context.holesActions,
-          itemsActions = _context.itemsActions;
-
 
       switch (element.prototype) {
         case 'lines':
-          linesActions.selectToolDrawingLine(element.name);
+          this.context.linesActions.selectToolDrawingLine(element.name);
           break;
         case 'items':
-          itemsActions.selectToolDrawingItem(element.name);
+          this.context.itemsActions.selectToolDrawingItem(element.name);
           break;
         case 'holes':
-          holesActions.selectToolDrawingHole(element.name);
+          this.context.holesActions.selectToolDrawingHole(element.name);
           break;
       }
     }
@@ -122,7 +122,8 @@ var CatalogItem = function (_Component) {
 
       return React.createElement(
         'div',
-        { style: hover ? STYLE_BOX_HOVER : STYLE_BOX,
+        {
+          style: hover ? STYLE_BOX_HOVER : STYLE_BOX,
           onClick: function onClick(e) {
             return _this2.select();
           },
@@ -131,21 +132,22 @@ var CatalogItem = function (_Component) {
           },
           onMouseLeave: function onMouseLeave(e) {
             return _this2.setState({ hover: false });
-          } },
+          }
+        },
+        React.createElement(
+          'b',
+          { style: STYLE_TITLE },
+          element.info.title
+        ),
         React.createElement(
           'div',
           { style: _extends({}, STYLE_IMAGE, { backgroundImage: 'url(' + element.info.image + ')' }) },
           hover ? React.createElement(IconAdd, { style: STYLE_PLUS_HOVER }) : null
         ),
         React.createElement(
-          'b',
-          null,
-          element.info.title
-        ),
-        React.createElement(
           'ul',
           { style: STYLE_TAGS },
-          new Seq(element.info.tag).map(function (tag, index) {
+          element.info.tag.map(function (tag, index) {
             return React.createElement(
               'li',
               { style: STYLE_TAG, key: index },
@@ -157,8 +159,7 @@ var CatalogItem = function (_Component) {
           'div',
           { style: STYLE_DESCRIPTION },
           element.info.description
-        ),
-        React.createElement(IconAdd, { style: STYLE_ICON })
+        )
       );
     }
   }]);

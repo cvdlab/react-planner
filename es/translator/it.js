@@ -34,5 +34,6 @@ export default {
   "Catalog": "Catalogo",
   "Rotation": "Rotazione",
   "Altitude": "Quota",
-  "Name": "Nome"
+  "Name": "Nome",
+  "Would you want to start a new Project?": "Vuoi iniziare un nuovo progetto?"
 };

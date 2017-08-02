@@ -14,17 +14,17 @@ import IconConfigure from 'react-icons/lib/md/settings';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
-import If from "../../utils/react-if";
-import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
+import If from '../../utils/react-if';
+import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_UPLOADING_IMAGE, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
 
 var Icon2D = function Icon2D() {
   return React.createElement(
     'p',
     { style: {
-        fontSize: "19px",
-        textDecoration: "none",
-        fontWeight: "bold",
-        margin: "0px"
+        fontSize: '19px',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        margin: '0px'
       } },
     '2D'
   );
@@ -34,10 +34,10 @@ var Icon3D = function Icon3D() {
   return React.createElement(
     'p',
     { style: {
-        fontSize: "19px",
-        textDecoration: "none",
-        fontWeight: "bold",
-        margin: "0px"
+        fontSize: '19px',
+        textDecoration: 'none',
+        fontWeight: 'bold',
+        margin: '0px'
       } },
     '3D'
   );
@@ -45,8 +45,38 @@ var Icon3D = function Icon3D() {
 
 var ASIDE_STYLE = {
   backgroundColor: '#28292D',
-  padding: '10px',
-  overflowY: 'hidden'
+  padding: '10px'
+};
+
+var STYLE_TOOLTIP = {
+  position: 'absolute',
+  width: '140px',
+  color: '#FFFFFF',
+  background: '#000000',
+  height: '30px',
+  lineHeight: '30px',
+  textAlign: 'center',
+  visibility: 'visible',
+  borderRadius: '6px',
+  opacity: '0.8',
+  left: '100%',
+  top: '50%',
+  marginTop: '-15px',
+  marginLeft: '15px',
+  zIndex: '999',
+  fontSize: '12px'
+};
+
+var STYLE_TOOLTIP_PIN = {
+  position: 'absolute',
+  top: '50%',
+  right: '100%',
+  marginTop: '-8px',
+  width: '0',
+  height: '0',
+  borderRight: '8px solid #000000',
+  borderTop: '8px solid transparent',
+  borderBottom: '8px solid transparent'
 };
 
 export default function Toolbar(_ref, _ref2) {
@@ -65,7 +95,6 @@ export default function Toolbar(_ref, _ref2) {
 
 
   var mode = state.get('mode');
-
   var mode3DCondition = ![MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode);
 
   var sorter = [{
@@ -73,9 +102,9 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: false,
-        tooltip: translator.t("New project"),
+        tooltip: translator.t('New project'),
         onClick: function onClick(event) {
-          return projectActions.newProject();
+          return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
         } },
       React.createElement(IconNewFile, null)
     )
@@ -91,7 +120,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_VIEWING_CATALOG].includes(mode),
-        tooltip: translator.t("Open catalog"),
+        tooltip: translator.t('Open catalog'),
         onClick: function onClick(event) {
           return projectActions.openCatalog();
         } },
@@ -102,7 +131,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_3D_VIEW].includes(mode),
-        tooltip: translator.t("3D View"),
+        tooltip: translator.t('3D View'),
         onClick: function onClick(event) {
           return viewer3DActions.selectTool3DView();
         } },
@@ -113,7 +142,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_IDLE].includes(mode),
-        tooltip: translator.t("2D View"),
+        tooltip: translator.t('2D View'),
         onClick: function onClick(event) {
           return projectActions.rollback();
         } },
@@ -124,7 +153,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_3D_FIRST_PERSON].includes(mode),
-        tooltip: translator.t("3D First Person"),
+        tooltip: translator.t('3D First Person'),
         onClick: function onClick(event) {
           return viewer3DActions.selectTool3DFirstPerson();
         } },
@@ -135,7 +164,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_2D_ZOOM_IN].includes(mode),
-        tooltip: translator.t("Zoom in"),
+        tooltip: translator.t('Zoom in'),
         onClick: function onClick(event) {
           return viewer2DActions.selectToolZoomIn();
         } },
@@ -146,7 +175,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_2D_ZOOM_OUT].includes(mode),
-        tooltip: translator.t("Zoom out"),
+        tooltip: translator.t('Zoom out'),
         onClick: function onClick(event) {
           return viewer2DActions.selectToolZoomOut();
         } },
@@ -157,10 +186,11 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_2D_PAN].includes(mode),
-        tooltip: translator.t("Pan"),
+        tooltip: translator.t('Pan'),
         onClick: function onClick(event) {
           return viewer2DActions.selectToolPan();
-        } },
+        }
+      },
       React.createElement(IconPan, null)
     )
   }, {
@@ -168,7 +198,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: false,
-        tooltip: translator.t("Undo (CTRL-Z)"),
+        tooltip: translator.t('Undo (CTRL-Z)'),
         onClick: function onClick(event) {
           return projectActions.undo();
         } },
@@ -179,7 +209,7 @@ export default function Toolbar(_ref, _ref2) {
       ToolbarButton,
       {
         active: [MODE_CONFIGURING_PROJECT].includes(mode),
-        tooltip: translator.t("Configure project"),
+        tooltip: translator.t('Configure project'),
         onClick: function onClick(event) {
           return projectActions.openProjectConfigurator();
         } },
@@ -212,7 +242,11 @@ export default function Toolbar(_ref, _ref2) {
     sorter.map(function (el, ind) {
       return React.createElement(
         If,
-        { key: ind, condition: el.condition },
+        {
+          key: ind,
+          condition: el.condition,
+          style: { position: 'relative' }
+        },
         el.dom
       );
     })

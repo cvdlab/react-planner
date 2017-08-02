@@ -1,5 +1,5 @@
 import { Seq, Map, List } from "immutable";
-import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP } from '../constants';
+import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE } from '../constants';
 
 import { State, Scene, Guide, Catalog } from "../models";
 
@@ -16,6 +16,20 @@ export default function (state, action) {
 
     case OPEN_CATALOG:
       return openCatalog(state);
+
+    case CHANGE_CATALOG_PAGE:
+      return state.setIn(['catalog', 'page'], action.newPage).updateIn(['catalog', 'path'], function (path) {
+        return path.push(action.oldPage);
+      });
+
+    case GO_BACK_TO_CATALOG_PAGE:
+      var path = state.catalog.path;
+      var pageIndex = state.catalog.path.findIndex(function (page) {
+        return page === action.newPage;
+      });
+      return state.setIn(['catalog', 'page'], action.newPage).updateIn(['catalog', 'path'], function (path) {
+        return path.take(pageIndex);
+      });
 
     case SELECT_TOOL_EDIT:
       return state.set('mode', MODE_IDLE);

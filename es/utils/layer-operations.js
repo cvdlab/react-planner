@@ -9,7 +9,12 @@ import IDBroker from './id-broker';
 import NameGenerator from './name-generator';
 import * as Geometry from './geometry';
 import calculateInnerCyles from './graph-inner-cycles';
-import { EPSILON } from "../constants";
+
+var flatten = function flatten(list) {
+  return list.reduce(function (a, b) {
+    return a.concat(Array.isArray(b) ? flatten(b) : b);
+  }, []);
+};
 
 export function addLine(layer, type, x0, y0, x1, y1, catalog) {
   var properties = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
@@ -530,8 +535,54 @@ export function removeArea(layer, areaID) {
 }
 
 var sameSet = function sameSet(set1, set2) {
-  return set1.size == set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
+  return set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 };
+
+//https://github.com/MartyWallace/PolyK
+function ContainsPoint(polygon, pointX, pointY) {
+  var n = polygon.length >> 1;
+
+  var ax = void 0,
+      lup = void 0;
+  var ay = polygon[2 * n - 3] - pointY;
+  var bx = polygon[2 * n - 2] - pointX;
+  var by = polygon[2 * n - 1] - pointY;
+
+  if (bx === 0 && by === 0) return false; // point on edge
+
+  // let lup = by > ay;
+  for (var ii = 0; ii < n; ii++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * ii] - pointX;
+    by = polygon[2 * ii + 1] - pointY;
+    if (bx === 0 && by === 0) return false; // point on edge
+    if (ay === by) continue;
+    lup = by > ay;
+  }
+
+  var depth = 0;
+  for (var i = 0; i < n; i++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * i] - pointX;
+    by = polygon[2 * i + 1] - pointY;
+    if (ay < 0 && by < 0) continue; // both "up" or both "down"
+    if (ay > 0 && by > 0) continue; // both "up" or both "down"
+    if (ax < 0 && bx < 0) continue; // both points on the left
+
+    if (ay === by && Math.min(ax, bx) < 0) return true;
+    if (ay === by) continue;
+
+    var lx = ax + (bx - ax) * -ay / (by - ay);
+    if (lx === 0) return false; // point on edge
+    if (lx > 0) depth++;
+    if (ay === 0 && lup && by > ay) depth--; // hit vertex, both up
+    if (ay === 0 && !lup && by < ay) depth--; // hit vertex, both down
+    lup = by > ay;
+  }
+  return (depth & 1) === 1;
+}
 
 export function detectAndUpdateAreas(layer, catalog) {
 
@@ -548,20 +599,58 @@ export function detectAndUpdateAreas(layer, catalog) {
     verticesArrayIndex_to_vertexID[latestVertexIndex] = vertex.id;
   });
 
-  layer.lines.forEach(function (line) {
-    var vertices = line.vertices.map(function (vertexID) {
+  linesArray = layer.lines.map(function (line) {
+    return line.vertices.map(function (vertexID) {
       return vertexID_to_verticesArrayIndex[vertexID];
     }).toArray();
-    linesArray.push(vertices);
   });
 
   var innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
+
+  //prendo le coordinate di tutti i vertici dei cicli
+  var coordICBVAI = innerCyclesByVerticesArrayIndex.map(function (cycle) {
+    return cycle.map(function (vertexIndex) {
+      return verticesArray[vertexIndex];
+    });
+  });
+
+  //calcolo i cicli
+  var cycleContaining = coordICBVAI.map(function (el, ind1) {
+    var arr = flatten(el);
+    var toRet = [];
+    coordICBVAI.forEach(function (comp, ind2) {
+      if (ind1 !== ind2 && ContainsPoint(arr, comp[0][0], comp[0][1])) {
+        toRet.push(ind2);
+      }
+    });
+    return toRet;
+  });
+
+  //elimino i cicli nidificati
+  var uniqueCycleContaining = [];
+
+  for (var x = 0; x < cycleContaining.length; x++) {
+    var inCycle = cycleContaining[x];
+
+    var _loop = function _loop(y) {
+      var rifCycle = inCycle[y];
+      uniqueCycleContaining[x] = inCycle.filter(function (val) {
+        return !cycleContaining[rifCycle].includes(val);
+      });
+    };
+
+    for (var y = 0; y < inCycle.length; y++) {
+      _loop(y);
+    }
+  }
 
   var innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex).map(function (cycle) {
     return new List(cycle.map(function (vertexIndex) {
       return verticesArrayIndex_to_vertexID[vertexIndex];
     }));
   });
+
+  var areasID = [];
 
   layer = layer.withMutations(function (layer) {
     //remove areas
@@ -573,17 +662,31 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     //add new areas
-    innerCyclesByVerticesID.forEach(function (cycle) {
-      var areaInUse = layer.areas.some(function (area) {
+    innerCyclesByVerticesID.forEach(function (cycle, ind) {
+      var areaInUse = layer.areas.find(function (area) {
         return sameSet(area.vertices, cycle);
       });
-      if (!areaInUse) {
+
+      if (areaInUse) {
+        areasID[ind] = areaInUse.id;
+        layer = layer.setIn(['areas', areasID[ind], 'holes'], new List());
+      } else {
         var areaVerticesCoords = cycle.map(function (vertexId) {
           return layer.vertices.get(vertexId);
         });
-        addArea(layer, 'area', areaVerticesCoords, catalog);
+
+        var _addArea = addArea(layer, 'area', areaVerticesCoords, catalog),
+            area = _addArea.area;
+
+        areasID[ind] = area.id;
       }
     });
+
+    for (var _x2 = 0; _x2 < uniqueCycleContaining.length; _x2++) {
+      layer = layer.setIn(['areas', areasID[_x2], 'holes'], new List(uniqueCycleContaining[_x2] ? uniqueCycleContaining[_x2].map(function (el) {
+        return areasID[el];
+      }) : []));
+    }
   });
 
   return { layer: layer };

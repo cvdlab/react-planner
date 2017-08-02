@@ -5,34 +5,42 @@ export default function AreaFactory(name, info, textures) {
 
   var areaElement = {
     name: name,
-    prototype: "areas",
+    prototype: 'areas',
     info: info,
     properties: {
       patternColor: {
-        label: "Color",
-        type: "color",
-        defaultValue: "#f5f4f4"
+        label: 'Color',
+        type: 'color',
+        defaultValue: '#f5f4f4'
       },
       thickness: {
-        label: "Thickness",
-        type: "length-measure",
+        label: 'Thickness',
+        type: 'length-measure',
         defaultValue: {
           length: 0
         }
       }
     },
     render2D: function render2D(element, layer, scene) {
-      var path = "";
-      var first = true;
+      var path = '';
 
-      element.vertices.valueSeq().map(function (vertexID) {
-        return layer.vertices.get(vertexID);
-      }).forEach(function (vertex, vertexID) {
-        path += (first ? 'M' : 'L') + ' ' + vertex.x + ' ' + vertex.y + ' ';
-        first = false;
+      ///print area path
+      element.vertices.forEach(function (vertexID, ind) {
+        var vertex = layer.vertices.get(vertexID);
+        path += (ind ? 'L' : 'M') + vertex.x + ' ' + vertex.y + ' ';
       });
 
-      var fill = element.selected ? "#99c3fb" : element.properties.get('patternColor');
+      //add holes
+      element.holes.forEach(function (areaID) {
+        var area = layer.areas.get(areaID);
+
+        area.vertices.reverse().forEach(function (vertexID, ind) {
+          var vertex = layer.vertices.get(vertexID);
+          path += (ind ? 'L' : 'M') + vertex.x + ' ' + vertex.y + ' ';
+        });
+      });
+
+      var fill = element.selected ? '#99c3fb' : element.properties.get('patternColor');
 
       return React.createElement('path', { d: path, fill: fill });
     },
@@ -54,8 +62,8 @@ export default function AreaFactory(name, info, textures) {
     }
 
     areaElement.properties.texture = {
-      label: "Floor",
-      type: "enum",
+      label: 'Floor',
+      type: 'enum',
       defaultValue: 'none',
       values: textureValues
     };
