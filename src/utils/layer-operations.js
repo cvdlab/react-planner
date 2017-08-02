@@ -536,8 +536,10 @@ export function detectAndUpdateAreas(layer, catalog) {
     innerCyclesByVerticesID.forEach((cycle, ind) => {
       let areaInUse = layer.areas.find(area => sameSet(area.vertices, cycle));
 
-      if (areaInUse) areasID[ind] = areaInUse.id;
-      else {
+      if (areaInUse) {
+        areasID[ind] = areaInUse.id;
+        layer = layer.setIn(['areas', areasID[ind], 'holes'], new List());
+      } else {
         let areaVerticesCoords = cycle.map(vertexId => layer.vertices.get(vertexId));
         let {area} = addArea(layer, 'area', areaVerticesCoords, catalog);
         areasID[ind] = area.id;
