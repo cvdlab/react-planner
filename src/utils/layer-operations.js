@@ -430,21 +430,21 @@ const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2)
 
 //https://github.com/MartyWallace/PolyK
 function ContainsPoint(polygon, pointX, pointY) {
-  let p = polygon;
-  let px = pointX;
-  let py = pointY;
-  let n = p.length >> 1;
+  let n = polygon.length >> 1;
+
+  console.log(`polygon = ${polygon} -- point=(${pointX},${pointY}) -- polygon length = ${polygon.length} and n = ${n}`);
+
   let ax, lup;
-  let ay = p[2 * n - 3] - py;
-  let bx = p[2 * n - 2] - px;
-  let by = p[2 * n - 1] - py;
+  let ay = polygon[2 * n - 3] - pointY;
+  let bx = polygon[2 * n - 2] - pointX;
+  let by = polygon[2 * n - 1] - pointY;
 
   // let lup = by > ay;
   for (let ii = 0; ii < n; ii++) {
     ax = bx;
     ay = by;
-    bx = p[2 * ii] - px;
-    by = p[2 * ii + 1] - py;
+    bx = polygon[2 * ii] - pointX;
+    by = polygon[2 * ii + 1] - pointY;
     if (ay === by) continue;
     lup = by > ay;
   }
@@ -453,17 +453,18 @@ function ContainsPoint(polygon, pointX, pointY) {
   for (let i = 0; i < n; i++) {
     ax = bx;
     ay = by;
-    bx = p[2 * i] - px;
-    by = p[2 * i + 1] - py;
+    bx = polygon[2 * i] - pointX;
+    by = polygon[2 * i + 1] - pointY;
+    if (bx === 0 && by === 0) return false; // point on edge
     if (ay < 0 && by < 0) continue;  // both "up" or both "down"
     if (ay > 0 && by > 0) continue;  // both "up" or both "down"
     if (ax < 0 && bx < 0) continue;   // both points on the left
 
-    if (ay === by && Math.min(ax, bx) <= 0) return true;
+    if (ay === by && Math.min(ax, bx) < 0) return true;
     if (ay === by) continue;
 
     let lx = ax + (bx - ax) * (-ay) / (by - ay);
-    if (lx === 0) return true;      // point on edge
+    if (lx === 0) return false;      // point on edge
     if (lx > 0) depth++;
     if (ay === 0 && lup && by > ay) depth--;  // hit vertex, both up
     if (ay === 0 && !lup && by < ay) depth--; // hit vertex, both down
@@ -499,12 +500,16 @@ export function detectAndUpdateAreas(layer, catalog) {
     let arr = flatten(el);
     let toRet = [];
     coordICBVAI.forEach((comp, ind2) => {
-      if (ind1 !== ind2 && ContainsPoint(arr, comp[0][0], comp[0][1])) toRet.push(ind2);
+      if (ind1 !== ind2) {
+        let containsPoint = ContainsPoint(arr, comp[0][0], comp[0][1]);
+        console.log(containsPoint);
+        if (containsPoint) toRet.push(ind2);
+      }
     });
     return toRet;
   });
 
-  //elimino i cicli nidificati
+//elimino i cicli nidificati
   let uniqueCycleContaining = [];
 
   for (let x = 0; x < cycleContaining.length; x++) {
