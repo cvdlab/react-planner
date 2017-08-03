@@ -26,14 +26,20 @@ export default function Area({layer, area, catalog}) {
   let renderedAreaSize = null;
 
   if (area.selected) {
-    let polygon = area.vertices.toArray().map(vertexID => { let { x, y } = layer.vertices.get(vertexID); return [x, y]; } );
-    var center = polylabel([polygon], 1.0);
+    let polygon = area.vertices.toArray().map(vertexID => {
+      let {x, y} = layer.vertices.get(vertexID);
+      return [x, y];
+    });
+    let center = polylabel([polygon], 1.0);
     let areaSize = areapolygon(polygon, false);
 
     //subtract holes area
     area.holes.forEach(areaID => {
-      let hole = layer.areas.get( areaID );
-      let holePolygon = hole.vertices.toArray().map(vertexID => { let { x, y } = layer.vertices.get(vertexID); return [x, y]; } );
+      let hole = layer.areas.get(areaID);
+      let holePolygon = hole.vertices.toArray().map(vertexID => {
+        let {x, y} = layer.vertices.get(vertexID);
+        return [x, y];
+      });
 
       areaSize -= areapolygon(holePolygon, false);
     });

@@ -475,7 +475,7 @@ function ContainsPoint(polygon, pointX, pointY) {
 export function detectAndUpdateAreas(layer, catalog) {
 
   let verticesArray = [];           //array with vertices coords
-  let linesArray = [];              //array with edges
+  let linesArray;                   //array with edges
 
   let vertexID_to_verticesArrayIndex = {};
   let verticesArrayIndex_to_vertexID = {};
@@ -491,36 +491,10 @@ export function detectAndUpdateAreas(layer, catalog) {
 
   let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
 
-  //prendo le coordinate di tutti i vertici dei cicli
-  let coordICBVAI = innerCyclesByVerticesArrayIndex.map(cycle => cycle.map(vertexIndex => verticesArray[vertexIndex]));
-
-  //calcolo i cicli
-  let cycleContaining = coordICBVAI.map((el, ind1) => {
-    let arr = flatten(el);
-    let toRet = [];
-    coordICBVAI.forEach((comp, ind2) => {
-      if (ind1 !== ind2 && ContainsPoint(arr, comp[0][0], comp[0][1])) {
-        toRet.push(ind2);
-      }
-    });
-    return toRet;
-  });
-
-//elimino i cicli nidificati
-  let uniqueCycleContaining = [];
-
-  for (let x = 0; x < cycleContaining.length; x++) {
-    let inCycle = cycleContaining[x];
-    for (let y = 0; y < inCycle.length; y++) {
-      let rifCycle = inCycle[y];
-      uniqueCycleContaining[x] = inCycle.filter(val => !cycleContaining[rifCycle].includes(val));
-    }
-  }
-
   let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
     .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
 
-  let areasID = [];
+  let areaIDs = [];
 
   layer = layer.withMutations(layer => {
     //remove areas
@@ -534,18 +508,64 @@ export function detectAndUpdateAreas(layer, catalog) {
       let areaInUse = layer.areas.find(area => sameSet(area.vertices, cycle));
 
       if (areaInUse) {
-        areasID[ind] = areaInUse.id;
-        layer = layer.setIn(['areas', areasID[ind], 'holes'], new List());
+        areaIDs[ind] = areaInUse.id;
+        layer.setIn(['areas', areaIDs[ind], 'holes'], new List());
       } else {
         let areaVerticesCoords = cycle.map(vertexId => layer.vertices.get(vertexId));
         let {area} = addArea(layer, 'area', areaVerticesCoords, catalog);
-        areasID[ind] = area.id;
+        areaIDs[ind] = area.id;
       }
     });
 
-    for (let x = 0; x < uniqueCycleContaining.length; x++) {
-      layer = layer.setIn(['areas', areasID[x], 'holes'], new List(uniqueCycleContaining[x] ? uniqueCycleContaining[x].map(el => areasID[el]) : []));
+    // Build a relationship between areas and their coordinates
+    let verticesCoordsForArea = areaIDs.map(areaID => {
+      return {
+        id: areaID,
+        vertices: layer.areas.get(areaID).vertices.map(vertexID => {
+          return new List([layer.vertices.get(vertexID).x, layer.vertices.get(vertexID).y]);
+        })
+      }
+    });
+
+    // Find all holes for an area
+    let i, j;
+    for (i = 0; i < verticesCoordsForArea.length; i++) {
+      let holesList = new List(); // The holes for this area
+      let areaVerticesList = verticesCoordsForArea[i].vertices.flatten().toArray();
+      for (j = 0; j < verticesCoordsForArea.length; j++) {
+        if (i !== j) {
+          let isHole = ContainsPoint(areaVerticesList,
+            verticesCoordsForArea[j].vertices.get(0).get(0),
+            verticesCoordsForArea[j].vertices.get(0).get(1));
+          if (isHole) {
+            holesList = holesList.push(verticesCoordsForArea[j].id);
+          }
+        }
+      }
+      layer.setIn(['areas', verticesCoordsForArea[i].id, 'holes'], holesList);
     }
+
+
+    // Remove holes which are already holes for other areas
+    areaIDs.forEach(areaID => {
+      let doubleHoles = new Set();
+      let areaHoles = layer.getIn(['areas', areaID, 'holes']);
+      areaHoles.forEach((areaHoleID) => {
+        let holesOfholes = layer.getIn(['areas', areaHoleID, 'holes']);
+        holesOfholes.forEach((holeID) => {
+          let holeIndex = areaHoles.indexOf(holeID);
+          if (holeIndex !== -1) {
+            // layer.setIn(['areas', areaID, 'holes'], areaHoles.remove(holeIndex));
+            doubleHoles.add(holeID);
+          }
+        });
+      });
+      doubleHoles.forEach(d => {
+        let holeIndex = areaHoles.indexOf(d);
+        areaHoles = areaHoles.remove(holeIndex);
+      });
+      layer.setIn(['areas', areaID, 'holes'], areaHoles);
+    });
   });
 
   return {layer};
