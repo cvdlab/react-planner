@@ -60,7 +60,33 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
     }
 
     let serializer = new XMLSerializer();
-    imageBrowserDownload(`data:image/svg+xml;utf8,${serializer.serializeToString(maxWidthSVGElement)}`);
+
+    let img = new Image;
+
+    // I create the new canvas to draw
+    let canvas = document.createElement('canvas');
+    let ctx = canvas.getContext('2d');
+
+    // Set width and height for the new canvas
+    let heightAtt = document.createAttribute("height");
+    heightAtt.value = maxWidthSVGElement.height.baseVal.value;
+    canvas.setAttributeNode(heightAtt);
+
+    let widthAtt = document.createAttribute("width");
+    widthAtt.value = maxWidthSVGElement.width.baseVal.value;
+    canvas.setAttributeNode(widthAtt);
+
+    ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    img.crossOrigin = 'anonymous';
+    img.src = `data:image/svg+xml;utf8,${serializer.serializeToString(maxWidthSVGElement)}`;
+
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, maxWidthSVGElement.width.baseVal.value, maxWidthSVGElement.height.baseVal.value);
+      imageBrowserDownload(canvas.toDataURL());
+    };
+
   };
 
   if ([MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)) {
