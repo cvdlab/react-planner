@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import IconBefore from 'react-icons/lib/md/navigate-before';
+import * as SharedStyle from '../../shared-style';
 
 const STYLE_BOX = {
   width: '14em',
@@ -19,23 +20,23 @@ const STYLE_BOX = {
 
 const STYLE_BOX_HOVER = {
   ...STYLE_BOX,
-  background: '#1ca6fc'
+  background: SharedStyle.SECONDARY_COLOR.main
 };
 
 const STYLE_BACK = {
   position: 'absolute',
-  color: '#000',
+  color: SharedStyle.COLORS.black,
   fontSize: '5em',
   width: '100%'
 };
 
 const STYLE_BACK_HOVER = {
   ...STYLE_BACK,
-  color: '#1ca6fc'
+  color: SharedStyle.SECONDARY_COLOR.main
 };
 
 const CONTAINER_DIV = {
-  background: '#fff',
+  background: SharedStyle.COLORS.white,
   marginBottom: '5px',
   border: 'solid 1px #e6e6e6',
   width: '100%',

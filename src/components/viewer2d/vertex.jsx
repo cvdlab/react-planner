@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
-const STYLE = {fill: "#0096fd", stroke: "#fff", cursor: "move"};
+const STYLE = {fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: "move"};
 
 export default function Vertex({vertex, layer}) {
 

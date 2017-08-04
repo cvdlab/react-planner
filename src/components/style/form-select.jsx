@@ -1,4 +1,5 @@
 import React from 'react';
+import * as SharedStyle from '../../shared-style';
 
 const BASE_STYLE = {
   display: "block",
@@ -6,7 +7,7 @@ const BASE_STYLE = {
   padding: "0px 4px",
   fontSize: "13px",
   color: "#55595c",
-  backgroundColor: "#fff",
+  backgroundColor: SharedStyle.COLORS.white,
   backgroundImage: "none",
   border: "1px solid rgba(0,0,0,.15)",
   outline: "none",

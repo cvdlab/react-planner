@@ -24,6 +24,7 @@ import {
   MODE_VIEWING_CATALOG,
   MODE_CONFIGURING_PROJECT
 } from '../../constants';
+import * as SharedStyle from '../../shared-style';
 
 const Icon2D = () => <p style={{
   fontSize: '19px',
@@ -40,15 +41,15 @@ const Icon3D = () => <p style={{
 }}>3D</p>;
 
 const ASIDE_STYLE = {
-  backgroundColor: '#28292D',
+  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   padding: '10px'
 };
 
 const STYLE_TOOLTIP = {
   position: 'absolute',
   width: '140px',
-  color: '#FFFFFF',
-  background: '#000000',
+  color: SharedStyle.COLORS.white,
+  background: SharedStyle.COLORS.black,
   height: '30px',
   lineHeight: '30px',
   textAlign: 'center',

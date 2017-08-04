@@ -5,14 +5,15 @@ import FooterToggleButton from './footer-toggle-button';
 import {VERSION} from '../../version';
 import {SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK} from '../../utils/snap';
 import {MODE_SNAPPING} from '../../constants';
+import * as SharedStyle from '../../shared-style';
 
 const footerBarStyle = {
   position: 'absolute',
   bottom: 0,
   lineHeight: '14px',
   fontSize: '12px',
-  color: '#FFF',
-  backgroundColor: '#005faf',
+  color: SharedStyle.COLORS.white,
+  backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
   padding: '3px 1em',
   margin: 0,
   boxSizing: 'border-box',

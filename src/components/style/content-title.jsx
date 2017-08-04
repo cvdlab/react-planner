@@ -1,7 +1,8 @@
 import React from 'react';
+import * as SharedStyle from '../../shared-style';
 
 const STYLE = {
-  color: "#2e2f33",
+  color: SharedStyle.PRIMARY_COLOR.alt,
   fontWeight: "300",
 };
 

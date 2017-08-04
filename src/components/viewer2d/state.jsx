@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-
 import Scene from './scene';
 import Snap from './snap';
+import * as SharedStyle from '../../shared-style';
 
 export default function State({state, catalog}) {
 
@@ -16,7 +16,7 @@ export default function State({state, catalog}) {
 
   return (
     <g>
-      <rect x="0" y="0" width={width} height={height} fill="#fff"/>
+      <rect x="0" y="0" width={width} height={height} fill={SharedStyle.COLORS.white}/>
       <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
         <Scene scene={scene} catalog={catalog}/>
         {activeSnapElement}

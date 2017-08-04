@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
@@ -18,8 +19,8 @@ const STYLE = {
 const STYLE_TOOLTIP = {
   position: 'absolute',
   width: '140px',
-  color: '#FFFFFF',
-  background: '#000000',
+  color: SharedStyle.COLORS.white,
+  background: SharedStyle.COLORS.black,
   height: '30px',
   lineHeight: '30px',
   textAlign: 'center',
@@ -55,7 +56,7 @@ export default class ToolbarButton extends Component {
 
   render() {
     let { state, props } = this;
-    let color = props.active || state.active ? '#1CA6FC' : '#C2C2C2';
+    let color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
 
     return (
       <div style={STYLE}

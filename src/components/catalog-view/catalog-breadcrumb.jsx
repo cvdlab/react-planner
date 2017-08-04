@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import Arrow from 'react-icons/lib/md/keyboard-arrow-right';
+import * as SharedStyle from '../../shared-style';
 
 const breadcrumbStyle = {
   margin: '1.5em',
@@ -15,11 +16,11 @@ const breadcrumbTextStyle = {
 const breadcrumbLastTextStyle = {
   ...breadcrumbTextStyle,
   fontWeight:'bolder',
-  color:'rgb(28, 166, 252)'
+  color:SharedStyle.SECONDARY_COLOR.main
 };
 
 const breadcrumbTabStyle = {
-  fill: '#000',
+  fill: SharedStyle.COLORS.black,
   fontSize: '24px',
   marginLeft: '10px',
   marginRight: '10px'

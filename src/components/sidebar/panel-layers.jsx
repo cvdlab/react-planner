@@ -18,13 +18,14 @@ import {
   MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE,
   MODE_ROTATING_ITEM
 } from '../../constants';
+import * as SharedStyle from '../../shared-style';
 
 const styleEditButton = {
   cursor: 'pointer',
   marginLeft: '5px',
   border: '0px',
   background: 'none',
-  color: '#fff',
+  color: SharedStyle.COLORS.white,
   fontSize: '14px',
   outline: '0px'
 };
@@ -40,7 +41,7 @@ const tableLayerStyle = {
 };
 
 const iconColStyle = {width: '2em'};
-const styleHoverColor = {color: '#1ca6fc'};
+const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
 const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
 const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
 const styleEyeVisible = {fontSize: '1.25em'};

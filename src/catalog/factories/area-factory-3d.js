@@ -12,6 +12,7 @@ import {
   RepeatWrapping,
   Vector2
 } from 'three';
+import * as SharedStyle from '../../shared-style';
 
 /**
  * Apply a texture to a wall face
@@ -82,7 +83,7 @@ export default function createArea(element, layer, scene, textures) {
   if (element.selected) {
     color = 0x99c3fb
   } else if (textureName && textureName !== 'none') {
-    color = 0xffffff;
+    color = SharedStyle.COLORS.white;
   }
 
   let shape = new Shape();

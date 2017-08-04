@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
 const toggleButtonStyle = {
   width: '5em',
@@ -17,7 +18,7 @@ const toggleButtonStyleOver = {
   ...toggleButtonStyle,
   backgroundColor: '#1c82c6',
   border: '1px solid #FFF',
-  color: '#FFF'
+  color: SharedStyle.COLORS.white
 };
 
 export default class FooterToggleButton extends Component {

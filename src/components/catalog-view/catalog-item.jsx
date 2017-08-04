@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import IconAdd from 'react-icons/lib/fa/plus-circle';
 import {Seq} from 'immutable';
+import * as SharedStyle from '../../shared-style';
 
 const STYLE_BOX = {
   width: '14em',
@@ -20,7 +21,7 @@ const STYLE_BOX = {
 
 const STYLE_BOX_HOVER = {
   ...STYLE_BOX,
-  background: '#1ca6fc'
+  background: SharedStyle.SECONDARY_COLOR.main
 };
 
 const STYLE_TITLE = {
@@ -33,7 +34,7 @@ const STYLE_TITLE = {
 
 const STYLE_TITLE_HOVER = {
   ...STYLE_TITLE,
-  color:'#FFF'
+  color:SharedStyle.COLORS.white
 };
 
 const STYLE_IMAGE_CONTAINER = {
@@ -54,7 +55,7 @@ const STYLE_IMAGE = {
   height: '100%',
   backgroundSize: 'contain',
   backgroundPosition:'50% 50%',
-  backgroundColor:'#FFF',
+  backgroundColor:SharedStyle.COLORS.white,
   backgroundRepeat:'no-repeat',
   transition: 'all .2s ease-in-out'
 };
@@ -66,7 +67,7 @@ const STYLE_IMAGE_HOVER = {
 
 const STYLE_PLUS_HOVER = {
   marginTop:'1.5em',
-  color: '#1ca6fc',
+  color: SharedStyle.SECONDARY_COLOR.main,
   fontSize: '2em',
   opacity: '0.7',
   width: '100%'
@@ -97,7 +98,7 @@ const STYLE_TAGS = {
 const STYLE_TAG = {
   display: 'inline-block',
   background: '#337ab7',
-  color: '#fff',
+  color: SharedStyle.COLORS.white,
   padding: '1px 4px',
   marginRight: '3px',
   borderRadius: '3px'

@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-
+import * as SharedStyle from '../../shared-style';
 
 const STYLE_INPUT = {
   display: "block",
@@ -8,7 +8,7 @@ const STYLE_INPUT = {
   fontSize: "13px",
   lineHeight: "1.25",
   color: "#55595c",
-  backgroundColor: "#fff",
+  backgroundColor: SharedStyle.COLORS.white,
   backgroundImage: "none",
   border: "1px solid rgba(0,0,0,.15)",
   outline: "none",
