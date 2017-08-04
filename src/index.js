@@ -24,6 +24,7 @@ import FormSlider from './components/style/form-slider';
 import FormSubmitButton from './components/style/form-submit-button';
 import FormTextInput from './components/style/form-text-input';
 import * as ReactPlannerConstants from './constants';
+import * as ReactPlannerSharedStyle from './shared-style';
 import {VERSION} from './version';
 
 import ReactPlannerActions from './actions/actions';
@@ -73,5 +74,6 @@ export {
   StyleComponents,
   ReactPlannerConstants,
   ReactPlannerReducers,
-  ReactPlannerActions
+  ReactPlannerActions,
+  ReactPlannerSharedStyle
 };
