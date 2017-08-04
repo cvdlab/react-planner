@@ -545,7 +545,6 @@ export function detectAndUpdateAreas(layer, catalog) {
       layer.setIn(['areas', verticesCoordsForArea[i].id, 'holes'], holesList);
     }
 
-
     // Remove holes which are already holes for other areas
     areaIDs.forEach(areaID => {
       let doubleHoles = new Set();
@@ -555,13 +554,12 @@ export function detectAndUpdateAreas(layer, catalog) {
         holesOfholes.forEach((holeID) => {
           let holeIndex = areaHoles.indexOf(holeID);
           if (holeIndex !== -1) {
-            // layer.setIn(['areas', areaID, 'holes'], areaHoles.remove(holeIndex));
             doubleHoles.add(holeID);
           }
         });
       });
-      doubleHoles.forEach(d => {
-        let holeIndex = areaHoles.indexOf(d);
+      doubleHoles.forEach(doubleHoleID => {
+        let holeIndex = areaHoles.indexOf(doubleHoleID);
         areaHoles = areaHoles.remove(holeIndex);
       });
       layer.setIn(['areas', areaID, 'holes'], areaHoles);
