@@ -2,39 +2,42 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Arrow from 'react-icons/lib/md/keyboard-arrow-right';
 
-const CatalogBreadcrumb = ({names}) => {
-  let labelNames = [];
-  for (let i = 0; i < names.length - 1; i++) {
+const breadcrumbStyle = {
+  margin: '1.5em',
+  display: 'flex'
+};
 
-    let cursor = 'default';
-    if (names[i].hasOwnProperty('action')) {
-      cursor = 'pointer';
-    }
+const breadcrumbTextStyle = {
+  fontSize: '20px',
+  cursor: 'pointer'
+};
 
-    labelNames.push(<div key={i} style={{display: 'flex'}}>
-      <div style={{fontSize: '20px', cursor: cursor}}
-           onClick={names[i].action}>{names[i].name}
-      </div>
-      <div style={{marginLeft: '10px', marginRight: '10px'}}><Arrow style={{fill: '#000', fontSize: 24}}/></div>
-    </div>);
-  }
+const breadcrumbLastTextStyle = {
+  ...breadcrumbTextStyle,
+  fontWeight:'bolder',
+  color:'rgb(28, 166, 252)'
+};
 
-  let cursor = 'default';
-  if (names[names.length - 1].hasOwnProperty('action')) {
-    cursor = 'pointer';
-  }
+const breadcrumbTabStyle = {
+  fill: '#000',
+  fontSize: '24px',
+  marginLeft: '10px',
+  marginRight: '10px'
+};
 
-  labelNames.push(<div key={names.length - 1} style={{display: 'flex'}}>
-    <div style={{fontSize: '20px', cursor: cursor}}
-         onClick={names[names.length - 1].action}><b>{names[names.length - 1].name}</b>
+const CatalogBreadcrumb = ({ names }) => {
+
+  let labelNames = names.map((name, ind) => {
+
+    let lastElement = ind === names.length - 1;
+
+    return <div key={ind} style={{ display: 'flex' }}>
+        <div style={ !lastElement ? breadcrumbTextStyle : breadcrumbLastTextStyle } onClick={name.action}>{name.name}</div>
+        { !lastElement ? <Arrow style={breadcrumbTabStyle} /> : null }
     </div>
-  </div>);
+  });
 
-  return (
-    <div style={{margin: '50px', display: 'flex'}}>
-      {labelNames}
-    </div>
-  )
+  return <div style={breadcrumbStyle}>{labelNames}</div>;
 };
 
 CatalogBreadcrumb.propTypes = {

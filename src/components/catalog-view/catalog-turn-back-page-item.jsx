@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import IconBack from 'react-icons/lib/md/keyboard-backspace';
+import IconBefore from 'react-icons/lib/md/navigate-before';
 
 const STYLE_BOX = {
   width: '14em',
@@ -12,7 +12,9 @@ const STYLE_BOX = {
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px'
+  borderRadius: '2px',
+  transition: 'all .2s ease-in-out',
+  WebkitTransition: 'all .2s ease-in-out'
 };
 
 const STYLE_BOX_HOVER = {
@@ -20,11 +22,16 @@ const STYLE_BOX_HOVER = {
   background: '#1ca6fc'
 };
 
-const STYLE_BACK_HOVER = {
+const STYLE_BACK = {
   position: 'absolute',
-  color: '#1ca6fc',
+  color: '#000',
   fontSize: '5em',
-  width: '100%',
+  width: '100%'
+};
+
+const STYLE_BACK_HOVER = {
+  ...STYLE_BACK,
+  color: '#1ca6fc'
 };
 
 const CONTAINER_DIV = {
@@ -60,9 +67,8 @@ export default class CatalogTurnBackPageItem extends Component {
         onMouseEnter={e => this.setState({hover: true})}
         onMouseLeave={e => this.setState({hover: false})}
       >
-
         <div style={CONTAINER_DIV}>
-          <IconBack style={STYLE_BACK_HOVER}/>
+          <IconBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>
         </div>
 
       </div>
