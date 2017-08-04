@@ -60,7 +60,7 @@ const buildShapeClosures = (vertex0, vertex1, height, thickness) => {
   ];
 
   return { topShape, leftShape };
-}
+};
 
 /**
  * This function will create a shape given a list of coordinates
@@ -74,15 +74,14 @@ const createShape = (shapeCoords) => {
     shape.lineTo(shapeCoords[i][0], shapeCoords[i][1]);
   }
   return shape;
-}
+};
 
 /**
  * Apply a texture to a wall face
  * @param material: The material of the face
- * @param textureName: The name of the texture to load
+ * @param texture: The texture to load
  * @param length: The lenght of the face
  * @param height: The height of the face
- * @param textures: The list of textures available for this wall
  */
 const applyTexture = (material, texture, length, height) => {
   let loader = new TextureLoader();
