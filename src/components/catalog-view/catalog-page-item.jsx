@@ -12,7 +12,9 @@ const STYLE_BOX = {
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px'
+  borderRadius: '2px',
+  transition: 'all .2s ease-in-out',
+  WebkitTransition: 'all .2s ease-in-out'
 };
 
 const STYLE_BOX_HOVER = {
@@ -26,12 +28,17 @@ const STYLE_TITLE = {
   textAlign: 'center',
   display: 'block',
   marginBottom: '.5em',
-  textTransform: 'capitalize'
+  padding:'1em',
+  textTransform: 'capitalize',
+  WebkitTransition: 'all .15s ease-in-out'
 };
 
 const STYLE_TITLE_HOVERED = {
   ...STYLE_TITLE,
-  opacity: 0.1
+  fontSize: '1.4em',
+  transform: 'translateY(-60px)',
+  color:'rgb(28, 166, 252)',
+  marginTop:'0.5em'
 };
 
 const STYLE_NEXT_HOVER = {

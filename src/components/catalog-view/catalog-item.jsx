@@ -13,7 +13,9 @@ const STYLE_BOX = {
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px'
+  borderRadius: '2px',
+  transition: 'all .15s ease-in-out',
+  WebkitTransition: 'all .15s ease-in-out'
 };
 
 const STYLE_BOX_HOVER = {
@@ -29,16 +31,37 @@ const STYLE_TITLE = {
   textTransform: 'capitalize'
 };
 
-const STYLE_IMAGE = {
-  background: '#222',
-  marginBottom: '5px',
-  border: 'solid 1px #e6e6e6',
+const STYLE_TITLE_HOVER = {
+  ...STYLE_TITLE,
+  color:'#FFF'
+};
+
+const STYLE_IMAGE_CONTAINER = {
   width: '100%',
   height: '8em',
+  position:'relative',
+  overflow:'hidden',
+  border: 'solid 1px #e6e6e6',
+  padding:0,
+  margin:0,
+  marginBottom: '5px'
+};
+
+const STYLE_IMAGE = {
+  position:'absolute',
+  background: '#222',
+  width: '100%',
+  height: '100%',
   backgroundSize: 'contain',
   backgroundPosition:'50% 50%',
   backgroundColor:'#FFF',
-  backgroundRepeat:'no-repeat'
+  backgroundRepeat:'no-repeat',
+  transition: 'all .2s ease-in-out'
+};
+
+const STYLE_IMAGE_HOVER = {
+  ...STYLE_IMAGE,
+  transform: 'scale(1.2)'
 };
 
 const STYLE_PLUS_HOVER = {
@@ -114,9 +137,11 @@ export default class CatalogItem extends Component {
         onMouseEnter={e => this.setState({hover: true})}
         onMouseLeave={e => this.setState({hover: false})}
       >
-        <b style={STYLE_TITLE}>{element.info.title}</b>
-        <div style={{ ...STYLE_IMAGE, backgroundImage: 'url(' + element.info.image + ')'}}>
-          { hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null }
+        <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{element.info.title}</b>
+        <div style={ STYLE_IMAGE_CONTAINER }>
+          <div style={{...( !hover ? STYLE_IMAGE: STYLE_IMAGE_HOVER ), backgroundImage: 'url(' + element.info.image + ')'}}>
+            { hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null }
+          </div>
         </div>
         <ul style={STYLE_TAGS}>
           {element.info.tag.map((tag, index) => <li style={STYLE_TAG} key={index}>{tag}</li>)}
