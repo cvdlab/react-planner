@@ -24,6 +24,7 @@ import FormSlider from './components/style/form-slider';
 import FormSubmitButton from './components/style/form-submit-button';
 import FormTextInput from './components/style/form-text-input';
 import * as ReactPlannerConstants from './constants';
+import * as ReactPlannerSharedStyle from './shared-style';
 import { VERSION } from './version';
 
 import ReactPlannerActions from './actions/actions';
@@ -58,4 +59,4 @@ var ReactPlannerReducers = {
   ReactPlannerViewer3dReducer: ReactPlannerViewer3dReducer
 };
 
-export { Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Content as ReactPlannerContent, Plugins, ElementsFactories, StyleComponents, ReactPlannerConstants, ReactPlannerReducers, ReactPlannerActions };
+export { Catalog, Translator, ToolbarButton, Ruler, Models, State2DViewer, reducer, ReactPlanner, Content as ReactPlannerContent, Plugins, ElementsFactories, StyleComponents, ReactPlannerConstants, ReactPlannerReducers, ReactPlannerActions, ReactPlannerSharedStyle };

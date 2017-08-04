@@ -1,12 +1,12 @@
 import { Shape, MeshPhongMaterial, ShapeGeometry, Box3, TextureLoader, BackSide, FrontSide, Object3D, Mesh, MeshBasicMaterial, RepeatWrapping, Vector2 } from 'three';
+import * as SharedStyle from '../../shared-style';
 
 /**
  * Apply a texture to a wall face
  * @param material: The material of the face
- * @param textureName: The name of the texture to load
+ * @param texture: The texture to load
  * @param length: The lenght of the face
  * @param height: The height of the face
- * @param textures: The list of textures available for this wall
  */
 var applyTexture = function applyTexture(material, texture, length, height) {
   var loader = new TextureLoader();
@@ -68,7 +68,7 @@ export default function createArea(element, layer, scene, textures) {
   if (element.selected) {
     color = 0x99c3fb;
   } else if (textureName && textureName !== 'none') {
-    color = 0xffffff;
+    color = SharedStyle.COLORS.white;
   }
 
   var shape = new Shape();
@@ -80,6 +80,21 @@ export default function createArea(element, layer, scene, textures) {
   var areaMaterial1 = new MeshPhongMaterial({ side: FrontSide, color: color });
   var areaMaterial2 = new MeshPhongMaterial({ side: BackSide, color: color });
 
+  /* Create holes for the area */
+  element.holes.forEach(function (holeID) {
+    var holeCoords = [];
+    layer.getIn(['areas', holeID, 'vertices']).forEach(function (vertexID) {
+      var _layer$getIn = layer.getIn(['vertices', vertexID]),
+          x = _layer$getIn.x,
+          y = _layer$getIn.y;
+
+      holeCoords.push([x, y]);
+    });
+    holeCoords = holeCoords.reverse();
+    var holeShape = createShape(holeCoords);
+    shape.holes.push(holeShape);
+  });
+
   var shapeGeometry = new ShapeGeometry(shape);
   assignUVs(shapeGeometry);
 
@@ -88,7 +103,6 @@ export default function createArea(element, layer, scene, textures) {
   var width = boundingBox.max.x - boundingBox.min.x;
   var height = boundingBox.max.y - boundingBox.min.y;
 
-  var loader = new TextureLoader();
   var texture = textures[textureName];
 
   applyTexture(areaMaterial1, texture, width, height);
@@ -105,3 +119,17 @@ export default function createArea(element, layer, scene, textures) {
 
   return Promise.resolve(area);
 }
+
+/**
+ * This function will create a shape given a list of coordinates
+ * @param shapeCoords
+ * @returns {Shape}
+ */
+var createShape = function createShape(shapeCoords) {
+  var shape = new Shape();
+  shape.moveTo(shapeCoords[0][0], shapeCoords[0][1]);
+  for (var i = 1; i < shapeCoords.length; i++) {
+    shape.lineTo(shapeCoords[i][0], shapeCoords[i][1]);
+  }
+  return shape;
+};

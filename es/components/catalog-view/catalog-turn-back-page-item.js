@@ -10,7 +10,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import IconBack from 'react-icons/lib/md/keyboard-backspace';
+import IconBefore from 'react-icons/lib/md/navigate-before';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE_BOX = {
   width: '14em',
@@ -22,22 +23,28 @@ var STYLE_BOX = {
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px'
+  borderRadius: '2px',
+  transition: 'all .2s ease-in-out',
+  WebkitTransition: 'all .2s ease-in-out'
 };
 
 var STYLE_BOX_HOVER = _extends({}, STYLE_BOX, {
-  background: '#1ca6fc'
+  background: SharedStyle.SECONDARY_COLOR.main
 });
 
-var STYLE_BACK_HOVER = {
+var STYLE_BACK = {
   position: 'absolute',
-  color: '#1ca6fc',
+  color: SharedStyle.COLORS.black,
   fontSize: '5em',
   width: '100%'
 };
 
+var STYLE_BACK_HOVER = _extends({}, STYLE_BACK, {
+  color: SharedStyle.SECONDARY_COLOR.main
+});
+
 var CONTAINER_DIV = {
-  background: '#fff',
+  background: SharedStyle.COLORS.white,
   marginBottom: '5px',
   border: 'solid 1px #e6e6e6',
   width: '100%',
@@ -89,7 +96,7 @@ var CatalogTurnBackPageItem = function (_Component) {
         React.createElement(
           'div',
           { style: CONTAINER_DIV },
-          React.createElement(IconBack, { style: STYLE_BACK_HOVER })
+          React.createElement(IconBefore, { style: !hover ? STYLE_BACK : STYLE_BACK_HOVER })
         )
       );
     }

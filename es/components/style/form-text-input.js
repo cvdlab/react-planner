@@ -11,6 +11,7 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 import React, { Component } from 'react';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE_INPUT = {
   display: "block",
@@ -19,7 +20,7 @@ var STYLE_INPUT = {
   fontSize: "13px",
   lineHeight: "1.25",
   color: "#55595c",
-  backgroundColor: "#fff",
+  backgroundColor: SharedStyle.COLORS.white,
   backgroundImage: "none",
   border: "1px solid rgba(0,0,0,.15)",
   outline: "none",
@@ -39,15 +40,15 @@ var FormTextInput = function (_Component) {
   }
 
   _createClass(FormTextInput, [{
-    key: "render",
+    key: 'render',
     value: function render() {
       var _this2 = this;
 
       var _props = this.props,
           style = _props.style,
-          rest = _objectWithoutProperties(_props, ["style"]);
+          rest = _objectWithoutProperties(_props, ['style']);
 
-      return React.createElement("input", _extends({
+      return React.createElement('input', _extends({
         onFocus: function onFocus(e) {
           return _this2.setState({ focus: true });
         },
@@ -57,7 +58,7 @@ var FormTextInput = function (_Component) {
         style: _extends({}, STYLE_INPUT, style, {
           border: this.state.focus ? '1px solid #66afe9' : '1px solid rgba(0,0,0,.15)'
         }),
-        type: "text" }, rest));
+        type: 'text' }, rest));
     }
   }]);
 

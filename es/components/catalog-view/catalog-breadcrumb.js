@@ -1,58 +1,55 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import Arrow from 'react-icons/lib/md/keyboard-arrow-right';
+import * as SharedStyle from '../../shared-style';
+
+var breadcrumbStyle = {
+  margin: '1.5em',
+  display: 'flex'
+};
+
+var breadcrumbTextStyle = {
+  fontSize: '20px',
+  cursor: 'pointer'
+};
+
+var breadcrumbLastTextStyle = _extends({}, breadcrumbTextStyle, {
+  fontWeight: 'bolder',
+  color: SharedStyle.SECONDARY_COLOR.main
+});
+
+var breadcrumbTabStyle = {
+  fill: SharedStyle.COLORS.black,
+  fontSize: '24px',
+  marginLeft: '10px',
+  marginRight: '10px'
+};
 
 var CatalogBreadcrumb = function CatalogBreadcrumb(_ref) {
   var names = _ref.names;
 
-  var labelNames = [];
-  for (var i = 0; i < names.length - 1; i++) {
 
-    var _cursor = 'default';
-    if (names[i].hasOwnProperty('action')) {
-      _cursor = 'pointer';
-    }
+  var labelNames = names.map(function (name, ind) {
 
-    labelNames.push(React.createElement(
+    var lastElement = ind === names.length - 1;
+
+    return React.createElement(
       'div',
-      { key: i, style: { display: 'flex' } },
+      { key: ind, style: { display: 'flex' } },
       React.createElement(
         'div',
-        { style: { fontSize: '20px', cursor: _cursor },
-          onClick: names[i].action },
-        names[i].name
+        { style: !lastElement ? breadcrumbTextStyle : breadcrumbLastTextStyle, onClick: name.action },
+        name.name
       ),
-      React.createElement(
-        'div',
-        { style: { marginLeft: '10px', marginRight: '10px' } },
-        React.createElement(Arrow, { style: { fill: '#000', fontSize: 24 } })
-      )
-    ));
-  }
-
-  var cursor = 'default';
-  if (names[names.length - 1].hasOwnProperty('action')) {
-    cursor = 'pointer';
-  }
-
-  labelNames.push(React.createElement(
-    'div',
-    { key: names.length - 1, style: { display: 'flex' } },
-    React.createElement(
-      'div',
-      { style: { fontSize: '20px', cursor: cursor },
-        onClick: names[names.length - 1].action },
-      React.createElement(
-        'b',
-        null,
-        names[names.length - 1].name
-      )
-    )
-  ));
+      !lastElement ? React.createElement(Arrow, { style: breadcrumbTabStyle }) : null
+    );
+  });
 
   return React.createElement(
     'div',
-    { style: { margin: '50px', display: 'flex' } },
+    { style: breadcrumbStyle },
     labelNames
   );
 };

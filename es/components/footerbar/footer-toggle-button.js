@@ -10,6 +10,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
 var toggleButtonStyle = {
   width: '5em',
@@ -26,7 +27,7 @@ var toggleButtonStyle = {
 var toggleButtonStyleOver = _extends({}, toggleButtonStyle, {
   backgroundColor: '#1c82c6',
   border: '1px solid #FFF',
-  color: '#FFF'
+  color: SharedStyle.COLORS.white
 });
 
 var FooterToggleButton = function (_Component) {

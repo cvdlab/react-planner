@@ -11,6 +11,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IconNext from 'react-icons/lib/md/navigate-next';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE_BOX = {
   width: '14em',
@@ -22,11 +23,13 @@ var STYLE_BOX = {
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px'
+  borderRadius: '2px',
+  transition: 'all .2s ease-in-out',
+  WebkitTransition: 'all .2s ease-in-out'
 };
 
 var STYLE_BOX_HOVER = _extends({}, STYLE_BOX, {
-  background: '#1ca6fc'
+  background: SharedStyle.SECONDARY_COLOR.main
 });
 
 var STYLE_TITLE = {
@@ -35,22 +38,27 @@ var STYLE_TITLE = {
   textAlign: 'center',
   display: 'block',
   marginBottom: '.5em',
-  textTransform: 'capitalize'
+  padding: '1em',
+  textTransform: 'capitalize',
+  WebkitTransition: 'all .15s ease-in-out'
 };
 
 var STYLE_TITLE_HOVERED = _extends({}, STYLE_TITLE, {
-  opacity: 0.1
+  fontSize: '1.4em',
+  transform: 'translateY(-60px)',
+  color: 'rgb(28, 166, 252)',
+  marginTop: '0.5em'
 });
 
 var STYLE_NEXT_HOVER = {
   position: 'absolute',
-  color: '#1ca6fc',
+  color: SharedStyle.SECONDARY_COLOR.main,
   fontSize: '5em',
   width: '100%'
 };
 
 var CONTAINER_DIV = {
-  background: '#fff',
+  background: SharedStyle.COLORS.white,
   marginBottom: '5px',
   border: 'solid 1px #e6e6e6',
   width: '100%',

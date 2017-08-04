@@ -8,6 +8,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
@@ -26,8 +27,8 @@ var STYLE = {
 var STYLE_TOOLTIP = {
   position: 'absolute',
   width: '140px',
-  color: '#FFFFFF',
-  background: '#000000',
+  color: SharedStyle.COLORS.white,
+  background: SharedStyle.COLORS.black,
   height: '30px',
   lineHeight: '30px',
   textAlign: 'center',
@@ -74,7 +75,7 @@ var ToolbarButton = function (_Component) {
       var state = this.state,
           props = this.props;
 
-      var color = props.active || state.active ? '#1CA6FC' : '#C2C2C2';
+      var color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
 
       return React.createElement(
         'div',

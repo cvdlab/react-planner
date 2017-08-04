@@ -12,6 +12,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
 var BASE_STYLE = {
   display: "inline-block",
@@ -27,7 +28,7 @@ var BASE_STYLE = {
   userSelect: "none",
   padding: "5px 14px",
   fontSize: "14px",
-  color: "#000",
+  color: SharedStyle.COLORS.black,
   fonWeight: "400px",
   transition: "background-color 175ms ease, border 175ms ease",
   outline: "none",

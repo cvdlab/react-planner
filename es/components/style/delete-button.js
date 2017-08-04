@@ -4,17 +4,18 @@ function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in ob
 
 import React from 'react';
 import Button from './button';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE = {
   borderColor: "#c12e2a",
   backgroundColor: "#c9302c",
-  color: "#fff"
+  color: SharedStyle.COLORS.white
 };
 
 var STYLE_HOVER = {
   backgroundColor: "#972726",
   borderColor: "#c12e2a",
-  color: "#fff"
+  color: SharedStyle.COLORS.white
 };
 
 export default function FormDeleteButton(_ref) {

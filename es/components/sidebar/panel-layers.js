@@ -25,13 +25,14 @@ import FormSlider from '../style/form-slider';
 import CancelButton from '../style/cancel-button';
 
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
+import * as SharedStyle from '../../shared-style';
 
 var styleEditButton = {
   cursor: 'pointer',
   marginLeft: '5px',
   border: '0px',
   background: 'none',
-  color: '#fff',
+  color: SharedStyle.COLORS.white,
   fontSize: '14px',
   outline: '0px'
 };
@@ -47,7 +48,7 @@ var tableLayerStyle = {
 };
 
 var iconColStyle = { width: '2em' };
-var styleHoverColor = { color: '#1ca6fc' };
+var styleHoverColor = { color: SharedStyle.SECONDARY_COLOR.main };
 var styleEditButtonHover = _extends({}, styleEditButton, styleHoverColor);
 var styleAddLabel = { fontSize: '10px', marginLeft: '5px' };
 var styleEyeVisible = { fontSize: '1.25em' };

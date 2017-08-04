@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import * as SharedStyle from '../../shared-style';
 
-var STYLE = { fill: "#0096fd", stroke: "#fff", cursor: "move" };
+var STYLE = { fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: "move" };
 
 export default function Vertex(_ref) {
   var vertex = _ref.vertex,

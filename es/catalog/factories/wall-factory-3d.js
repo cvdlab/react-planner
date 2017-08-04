@@ -55,10 +55,9 @@ var createShape = function createShape(shapeCoords) {
 /**
  * Apply a texture to a wall face
  * @param material: The material of the face
- * @param textureName: The name of the texture to load
+ * @param texture: The texture to load
  * @param length: The lenght of the face
  * @param height: The height of the face
- * @param textures: The list of textures available for this wall
  */
 var applyTexture = function applyTexture(material, texture, length, height) {
   var loader = new TextureLoader();

@@ -6,9 +6,10 @@ import PanelElementEditor from './panel-element-editor/panel-element-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
 import PanelLayerElements from './panel-layer-elements';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE = {
-  backgroundColor: '#28292D',
+  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   display: 'block',
   overflowY: 'auto',
   overflowX: 'hidden',

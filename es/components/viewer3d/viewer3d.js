@@ -16,6 +16,7 @@ import { parseData, updateScene } from './scene-creator';
 import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
+import * as SharedStyle from '../../shared-style';
 
 var Scene3DViewer = function (_React$Component) {
   _inherits(Scene3DViewer, _React$Component);
@@ -56,7 +57,7 @@ var Scene3DViewer = function (_React$Component) {
       var scene3D = new Three.Scene();
 
       //RENDERER
-      this.renderer.setClearColor(new Three.Color(0xffffff));
+      this.renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
       this.renderer.setSize(this.width, this.height);
 
       // LOAD DATA
@@ -88,7 +89,7 @@ var Scene3DViewer = function (_React$Component) {
 
       // Add another light
 
-      var spotLight1 = new Three.SpotLight(0xffffff, 0.30);
+      var spotLight1 = new Three.SpotLight(SharedStyle.COLORS.white, 0.30);
       spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
       scene3D.add(spotLight1);
 

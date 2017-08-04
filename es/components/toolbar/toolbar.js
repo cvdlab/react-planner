@@ -16,6 +16,7 @@ import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
 import If from '../../utils/react-if';
 import { MODE_IDLE, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_UPLOADING_IMAGE, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
+import * as SharedStyle from '../../shared-style';
 
 var Icon2D = function Icon2D() {
   return React.createElement(
@@ -44,15 +45,15 @@ var Icon3D = function Icon3D() {
 };
 
 var ASIDE_STYLE = {
-  backgroundColor: '#28292D',
+  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   padding: '10px'
 };
 
 var STYLE_TOOLTIP = {
   position: 'absolute',
   width: '140px',
-  color: '#FFFFFF',
-  background: '#000000',
+  color: SharedStyle.COLORS.white,
+  background: SharedStyle.COLORS.black,
   height: '30px',
   lineHeight: '30px',
   textAlign: 'center',

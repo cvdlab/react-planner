@@ -1,5 +1,6 @@
 import buildWall from './wall-factory-3d';
 import React from 'react';
+import * as SharedStyle from '../../shared-style';
 
 function pointsDistance(x0, y0, x1, y1) {
   return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
@@ -30,7 +31,7 @@ export default function WallFactory(name, info, textures) {
 
     render2D: function render2D(element, layer, scene) {
       var STYLE_BASE = { stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2" };
-      var STYLE_SELECTED = { stroke: "#99c3fb", strokeWidth: "5px", fill: "#000" };
+      var STYLE_SELECTED = { stroke: "#99c3fb", strokeWidth: "5px", fill: SharedStyle.COLORS.black };
       var STYLE_TEXT = { textAnchor: "middle" };
       var STYLE_LINE = { stroke: "#99c3fb" };
 

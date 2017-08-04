@@ -1,6 +1,7 @@
 import * as Three from 'three';
 import { HELVETIKER } from '../libs/helvetiker_regular.typeface.js';
 import { List } from 'immutable';
+import * as SharedStyle from '../../../shared-style';
 
 export default function (width, height, guide) {
   var step = guide.properties.get('step');
@@ -32,7 +33,7 @@ export default function (width, height, guide) {
         font: font
       });
 
-      var wrapper = new Three.MeshBasicMaterial({ color: 0x000000 });
+      var wrapper = new Three.MeshBasicMaterial({ color: SharedStyle.COLORS.black });
       var words = new Three.Mesh(shape, wrapper);
 
       words.rotation.x -= Math.PI / 2;

@@ -16,6 +16,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import IconAdd from 'react-icons/lib/fa/plus-circle';
 import { Seq } from 'immutable';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE_BOX = {
   width: '14em',
@@ -27,11 +28,13 @@ var STYLE_BOX = {
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
-  borderRadius: '2px'
+  borderRadius: '2px',
+  transition: 'all .15s ease-in-out',
+  WebkitTransition: 'all .15s ease-in-out'
 };
 
 var STYLE_BOX_HOVER = _extends({}, STYLE_BOX, {
-  background: '#1ca6fc'
+  background: SharedStyle.SECONDARY_COLOR.main
 });
 
 var STYLE_TITLE = {
@@ -42,21 +45,40 @@ var STYLE_TITLE = {
   textTransform: 'capitalize'
 };
 
-var STYLE_IMAGE = {
-  background: '#222',
-  marginBottom: '5px',
-  border: 'solid 1px #e6e6e6',
+var STYLE_TITLE_HOVER = _extends({}, STYLE_TITLE, {
+  color: SharedStyle.COLORS.white
+});
+
+var STYLE_IMAGE_CONTAINER = {
   width: '100%',
   height: '8em',
+  position: 'relative',
+  overflow: 'hidden',
+  border: 'solid 1px #e6e6e6',
+  padding: 0,
+  margin: 0,
+  marginBottom: '5px'
+};
+
+var STYLE_IMAGE = {
+  position: 'absolute',
+  background: '#222',
+  width: '100%',
+  height: '100%',
   backgroundSize: 'contain',
   backgroundPosition: '50% 50%',
-  backgroundColor: '#FFF',
-  backgroundRepeat: 'no-repeat'
+  backgroundColor: SharedStyle.COLORS.white,
+  backgroundRepeat: 'no-repeat',
+  transition: 'all .2s ease-in-out'
 };
+
+var STYLE_IMAGE_HOVER = _extends({}, STYLE_IMAGE, {
+  transform: 'scale(1.2)'
+});
 
 var STYLE_PLUS_HOVER = {
   marginTop: '1.5em',
-  color: '#1ca6fc',
+  color: SharedStyle.SECONDARY_COLOR.main,
   fontSize: '2em',
   opacity: '0.7',
   width: '100%'
@@ -77,7 +99,7 @@ var STYLE_TAGS = {
 var STYLE_TAG = {
   display: 'inline-block',
   background: '#337ab7',
-  color: '#fff',
+  color: SharedStyle.COLORS.white,
   padding: '1px 4px',
   marginRight: '3px',
   borderRadius: '3px'
@@ -136,13 +158,17 @@ var CatalogItem = function (_Component) {
         },
         React.createElement(
           'b',
-          { style: STYLE_TITLE },
+          { style: !hover ? STYLE_TITLE : STYLE_TITLE_HOVER },
           element.info.title
         ),
         React.createElement(
           'div',
-          { style: _extends({}, STYLE_IMAGE, { backgroundImage: 'url(' + element.info.image + ')' }) },
-          hover ? React.createElement(IconAdd, { style: STYLE_PLUS_HOVER }) : null
+          { style: STYLE_IMAGE_CONTAINER },
+          React.createElement(
+            'div',
+            { style: _extends({}, !hover ? STYLE_IMAGE : STYLE_IMAGE_HOVER, { backgroundImage: 'url(' + element.info.image + ')' }) },
+            hover ? React.createElement(IconAdd, { style: STYLE_PLUS_HOVER }) : null
+          )
         ),
         React.createElement(
           'ul',

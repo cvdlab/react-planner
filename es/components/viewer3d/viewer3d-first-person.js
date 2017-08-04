@@ -17,6 +17,7 @@ import { disposeScene } from './three-memory-cleaner';
 import diff from 'immutablediff';
 import { initPointerLock } from "./pointer-lock-navigation";
 import { firstPersonOnKeyDown, firstPersonOnKeyUp } from "./libs/first-person-controls";
+import * as SharedStyle from '../../shared-style';
 
 var Viewer3DFirstPerson = function (_React$Component) {
   _inherits(Viewer3DFirstPerson, _React$Component);
@@ -69,7 +70,7 @@ var Viewer3DFirstPerson = function (_React$Component) {
       var sceneOnTop = new Three.Scene();
 
       //RENDERER
-      this.renderer.setClearColor(new Three.Color(0xffffff));
+      this.renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
       this.renderer.setSize(this.width, this.height);
 
       // LOAD DATA
@@ -96,7 +97,7 @@ var Viewer3DFirstPerson = function (_React$Component) {
       scene3D.add(light);
 
       // Add another light
-      var pointLight = new Three.PointLight(0xffffff, 0.4, 1000);
+      var pointLight = new Three.PointLight(SharedStyle.COLORS.white, 0.4, 1000);
       pointLight.position.set(0, 0, 0);
       scene3D.add(pointLight);
 
@@ -146,7 +147,7 @@ var Viewer3DFirstPerson = function (_React$Component) {
 
       var pointer = new Three.Object3D();
 
-      var pointerMaterial = new Three.MeshBasicMaterial({ depthTest: false, depthWrite: false, color: 0x000000 });
+      var pointerMaterial = new Three.MeshBasicMaterial({ depthTest: false, depthWrite: false, color: SharedStyle.COLORS.black });
       var pointerGeometry1 = new Three.Geometry();
       pointerGeometry1.vertices.push(new Three.Vector3(-10, 0, 0));
       pointerGeometry1.vertices.push(new Three.Vector3(10, 0, 0));

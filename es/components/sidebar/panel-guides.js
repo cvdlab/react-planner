@@ -4,10 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import IconAdd from 'react-icons/lib/ti/plus';
+import * as SharedStyle from '../../shared-style';
 
 var STYLE_ADD_WRAPPER = {
   display: "block",
-  color: "#fff",
+  color: SharedStyle.COLORS.white,
   textDecoration: "none",
   fontSize: "15px",
   padding: "0px 15px",
