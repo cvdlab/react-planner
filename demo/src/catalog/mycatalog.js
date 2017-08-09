@@ -19,11 +19,13 @@ import sashWindow from './holes/sash-window/sash-window';
 import venetianBlindWindow from './holes/venetian-blind-window/venetian-blind-window';
 import windowCurtain from './holes/window-curtain/window-curtain';
 
-catalog.registerElement(windowCat);
-catalog.registerElement(door);
-catalog.registerElement(sashWindow);
-catalog.registerElement(venetianBlindWindow);
-catalog.registerElement(windowCurtain);
+catalog.registerMultipleElements([
+  windowCat,
+  door,
+  sashWindow,
+  venetianBlindWindow,
+  windowCurtain
+]);
 
 //items
 import blackboard from './items/blackboard/blackboard';
@@ -41,26 +43,24 @@ import teachingPost from './items/teaching-post/teaching-post';
 import trash from './items/trash/trash';
 import tv from './items/tv/tv';
 
-catalog.registerElement(blackboard);
-catalog.registerElement(coatHook);
-catalog.registerElement(cube);
-catalog.registerElement(fireEstinguisher);
-catalog.registerElement(image);
-catalog.registerElement(radiator);
-catalog.registerElement(recyclingBins);
-catalog.registerElement(schoolDesk);
-catalog.registerElement(schoolDeskDouble);
-catalog.registerElement(simpleStair);
-catalog.registerElement(sofa);
-catalog.registerElement(teachingPost);
-catalog.registerElement(trash);
-catalog.registerElement(tv);
+catalog.registerMultipleElements([
+  blackboard,
+  coatHook,
+  cube,
+  fireEstinguisher,
+  image,
+  radiator,
+  recyclingBins,
+  schoolDesk,
+  schoolDeskDouble,
+  simpleStair,
+  sofa,
+  teachingPost,
+  trash,
+  tv
+]);
 
-catalog.registerCategory("windows", "Windows");
-
-catalog.addToCategory("windows", windowCat);
-catalog.addToCategory("windows", sashWindow);
-catalog.addToCategory("windows", venetianBlindWindow);
-catalog.addToCategory("windows", windowCurtain);
+//categories
+catalog.registerCategory('windows', 'Windows', [windowCat, sashWindow, venetianBlindWindow, windowCurtain] );
 
 export default catalog;

@@ -60,12 +60,12 @@ export default class Catalog {
     }
   }
 
-  registerPropertyType(propertyType, propertyViewer, propertyEditor) {
-    this.propertyTypes[propertyType] = {
-      type: propertyType,
-      Viewer: propertyViewer,
-      Editor: propertyEditor
-    }
+  registerMultipleElements(elementArray) {
+    elementArray.forEach(el => this.registerElement(el));
+  }
+
+  registerPropertyType(type, Viewer, Editor) {
+    this.propertyTypes[type] = {type, Viewer, Editor};
   }
 
   registerMultiplePropertyType(propertyTypeArray) {
@@ -73,7 +73,7 @@ export default class Catalog {
   }
 
   validateElement(json) {
-    if (!json.hasOwnProperty('name')) throw new Error(`Element not valid`);
+    if (!json.hasOwnProperty('name')) throw new Error('Element not valid');
 
     let name = json.name;
     if (!json.hasOwnProperty('prototype')) throw new Error(`Element ${name} doesn't have prototype`);
@@ -101,10 +101,14 @@ export default class Catalog {
     return this.elements.hasOwnProperty(type);
   }
 
-  registerCategory(name, label) {
+  registerCategory(name, label, childs) {
     if (this.validateCategory(name, label)) {
       this.categories[name] = {name, label, categories: [], elements: []};
       this.categories.root.categories.push(this.categories[name]);
+
+      if(childs && childs.length) {
+        childs.forEach( el => this.addToCategory( name, el ) );
+      }
     }
   }
 
@@ -121,21 +125,18 @@ export default class Catalog {
   }
 
   categoryHasElement(categoryName, elementName) {
-    let i;
-    for (i = 0; i < this.categories[categoryName].elements.length; i++) {
-      if (this.categories[categoryName].elements[i].name === elementName) {
-        return true;
-      }
-    }
-
-    return false;
+    return this.hasCategory(categoryName) && this.categories[categoryName].elements.some(el => el.name === elementName);
   }
 
   validateCategory(name, label) {
-    if (name === "") {
-      throw new Error(`Category has empty name`);
-    } else if (this.categories[name]) {
-      throw new Error(`Category has already been registered`);
+    if (!name) {
+      throw new Error('Category has undefined name');
+    }
+    if (name === '') {
+      throw new Error('Category has empty name');
+    }
+    if (this.hasCategory(name)) {
+      throw new Error('Category has already been registered');
     }
 
     return true;
