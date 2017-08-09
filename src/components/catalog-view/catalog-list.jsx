@@ -7,19 +7,29 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 
-const STYLE_ITEMS = {
-  display: "flex",
-  flexFlow: "row wrap",
+const CONTAINER_STYLE = {
+  position: 'fixed',
+  width:'calc( 100% - 51px)',
+  height:'calc( 100% - 20px)',
+  backgroundColor:'#FFF',
+  padding:'1em',
+  left:50,
+  overflowY:'auto',
+  overflowX:'hidden',
+  zIndex:10
 };
 
+const STYLE_ITEMS = {
+  display: 'flex',
+  flexFlow: 'row wrap',
+};
 
-export default function CatalogList({width, height, state}, {catalog, translator, projectActions}) {
+export default function CatalogList({width, height, style = {}, state}, {catalog, translator, projectActions}) {
 
   let page = state.catalog.page;
   let currentCategory = catalog.getCategory(page);
   let categoriesToDisplay = currentCategory.categories;
   let elementsToDisplay = currentCategory.elements;
-
 
   let breadcrumbComponent = null;
 
@@ -34,7 +44,7 @@ export default function CatalogList({width, height, state}, {catalog, translator
       });
     });
 
-    breadcrumbsNames.push({name: currentCategory.label, action: ""});
+    breadcrumbsNames.push({name: currentCategory.label, action: ''});
 
     breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
 
@@ -46,7 +56,7 @@ export default function CatalogList({width, height, state}, {catalog, translator
     <CatalogTurnBackPageItem page={catalog.categories[state.catalog.path.get(pathSize - 1)]}/>) : null;
 
   return (
-    <ContentContainer width={width} height={height}>
+    <ContentContainer width={width} height={height} style={{...CONTAINER_STYLE, ...style}}>
       <ContentTitle>{translator.t('Catalog')}</ContentTitle>
       {breadcrumbComponent}
       <div style={STYLE_ITEMS}>
@@ -62,9 +72,10 @@ export default function CatalogList({width, height, state}, {catalog, translator
 }
 
 CatalogList.propTypes = {
+  state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  state: PropTypes.object.isRequired,
+  style: PropTypes.object
 };
 
 CatalogList.contextTypes = {
