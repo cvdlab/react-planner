@@ -30,6 +30,17 @@ export default function Area({layer, area, catalog}) {
       let {x, y} = layer.vertices.get(vertexID);
       return [x, y];
     });
+
+    area.holes.forEach(holeID => {
+
+      let polygonHole = layer.areas.get(holeID).vertices.toArray().map(vertexID => {
+        let {x, y} = layer.vertices.get(vertexID);
+        return [x, y];
+      });
+
+      polygon = polygon.concat(polygonHole.reverse());
+    });
+
     let center = polylabel([polygon], 1.0);
     let areaSize = areapolygon(polygon, false);
 
