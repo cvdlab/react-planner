@@ -2,10 +2,14 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
+import FooterContentButton from './footer-content-button';
 import {VERSION} from '../../version';
 import {SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK} from '../../utils/snap';
 import {MODE_SNAPPING} from '../../constants';
 import * as SharedStyle from '../../shared-style';
+import IconClose from 'react-icons/lib/fa/close';
+import MdAddCircle from 'react-icons/lib/md/add-circle';
+import MdWarning from 'react-icons/lib/md/warning';
 
 const footerBarStyle = {
   position: 'absolute',
@@ -57,6 +61,13 @@ export default class FooterBar extends Component {
     let {x, y} = this.props.state.get('mouse').toJS();
     let zoom = this.props.state.get('zoom');
     let mode = this.props.state.get('mode');
+
+    let errors = this.props.state.get('errors').toArray();
+    let errorsJsx = errors.map((err,ind) =>
+      <div key={ind} style={{borderBottom:'1px solid #555', lineHeight:'1.5em'}}>[ { (new Date(err.date)).toLocaleString() } ] {err.error}</div>
+    );
+    let errorLableStyle = errors.length ? {color:SharedStyle.MATERIAL_COLORS[500].red} : {};
+    let errorIconStyle = errors.length ? {transform:'rotate(45deg)',color:SharedStyle.MATERIAL_COLORS[500].red} : {transform:'rotate(45deg)'};
 
     return (
       <div style={{...footerBarStyle, width: this.props.width, height: this.props.height}}>
@@ -112,6 +123,19 @@ export default class FooterBar extends Component {
         {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index}/>)}
 
         <div style={rightTextStyle}>React-Planner {VERSION}</div>
+
+        <div style={rightTextStyle}>
+          <FooterContentButton
+            state={this.state}
+            icon={MdAddCircle}
+            iconStyle={errorIconStyle}
+            text={errors.length.toString()}
+            textStyle={errorLableStyle}
+            title={'Errors [ ' + errors.length + ' ]'}
+            titleStyle={errorLableStyle}
+            content={[errorsJsx]}
+          />
+        </div>
 
       </div>
     );
