@@ -8,7 +8,7 @@ import { Vertex } from '../models';
 import IDBroker from './id-broker';
 import NameGenerator from './name-generator';
 import * as Geometry from './geometry';
-import calculateInnerCyles from './graph-inner-cycles';
+import calculateInnerCyles, { isClockWiseOrder } from './graph-inner-cycles';
 
 var flatten = function flatten(list) {
   return list.reduce(function (a, b) {
@@ -611,6 +611,21 @@ export function detectAndUpdateAreas(layer, catalog) {
     return new List(cycle.map(function (vertexIndex) {
       return verticesArrayIndex_to_vertexID[vertexIndex];
     }));
+  });
+
+  // All area vertices should be ordered in counterclockwise order
+  innerCyclesByVerticesID = innerCyclesByVerticesID.withMutations(function (innerCyclesByVerticesID) {
+    innerCyclesByVerticesID.forEach(function (innerCycle, index) {
+      var innerCycleWithCoords = innerCycle.map(function (vertexID) {
+        return new Map({
+          x: layer.vertices.get(vertexID).x,
+          y: layer.vertices.get(vertexID).y
+        });
+      });
+      if (isClockWiseOrder(innerCycleWithCoords)) {
+        innerCyclesByVerticesID.set(index, innerCyclesByVerticesID.get(index).reverse());
+      }
+    });
   });
 
   var areaIDs = [];

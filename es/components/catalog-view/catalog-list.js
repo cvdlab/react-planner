@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import CatalogItem from './catalog-item';
@@ -7,14 +9,28 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 
+var CONTAINER_STYLE = {
+  position: 'fixed',
+  width: 'calc( 100% - 51px)',
+  height: 'calc( 100% - 20px)',
+  backgroundColor: '#FFF',
+  padding: '1em',
+  left: 50,
+  overflowY: 'auto',
+  overflowX: 'hidden',
+  zIndex: 10
+};
+
 var STYLE_ITEMS = {
-  display: "flex",
-  flexFlow: "row wrap"
+  display: 'flex',
+  flexFlow: 'row wrap'
 };
 
 export default function CatalogList(_ref, _ref2) {
   var width = _ref.width,
       height = _ref.height,
+      _ref$style = _ref.style,
+      style = _ref$style === undefined ? {} : _ref$style,
       state = _ref.state;
   var catalog = _ref2.catalog,
       translator = _ref2.translator,
@@ -41,7 +57,7 @@ export default function CatalogList(_ref, _ref2) {
       });
     });
 
-    breadcrumbsNames.push({ name: currentCategory.label, action: "" });
+    breadcrumbsNames.push({ name: currentCategory.label, action: '' });
 
     breadcrumbComponent = React.createElement(CatalogBreadcrumb, { names: breadcrumbsNames });
   }
@@ -52,7 +68,7 @@ export default function CatalogList(_ref, _ref2) {
 
   return React.createElement(
     ContentContainer,
-    { width: width, height: height },
+    { width: width, height: height, style: _extends({}, CONTAINER_STYLE, style) },
     React.createElement(
       ContentTitle,
       null,
@@ -77,9 +93,10 @@ export default function CatalogList(_ref, _ref2) {
 }
 
 CatalogList.propTypes = {
+  state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  state: PropTypes.object.isRequired
+  style: PropTypes.object
 };
 
 CatalogList.contextTypes = {

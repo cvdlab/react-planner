@@ -33,3 +33,23 @@ export default function calculateInnerCycles(verticesArray, edgesArray) {
 
   return innerCycles;
 }
+
+export function isClockWiseOrder(innerCycleWithCoords) {
+  // See: https://stackoverflow.com/a/1165943 and http://blog.element84.com/polygon-winding.html
+
+  var i = 0;
+  var twiceEnclosedArea = 0;
+
+  for (i = 0; i < innerCycleWithCoords.size; i++) {
+
+    var x1 = innerCycleWithCoords.get(i).get('x');
+    var y1 = innerCycleWithCoords.get(i).get('y');
+
+    var x2 = innerCycleWithCoords.get((i + 1) % innerCycleWithCoords.size).get('x');
+    var y2 = innerCycleWithCoords.get((i + 1) % innerCycleWithCoords.size).get('y');
+
+    twiceEnclosedArea += (x2 - x1) * (y2 + y1);
+  }
+
+  return twiceEnclosedArea > 0;
+}

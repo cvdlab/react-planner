@@ -12,10 +12,14 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
+import FooterContentButton from './footer-content-button';
 import { VERSION } from '../../version';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
+import IconClose from 'react-icons/lib/fa/close';
+import MdAddCircle from 'react-icons/lib/md/add-circle';
+import MdWarning from 'react-icons/lib/md/warning';
 
 var footerBarStyle = {
   position: 'absolute',
@@ -78,6 +82,34 @@ var FooterBar = function (_Component) {
 
       var zoom = this.props.state.get('zoom');
       var mode = this.props.state.get('mode');
+
+      var errors = this.props.state.get('errors').toArray();
+      var errorsJsx = errors.map(function (err, ind) {
+        return React.createElement(
+          'div',
+          { key: ind, style: { borderBottom: '1px solid #555', lineHeight: '1.5em' } },
+          '[ ',
+          new Date(err.date).toLocaleString(),
+          ' ] ',
+          err.error
+        );
+      });
+      var errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
+      var errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
+
+      var warnings = this.props.state.get('warnings').toArray();
+      var warningsJsx = warnings.map(function (warn, ind) {
+        return React.createElement(
+          'div',
+          { key: ind, style: { borderBottom: '1px solid #555', lineHeight: '1.5em' } },
+          '[ ',
+          new Date(warn.date).toLocaleString(),
+          ' ] ',
+          warn.warning
+        );
+      });
+      var warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
+      var warningIconStyle = warningLableStyle;
 
       return React.createElement(
         'div',
@@ -157,6 +189,30 @@ var FooterBar = function (_Component) {
           { style: rightTextStyle },
           'React-Planner ',
           VERSION
+        ),
+        React.createElement(
+          'div',
+          { style: rightTextStyle },
+          React.createElement(FooterContentButton, {
+            state: this.state,
+            icon: MdAddCircle,
+            iconStyle: errorIconStyle,
+            text: errors.length.toString(),
+            textStyle: errorLableStyle,
+            title: 'Errors [ ' + errors.length + ' ]',
+            titleStyle: errorLableStyle,
+            content: [errorsJsx]
+          }),
+          React.createElement(FooterContentButton, {
+            state: this.state,
+            icon: MdWarning,
+            iconStyle: warningIconStyle,
+            text: warnings.length.toString(),
+            textStyle: warningLableStyle,
+            title: 'Warnings [ ' + warnings.length + ' ]',
+            titleStyle: warningLableStyle,
+            content: [warningsJsx]
+          })
         )
       );
     }

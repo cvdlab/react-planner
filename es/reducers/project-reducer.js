@@ -1,5 +1,5 @@
 import { Seq, Map, List } from "immutable";
-import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE } from '../constants';
+import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING } from '../constants';
 
 import { State, Scene, Guide, Catalog } from "../models";
 
@@ -75,6 +75,12 @@ export default function (state, action) {
 
     case TOGGLE_SNAP:
       return toggleSnap(state, action.mask);
+
+    case THROW_ERROR:
+      return throwError(state, action.error);
+
+    case THROW_WARNING:
+      return throwWarning(state, action.warning);
 
     default:
       return state;
@@ -259,3 +265,17 @@ function updateZoomScale(state, scale) {
 function toggleSnap(state, mask) {
   return state.set('snapMask', mask);
 }
+
+function throwError(state, error) {
+  return state.set('errors', state.get('errors').push({
+    date: Date.now(),
+    error: error
+  }));
+}
+
+var throwWarning = function throwWarning(state, warning) {
+  return state.set('warnings', state.get('warnings').push({
+    date: Date.now(),
+    warning: warning
+  }));
+};

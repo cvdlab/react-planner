@@ -401,5 +401,7 @@ export var State = function (_Record12) {
   drawingSupport: new Map(),
   draggingSupport: new Map(),
   rotatingSupport: new Map(),
+  errors: new List(),
+  warnings: new List(),
   misc: new Map() //additional info
 }, 'State'));
