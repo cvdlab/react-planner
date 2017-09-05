@@ -20,7 +20,10 @@ import {
   INIT_CATALOG,
   UPDATE_MOUSE_COORDS,
   UPDATE_ZOOM_SCALE,
-  TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE
+  TOGGLE_SNAP,
+  CHANGE_CATALOG_PAGE,
+  GO_BACK_TO_CATALOG_PAGE,
+  THROW_ERROR
 } from '../constants';
 
 import {State, Scene, Guide, Catalog} from "../models";
@@ -108,6 +111,9 @@ export default function (state, action) {
 
     case TOGGLE_SNAP:
       return toggleSnap(state, action.mask);
+
+    case THROW_ERROR:
+      return throwError(state, action.error);
 
     default:
       return state;
@@ -271,4 +277,12 @@ function updateZoomScale(state, scale) {
 
 function toggleSnap(state, mask) {
   return state.set('snapMask', mask);
+}
+
+function throwError(state, error) {
+  return state.set('errors', state.get('errors').push({
+    date: Date.now(),
+    error
+  }));
+  //return state.set('errors', error);
 }

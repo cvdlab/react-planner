@@ -286,6 +286,7 @@ export class State extends Record({
   drawingSupport: new Map(),
   draggingSupport: new Map(),
   rotatingSupport: new Map(),
+  errors: new List(),
   misc: new Map()   //additional info
 }, 'State') {
   constructor(json = {}) {
