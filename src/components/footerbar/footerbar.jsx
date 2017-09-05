@@ -69,6 +69,13 @@ export default class FooterBar extends Component {
     let errorLableStyle = errors.length ? {color:SharedStyle.MATERIAL_COLORS[500].red} : {};
     let errorIconStyle = errors.length ? {transform:'rotate(45deg)',color:SharedStyle.MATERIAL_COLORS[500].red} : {transform:'rotate(45deg)'};
 
+    let warnings = this.props.state.get('warnings').toArray();
+    let warningsJsx = warnings.map((warn,ind) =>
+      <div key={ind} style={{borderBottom:'1px solid #555', lineHeight:'1.5em'}}>[ { (new Date(warn.date)).toLocaleString() } ] {warn.warning}</div>
+    );
+    let warningLableStyle = warnings.length ? {color:SharedStyle.MATERIAL_COLORS[500].yellow} : {};
+    let warningIconStyle = warningLableStyle;
+
     return (
       <div style={{...footerBarStyle, width: this.props.width, height: this.props.height}}>
 
@@ -134,6 +141,16 @@ export default class FooterBar extends Component {
             title={'Errors [ ' + errors.length + ' ]'}
             titleStyle={errorLableStyle}
             content={[errorsJsx]}
+          />
+          <FooterContentButton
+            state={this.state}
+            icon={MdWarning}
+            iconStyle={warningIconStyle}
+            text={warnings.length.toString()}
+            textStyle={warningLableStyle}
+            title={'Warnings [ ' + warnings.length + ' ]'}
+            titleStyle={warningLableStyle}
+            content={[warningsJsx]}
           />
         </div>
 
