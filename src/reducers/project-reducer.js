@@ -23,7 +23,8 @@ import {
   TOGGLE_SNAP,
   CHANGE_CATALOG_PAGE,
   GO_BACK_TO_CATALOG_PAGE,
-  THROW_ERROR
+  THROW_ERROR,
+  THROW_WARNING
 } from '../constants';
 
 import {State, Scene, Guide, Catalog} from "../models";
@@ -114,6 +115,9 @@ export default function (state, action) {
 
     case THROW_ERROR:
       return throwError(state, action.error);
+
+    case THROW_WARNING:
+      return throwWarning(state, action.warning);
 
     default:
       return state;
@@ -284,5 +288,9 @@ function throwError(state, error) {
     date: Date.now(),
     error
   }));
-  //return state.set('errors', error);
 }
+
+const throwWarning = (state, warning) => state.set('warnings', state.get('warnings').push({
+  date: Date.now(),
+  warning
+}));

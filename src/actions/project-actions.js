@@ -20,7 +20,8 @@ import {
   TOGGLE_SNAP,
   CHANGE_CATALOG_PAGE,
   GO_BACK_TO_CATALOG_PAGE,
-  THROW_ERROR
+  THROW_ERROR,
+  THROW_WARNING
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -181,5 +182,12 @@ export function throwError(error) {
   return {
     type: THROW_ERROR,
     error
+  };
+}
+
+export function throwWarning(warning) {
+  return {
+    type: THROW_WARNING,
+    warning
   };
 }
