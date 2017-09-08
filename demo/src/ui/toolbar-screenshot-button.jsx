@@ -1,9 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import IconSave from 'react-icons/lib/md/camera-alt';
-import {ToolbarButton, ReactPlannerConstants} from 'react-planner';
+import {ToolbarComponents, ReactPlannerConstants} from 'react-planner';
 
-let {
+const {
   MODE_IDLE,
   MODE_2D_ZOOM_IN,
   MODE_2D_ZOOM_OUT,
@@ -21,13 +21,15 @@ let {
   MODE_3D_VIEW
 } = ReactPlannerConstants;
 
+const { ToolbarButton } = ToolbarComponents;
+
 export default function ToolbarScreenshotButton({mode}, {translator}) {
 
   let imageBrowserDownload = imageUri => {
     let fileOutputLink = document.createElement('a');
 
-    let filename = "output" + Date.now() + ".png";
-    filename = window.prompt("Insert output filename", filename);
+    let filename = 'output' + Date.now() + '.png';
+    filename = window.prompt('Insert output filename', filename);
     if (!filename) return;
 
     fileOutputLink.setAttribute('download', filename);
@@ -68,15 +70,15 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
     let ctx = canvas.getContext('2d');
 
     // Set width and height for the new canvas
-    let heightAtt = document.createAttribute("height");
+    let heightAtt = document.createAttribute('height');
     heightAtt.value = maxWidthSVGElement.height.baseVal.value;
     canvas.setAttributeNode(heightAtt);
 
-    let widthAtt = document.createAttribute("width");
+    let widthAtt = document.createAttribute('width');
     widthAtt.value = maxWidthSVGElement.width.baseVal.value;
     canvas.setAttributeNode(widthAtt);
 
-    ctx.fillStyle = "white";
+    ctx.fillStyle = 'white';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     img.crossOrigin = 'anonymous';
@@ -91,7 +93,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
 
   if ([MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)) {
     return (
-      <ToolbarButton active={false} tooltip={translator.t("Get Screenshot")} onClick={saveScreenshotToFile}>
+      <ToolbarButton active={false} tooltip={translator.t('Get Screenshot')} onClick={saveScreenshotToFile}>
         <IconSave/>
       </ToolbarButton>
     );
@@ -112,7 +114,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
       MODE_ROTATING_ITEM].includes(mode)) {
 
     return (
-      <ToolbarButton active={false} tooltip={translator.t("Get Screenshot")} onClick={saveSVGScreenshotToFile}>
+      <ToolbarButton active={false} tooltip={translator.t('Get Screenshot')} onClick={saveSVGScreenshotToFile}>
         <IconSave/>
       </ToolbarButton>
     );
