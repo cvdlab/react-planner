@@ -103,6 +103,12 @@ export default class Catalog {
     return this.elements.hasOwnProperty(type);
   }
 
+  /** @description Register a new category
+   *  @param {string} name Name of category
+   *  @param {string} label Label of category
+   *  @param {array} [childs] Category's childs
+   *  @return {object} Registered category
+  */
   registerCategory(name, label, childs) {
     if (this.validateCategory(name, label)) {
       this.categories[name] = {name, label, categories: [], elements: []};
