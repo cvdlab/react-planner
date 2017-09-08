@@ -5,7 +5,7 @@ import {connect} from 'react-redux';
 
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
-import actions from './actions/actions';
+import actions from './actions/export';
 import Layout from './components/layout';
 import {objectsMap} from './utils/objects-utils';
 

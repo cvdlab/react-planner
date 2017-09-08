@@ -1,12 +1,14 @@
-import PropertyColor from './properties/property-color';
-import PropertyEnum from './properties/property-enum';
-import PropertyString from './properties/property-string';
-import PropertyNumber from './properties/property-number';
-import PropertyLengthMeasure from './properties/property-lenght-measure';
-import PropertyToggle from './properties/property-toggle';
-import PropertyCheckbox from './properties/property-checkbox';
-import PropertyHidden from './properties/property-hidden';
-import PropertyReadOnly from './properties/property-read-only';
+import {
+  PropertyColor,
+  PropertyEnum,
+  PropertyString,
+  PropertyNumber,
+  PropertyLengthMeasure,
+  PropertyToggle,
+  PropertyCheckbox,
+  PropertyHidden,
+  PropertyReadOnly
+} from './properties/export';
 
 import {UNIT_CENTIMETER} from '../constants';
 
@@ -109,7 +111,10 @@ export default class Catalog {
       if(childs && childs.length) {
         childs.forEach( el => this.addToCategory( name, el ) );
       }
+
+      return this.categories[name];
     }
+    return null;
   }
 
   addToCategory(name, child) {
