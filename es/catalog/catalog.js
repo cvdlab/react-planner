@@ -4,15 +4,7 @@ function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-import PropertyColor from './properties/property-color';
-import PropertyEnum from './properties/property-enum';
-import PropertyString from './properties/property-string';
-import PropertyNumber from './properties/property-number';
-import PropertyLengthMeasure from './properties/property-lenght-measure';
-import PropertyToggle from './properties/property-toggle';
-import PropertyCheckbox from './properties/property-checkbox';
-import PropertyHidden from './properties/property-hidden';
-import PropertyReadOnly from './properties/property-read-only';
+import { PropertyColor, PropertyEnum, PropertyString, PropertyNumber, PropertyLengthMeasure, PropertyToggle, PropertyCheckbox, PropertyHidden, PropertyReadOnly } from './properties/export';
 
 import { UNIT_CENTIMETER } from '../constants';
 
@@ -30,6 +22,12 @@ var Catalog = function () {
     this.registerMultiplePropertyType([['color', PropertyColor, PropertyColor], ['enum', PropertyEnum, PropertyEnum], ['string', PropertyString, PropertyString], ['number', PropertyNumber, PropertyNumber], ['length-measure', PropertyLengthMeasure, PropertyLengthMeasure], ['toggle', PropertyToggle, PropertyToggle], ['checkbox', PropertyCheckbox, PropertyCheckbox], ['hidden', PropertyHidden, PropertyHidden], ['read-only', PropertyReadOnly, PropertyReadOnly]]);
   }
 
+  /** @description Get catalog's element
+   *  @param {string} type Element's type
+   *  @return {?object} Element
+  */
+
+
   _createClass(Catalog, [{
     key: 'getElement',
     value: function getElement(type) {
@@ -38,6 +36,12 @@ var Catalog = function () {
       }
       throw new Error('Element ' + type + ' does not exist in catalog');
     }
+
+    /** @description Get catalog category
+     *  @param {string} categoryName Name of category
+     *  @return {object} Category
+    */
+
   }, {
     key: 'getCategory',
     value: function getCategory(categoryName) {
@@ -46,6 +50,12 @@ var Catalog = function () {
       }
       throw new Error('Category ' + categoryName + ' does not exist in catalog');
     }
+
+    /** @description Return type of a specfied property
+     *  @param {string} type Property type
+     *  @return {?object} Property
+    */
+
   }, {
     key: 'getPropertyType',
     value: function getPropertyType(type) {
@@ -54,6 +64,12 @@ var Catalog = function () {
       }
       throw new Error('Element ' + type + ' does not exist in catalog');
     }
+
+    /** @description Register a new element
+     *  @param {object} json Element structure
+     *  @return {void}
+    */
+
   }, {
     key: 'registerElement',
     value: function registerElement(json) {
@@ -63,6 +79,12 @@ var Catalog = function () {
         this.categories.root.elements.push(this.elements[json.name]);
       }
     }
+
+    /** @description Register multiple elements
+     *  @param {array} [elementArray] Array of elements
+     *  @return {void}
+    */
+
   }, {
     key: 'registerMultipleElements',
     value: function registerMultipleElements(elementArray) {
@@ -72,11 +94,25 @@ var Catalog = function () {
         return _this.registerElement(el);
       });
     }
+
+    /** @description Register a new property
+     *  @param {string} type Type of property
+     *  @param {object} Viewer Property viewer component
+     *  @param {object} Editor Property editor component
+     *  @return {void}
+    */
+
   }, {
     key: 'registerPropertyType',
     value: function registerPropertyType(type, Viewer, Editor) {
       this.propertyTypes[type] = { type: type, Viewer: Viewer, Editor: Editor };
     }
+
+    /** @description Register multiple property
+     *  @param {array} propertyTypeArray Array of properties
+     *  @return {void}
+    */
+
   }, {
     key: 'registerMultiplePropertyType',
     value: function registerMultiplePropertyType(propertyTypeArray) {
@@ -86,6 +122,12 @@ var Catalog = function () {
         return _this2.registerPropertyType.apply(_this2, _toConsumableArray(el));
       });
     }
+
+    /** @description Validate an element
+     *  @param {object} json Element's structure
+     *  @return {?boolean}
+    */
+
   }, {
     key: 'validateElement',
     value: function validateElement(json) {
@@ -112,11 +154,25 @@ var Catalog = function () {
 
       return true;
     }
+
+    /** @description Check if catalog has element
+     *  @param {string} type Element's type
+     *  @return {boolean}
+    */
+
   }, {
     key: 'hasElement',
     value: function hasElement(type) {
       return this.elements.hasOwnProperty(type);
     }
+
+    /** @description Register a new category
+     *  @param {string} name Name of category
+     *  @param {string} label Label of category
+     *  @param {array} [childs] Category's childs
+     *  @return {?object} Registered category
+    */
+
   }, {
     key: 'registerCategory',
     value: function registerCategory(name, label, childs) {
@@ -131,8 +187,18 @@ var Catalog = function () {
             return _this3.addToCategory(name, el);
           });
         }
+
+        return this.categories[name];
       }
+      return null;
     }
+
+    /** @description Add an element to the specified category
+     *  @param {string} name Name of category
+     *  @param {object} child Element's structure
+     *  @return {?void}
+    */
+
   }, {
     key: 'addToCategory',
     value: function addToCategory(name, child) {
@@ -146,6 +212,13 @@ var Catalog = function () {
         throw new Error('child ' + child + ' is either category nor element');
       }
     }
+
+    /** @description Check if category contain element
+     *  @param {string} categoryName Name of category
+     *  @param {string} elementName Name of element
+     *  @return {boolean}
+    */
+
   }, {
     key: 'categoryHasElement',
     value: function categoryHasElement(categoryName, elementName) {
@@ -153,6 +226,13 @@ var Catalog = function () {
         return el.name === elementName;
       });
     }
+
+    /** @description Validate a category
+     *  @param {string} name Name of category
+     *  @param {string} label Label of category
+     *  @return {?boolean}
+    */
+
   }, {
     key: 'validateCategory',
     value: function validateCategory(name, label) {
@@ -168,6 +248,12 @@ var Catalog = function () {
 
       return true;
     }
+
+    /** @description Verify if catalog already contain a category with specified name
+     *  @param {string} categoryName Name of category
+     *  @return {boolean}
+    */
+
   }, {
     key: 'hasCategory',
     value: function hasCategory(categoryName) {
