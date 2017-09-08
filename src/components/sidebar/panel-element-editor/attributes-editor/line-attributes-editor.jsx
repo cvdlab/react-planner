@@ -1,16 +1,15 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import FormNumberInput from '../../../style/form-number-input';
-import FormTextInput from '../../../style/form-text-input';
-import PropertyLengthMeasure from '../../../../catalog/properties/property-lenght-measure';
+import { FormNumberInput, FormTextInput } from '../../../style/export';
+import { PropertyLengthMeasure } from '../../../../catalog/properties/export';
 
-let tableStyle = {
+const tableStyle = {
   width: '100%'
 };
-let firstTdStyle = {
+const firstTdStyle = {
   width: '6em'
 };
-let inputStyle = {
+const inputStyle = {
   textAlign: 'left'
 };
 
