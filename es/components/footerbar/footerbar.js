@@ -13,7 +13,6 @@ import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
-import { VERSION } from '../../version';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
@@ -184,12 +183,11 @@ var FooterBar = function (_Component) {
         this.props.footerbarComponents.map(function (Component, index) {
           return React.createElement(Component, { state: state, key: index });
         }),
-        React.createElement(
+        this.props.softwareSignature ? React.createElement(
           'div',
           { style: rightTextStyle },
-          'React-Planner ',
-          VERSION
-        ),
+          this.props.softwareSignature
+        ) : null,
         React.createElement(
           'div',
           { style: rightTextStyle },
@@ -228,7 +226,8 @@ FooterBar.propTypes = {
   state: PropTypes.object.isRequired,
   footerbarComponents: PropTypes.array.isRequired,
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
+  softwareSignature: PropTypes.string
 };
 
 FooterBar.contextTypes = {

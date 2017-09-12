@@ -8,14 +8,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import ContentTitle from '../style/content-title';
-import ContentContainer from '../style/content-container';
-import FormLabel from '../style/form-label';
-import FormBlock from '../style/form-block';
-import FormNumberInput from '../style/form-number-input';
-
-import FormSubmitButton from '../style/form-submit-button';
-import CancelButton from '../style/cancel-button';
+import { ContentTitle, ContentContainer, FormLabel, FormBlock, FormNumberInput, FormSubmitButton, CancelButton } from '../style/export';
 
 var ProjectConfigurator = function (_Component) {
   _inherits(ProjectConfigurator, _Component);
@@ -74,7 +67,7 @@ var ProjectConfigurator = function (_Component) {
         React.createElement(
           ContentTitle,
           null,
-          translator.t("Project config")
+          translator.t('Project config')
         ),
         React.createElement(
           'form',
@@ -87,7 +80,7 @@ var ProjectConfigurator = function (_Component) {
             React.createElement(
               FormLabel,
               { htmlFor: 'width' },
-              translator.t("width")
+              translator.t('width')
             ),
             React.createElement(FormNumberInput, { id: 'width', placeholder: 'width', value: dataWidth,
               onChange: function onChange(e) {
@@ -100,7 +93,7 @@ var ProjectConfigurator = function (_Component) {
             React.createElement(
               FormLabel,
               { htmlFor: 'height' },
-              translator.t("height")
+              translator.t('height')
             ),
             React.createElement(FormNumberInput, { id: 'height', placeholder: 'height', value: dataHeight,
               onChange: function onChange(e) {
@@ -125,7 +118,7 @@ var ProjectConfigurator = function (_Component) {
                       onClick: function onClick(e) {
                         return projectActions.rollback();
                       } },
-                    translator.t("Cancel")
+                    translator.t('Cancel')
                   )
                 ),
                 React.createElement(
@@ -134,7 +127,7 @@ var ProjectConfigurator = function (_Component) {
                   React.createElement(
                     FormSubmitButton,
                     { size: 'large' },
-                    translator.t("Save")
+                    translator.t('Save')
                   )
                 )
               )

@@ -18,8 +18,23 @@ import { connect } from 'react-redux';
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
 import actions from './actions/export';
-import Layout from './components/layout';
 import { objectsMap } from './utils/objects-utils';
+import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
+import { VERSION } from './version';
+
+var Toolbar = ToolbarComponents.Toolbar;
+var Sidebar = SidebarComponents.Sidebar;
+var FooterBar = FooterBarComponents.FooterBar;
+
+
+var toolbarW = 50;
+var sidebarW = 300;
+var footerBarH = 20;
+
+var wrapperStyle = {
+  display: 'flex',
+  flexFlow: 'row nowrap'
+};
 
 var ReactPlanner = function (_Component) {
   _inherits(ReactPlanner, _Component);
@@ -81,7 +96,23 @@ var ReactPlanner = function (_Component) {
           stateExtractor = _props2.stateExtractor,
           props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor']);
 
-      return React.createElement(Layout, _extends({ width: width, height: height, state: stateExtractor(state) }, props));
+      var contentW = width - toolbarW - sidebarW;
+      var toolbarH = height - footerBarH;
+      var contentH = height - footerBarH;
+      var sidebarH = height - footerBarH;
+
+      var extractedState = stateExtractor(state);
+
+      return React.createElement(
+        'div',
+        { style: _extends({}, wrapperStyle, { height: height }) },
+        React.createElement(Toolbar, _extends({ width: toolbarW, height: toolbarH, state: extractedState }, props)),
+        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState }, props, { onWheel: function onWheel(event) {
+            return event.preventDefault();
+          } })),
+        React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)),
+        React.createElement(FooterBar, _extends({ width: width, height: footerBarH, state: extractedState }, props))
+      );
     }
   }]);
 
@@ -101,7 +132,8 @@ ReactPlanner.propTypes = {
   toolbarButtons: PropTypes.array,
   sidebarComponents: PropTypes.array,
   footerbarComponents: PropTypes.array,
-  customContents: PropTypes.object
+  customContents: PropTypes.object,
+  softwareSignature: PropTypes.string
 };
 
 ReactPlanner.contextTypes = {
@@ -120,7 +152,7 @@ ReactPlanner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-
+  softwareSignature: 'React-Planner ' + VERSION,
   toolbarButtons: [],
   sidebarComponents: [],
   footerbarComponents: [],
