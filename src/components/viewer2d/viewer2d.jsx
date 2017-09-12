@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 import PropTypes from 'prop-types';
@@ -332,8 +332,8 @@ export default function Viewer2D({state, width, height},
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
 
-      miniaturePosition="none"
-      toolbarPosition="right">
+      miniaturePosition='none'
+      toolbarPosition='right'>
 
       <svg width={scene.width} height={scene.height}>
         <g style={Object.assign(mode2Cursor(mode), mode2PointerEvents(mode))}>

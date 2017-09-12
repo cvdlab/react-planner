@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import IconSave from 'react-icons/lib/md/camera-alt';
-import {ToolbarComponents, ReactPlannerConstants} from 'react-planner';
+import {ReactPlannerComponents, ReactPlannerConstants} from 'react-planner';
 
 const {
   MODE_IDLE,
@@ -21,7 +21,7 @@ const {
   MODE_3D_VIEW
 } = ReactPlannerConstants;
 
-const { ToolbarButton } = ToolbarComponents;
+const { ToolbarButton } = ReactPlannerComponents.ToolbarComponents;
 
 export default function ToolbarScreenshotButton({mode}, {translator}) {
 

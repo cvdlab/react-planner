@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import ContentTitle from '../style/content-title';
-import ContentContainer from '../style/content-container';
-import FormLabel from '../style/form-label';
-import FormBlock from '../style/form-block';
-import FormNumberInput from '../style/form-number-input';
-
-import FormSubmitButton from '../style/form-submit-button';
-import CancelButton from '../style/cancel-button';
+import {
+  ContentTitle,
+  ContentContainer,
+  FormLabel,
+  FormBlock,
+  FormNumberInput,
+  FormSubmitButton,
+  CancelButton
+} from '../style/export';
 
 export default class ProjectConfigurator extends Component {
 
@@ -45,18 +46,18 @@ export default class ProjectConfigurator extends Component {
 
     return (
       <ContentContainer width={width} height={height}>
-        <ContentTitle>{translator.t("Project config")}</ContentTitle>
+        <ContentTitle>{translator.t('Project config')}</ContentTitle>
 
         <form onSubmit={e => this.onSubmit(e)}>
           <FormBlock>
-            <FormLabel htmlFor="width">{translator.t("width")}</FormLabel>
-            <FormNumberInput id="width" placeholder="width" value={dataWidth}
+            <FormLabel htmlFor='width'>{translator.t('width')}</FormLabel>
+            <FormNumberInput id='width' placeholder='width' value={dataWidth}
                              onChange={e => this.setState({dataWidth: e.target.value})}/>
           </FormBlock>
 
           <FormBlock>
-            <FormLabel htmlFor="height">{translator.t("height")}</FormLabel>
-            <FormNumberInput id="height" placeholder="height" value={dataHeight}
+            <FormLabel htmlFor='height'>{translator.t('height')}</FormLabel>
+            <FormNumberInput id='height' placeholder='height' value={dataHeight}
                              onChange={e => this.setState({dataHeight: e.target.value})}/>
           </FormBlock>
 
@@ -64,11 +65,11 @@ export default class ProjectConfigurator extends Component {
             <tbody>
             <tr>
               <td>
-                <CancelButton size="large"
-                              onClick={e => projectActions.rollback()}>{translator.t("Cancel")}</CancelButton>
+                <CancelButton size='large'
+                              onClick={e => projectActions.rollback()}>{translator.t('Cancel')}</CancelButton>
               </td>
               <td>
-                <FormSubmitButton size="large">{translator.t("Save")}</FormSubmitButton>
+                <FormSubmitButton size='large'>{translator.t('Save')}</FormSubmitButton>
               </td>
             </tr>
             </tbody>
