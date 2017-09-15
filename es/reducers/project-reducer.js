@@ -1,9 +1,9 @@
 import { Seq, Map, List } from "immutable";
-import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING } from '../constants';
+import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING, COPY_PROPERTIES, PASTE_PROPERTIES } from '../constants';
 
 import { State, Scene, Guide, Catalog } from "../models";
 
-import { removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, setItemsAttributes as setItemsAttributesOp, setLinesAttributes as setLinesAttributesOp, setHolesAttributes as setHolesAttributesOp, select, unselect, unselectAll as unselectAllOp, removeItem, loadLayerFromJSON, setPropertiesOnSelected, setAttributesOnSelected } from '../utils/layer-operations';
+import { removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, setItemsAttributes as setItemsAttributesOp, setLinesAttributes as setLinesAttributesOp, setHolesAttributes as setHolesAttributesOp, select, unselect, unselectAll as unselectAllOp, removeItem, loadLayerFromJSON, setPropertiesOnSelected, updatePropertiesOnSelected, setAttributesOnSelected } from '../utils/layer-operations';
 
 export default function (state, action) {
 
@@ -82,6 +82,12 @@ export default function (state, action) {
     case THROW_WARNING:
       return throwWarning(state, action.warning);
 
+    case COPY_PROPERTIES:
+      return copyProperties(state, action.properties);
+
+    case PASTE_PROPERTIES:
+      return pasteProperties(state);
+
     default:
       return state;
 
@@ -104,6 +110,17 @@ function setProperties(state, properties) {
   var scene = state.scene;
   scene = scene.set('layers', scene.layers.map(function (layer) {
     return setPropertiesOnSelected(layer, properties);
+  }));
+  return state.merge({
+    scene: scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  });
+}
+
+function updateProperties(state, properties) {
+  var scene = state.scene;
+  scene = scene.set('layers', scene.layers.map(function (layer) {
+    return updatePropertiesOnSelected(layer, properties);
   }));
   return state.merge({
     scene: scene,
@@ -278,4 +295,12 @@ var throwWarning = function throwWarning(state, warning) {
     date: Date.now(),
     warning: warning
   }));
+};
+
+var copyProperties = function copyProperties(state, properties) {
+  return state.set('clipboardProperties', properties.toJS());
+};
+
+var pasteProperties = function pasteProperties(state) {
+  return updateProperties(state, state.get('clipboardProperties'));
 };

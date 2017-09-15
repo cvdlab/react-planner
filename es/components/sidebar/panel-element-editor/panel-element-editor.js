@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Panel from '../panel';
 import { Seq } from 'immutable';
@@ -7,7 +7,8 @@ import ElementEditor from './element-editor';
 
 export default function PanelElementEditor(_ref, _ref2) {
   var state = _ref.state;
-  var translator = _ref2.translator;
+  var projectActions = _ref2.projectActions,
+      translator = _ref2.translator;
   var scene = state.scene,
       mode = state.mode;
 
@@ -46,5 +47,6 @@ PanelElementEditor.propTypes = {
 };
 
 PanelElementEditor.contextTypes = {
+  projectActions: PropTypes.object.isRequired,
   translator: PropTypes.object.isRequired
 };

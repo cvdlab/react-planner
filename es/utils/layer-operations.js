@@ -397,6 +397,15 @@ function opSetProperties(layer, prototype, ID, properties) {
   layer.mergeIn([prototype, ID, 'properties'], properties);
 }
 
+function opUpdateProperties(layer, prototype, ID, properties) {
+  var newProp = fromJS(properties);
+  newProp.forEach(function (v, k) {
+    if (layer.getIn([prototype, ID, 'properties', k])) {
+      layer = layer.setIn([prototype, ID, 'properties', k], v);
+    }
+  });
+}
+
 function opSetItemsAttributes(layer, prototype, ID, itemsAttributes) {
   itemsAttributes = fromJS(itemsAttributes);
   layer.mergeIn([prototype, ID], itemsAttributes);
@@ -456,6 +465,24 @@ export function setPropertiesOnSelected(layer, properties) {
     });
     selected.items.forEach(function (itemID) {
       return opSetProperties(layer, 'items', itemID, properties);
+    });
+  });
+}
+
+export function updatePropertiesOnSelected(layer, properties) {
+  return layer.withMutations(function (layer) {
+    var selected = layer.selected;
+    selected.lines.forEach(function (lineID) {
+      return opUpdateProperties(layer, 'lines', lineID, properties);
+    });
+    selected.holes.forEach(function (holeID) {
+      return opUpdateProperties(layer, 'holes', holeID, properties);
+    });
+    selected.areas.forEach(function (areaID) {
+      return opUpdateProperties(layer, 'areas', areaID, properties);
+    });
+    selected.items.forEach(function (itemID) {
+      return opUpdateProperties(layer, 'items', itemID, properties);
     });
   });
 }

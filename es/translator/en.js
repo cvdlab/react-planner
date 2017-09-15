@@ -35,5 +35,7 @@ export default {
   "Rotation": "Rotation",
   "Altitude": "Altitude",
   "Name": "Name",
-  "Would you want to start a new Project?": "Would you want to start a new Project?"
+  "Would you want to start a new Project?": "Would you want to start a new Project?",
+  "Copy": "Copy",
+  "Paste": "Paste"
 };

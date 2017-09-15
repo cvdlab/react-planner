@@ -19,12 +19,37 @@ import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import * as geometry from '../../../utils/geometry.js';
 import * as math from '../../../utils/math.js';
+import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
+import MdContentCopy from 'react-icons/lib/md/content-copy';
+import MdContentPaste from 'react-icons/lib/md/content-paste';
 
 var tableStyle = {
   marginTop: '10px',
   marginRight: '0px',
   marginLeft: 'auto'
+};
+
+var attrPorpSeparatorStyle = {
+  margin: '0.5em 0.25em 0.5em 0',
+  border: '2px solid ' + SharedStyle.SECONDARY_COLOR.alt,
+  position: 'relative',
+  height: '2.5em',
+  borderRadius: '2px'
+};
+
+var headActionStyle = {
+  position: 'absolute',
+  right: '0.5em',
+  top: '0.5em'
+};
+
+var iconHeadStyle = {
+  float: 'right',
+  margin: '-3px 4px 0px 0px',
+  padding: 0,
+  cursor: 'pointer',
+  fontSize: '1.4em'
 };
 
 var ElementEditor = function (_Component) {
@@ -351,6 +376,16 @@ var ElementEditor = function (_Component) {
       }
     }
   }, {
+    key: 'copyProperties',
+    value: function copyProperties(properties) {
+      this.context.projectActions.copyProperties(properties);
+    }
+  }, {
+    key: 'pasteProperties',
+    value: function pasteProperties() {
+      this.context.projectActions.pasteProperties();
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this3 = this;
@@ -362,7 +397,9 @@ var ElementEditor = function (_Component) {
           projectActions = _context.projectActions,
           catalog = _context.catalog,
           translator = _context.translator,
-          appState = this.props.state;
+          _props = this.props,
+          appState = _props.state,
+          element = _props.element;
 
 
       return React.createElement(
@@ -370,10 +407,32 @@ var ElementEditor = function (_Component) {
         { onSubmit: function onSubmit(e) {
             return _this3.save(e);
           } },
-        React.createElement(AttributesEditor, { element: this.props.element,
+        React.createElement(AttributesEditor, { element: element,
           onUpdate: this.updateAttribute,
           attributeFormData: attributesFormData,
           state: appState }),
+        React.createElement(
+          'div',
+          { style: attrPorpSeparatorStyle },
+          React.createElement(
+            'div',
+            { style: headActionStyle },
+            React.createElement(
+              'div',
+              { title: translator.t('Copy'), style: iconHeadStyle, onClick: function onClick(e) {
+                  return _this3.copyProperties(element.properties);
+                } },
+              React.createElement(MdContentCopy, null)
+            ),
+            appState.get('clipboardProperties') ? React.createElement(
+              'div',
+              { title: translator.t('Paste'), style: iconHeadStyle, onClick: function onClick(e) {
+                  return _this3.pasteProperties();
+                } },
+              React.createElement(MdContentPaste, null)
+            ) : null
+          )
+        ),
         propertiesFormData.entrySeq().map(function (_ref) {
           var _ref2 = _slicedToArray(_ref, 2),
               propertyName = _ref2[0],
@@ -394,7 +453,7 @@ var ElementEditor = function (_Component) {
               return _this3.updateProperty(propertyName, value);
             },
             state: appState,
-            sourceElement: _this3.props.element,
+            sourceElement: element,
             internalState: _this3.state
           });
         }),
@@ -415,7 +474,7 @@ var ElementEditor = function (_Component) {
                   { size: 'small', onClick: function onClick(e) {
                       return projectActions.remove();
                     } },
-                  translator.t("Delete")
+                  translator.t('Delete')
                 )
               ),
               React.createElement(
@@ -426,7 +485,7 @@ var ElementEditor = function (_Component) {
                   { size: 'small', onClick: function onClick(e) {
                       return _this3.reset();
                     } },
-                  translator.t("Reset")
+                  translator.t('Reset')
                 )
               ),
               React.createElement(
@@ -435,7 +494,7 @@ var ElementEditor = function (_Component) {
                 React.createElement(
                   FormSubmitButton,
                   { size: 'small' },
-                  translator.t("Save")
+                  translator.t('Save')
                 )
               )
             )

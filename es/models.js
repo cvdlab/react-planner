@@ -403,5 +403,6 @@ export var State = function (_Record12) {
   rotatingSupport: new Map(),
   errors: new List(),
   warnings: new List(),
+  clipboardProperties: null,
   misc: new Map() //additional info
 }, 'State'));
