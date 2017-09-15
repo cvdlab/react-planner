@@ -7,12 +7,37 @@ import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import * as geometry from '../../../utils/geometry.js';
 import * as math from '../../../utils/math.js';
+import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
+import MdContentCopy from 'react-icons/lib/md/content-copy';
+import MdContentPaste from 'react-icons/lib/md/content-paste';
 
-let tableStyle = {
+const tableStyle = {
   marginTop: '10px',
   marginRight: '0px',
   marginLeft: 'auto'
+};
+
+const attrPorpSeparatorStyle = {
+  margin: '0.5em 0.25em 0.5em 0',
+  border: '2px solid ' + SharedStyle.SECONDARY_COLOR.alt,
+  position:'relative',
+  height:'2.5em',
+  borderRadius:'2px'
+};
+
+const headActionStyle = {
+  position:'absolute',
+  right:'0.5em',
+  top:'0.5em'
+};
+
+const iconHeadStyle = {
+  float:'right',
+  margin:'-3px 4px 0px 0px',
+  padding:0,
+  cursor:'pointer',
+  fontSize:'1.4em'
 };
 
 export default class ElementEditor extends Component {
@@ -300,20 +325,35 @@ export default class ElementEditor extends Component {
     }
   }
 
+  copyProperties( properties ) {
+    this.context.projectActions.copyProperties( properties );
+  };
+
+  pasteProperties() {
+    this.context.projectActions.pasteProperties();
+  };
+
   render() {
     let {
       state: {propertiesFormData, attributesFormData},
       context: {projectActions, catalog, translator},
-      props: {state: appState},
+      props: {state: appState, element},
     } = this;
 
     return (
       <form onSubmit={e => this.save(e)}>
 
-        <AttributesEditor element={this.props.element}
+        <AttributesEditor element={element}
                           onUpdate={this.updateAttribute}
                           attributeFormData={attributesFormData}
                           state={appState}/>
+
+        <div style={attrPorpSeparatorStyle}>
+          <div style={headActionStyle}>
+            <div title={translator.t('Copy')} style={iconHeadStyle} onClick={ e => this.copyProperties(element.properties) }><MdContentCopy /></div>
+            { appState.get('clipboardProperties') ? <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ e => this.pasteProperties() }><MdContentPaste /></div> : null }
+          </div>
+        </div>
 
         {propertiesFormData.entrySeq()
           .map(([propertyName, data]) => {
@@ -329,7 +369,7 @@ export default class ElementEditor extends Component {
               configs={configs}
               onUpdate={value => this.updateProperty(propertyName, value)}
               state={appState}
-              sourceElement={this.props.element}
+              sourceElement={element}
               internalState={this.state}
             />
           })
@@ -339,13 +379,13 @@ export default class ElementEditor extends Component {
           <tbody>
           <tr>
             <td>
-              <DeleteButton size="small" onClick={e => projectActions.remove()}>{translator.t("Delete")}</DeleteButton>
+              <DeleteButton size="small" onClick={e => projectActions.remove()}>{translator.t('Delete')}</DeleteButton>
             </td>
             <td>
-              <CancelButton size="small" onClick={e => this.reset()}>{translator.t("Reset")}</CancelButton>
+              <CancelButton size="small" onClick={e => this.reset()}>{translator.t('Reset')}</CancelButton>
             </td>
             <td>
-              <FormSubmitButton size="small">{translator.t("Save")}</FormSubmitButton>
+              <FormSubmitButton size="small">{translator.t('Save')}</FormSubmitButton>
             </td>
           </tr>
           </tbody>

@@ -21,7 +21,9 @@ import {
   CHANGE_CATALOG_PAGE,
   GO_BACK_TO_CATALOG_PAGE,
   THROW_ERROR,
-  THROW_WARNING
+  THROW_WARNING,
+  COPY_PROPERTIES,
+  PASTE_PROPERTIES
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -189,5 +191,18 @@ export function throwWarning(warning) {
   return {
     type: THROW_WARNING,
     warning
+  };
+}
+
+export function copyProperties(properties) {
+  return {
+    type: COPY_PROPERTIES,
+    properties
+  };
+}
+
+export function pasteProperties() {
+  return {
+    type: PASTE_PROPERTIES
   };
 }

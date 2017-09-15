@@ -312,6 +312,17 @@ function opSetProperties(layer, prototype, ID, properties) {
   layer.mergeIn([prototype, ID, 'properties'], properties);
 }
 
+function opUpdateProperties(layer, prototype, ID, properties) {
+  let newProp = fromJS(properties);
+  newProp.forEach( ( v, k ) =>
+  {
+    if( layer.getIn([prototype, ID, 'properties', k]) )
+    {
+      layer = layer.setIn([prototype, ID, 'properties', k], v);
+    }
+  });
+}
+
 function opSetItemsAttributes(layer, prototype, ID, itemsAttributes) {
   itemsAttributes = fromJS(itemsAttributes);
   layer.mergeIn([prototype, ID], itemsAttributes);
@@ -363,6 +374,16 @@ export function setPropertiesOnSelected(layer, properties) {
     selected.holes.forEach(holeID => opSetProperties(layer, 'holes', holeID, properties));
     selected.areas.forEach(areaID => opSetProperties(layer, 'areas', areaID, properties));
     selected.items.forEach(itemID => opSetProperties(layer, 'items', itemID, properties));
+  });
+}
+
+export function updatePropertiesOnSelected(layer, properties) {
+  return layer.withMutations(layer => {
+    let selected = layer.selected;
+    selected.lines.forEach(lineID => opUpdateProperties(layer, 'lines', lineID, properties));
+    selected.holes.forEach(holeID => opUpdateProperties(layer, 'holes', holeID, properties));
+    selected.areas.forEach(areaID => opUpdateProperties(layer, 'areas', areaID, properties));
+    selected.items.forEach(itemID => opUpdateProperties(layer, 'items', itemID, properties));
   });
 }
 

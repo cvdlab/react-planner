@@ -24,7 +24,9 @@ import {
   CHANGE_CATALOG_PAGE,
   GO_BACK_TO_CATALOG_PAGE,
   THROW_ERROR,
-  THROW_WARNING
+  THROW_WARNING,
+  COPY_PROPERTIES,
+  PASTE_PROPERTIES
 } from '../constants';
 
 import {State, Scene, Guide, Catalog} from "../models";
@@ -43,6 +45,7 @@ import {
   removeItem,
   loadLayerFromJSON,
   setPropertiesOnSelected,
+  updatePropertiesOnSelected,
   setAttributesOnSelected
 } from '../utils/layer-operations';
 
@@ -119,6 +122,12 @@ export default function (state, action) {
     case THROW_WARNING:
       return throwWarning(state, action.warning);
 
+    case COPY_PROPERTIES:
+      return copyProperties(state, action.properties);
+
+    case PASTE_PROPERTIES:
+    return pasteProperties(state);
+
     default:
       return state;
 
@@ -141,6 +150,15 @@ function loadProject(state, sceneJSON) {
 function setProperties(state, properties) {
   let scene = state.scene;
   scene = scene.set('layers', scene.layers.map(layer => setPropertiesOnSelected(layer, properties)));
+  return state.merge({
+    scene,
+    sceneHistory: state.sceneHistory.push(scene)
+  })
+}
+
+function updateProperties(state, properties) {
+  let scene = state.scene;
+  scene = scene.set('layers', scene.layers.map(layer => updatePropertiesOnSelected(layer, properties)));
   return state.merge({
     scene,
     sceneHistory: state.sceneHistory.push(scene)
@@ -294,3 +312,7 @@ const throwWarning = (state, warning) => state.set('warnings', state.get('warnin
   date: Date.now(),
   warning
 }));
+
+const copyProperties = (state, properties) => state.set('clipboardProperties', properties.toJS());
+
+const pasteProperties = (state) => updateProperties(state, state.get('clipboardProperties'));
