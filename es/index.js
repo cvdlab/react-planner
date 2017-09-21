@@ -10,5 +10,6 @@ import ReactPlannerComponents from './components/export';
 import ReactPlannerActions from './actions/export';
 import ReactPlannerReducers from './reducers/export';
 import ElementsFactories from './catalog/factories/export';
+import ReactPlannerUtils from './utils/export';
 
-export { Catalog, Translator, Models, reducer, ReactPlanner, Plugins, ElementsFactories, ReactPlannerConstants, ReactPlannerReducers, ReactPlannerActions, ReactPlannerComponents, ReactPlannerSharedStyle };
+export { Catalog, Translator, Models, reducer, ReactPlanner, Plugins, ElementsFactories, ReactPlannerConstants, ReactPlannerReducers, ReactPlannerActions, ReactPlannerComponents, ReactPlannerSharedStyle, ReactPlannerUtils };
