@@ -6,6 +6,7 @@ import CatalogPageItem from './catalog-page-item';
 import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
+import * as SharedStyle from '../../shared-style';
 
 const containerStyle = {
   position: 'fixed',
@@ -37,7 +38,8 @@ const searchContainer = {
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
   borderRadius: '2px',
   transition: 'all .2s ease-in-out',
-  WebkitTransition: 'all .2s ease-in-out'
+  WebkitTransition: 'all .2s ease-in-out',
+  marginBottom: '1em'
 };
 
 const searchText = {
@@ -51,6 +53,26 @@ const searchInput = {
   margin: '0',
   padding: '0 1em',
   border: '1px solid #EEE'
+};
+
+const historyContainer = {
+  ...searchContainer,
+  padding: '0.2em 0.625em'
+};
+
+const historyElementStyle = {
+  width: 'auto',
+  height: '2em',
+  lineHeight: '2em',
+  textAlign:'center',
+  borderRadius: '1em',
+  display: 'inline-block',
+  cursor: 'pointer',
+  backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
+  color: SharedStyle.PRIMARY_COLOR.text_main,
+  textTransform: 'capitalize',
+  margin: '0.25em',
+  padding: '0 1em'
 };
 
 export default class CatalogList extends Component {
@@ -105,6 +127,23 @@ export default class CatalogList extends Component {
     });
   };
 
+  select( element ) {
+
+    switch (element.prototype) {
+      case 'lines':
+        this.context.linesActions.selectToolDrawingLine(element.name);
+        break;
+      case 'items':
+        this.context.itemsActions.selectToolDrawingItem(element.name);
+        break;
+      case 'holes':
+        this.context.holesActions.selectToolDrawingHole(element.name);
+        break;
+    }
+
+    this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
+  }
+
   render() {
 
     let page = this.props.state.catalog.page;
@@ -135,6 +174,12 @@ export default class CatalogList extends Component {
     let turnBackButton = pathSize > 0 ? (
       <CatalogTurnBackPageItem key={pathSize} page={this.context.catalog.categories[this.props.state.catalog.path.get(pathSize - 1)]}/>) : null;
 
+
+    let selectedHistory = this.props.state.get('selectedElementsHistory');
+    let selectedHistoryElements = selectedHistory.map( ( el, ind ) =>
+      <div key={ind} style={historyElementStyle} title={el.name} onClick={() => this.select(el) }>{el.name}</div>
+    );
+
     return (
       <ContentContainer width={this.props.width} height={this.props.height} style={{...containerStyle, ...this.props.style}}>
         <ContentTitle>{this.context.translator.t('Catalog')}</ContentTitle>
@@ -143,6 +188,13 @@ export default class CatalogList extends Component {
           <span style={searchText}>{this.context.translator.t('Search Element')}</span>
           <input type="text" style={searchInput} onChange={( e ) => { this.matcharray( e.target.value ); } }/>
         </div>
+        { selectedHistory.size ?
+          <div style={historyContainer}>
+            <span>Last Selected:</span>
+            {selectedHistoryElements}
+          </div> :
+          null
+        }
         <div style={itemsStyle}>
           {
             this.state.matchString === '' ? [
@@ -168,5 +220,8 @@ CatalogList.propTypes = {
 CatalogList.contextTypes = {
   catalog: PropTypes.object.isRequired,
   translator: PropTypes.object.isRequired,
+  itemsActions: PropTypes.object.isRequired,
+  linesActions: PropTypes.object.isRequired,
+  holesActions: PropTypes.object.isRequired,
   projectActions: PropTypes.object.isRequired
 };
