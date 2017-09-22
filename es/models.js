@@ -404,5 +404,6 @@ export var State = function (_Record12) {
   errors: new List(),
   warnings: new List(),
   clipboardProperties: null,
+  selectedElementsHistory: new List(),
   misc: new Map() //additional info
 }, 'State'));

@@ -1,5 +1,5 @@
 import { Seq, Map, List } from "immutable";
-import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING, COPY_PROPERTIES, PASTE_PROPERTIES } from '../constants';
+import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING, COPY_PROPERTIES, PASTE_PROPERTIES, PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY } from '../constants';
 
 import { State, Scene, Guide, Catalog } from "../models";
 
@@ -87,6 +87,9 @@ export default function (state, action) {
 
     case PASTE_PROPERTIES:
       return pasteProperties(state);
+
+    case PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY:
+      return pushLastSelectedCatalogElementToHistory(state, action.element);
 
     default:
       return state;
@@ -303,4 +306,18 @@ var copyProperties = function copyProperties(state, properties) {
 
 var pasteProperties = function pasteProperties(state) {
   return updateProperties(state, state.get('clipboardProperties'));
+};
+
+var pushLastSelectedCatalogElementToHistory = function pushLastSelectedCatalogElementToHistory(state, element) {
+  var currHistory = state.selectedElementsHistory;
+
+  var previousPosition = currHistory.findIndex(function (el) {
+    return el.name === element.name;
+  });
+  if (previousPosition !== -1) {
+    currHistory = currHistory.splice(previousPosition, 1);
+  }
+  currHistory = currHistory.splice(0, 0, element);
+
+  return state.set('selectedElementsHistory', currHistory);
 };

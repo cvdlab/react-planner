@@ -37,5 +37,6 @@ export default {
   "Name": "Nome",
   "Would you want to start a new Project?": "Vuoi iniziare un nuovo progetto?",
   "Copy": "Copia",
-  "Paste": "Incolla"
+  "Paste": "Incolla",
+  "Search Element": "Cerca Elemento"
 };

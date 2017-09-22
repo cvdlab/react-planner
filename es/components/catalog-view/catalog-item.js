@@ -24,13 +24,14 @@ var STYLE_BOX = {
   padding: '0.625em',
   background: '#f7f7f9',
   border: '1px solid #e1e1e8',
-  margin: '0.3em',
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
   borderRadius: '2px',
   transition: 'all .15s ease-in-out',
-  WebkitTransition: 'all .15s ease-in-out'
+  WebkitTransition: 'all .15s ease-in-out',
+  alignSelf: 'center',
+  justifySelf: 'center'
 };
 
 var STYLE_BOX_HOVER = _extends({}, STYLE_BOX, {
@@ -133,6 +134,8 @@ var CatalogItem = function (_Component) {
           this.context.holesActions.selectToolDrawingHole(element.name);
           break;
       }
+
+      this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
     }
   }, {
     key: 'render',
@@ -203,5 +206,6 @@ CatalogItem.propTypes = {
 CatalogItem.contextTypes = {
   itemsActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired
+  holesActions: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired
 };
