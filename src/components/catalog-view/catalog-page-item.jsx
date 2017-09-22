@@ -52,7 +52,7 @@ const STYLE_NEXT_HOVER = {
 const CONTAINER_DIV = {
   background: SharedStyle.COLORS.white,
   marginBottom: '5px',
-  border: 'solid 1px #e6e6e6',
+  border: 'solid 1px #EEE',
   width: '100%',
   height: '100%',
   display: 'flex',

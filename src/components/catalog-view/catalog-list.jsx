@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import CatalogItem from './catalog-item';
 import CatalogBreadcrumb from './catalog-breadcrumb';
@@ -7,7 +7,7 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 
-const CONTAINER_STYLE = {
+const containerStyle = {
   position: 'fixed',
   width:'calc( 100% - 51px)',
   height:'calc( 100% - 20px)',
@@ -19,56 +19,142 @@ const CONTAINER_STYLE = {
   zIndex:10
 };
 
-const STYLE_ITEMS = {
+const itemsStyle = {
   display: 'flex',
-  flexFlow: 'row wrap',
+  flexFlow: 'row wrap'
 };
 
-export default function CatalogList({width, height, style = {}, state}, {catalog, translator, projectActions}) {
+const searchContainer = {
+  width: '100%',
+  height: '3em',
+  padding: '0.625em',
+  background: '#f7f7f9',
+  border: '1px solid #e1e1e8',
+  margin: '0.3em',
+  cursor: 'pointer',
+  position: 'relative',
+  boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
+  borderRadius: '2px',
+  transition: 'all .2s ease-in-out',
+  WebkitTransition: 'all .2s ease-in-out'
+};
 
-  let page = state.catalog.page;
-  let currentCategory = catalog.getCategory(page);
-  let categoriesToDisplay = currentCategory.categories;
-  let elementsToDisplay = currentCategory.elements;
+const searchText = {
+  width: '8em',
+  display: 'inline-block'
+};
 
-  let breadcrumbComponent = null;
+const searchInput = {
+  width: 'calc( 100% - 10em )',
+  height: '2em',
+  margin: '0',
+  padding: '0 1em',
+  border: '1px solid #EEE'
+};
 
-  if (page !== 'root') {
+export default class CatalogList extends Component {
 
-    let breadcrumbsNames = [];
+  constructor(props, context) {
+    super(props);
 
-    state.catalog.path.forEach(pathName => {
-      breadcrumbsNames.push({
-        name: catalog.getCategory(pathName).label,
-        action: () => projectActions.goBackToCatalogPage(pathName)
-      });
-    });
+    let page = props.state.catalog.page;
+    let currentCategory = context.catalog.getCategory(page);
+    let categoriesToDisplay = currentCategory.categories;
+    let elementsToDisplay = currentCategory.elements.filter(element => element.prototype !== 'areas');
 
-    breadcrumbsNames.push({name: currentCategory.label, action: ''});
-
-    breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
-
+    this.state = {
+      categories: currentCategory.categories,
+      elements: elementsToDisplay,
+      matchString: '',
+      matchedElements: []
+    };
   }
 
-  let pathSize = state.catalog.path.size;
+  flattenCategories( categories ) {
+    let toRet = [];
 
-  let turnBackButton = pathSize > 0 ? (
-    <CatalogTurnBackPageItem page={catalog.categories[state.catalog.path.get(pathSize - 1)]}/>) : null;
+    for( let x = 0; x < categories.length; x++ )
+    {
+      let curr = categories[x];
+      toRet = toRet.concat( curr.elements );
+      if( curr.categories.length ) toRet = toRet.concat( this.flattenCategories ( curr.categories ) );
+    }
 
-  return (
-    <ContentContainer width={width} height={height} style={{...CONTAINER_STYLE, ...style}}>
-      <ContentTitle>{translator.t('Catalog')}</ContentTitle>
-      {breadcrumbComponent}
-      <div style={STYLE_ITEMS}>
-        {turnBackButton}
-        {categoriesToDisplay.map(category => <CatalogPageItem key={category.name} page={category}
-                                                              oldPage={currentCategory}/>)}
-        {elementsToDisplay
-          .filter(element => element.prototype !== 'areas')
-          .map(element => <CatalogItem key={element.name} element={element}/>)}
-      </div>
-    </ContentContainer>
-  )
+    return toRet;
+  }
+
+  matcharray( text ) {
+
+    let array = this.state.elements.concat( this.flattenCategories( this.state.categories ) );
+
+    let filtered = [];
+
+    if( text != '' ) {
+      let regexp = new RegExp( text, 'i');
+      for (let i = 0; i < array.length; i++) {
+        if (regexp.test(array[i].info.title)) {
+          filtered.push(array[i]);
+        }
+      }
+    }
+
+    this.setState({
+      matchString: text,
+      matchedElements: filtered
+    });
+  };
+
+  render() {
+
+    let page = this.props.state.catalog.page;
+    let currentCategory = this.context.catalog.getCategory(page);
+    let categoriesToDisplay = currentCategory.categories;
+    let elementsToDisplay = currentCategory.elements.filter(element => element.prototype !== 'areas');
+
+    let breadcrumbComponent = null;
+
+    if (page !== 'root') {
+
+      let breadcrumbsNames = [];
+
+      this.props.state.catalog.path.forEach(pathName => {
+        breadcrumbsNames.push({
+          name: this.context.catalog.getCategory(pathName).label,
+          action: () => projectActions.goBackToCatalogPage(pathName)
+        });
+      });
+
+      breadcrumbsNames.push({name: currentCategory.label, action: ''});
+
+      breadcrumbComponent = (<CatalogBreadcrumb names={breadcrumbsNames}/>);
+    }
+
+    let pathSize = this.props.state.catalog.path.size;
+
+    let turnBackButton = pathSize > 0 ? (
+      <CatalogTurnBackPageItem key={pathSize} page={this.context.catalog.categories[this.props.state.catalog.path.get(pathSize - 1)]}/>) : null;
+
+    return (
+      <ContentContainer width={this.props.width} height={this.props.height} style={{...containerStyle, ...this.props.style}}>
+        <ContentTitle>{this.context.translator.t('Catalog')}</ContentTitle>
+        {breadcrumbComponent}
+        <div style={searchContainer}>
+          <span style={searchText}>{this.context.translator.t('Search Element')}</span>
+          <input type="text" style={searchInput} onChange={( e ) => { this.matcharray( e.target.value ); } }/>
+        </div>
+        <div style={itemsStyle}>
+          {
+            this.state.matchString === '' ? [
+              turnBackButton,
+              categoriesToDisplay.map(cat => <CatalogPageItem key={cat.name} page={cat} oldPage={currentCategory}/>),
+              elementsToDisplay.map(elem => <CatalogItem key={elem.name} element={elem}/>)
+            ] :
+            this.state.matchedElements.map(elem => <CatalogItem key={elem.name} element={elem}/>)
+          }
+        </div>
+      </ContentContainer>
+    )
+  }
 }
 
 CatalogList.propTypes = {
