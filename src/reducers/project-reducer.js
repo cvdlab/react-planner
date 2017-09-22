@@ -26,7 +26,8 @@ import {
   THROW_ERROR,
   THROW_WARNING,
   COPY_PROPERTIES,
-  PASTE_PROPERTIES
+  PASTE_PROPERTIES,
+  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY
 } from '../constants';
 
 import {State, Scene, Guide, Catalog} from "../models";
@@ -126,7 +127,10 @@ export default function (state, action) {
       return copyProperties(state, action.properties);
 
     case PASTE_PROPERTIES:
-    return pasteProperties(state);
+      return pasteProperties(state);
+
+    case PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY:
+      return pushLastSelectedCatalogElementToHistory(state, action.element);
 
     default:
       return state;
@@ -316,3 +320,16 @@ const throwWarning = (state, warning) => state.set('warnings', state.get('warnin
 const copyProperties = (state, properties) => state.set('clipboardProperties', properties.toJS());
 
 const pasteProperties = (state) => updateProperties(state, state.get('clipboardProperties'));
+
+const pushLastSelectedCatalogElementToHistory = ( state, element ) => {
+  let currHistory = state.selectedElementsHistory;
+
+  let previousPosition = currHistory.findIndex( el => el.name === element.name );
+  if( previousPosition !== -1 )
+  {
+    currHistory = currHistory.splice( previousPosition, 1 );
+  }
+  currHistory = currHistory.splice( 0, 0, element );
+
+  return state.set('selectedElementsHistory', currHistory);
+};

@@ -126,6 +126,8 @@ export default class CatalogItem extends Component {
         this.context.holesActions.selectToolDrawingHole(element.name);
         break;
     }
+
+    this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
   }
 
   render() {
@@ -161,5 +163,6 @@ CatalogItem.propTypes = {
 CatalogItem.contextTypes = {
   itemsActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired
+  holesActions: PropTypes.object.isRequired,
+  projectActions: PropTypes.object.isRequired
 };

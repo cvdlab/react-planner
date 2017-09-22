@@ -23,7 +23,8 @@ import {
   THROW_ERROR,
   THROW_WARNING,
   COPY_PROPERTIES,
-  PASTE_PROPERTIES
+  PASTE_PROPERTIES,
+  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -204,5 +205,12 @@ export function copyProperties(properties) {
 export function pasteProperties() {
   return {
     type: PASTE_PROPERTIES
+  };
+}
+
+export function pushLastSelectedCatalogElementToHistory( element ) {
+  return {
+    type: PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
+    element
   };
 }
