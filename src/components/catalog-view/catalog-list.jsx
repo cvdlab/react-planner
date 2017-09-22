@@ -20,8 +20,10 @@ const containerStyle = {
 };
 
 const itemsStyle = {
-  display: 'flex',
-  flexFlow: 'row wrap'
+  display: 'grid',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(14em, 1fr))',
+  gridGap: '10px',
+  marginTop: '1em'
 };
 
 const searchContainer = {
@@ -30,7 +32,6 @@ const searchContainer = {
   padding: '0.625em',
   background: '#f7f7f9',
   border: '1px solid #e1e1e8',
-  margin: '0.3em',
   cursor: 'pointer',
   position: 'relative',
   boxShadow: '0 1px 6px 0 rgba(0, 0, 0, 0.11), 0 1px 4px 0 rgba(0, 0, 0, 0.11)',
