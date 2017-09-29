@@ -235,7 +235,7 @@ var CatalogList = function (_Component) {
           React.createElement(
             'span',
             null,
-            'Last Selected:'
+            this.context.translator.t('Last Selected')
           ),
           selectedHistoryElements
         ) : null,

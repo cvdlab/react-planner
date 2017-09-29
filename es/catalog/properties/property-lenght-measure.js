@@ -58,8 +58,11 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          configs.label,
-          ':'
+          React.createElement(
+            FormLabel,
+            null,
+            configs.label
+          )
         ),
         React.createElement(
           'td',
@@ -76,10 +79,13 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
                 React.createElement(
                   'td',
                   null,
-                  React.createElement(FormNumberInput, { value: _length, onChange: function onChange(event) {
+                  React.createElement(FormNumberInput, {
+                    value: _length,
+                    onChange: function onChange(event) {
                       return update(event.target.value, _unit);
                     },
-                    min: configs.min, max: configs.max })
+                    min: configs.min, max: configs.max
+                  })
                 ),
                 React.createElement(
                   'td',

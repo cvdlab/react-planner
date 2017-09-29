@@ -8,7 +8,7 @@ export default {
   "Cancel": "Annulla",
   "Save": "Salva",
   "Layer config": "Configurazione livello",
-  "name": "Nome",
+  "Name": "Nome",
   "opacity": "Opacità",
   "altitude": "Quota",
   "order": "Ordine",
@@ -34,9 +34,13 @@ export default {
   "Catalog": "Catalogo",
   "Rotation": "Rotazione",
   "Altitude": "Quota",
-  "Name": "Nome",
   "Would you want to start a new Project?": "Vuoi iniziare un nuovo progetto?",
   "Copy": "Copia",
   "Paste": "Incolla",
-  "Search Element": "Cerca Elemento"
+  "Search Element": "Cerca Elemento",
+  "Last Selected": "Ultimi Selezionati",
+  "Length": "Lunghezza",
+  "Lines": "Linee",
+  "Holes": "Buchi",
+  "Items": "Oggetti"
 };
