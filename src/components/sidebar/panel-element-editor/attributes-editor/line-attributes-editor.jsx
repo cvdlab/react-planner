@@ -24,35 +24,49 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
     <table style={tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}>Nome:</td>
-        <td><FormTextInput value={name} onChange={event => onUpdate('name', event.target.value)} style={inputStyle}/></td>
-      </tr>
-      <tr>
-        <td style={firstTdStyle}>X1:</td>
-        <td><FormNumberInput value={vertexOne.get('x')}
-                             onChange={event => onUpdate('vertexOne', {'x': event.target.value})} style={inputStyle}
-                             state={state}/>
+        <td style={firstTdStyle}>{ translator.t('Name')}</td>
+        <td>
+          <FormTextInput value={name} onChange={event => onUpdate('name', event.target.value)} style={inputStyle}/>
         </td>
       </tr>
       <tr>
-        <td style={firstTdStyle}>Y1:</td>
-        <td><FormNumberInput value={vertexOne.get('y')}
-                             onChange={event => onUpdate('vertexOne', {'y': event.target.value})} style={inputStyle}
-                             state={state}/>
+        <td style={firstTdStyle}>X1</td>
+        <td>
+          <FormNumberInput
+            value={vertexOne.get('x')}
+            onChange={event => onUpdate('vertexOne', {'x': event.target.value})} style={inputStyle}
+            state={state}
+          />
         </td>
       </tr>
       <tr>
-        <td style={firstTdStyle}>X2:</td>
-        <td><FormNumberInput value={vertexTwo.get('x')}
-                             onChange={event => onUpdate('vertexTwo', {'x': event.target.value})} style={inputStyle}
-                             state={state}/>
+        <td style={firstTdStyle}>Y1</td>
+        <td>
+          <FormNumberInput
+            value={vertexOne.get('y')}
+            onChange={event => onUpdate('vertexOne', {'y': event.target.value})} style={inputStyle}
+            state={state}
+          />
         </td>
       </tr>
       <tr>
-        <td style={firstTdStyle}>Y2:</td>
-        <td><FormNumberInput value={vertexTwo.get('y')}
-                             onChange={event => onUpdate('vertexTwo', {'y': event.target.value})} style={inputStyle}
-                             state={state}/>
+        <td style={firstTdStyle}>X2</td>
+        <td>
+          <FormNumberInput
+            value={vertexTwo.get('x')}
+            onChange={event => onUpdate('vertexTwo', {'x': event.target.value})} style={inputStyle}
+            state={state}
+          />
+        </td>
+      </tr>
+      <tr>
+        <td style={firstTdStyle}>Y2</td>
+        <td>
+          <FormNumberInput
+            value={vertexTwo.get('y')}
+            onChange={event => onUpdate('vertexTwo', {'y': event.target.value})} style={inputStyle}
+            state={state}
+          />
         </td>
       </tr>
       </tbody>
@@ -60,7 +74,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
     <PropertyLengthMeasure
       value={ lineLength }
       onUpdate={mapped => onUpdate('lineLength', mapped)}
-      configs={{label: 'Length', min: 0, max: Infinity}}
+      configs={{label: translator.t('Length'), min: 0, max: Infinity}}
       state={state}
     />
   </div>;

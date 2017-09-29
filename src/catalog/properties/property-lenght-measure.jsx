@@ -42,13 +42,18 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
     <table className="PropertyLengthMeasure" style={propertyContainerStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}>{configs.label}:</td>
+        <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td style={secondTdStyle}>
           <table style={tableStyle}>
             <tbody>
             <tr>
-              <td><FormNumberInput value={_length} onChange={event => update(event.target.value, _unit)}
-                                   min={configs.min} max={configs.max}/></td>
+              <td>
+                <FormNumberInput
+                  value={_length}
+                  onChange={event => update(event.target.value, _unit)}
+                  min={configs.min} max={configs.max}
+                />
+              </td>
               <td style={unitContainerStyle}>
                 <FormSelect value={_unit} onChange={event => update(_length, event.target.value)}>
                   {

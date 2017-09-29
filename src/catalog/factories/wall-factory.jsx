@@ -10,19 +10,19 @@ export default function WallFactory(name, info, textures) {
 
   let wallElement = {
     name,
-    prototype: "lines",
+    prototype: 'lines',
     info,
     properties: {
       height: {
-        label: "Height",
-        type: "length-measure",
+        label: 'Height',
+        type: 'length-measure',
         defaultValue: {
           length: 300,
         }
       },
       thickness: {
-        label: "Thickness",
-        type: "length-measure",
+        label: 'Thickness',
+        type: 'length-measure',
         defaultValue: {
           length: 20
         }
@@ -30,10 +30,10 @@ export default function WallFactory(name, info, textures) {
     },
 
     render2D: function (element, layer, scene) {
-      const STYLE_BASE = {stroke: "#8E9BA2", strokeWidth: "1px", fill: "#8E9BA2"};
-      const STYLE_SELECTED = {stroke: "#99c3fb", strokeWidth: "5px", fill: SharedStyle.COLORS.black};
-      const STYLE_TEXT = {textAnchor: "middle"};
-      const STYLE_LINE = {stroke: "#99c3fb"};
+      const STYLE_BASE = {stroke: '#8E9BA2', strokeWidth: '1px', fill: '#8E9BA2'};
+      const STYLE_SELECTED = {stroke: '#99c3fb', strokeWidth: '5px', fill: SharedStyle.COLORS.black};
+      const STYLE_TEXT = {textAnchor: 'middle'};
+      const STYLE_LINE = {stroke: '#99c3fb'};
 
       //let line = layer.lines.get(hole.line);
       //let epsilon = line.properties.get('thickness') / 2;
@@ -48,11 +48,11 @@ export default function WallFactory(name, info, textures) {
 
       return (element.selected) ?
         <g>
-          <path key="3" d={path} style={element.selected ? STYLE_SELECTED : STYLE_BASE}/>
-          <line key="2" x1={length / 5} y1={-39} x2={length / 5} y2={38} style={STYLE_LINE}/>
-          <text key="1" x={length / 5} y={50} style={STYLE_TEXT}>A</text>
+          <path key='3' d={path} style={element.selected ? STYLE_SELECTED : STYLE_BASE}/>
+          <line key='2' x1={length / 5} y1={-39} x2={length / 5} y2={38} style={STYLE_LINE}/>
+          <text key='1' x={length / 5} y={50} style={STYLE_TEXT}>A</text>
           ,
-          <text key="4" x={length / 5} y={-40} style={STYLE_TEXT}>B</text>
+          <text key='4' x={length / 5} y={-40} style={STYLE_TEXT}>B</text>
         </g> :
         <path key={3} d={path} style={element.selected ? STYLE_SELECTED : STYLE_BASE}/>
     },
@@ -74,15 +74,15 @@ export default function WallFactory(name, info, textures) {
     }
 
     wallElement.properties.textureA = {
-      label: "Covering A",
-      type: "enum",
+      label: 'Covering A',
+      type: 'enum',
       defaultValue: 'none',
       values: textureValues
     };
 
     wallElement.properties.textureB = {
-      label: "Covering B",
-      type: "enum",
+      label: 'Covering B',
+      type: 'enum',
       defaultValue: 'none',
       values: textureValues
     };

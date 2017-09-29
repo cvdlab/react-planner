@@ -190,7 +190,7 @@ export default class CatalogList extends Component {
         </div>
         { selectedHistory.size ?
           <div style={historyContainer}>
-            <span>Last Selected:</span>
+            <span>{this.context.translator.t('Last Selected')}</span>
             {selectedHistoryElements}
           </div> :
           null
