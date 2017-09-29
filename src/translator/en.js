@@ -39,5 +39,8 @@ export default {
   "Paste":"Paste",
   "Search Element":"Search Element",
   "Last Selected":"Last Selected",
-  "Length":"Length"
+  "Length":"Length",
+  "Lines":"Lines",
+  "Holes":"Holes",
+  "Items":"Items"
 }

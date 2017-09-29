@@ -39,5 +39,8 @@ export default {
   "Paste":"Incolla",
   "Search Element":"Cerca Elemento",
   "Last Selected":"Ultimi Selezionati",
-  "Length":"Lunghezza"
+  "Length":"Lunghezza",
+  "Lines":"Linee",
+  "Holes":"Buchi",
+  "Items":"Oggetti"
 }
