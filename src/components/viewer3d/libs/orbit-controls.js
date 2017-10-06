@@ -655,8 +655,6 @@ module.exports = OrbitControls = function (object, domElement) {
 
     if (scope.enabled === false) return;
 
-    event.preventDefault();
-
     if (event.button === scope.mouseButtons.ORBIT) {
 
       if (scope.enableRotate === false) return;
@@ -697,8 +695,6 @@ module.exports = OrbitControls = function (object, domElement) {
   function onMouseMove(event) {
 
     if (scope.enabled === false) return;
-
-    event.preventDefault();
 
     if (state === STATE.ROTATE) {
 
@@ -741,7 +737,6 @@ module.exports = OrbitControls = function (object, domElement) {
 
     if (scope.enabled === false || scope.enableZoom === false || ( state !== STATE.NONE && state !== STATE.ROTATE )) return;
 
-    event.preventDefault();
     event.stopPropagation();
 
     handleMouseWheel(event);
@@ -813,7 +808,6 @@ module.exports = OrbitControls = function (object, domElement) {
 
     if (scope.enabled === false) return;
 
-    event.preventDefault();
     event.stopPropagation();
 
     switch (event.touches.length) {
@@ -865,24 +859,18 @@ module.exports = OrbitControls = function (object, domElement) {
 
   }
 
-  function onContextMenu(event) {
+  function onContextMenu(event) {}
 
-    event.preventDefault();
+  scope.domElement.addEventListener('contextmenu', onContextMenu, { passive: true });
 
-  }
+  scope.domElement.addEventListener('mousedown', onMouseDown, { passive: true });
+  scope.domElement.addEventListener('wheel', onMouseWheel, { passive: true });
 
-  //
+  scope.domElement.addEventListener('touchstart', onTouchStart, { passive: true });
+  scope.domElement.addEventListener('touchend', onTouchEnd, { passive: true });
+  scope.domElement.addEventListener('touchmove', onTouchMove, { passive: true });
 
-  scope.domElement.addEventListener('contextmenu', onContextMenu, false);
-
-  scope.domElement.addEventListener('mousedown', onMouseDown, false);
-  scope.domElement.addEventListener('wheel', onMouseWheel, false);
-
-  scope.domElement.addEventListener('touchstart', onTouchStart, false);
-  scope.domElement.addEventListener('touchend', onTouchEnd, false);
-  scope.domElement.addEventListener('touchmove', onTouchMove, false);
-
-  window.addEventListener('keydown', onKeyDown, false);
+  window.addEventListener('keydown', onKeyDown, { passive: true });
 
   // force an update at start
 
