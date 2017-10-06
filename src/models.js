@@ -60,17 +60,24 @@ export class ElementsSet extends Record({
   }
 }
 
+const sharedAttributes =
+{
+  id: '',
+  type: '',
+  prototype: '',
+  name: '',
+  misc: new Map(),
+  selected: false,
+  properties: new Map()
+}
 
 export class Vertex extends Record({
-  id: '',
+  ...sharedAttributes,
   x: -1,
   y: -1,
   prototype: 'vertices',
-  name: '',
-  selected: false,
   lines: new List(),
-  areas: new List(),
-  misc: new Map()
+  areas: new List()
 }, 'Vertex') {
   constructor(json = {}) {
     super({
@@ -82,15 +89,10 @@ export class Vertex extends Record({
 }
 
 export class Line extends Record({
-  id: '',
-  type: '',
+  ...sharedAttributes,
   prototype: 'lines',
-  name: '',
   vertices: new List(),
-  holes: new List(),
-  selected: false,
-  properties: new Map(),
-  misc: new Map()
+  holes: new List()
 }, 'Line') {
   constructor(json = {}) {
     super({
@@ -103,15 +105,10 @@ export class Line extends Record({
 }
 
 export class Hole extends Record({
-  id: '',
-  type: '',
+  ...sharedAttributes,
   prototype: 'holes',
-  name: '',
   offset: -1,
-  line: '',
-  selected: false,
-  properties: new Map(),
-  misc: new Map()
+  line: ''
 }, 'Hole') {
   constructor(json = {}) {
     super({
@@ -122,15 +119,10 @@ export class Hole extends Record({
 }
 
 export class Area extends Record({
-  id: '',
-  type: '',
+  ...sharedAttributes,
   prototype: 'areas',
-  name: '',
   vertices: new List(),
-  holes: new List(),
-  selected: false,
-  properties: new Map(),
-  misc: new Map()
+  holes: new List()
 }, 'Area') {
   constructor(json = {}) {
     super({
@@ -142,16 +134,11 @@ export class Area extends Record({
 }
 
 export class Item extends Record({
-  id: '',
+  ...sharedAttributes,
   prototype: 'items',
-  name: '',
-  type: '',
-  properties: new Map(),
-  selected: false,
   x: 0,
   y: 0,
-  rotation: 0,
-  misc: new Map()
+  rotation: 0
 }, 'Item') {
   constructor(json = {}) {
     super({
