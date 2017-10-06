@@ -6,7 +6,13 @@ export default function AreaFactory(name, info, textures) {
   let areaElement = {
     name,
     prototype: 'areas',
-    info,
+    info: {
+      ...info,
+      visibility: {
+        catalog: false,
+        layerElementsVisible: false
+      }
+    },
     properties: {
       patternColor: {
         label: 'Color',
