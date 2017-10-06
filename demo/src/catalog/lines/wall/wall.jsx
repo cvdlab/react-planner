@@ -1,11 +1,15 @@
 import {ElementsFactories} from 'react-planner';
 
 let info = {
-  title: "wall",
+  title: 'wall',
   tag: ['wall'],
-  group: "Vertical closure",
-  description: "Wall with bricks or painted",
-  image: require('./wall.png')
+  group: 'Vertical closure',
+  description: 'Wall with bricks or painted',
+  image: require('./wall.png'),
+  visibility: {
+    catalog: true,
+    layerElementsVisible: true
+  }
 };
 
 let textures = {
@@ -37,4 +41,4 @@ let textures = {
   },
 };
 
-export default ElementsFactories.WallFactory("wall", info, textures)
+export default ElementsFactories.WallFactory('wall', info, textures)
