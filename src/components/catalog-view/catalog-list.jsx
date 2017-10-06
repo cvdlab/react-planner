@@ -83,7 +83,7 @@ export default class CatalogList extends Component {
     let page = props.state.catalog.page;
     let currentCategory = context.catalog.getCategory(page);
     let categoriesToDisplay = currentCategory.categories;
-    let elementsToDisplay = currentCategory.elements.filter(element => element.prototype !== 'areas');
+    let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
 
     this.state = {
       categories: currentCategory.categories,
@@ -149,7 +149,7 @@ export default class CatalogList extends Component {
     let page = this.props.state.catalog.page;
     let currentCategory = this.context.catalog.getCategory(page);
     let categoriesToDisplay = currentCategory.categories;
-    let elementsToDisplay = currentCategory.elements.filter(element => element.prototype !== 'areas');
+    let elementsToDisplay = currentCategory.elements.filter(element => element.info.visibility ? element.info.visibility.catalog : true );
 
     let breadcrumbComponent = null;
 
