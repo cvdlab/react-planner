@@ -83,6 +83,16 @@ export var ElementsSet = function (_Record2) {
   items: new List()
 }, 'ElementsSet'));
 
+var sharedAttributes = {
+  id: '',
+  type: '',
+  prototype: '',
+  name: '',
+  misc: new Map(),
+  selected: false,
+  properties: new Map()
+};
+
 export var Vertex = function (_Record3) {
   _inherits(Vertex, _Record3);
 
@@ -98,17 +108,13 @@ export var Vertex = function (_Record3) {
   }
 
   return Vertex;
-}(Record({
-  id: '',
+}(Record(_extends({}, sharedAttributes, {
   x: -1,
   y: -1,
   prototype: 'vertices',
-  name: '',
-  selected: false,
   lines: new List(),
-  areas: new List(),
-  misc: new Map()
-}, 'Vertex'));
+  areas: new List()
+}), 'Vertex'));
 
 export var Line = function (_Record4) {
   _inherits(Line, _Record4);
@@ -126,17 +132,11 @@ export var Line = function (_Record4) {
   }
 
   return Line;
-}(Record({
-  id: '',
-  type: '',
+}(Record(_extends({}, sharedAttributes, {
   prototype: 'lines',
-  name: '',
   vertices: new List(),
-  holes: new List(),
-  selected: false,
-  properties: new Map(),
-  misc: new Map()
-}, 'Line'));
+  holes: new List()
+}), 'Line'));
 
 export var Hole = function (_Record5) {
   _inherits(Hole, _Record5);
@@ -152,17 +152,11 @@ export var Hole = function (_Record5) {
   }
 
   return Hole;
-}(Record({
-  id: '',
-  type: '',
+}(Record(_extends({}, sharedAttributes, {
   prototype: 'holes',
-  name: '',
   offset: -1,
-  line: '',
-  selected: false,
-  properties: new Map(),
-  misc: new Map()
-}, 'Hole'));
+  line: ''
+}), 'Hole'));
 
 export var Area = function (_Record6) {
   _inherits(Area, _Record6);
@@ -179,17 +173,11 @@ export var Area = function (_Record6) {
   }
 
   return Area;
-}(Record({
-  id: '',
-  type: '',
+}(Record(_extends({}, sharedAttributes, {
   prototype: 'areas',
-  name: '',
   vertices: new List(),
-  holes: new List(),
-  selected: false,
-  properties: new Map(),
-  misc: new Map()
-}, 'Area'));
+  holes: new List()
+}), 'Area'));
 
 export var Item = function (_Record7) {
   _inherits(Item, _Record7);
@@ -205,18 +193,12 @@ export var Item = function (_Record7) {
   }
 
   return Item;
-}(Record({
-  id: '',
+}(Record(_extends({}, sharedAttributes, {
   prototype: 'items',
-  name: '',
-  type: '',
-  properties: new Map(),
-  selected: false,
   x: 0,
   y: 0,
-  rotation: 0,
-  misc: new Map()
-}, 'Item'));
+  rotation: 0
+}), 'Item'));
 
 export var Layer = function (_Record8) {
   _inherits(Layer, _Record8);

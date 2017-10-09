@@ -42,5 +42,6 @@ export default {
   "Length": "Lunghezza",
   "Lines": "Linee",
   "Holes": "Buchi",
-  "Items": "Oggetti"
+  "Items": "Oggetti",
+  "Areas": "Aree"
 };

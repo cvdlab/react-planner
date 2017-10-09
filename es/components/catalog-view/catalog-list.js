@@ -96,7 +96,7 @@ var CatalogList = function (_Component) {
     var currentCategory = context.catalog.getCategory(page);
     var categoriesToDisplay = currentCategory.categories;
     var elementsToDisplay = currentCategory.elements.filter(function (element) {
-      return element.prototype !== 'areas';
+      return element.info.visibility ? element.info.visibility.catalog : true;
     });
 
     _this.state = {
@@ -170,7 +170,7 @@ var CatalogList = function (_Component) {
       var currentCategory = this.context.catalog.getCategory(page);
       var categoriesToDisplay = currentCategory.categories;
       var elementsToDisplay = currentCategory.elements.filter(function (element) {
-        return element.prototype !== 'areas';
+        return element.info.visibility ? element.info.visibility.catalog : true;
       });
 
       var breadcrumbComponent = null;

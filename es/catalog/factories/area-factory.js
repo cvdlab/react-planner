@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 import createArea from './area-factory-3d';
 import React from 'react';
 
@@ -6,7 +8,12 @@ export default function AreaFactory(name, info, textures) {
   var areaElement = {
     name: name,
     prototype: 'areas',
-    info: info,
+    info: _extends({}, info, {
+      visibility: {
+        catalog: false,
+        layerElementsVisible: false
+      }
+    }),
     properties: {
       patternColor: {
         label: 'Color',

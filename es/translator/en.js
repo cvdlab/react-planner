@@ -42,5 +42,6 @@ export default {
   "Length": "Length",
   "Lines": "Lines",
   "Holes": "Holes",
-  "Items": "Items"
+  "Items": "Items",
+  "Areas": "Areas"
 };

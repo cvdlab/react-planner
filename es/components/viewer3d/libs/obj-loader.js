@@ -592,7 +592,7 @@ OBJLoader.prototype = {
           material.name = sourceMaterial.name;
         }
 
-        material.shading = sourceMaterial.smooth ? THREE.SmoothShading : THREE.FlatShading;
+        if (!sourceMaterial.smooth) material.flatShading = true;
 
         createdMaterials.push(material);
       }
