@@ -156,7 +156,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
     title: "rack server",
     description: "rack server",
@@ -169,7 +169,7 @@ export default {
       defaultValue: "#f5f4f4"
     },
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 105,
@@ -177,7 +177,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 50,
@@ -185,7 +185,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 210,
@@ -193,7 +193,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

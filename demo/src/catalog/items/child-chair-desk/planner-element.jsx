@@ -7,21 +7,21 @@ const HEIGHT = 100;
 const RADIUS = 10;
 
 export default {
-  name: "sedia_banco",
-  prototype: "items",
+  name: 'child chair desk',
+  prototype: 'items',
 
   info: {
-    tag: ['arredamento', 'wood', 'metal'],
-    group: "Items",
-    title: "chair con desk",
-    description: "chair con desk",
+    tag: ['furnishings', 'wood', 'metal'],
+    group: 'items',
+    title: 'child chair desk',
+    description: 'child chair desk',
     image: require('./chairDesk.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 20,
         unit: 'cm'
@@ -39,14 +39,14 @@ export default {
     else
       angle = 0;
 
-    let rect_style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
+    let rect_style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
 
     return (
 
       <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={rect_style}/>
-        <text key="2" x="0" y="0" transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${angle/2})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+        <rect key='1' x='0' y='0' width={WIDTH} height={DEPTH} style={rect_style}/>
+        <text key='2' x='0' y='0' transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${angle/2})`}
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.type}
         </text>
       </g>

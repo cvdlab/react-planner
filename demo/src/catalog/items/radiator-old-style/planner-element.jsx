@@ -205,16 +205,16 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'ghisa'],
+    tag: ['furnishings', 'cast iron'],
     group: "Items",
-    title: "termosifone ghisa",
-    description: "termosifone ghisa",
+    title: "cast iron radiator",
+    description: "cast iron radiator",
     image: require('./OldStyleRadiator.png')
   },
 
   properties: {
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 100,
@@ -222,7 +222,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 100,
@@ -230,7 +230,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 20,

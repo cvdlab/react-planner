@@ -262,53 +262,53 @@ function makeDoorStructure() {
 }
 
 export default {
-  name: "porta_antipanico_doppia",
-  prototype: "holes",
+  name: 'double panic door',
+  prototype: 'holes',
 
   info: {
-    tag: ['porta'],
-    group: "Comunicazione orizzontale",
-    title: "porta antipanico doppia",
-    description: "Porta di ferro",
+    tag: ['door'],
+    group: 'door',
+    title: 'double panic door',
+    description: 'iron door',
     image: require('./panicDoorDouble.png')
   },
 
   properties: {
     width: {
-      label: "larghezza",
-      type: "length-measure",
+      label: 'width',
+      type: 'length-measure',
       defaultValue: {
         length: 200,
         unit: 'cm'
       }
     },
     height: {
-      label: "altezza",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 215,
         unit: 'cm'
       }
     },
     thickness: {
-      label: "spessore",
-      type: "length-measure",
+      label: 'thickness',
+      type: 'length-measure',
       defaultValue: {
         length: 30,
         unit: 'cm'
       }
     },
     altitude: {
-      label:"quota",
-      type: "length-measure",
+      label:'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
       }
     },
     flip_horizontal: {
-      label: "flip orizzontale",
-      type: "checkbox",
+      label: 'flip',
+      type: 'checkbox',
       defaultValue: false,
       values: {
         'none': false,
@@ -319,10 +319,10 @@ export default {
 
   render2D: function (element, layer, scene) {
 
-    const STYLE_HOLE_BASE = {stroke: "#ff0000", strokeWidth: "3px", fill: "#ff0000"};
-    const STYLE_HOLE_SELECTED = {stroke: "#ff0000", strokeWidth: "4px", fill: "#ff0000", cursor: "move"};
-    const STYLE_ARC_BASE = {stroke: "#ff0000", strokeWidth: "3px", strokeDasharray: "5,5", fill: "none"};
-    const STYLE_ARC_SELECTED = {stroke: "#ff0000", strokeWidth: "4px", strokeDasharray: "5,5", fill: "none", cursor: "move"};
+    const STYLE_HOLE_BASE = {stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000'};
+    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: 'move'};
+    const STYLE_ARC_BASE = {stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
+    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
 
     let epsilon = 3;
     let flip = element.properties.get('flip_horizontal');
@@ -338,22 +338,22 @@ export default {
     if(flip){
       return (
         <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <path key="1" d={arcPath} style={arcStyle} transform={`translate(${0},${-holeWidth/2})`}/>
-          <line key="2" x1={0}  y1={0 - epsilon} x2={0} y2={-holeWidth/2 - epsilon} style={holeStyle}/>
-          <path key="3" d={arcPath2} style={arcStyle} transform={`translate(${holeWidth},${-holeWidth/2}) rotate(90)`}/>
-          <line key="4" x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={-holeWidth/2 - epsilon} style={holeStyle}/>
-          <path key="5" d={holePath} style={holeStyle}/>
+          <path key='1' d={arcPath} style={arcStyle} transform={`translate(${0},${-holeWidth/2})`}/>
+          <line key='2' x1={0}  y1={0 - epsilon} x2={0} y2={-holeWidth/2 - epsilon} style={holeStyle}/>
+          <path key='3' d={arcPath2} style={arcStyle} transform={`translate(${holeWidth},${-holeWidth/2}) rotate(90)`}/>
+          <line key='4' x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={-holeWidth/2 - epsilon} style={holeStyle}/>
+          <path key='5' d={holePath} style={holeStyle}/>
         </g>
       )
     }
     else {
         return (
           <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-            <path key="1" d={arcPath} style={arcStyle} transform={`translate(${holeWidth},${holeWidth/2}) rotate(180)`}/>
-            <line key="2" x1={0}  y1={0 - epsilon} x2={0} y2={holeWidth/2 - epsilon} style={holeStyle}/>
-            <path key="3" d={arcPath2} style={arcStyle} transform={`translate(${0},${holeWidth/2}) rotate(270)`}/>
-            <line key="4" x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={holeWidth/2 - epsilon} style={holeStyle}/>
-            <path key="5" d={holePath} style={holeStyle}/>
+            <path key='1' d={arcPath} style={arcStyle} transform={`translate(${holeWidth},${holeWidth/2}) rotate(180)`}/>
+            <line key='2' x1={0}  y1={0 - epsilon} x2={0} y2={holeWidth/2 - epsilon} style={holeStyle}/>
+            <path key='3' d={arcPath2} style={arcStyle} transform={`translate(${0},${holeWidth/2}) rotate(270)`}/>
+            <line key='4' x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={holeWidth/2 - epsilon} style={holeStyle}/>
+            <path key='5' d={holePath} style={holeStyle}/>
           </g>
         )
     }

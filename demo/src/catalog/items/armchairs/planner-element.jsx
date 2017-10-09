@@ -233,34 +233,34 @@ function makeArmchairMinLOD()
 }
 
 export default {
-  name: "poltrone",
-  prototype: "items",
+  name: 'armchairs',
+  prototype: 'items',
 
   info: {
-    tag: ['arredamento', 'wood'],
-    group: "Items",
-    title: "poltrone",
-    description: "poltrone",
+    tag: ['furnishings', 'wood'],
+    group: 'armchair',
+    title: 'armchairs',
+    description: 'armchairs',
     image: require('./armchairs.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
       }
     },
     seat: {
-      label: "n. posti",
-      type: "number",
+      label: 'seats',
+      type: 'number',
       defaultValue: 1
     },
     flip: {
-      label: "flip",
-      type: "checkbox",
+      label: 'flip',
+      type: 'checkbox',
       defaultValue: false,
       values: {
         'none': false,
@@ -271,8 +271,8 @@ export default {
 
   render2D: function (element, layer, scene) {
 
-    let rect_style ={stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
-    let text_style ={textAnchor: "middle", fontSize: "11px", fill: '#FF0000'};
+    let rect_style ={stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
+    let text_style ={textAnchor: 'middle', fontSize: '11px', fill: '#FF0000'};
 
     let angle = element.rotation + 90;
 
@@ -295,7 +295,7 @@ export default {
     return (
       <g transform={`translate(${(flip?-1:1) * WIDTH * seats/2},${-DEPTH / 2}) scale(${flip?1:-1},1)`}>
         {seatsArray}
-        <text x="0" y="0"
+        <text x='0' y='0'
               transform={`translate(${WIDTH * seats/2}, ${DEPTH / 2 + eps * seats/2}) scale(${flip?1:-1},-1) rotate(${textRotation})`}
               style={text_style}>
           {element.type}

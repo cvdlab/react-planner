@@ -127,21 +127,21 @@ function makeObjectMinLOD() {
 }
 
 export default {
-  name: "deskdouble",
-  prototype: "items",
+  name: 'double school desk',
+  prototype: 'items',
 
   info: {
-    tag: ['arredamento', 'wood'],
-    group: "Items",
-    title: "desk doppio",
-    description: "desk doppio",
+    tag: ['furnishings', 'wood'],
+    group: 'items',
+    title: 'double school desk',
+    description: 'double school desk',
     image: require('./deskdouble.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
@@ -160,11 +160,11 @@ export default {
 
     return (
       <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH}
-              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"}}/>
-        <text key="2" x="0" y="0"
+        <rect key='1' x='0' y='0' width={WIDTH} height={DEPTH}
+              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'}}/>
+        <text key='2' x='0' y='0'
               transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.type}
         </text>
       </g>

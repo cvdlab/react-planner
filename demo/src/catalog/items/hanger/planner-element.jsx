@@ -185,7 +185,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metallo','plastica'],
+    tag: ['furnishings', 'metallo','plastic'],
     group: "Items",
     title: "hanger",
     description: "hanger",
@@ -194,7 +194,7 @@ export default {
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

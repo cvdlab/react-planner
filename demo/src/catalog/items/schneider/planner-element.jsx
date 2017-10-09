@@ -244,7 +244,7 @@ export default {
       defaultValue: "#f5f4f4"
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

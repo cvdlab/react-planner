@@ -265,66 +265,66 @@ function makeDoorStructure () {
 }
 
 export default {
-  name: "porta_antipanico",
-  prototype: "holes",
+  name: 'panic door',
+  prototype: 'holes',
 
   info: {
-    tag: ['porta'],
-    group: "Comunicazione orizzontale",
-    title: "porta antipanico",
-    description: "Porta di ferro",
+    tag: ['door'],
+    group: 'door',
+    title: 'panic door',
+    description: 'iron door',
     image: require('./panicDoor.png')
   },
 
   properties: {
     width: {
-      label: "larghezza",
-      type: "length-measure",
+      label: 'width',
+      type: 'length-measure',
       defaultValue: {
         length: 100,
         unit: 'cm'
       }
     },
     height: {
-      label: "altezza",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 215,
         unit: 'cm'
       }
     },
     thickness: {
-      label: "spessore",
-      type: "length-measure",
+      label: 'thickness',
+      type: 'length-measure',
       defaultValue: {
         length: 30,
         unit: 'cm'
       }
     },
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
       }
     },
     flip_horizontal: {
-      label: "flip orizzontale",
-      type: "checkbox",
-      defaultValue: "none",
+      label: 'horizontal flip',
+      type: 'checkbox',
+      defaultValue: 'none',
       values: {
-        'none': "none",
-        'yes':  "yes"
+        'none': 'none',
+        'yes':  'yes'
       }
     },
     flip_vertical: {
-      label: "flip verticale",
-      type: "checkbox",
+      label: 'vertical flip',
+      type: 'checkbox',
       defaultValue: 'right',
       values: {
-        'right': "right",
-        'left':  "left"
+        'right': 'right',
+        'left':  'left'
       }
     },
   },
@@ -332,10 +332,10 @@ export default {
 
   render2D: function (element, layer, scene) {
 
-    const STYLE_HOLE_BASE = {stroke: "#ff0000", strokeWidth: "3px", fill: "#ff0000"};
-    const STYLE_HOLE_SELECTED = {stroke: "#ff0000", strokeWidth: "4px", fill: "#ff0000", cursor: "move"};
-    const STYLE_ARC_BASE = {stroke: "#ff0000", strokeWidth: "3px", strokeDasharray: "5,5", fill: "none"};
-    const STYLE_ARC_SELECTED = {stroke: "#ff0000", strokeWidth: "4px", strokeDasharray: "5,5", fill: "none", cursor: "move"};
+    const STYLE_HOLE_BASE = {stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000'};
+    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: 'move'};
+    const STYLE_ARC_BASE = {stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
+    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
 
     let epsilon = 3;
 
@@ -353,12 +353,12 @@ export default {
     let tX, tY;
     let pX1, pX2, pY1, pY2;
 
-    flip ? flip_value = "yes" : flip_value = "none";
-    handleSide ? handleSide_value = "right" : handleSide_value = "left";
+    flip ? flip_value = 'yes' : flip_value = 'none';
+    handleSide ? handleSide_value = 'right' : handleSide_value = 'left';
 
-    if(flip_value === "yes") {
+    if(flip_value === 'yes') {
       scaleX = 1;
-      if (handleSide_value === "right") {
+      if (handleSide_value === 'right') {
         tX = holeWidth;
         tY = -holeWidth;
         pX1 = -holeWidth;
@@ -379,9 +379,9 @@ export default {
         rotateAngle = 0;
       }
     }
-    else if (flip_value === "none") {
+    else if (flip_value === 'none') {
       scaleX = -1;
-      if (handleSide_value === "left") {
+      if (handleSide_value === 'left') {
         tX = holeWidth;
         tY = 0;
         pX1 = 0;
@@ -405,11 +405,11 @@ export default {
 
       return (
         <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <path key="1" d={arcPath} style={arcStyle}
+          <path key='1' d={arcPath} style={arcStyle}
                 transform={`translate(${tX},${tY}) scale(${scaleX},${scaleY}) rotate(${rotateAngle})`}/>
-          <line key="2" x1={pX1} y1={pY1 - epsilon} x2={pX2} y2={pY2 - epsilon} style={holeStyle}
+          <line key='2' x1={pX1} y1={pY1 - epsilon} x2={pX2} y2={pY2 - epsilon} style={holeStyle}
                 transform={`scale(${-scaleX},${scaleY})`}/>
-          <path key="5" d={holePath} style={holeStyle}/>
+          <path key='5' d={holePath} style={holeStyle}/>
         </g>
 
       );

@@ -248,7 +248,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'legno'],
+    tag: ['furnishings', 'wood'],
     group: "Items",
     title: "chair",
     description: "chair",
@@ -257,7 +257,7 @@ export default {
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

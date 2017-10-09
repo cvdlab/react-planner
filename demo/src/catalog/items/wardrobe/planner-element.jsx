@@ -191,7 +191,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
     title: "wardrobe",
     description: "wardrobe",

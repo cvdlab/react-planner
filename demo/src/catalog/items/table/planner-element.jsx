@@ -83,20 +83,20 @@ function makeObjectMinLOD(newWidth,newHeight,newDepth) {
 }
 
 export default {
-  name: "tavolo",
+  name: "table",
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'wood'],
+    tag: ['furnishings', 'wood'],
     group: "Items",
-    title: "tavolo",
-    description: "tavolo",
+    title: "table",
+    description: "table",
     image: require('./table.png')
   },
 
   properties: {
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 90,
@@ -104,7 +104,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 50,
@@ -112,7 +112,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 80,
@@ -120,7 +120,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

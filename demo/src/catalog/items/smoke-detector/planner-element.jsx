@@ -106,15 +106,15 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
-    title: "rilevatore fumo",
-    description: "rilevatore fumo",
+    title: "smoke detector",
+    description: "smoke detector",
     image: require('./smokeDetector.png')
   },
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 250,

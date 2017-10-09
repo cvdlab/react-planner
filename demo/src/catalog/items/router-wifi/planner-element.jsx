@@ -132,7 +132,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['telecomunicazioni'],
+    tag: ['telecomunication'],
     group: "Items",
     title: "router Wifi",
     description: "router Wifi",
@@ -140,7 +140,7 @@ export default {
   },
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

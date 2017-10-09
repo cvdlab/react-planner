@@ -18,7 +18,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Furnishings'],
+    tag: ['furnishings'],
     group: "teaching post",
     title: "Teaching post",
     description: "Teaching post",

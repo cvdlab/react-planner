@@ -33,7 +33,7 @@ function makeDoor(handleSide) {
 
   let geometry = new Three.ExtrudeGeometry( doorShape, extrudeSettings );
   let door = new Three.Mesh( geometry, grey ) ;
-  if(handleSide === "right")
+  if(handleSide === 'right')
     door.position.set(-1,0,0);
   else
     door.position.set(0,0,0);
@@ -41,7 +41,7 @@ function makeDoor(handleSide) {
 
   let doorGeometry = new Three.BoxGeometry(1,2,0.05);
   let door2 = new Three.Mesh(doorGeometry,grey);
-  if (handleSide === "right")
+  if (handleSide === 'right')
     door2.position.set(1.5,1,0.065);
   else
     door2.position.set(-.5,1,0.065);
@@ -69,7 +69,7 @@ function makeDoor(handleSide) {
   handle_p2.position.set(0.2,1,0.025);
   door.add(handle_p2);
 
-  if (handleSide === "left"){
+  if (handleSide === 'left'){
     handle_p1.position.x=0.8;
     handle_p2.position.x=0.8;
   }
@@ -78,75 +78,75 @@ function makeDoor(handleSide) {
 }
 
 export default {
-  name: "porta_scorrevole",
-  prototype: "holes",
+  name: 'sliding door',
+  prototype: 'holes',
 
   info: {
-    tag: ['porta'],
-    title: "porta scorrevole",
-    group: "Comunicazione orizzontale",
-    description: "Porta di ferro",
+    tag: ['door'],
+    title: 'sliding door',
+    group: 'door',
+    description: 'iron door',
     image: require('./slidingDoor.png')
   },
 
   properties: {
     width: {
-      label: "larghezza",
-      type: "length-measure",
+      label: 'width',
+      type: 'length-measure',
       defaultValue: {
         length: 200,
         unit: 'cm'
       }
     },
     height: {
-      label: "altezza",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 215,
         unit: 'cm'
       }
     },
     thickness: {
-      label: "spessore",
-      type: "length-measure",
+      label: 'thickness',
+      type: 'length-measure',
       defaultValue: {
         length: 30,
         unit: 'cm'
       }
     },
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
       }
     },
     flip_horizontal: {
-      label: "flip orizzontale",
-      type: "checkbox",
+      label: 'horizontal flip',
+      type: 'checkbox',
       defaultValue: 'none',
       values: {
-        'none': "none",
-        'yes':  "yes"
+        'none': 'none',
+        'yes':  'yes'
       }
     },
     flip_vertical: {
-      label: "flip verticale",
-      type: "checkbox",
+      label: 'vertical flip',
+      type: 'checkbox',
       defaultValue: 'right',
       values: {
-        'right': "right",
-        'left':  "left"
+        'right': 'right',
+        'left':  'left'
       }
     }
   },
 
   render2D: function (element, layer, scene) {
 
-    const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "14px", fill: "#000"};
-    const STYLE_HOLE_BASE2 = {stroke: "#000", strokeWidth: "16px", fill: "#000"};
-    const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "14px", fill: "#0096fd", cursor: "move"};
+    const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '14px', fill: '#000'};
+    const STYLE_HOLE_BASE2 = {stroke: '#000', strokeWidth: '16px', fill: '#000'};
+    const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '14px', fill: '#0096fd', cursor: 'move'};
 
     let epsilon = 3;
     let flip = element.properties.get('flip_horizontal');
@@ -160,12 +160,12 @@ export default {
     let scaleX2, scaleY2;
     let pX1, pX2;
 
-    flip ? flip = "yes" : flip = "none";
-    handleSide ? handleSide = "right" : handleSide = "left";
+    flip ? flip = 'yes' : flip = 'none';
+    handleSide ? handleSide = 'right' : handleSide = 'left';
 
-    if(flip === "yes") {
+    if(flip === 'yes') {
       scaleX = 1;
-      if (handleSide === "right") {
+      if (handleSide === 'right') {
         pX1 = 0;
         pX2 = holeWidth/2;
         scaleY = -1;
@@ -178,7 +178,7 @@ export default {
     }
     else {
       scaleX = 1;
-      if (handleSide === "right") {
+      if (handleSide === 'right') {
         pX1 = holeWidth/2;
         pX2 = holeWidth;
         scaleY = 1;
@@ -192,13 +192,13 @@ export default {
     }
       return (
         <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <line key="1" x1="0" y1={0 - epsilon} x2={holeWidth} y2={0 - epsilon} style={holeStyle}
+          <line key='1' x1='0' y1={0 - epsilon} x2={holeWidth} y2={0 - epsilon} style={holeStyle}
                 transform={`scale(${scaleX},${scaleY})`}/>
-          <line key="2" x1={pX1} y1={5 - epsilon} x2={pX2} y2={5 - epsilon} style={holeStyle2}
+          <line key='2' x1={pX1} y1={5 - epsilon} x2={pX2} y2={5 - epsilon} style={holeStyle2}
                 transform={`scale(${scaleX},${scaleY})`}/>
-          <line key="3" x1={holeWidth} y1={0 - epsilon} x2={holeWidth} y2={15 + epsilon} style={holeStyle2}
+          <line key='3' x1={holeWidth} y1={0 - epsilon} x2={holeWidth} y2={15 + epsilon} style={holeStyle2}
                 transform={`scale(${scaleX},${scaleY})`}/>
-          <line key="4" x1="0" y1={0 - epsilon} x2="0" y2={15 + epsilon} style={holeStyle2}
+          <line key='4' x1='0' y1={0 - epsilon} x2='0' y2={15 + epsilon} style={holeStyle2}
                 transform={`scale(${scaleX},${scaleY})`}/>
         </g>
       )
@@ -213,8 +213,8 @@ export default {
     let thickness = element.properties.get('thickness').get('length');
     let newAltitude = element.properties.get('altitude').get('length');
 
-    flip ? flip = "yes" : flip = "none";
-    handleSide ? handleSide = "right" : handleSide = "left";
+    flip ? flip = 'yes' : flip = 'none';
+    handleSide ? handleSide = 'right' : handleSide = 'left';
 
     let slidingDoor = new Three.Object3D();
     slidingDoor.add(makeDoor(handleSide).clone());

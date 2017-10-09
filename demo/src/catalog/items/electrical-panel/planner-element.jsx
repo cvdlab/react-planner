@@ -43,15 +43,15 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
-    title: "pannello elettrico",
-    description: "pannello elettrico",
+    title: "electric panel",
+    description: "electric panel",
     image: require('./electricalPanel.png')
   },
   properties: {
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 90,
@@ -59,7 +59,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 50,
@@ -67,7 +67,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 210,
@@ -75,7 +75,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

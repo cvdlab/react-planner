@@ -43,7 +43,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
     title: "hub",
     description: "hub",
@@ -51,7 +51,7 @@ export default {
   },
   properties: {
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 60,
@@ -59,7 +59,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 30,
@@ -67,7 +67,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 200,
@@ -75,7 +75,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

@@ -295,7 +295,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
     title: "sink",
     description: "sink",
@@ -303,7 +303,7 @@ export default {
   },
   properties: {
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 50,
@@ -311,7 +311,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 40,
@@ -319,7 +319,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 80,

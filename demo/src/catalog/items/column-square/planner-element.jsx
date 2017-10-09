@@ -7,45 +7,45 @@ const ferroMaterial = new Three.MeshLambertMaterial({map:mat});
 const material = new Three.MeshLambertMaterial({color: 0xf5f4f4});
 
 export default {
-  name: "column_square",
-  prototype: "items",
+  name: 'square column',
+  prototype: 'items',
 
   info: {
-    tag: [],
-    group: "Items",
-    title: "colonna quadrata",
-    description: "colonna",
+    tag: ['structure'],
+    group: 'items',
+    title: 'square column',
+    description: 'column',
     image: require('./square_column.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
       }
     },
     height:{
-      label: "altezza",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 300,
         unit: 'cm'
       }
     },
     width:{
-      label: "larghezza",
-      type: "length-measure",
+      label: 'width',
+      type: 'length-measure',
       defaultValue: {
         length: 50,
         unit: 'cm'
       }
     },
     depth:{
-      label: "profondità",
-      type: "length-measure",
+      label: 'depth',
+      type: 'length-measure',
       defaultValue: {
         length: 50,
         unit: 'cm'
@@ -65,13 +65,13 @@ export default {
       textRotation = 180;
     }
 
-    let circleStyle = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
+    let circleStyle = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
 
     return (
       <g transform={`translate(${-width / 2},${-depth / 2})`}>
-        <rect key="1" x="0" y="0" width={width} height={depth} style={circleStyle}/>
-        <text key="2" x="0" y="0" transform={`translate(${width / 2}, ${depth / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+        <rect key='1' x='0' y='0' width={width} height={depth} style={circleStyle}/>
+        <text key='2' x='0' y='0' transform={`translate(${width / 2}, ${depth / 2}) scale(1,-1) rotate(${textRotation})`}
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.type}
         </text>
       </g>

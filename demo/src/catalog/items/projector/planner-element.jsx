@@ -99,7 +99,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'wood', 'metal'],
+    tag: ['furnishings', 'wood', 'metal'],
     group: "Items",
     title: "projector",
     description: "projector",
@@ -108,7 +108,7 @@ export default {
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 100,
@@ -116,7 +116,7 @@ export default {
       }
     },
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 300,
@@ -124,7 +124,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 150,
@@ -132,7 +132,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 10,

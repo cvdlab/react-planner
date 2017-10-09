@@ -11,21 +11,21 @@ const grey = new Three.MeshLambertMaterial( {color: 0xdddddd} );
 const grey2 = new Three.MeshLambertMaterial( {color: 0x414449} );
 
 export default {
-  name: "lavagna_interattiva_multimediale",
-  prototype: "items",
+  name: 'multimedia chalkboard',
+  prototype: 'items',
 
   info: {
-    tag: ['arredamento', 'wood', 'metal'],
-    group: "Items",
-    title: "blackboard interattiva multimediale",
-    description: "lim",
+    tag: ['furnishings', 'wood', 'metal'],
+    group: 'items',
+    title: 'multimedia chalkboard',
+    description: 'multimedia chalkboard',
     image: require('./lim.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 100,
         unit: 'cm'
@@ -42,14 +42,14 @@ export default {
       textRotation = 180;
     }
 
-    let rect_style = {stroke : element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
+    let rect_style = {stroke : element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
 
     return (
 
       <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={rect_style}/>
-        <text key="2" x="0" y="0" transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+        <rect key='1' x='0' y='0' width={WIDTH} height={DEPTH} style={rect_style}/>
+        <text key='2' x='0' y='0' transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.type}
         </text>
       </g>

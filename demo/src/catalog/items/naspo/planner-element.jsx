@@ -220,7 +220,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
     title: "naspo",
     description: "naspo",
@@ -228,7 +228,7 @@ export default {
   },
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 60,

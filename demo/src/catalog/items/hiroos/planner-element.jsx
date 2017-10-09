@@ -67,7 +67,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
     title: "hiroos",
     description: "hiroos",
@@ -80,7 +80,7 @@ export default {
       defaultValue: "#f5f4f4"
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

@@ -541,16 +541,16 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'legno'],
+    tag: ['furnishings', 'wood'],
     group: "Items",
     title: "chairdesk",
-    description: "chair ufficio",
+    description: "office chair",
     image: require('./chairdesk.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

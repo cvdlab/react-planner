@@ -546,19 +546,19 @@ function makeObjectMinLOD() {
 }
 
 export default {
-  name: "quadro_trifase",
+  name: "three- phase panel",
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
-    title: "quadro trifase",
-    description: "pannello elettrico",
+    title: "three-phase panel",
+    description: "electric panel",
     image: require('./threePhasePanel.png')
   },
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 100,

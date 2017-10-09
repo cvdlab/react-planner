@@ -139,15 +139,15 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
-    title: "porta ombrelli",
-    description: "porta ombrelli",
+    title: "umbrella stand",
+    description: "umbrella stand",
     image: require('./umbrellaStand.png')
   },
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

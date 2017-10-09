@@ -116,21 +116,21 @@ function makeObjectMinLOD() {
 }
 
 export default {
-  name: "panca",
-  prototype: "items",
+  name: 'bench',
+  prototype: 'items',
 
   info: {
-    tag: ['arredamento', 'wood', 'metal'],
-    group: "Items",
-    title: "panca",
-    description: "panca",
+    tag: ['furnishings', 'wood', 'metal'],
+    group: 'Iiems',
+    title: 'bench',
+    description: 'bench',
     image: require('./bench.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
@@ -147,14 +147,14 @@ export default {
       textRotation = 180;
     }
 
-    let rect_style = {stroke : element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
+    let rect_style = {stroke : element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
 
     return (
 
       <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={rect_style}/>
-        <text key="2" x="0" y="0" transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
-          style={{textAnchor: "middle", fontSize: "11px"}}>
+        <rect key='1' x='0' y='0' width={WIDTH} height={DEPTH} style={rect_style}/>
+        <text key='2' x='0' y='0' transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
+          style={{textAnchor: 'middle', fontSize: '11px'}}>
         {element.type}
         </text>
       </g>

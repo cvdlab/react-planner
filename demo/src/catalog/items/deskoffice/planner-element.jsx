@@ -476,14 +476,14 @@ function makeObjectMinLOD(newWidthA,newWidthB,newHeight,newDepth) {
 }
 
 export default {
-  name: "scrivania",
+  name: "desk",
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'wood'],
+    tag: ['furnishings', 'wood'],
     group: "Items",
-    title: "scrivania",
-    description: "scrivania",
+    title: "desk",
+    description: "desk",
     image: require('./desk.png')
   },
 
@@ -505,7 +505,7 @@ export default {
       }
     },
     depth: {
-      label: "profondità",
+      label: "depth",
       type: "length-measure",
       defaultValue: {
         length: 90,
@@ -513,7 +513,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 100,
@@ -521,7 +521,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

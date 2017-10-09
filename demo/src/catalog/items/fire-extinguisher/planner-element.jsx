@@ -229,7 +229,7 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['Security'],
+    tag: ['security'],
     group: "Items",
     title: "Fire extinguisher",
     description: "Fire extinguisher",

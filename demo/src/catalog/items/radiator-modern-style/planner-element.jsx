@@ -201,16 +201,16 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
-    title: "termosifone alluminio",
-    description: "termosifone alluminio",
+    title: "aluminum radiator",
+    description: "aluminum radiator",
     image: require('./ModernStyleRadiator.png')
   },
 
   properties: {
     width: {
-      label: "larghezza",
+      label: "width",
       type: "length-measure",
       defaultValue: {
         length: 100,
@@ -218,7 +218,7 @@ export default {
       }
     },
     height: {
-      label: "altezza",
+      label: "height",
       type: "length-measure",
       defaultValue: {
         length: 100,
@@ -226,7 +226,7 @@ export default {
       }
     },
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 20,

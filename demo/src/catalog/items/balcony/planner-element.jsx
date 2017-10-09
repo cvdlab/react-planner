@@ -62,54 +62,54 @@ function makeObject(newWidth,newHeight,newDepth) {
 }
 
 export default {
-  name: "balcone",
-  prototype: "items",
+  name: 'balcony',
+  prototype: 'items',
 
   info: {
-    tag: ['arredamento', 'metal'],
-    group: "Items",
-    title: "balcony",
-    description: "balcony",
+    tag: ['furnishings', 'metal'],
+    group: 'balcony',
+    title: 'balcony',
+    description: 'balcony',
     image: require('./balcony.png')
   },
   properties: {
     name:{
-      label: "nome",
-      type: "string",
-      defaultValue: "balcony"
+      label: 'name',
+      type: 'string',
+      defaultValue: 'balcony'
     },
     patternColor: {
-      label: "pattern colori",
-      type: "color",
-      defaultValue: "#f5f4f4"
+      label: 'pattern color',
+      type: 'color',
+      defaultValue: '#f5f4f4'
     },
     width: {
-      label: "larghezza",
-      type: "length-measure",
+      label: 'width',
+      type: 'length-measure',
       defaultValue: {
         length: 500,
         unit: 'cm'
       }
     },
     depth: {
-      label: "profondità",
-      type: "length-measure",
+      label: 'depth',
+      type: 'length-measure',
       defaultValue: {
         length: 100,
         unit: 'cm'
       }
     },
     height: {
-      label: "altezza",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 100,
         unit: 'cm'
       }
     },
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
@@ -121,7 +121,7 @@ export default {
 
     let newWidth = element.properties.get('width').get('length');
     let newDepth = element.properties.get('depth').get('length');
-    let fillValue = element.selected ? "#99c3fb" : element.properties.get('patternColor');
+    let fillValue = element.selected ? '#99c3fb' : element.properties.get('patternColor');
     let angle = element.rotation + 90;
 
     let textRotation = 0;
@@ -131,11 +131,11 @@ export default {
 
     return (
       <g transform={`translate(${-newWidth / 2},${-newDepth / 2})`}>
-        <rect key="1" x="0" y="0" width={newWidth} height={newDepth}
-              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: fillValue}}/>
-        <text key="2" x="0" y="0"
+        <rect key='1' x='0' y='0' width={newWidth} height={newDepth}
+              style={{stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: fillValue}}/>
+        <text key='2' x='0' y='0'
               transform={`translate(${newWidth / 2}, ${newDepth / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.properties.get('name')}
         </text>
       </g>

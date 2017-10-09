@@ -6,57 +6,57 @@ import path from 'path';
 let cached3DWindow = null;
 
 export default {
-  name: "venetian-blind-window",
-  prototype: "holes",
+  name: 'venetian-blind-window',
+  prototype: 'holes',
 
   info: {
     tag: ['Window'],
-    group: "Vertical Closing",
-    title: "Venetian Blind Window",
-    description: "Venetian Blind Window",
+    group: 'Vertical Closing',
+    title: 'Venetian Blind Window',
+    description: 'Venetian Blind Window',
     image: require('./veneziana.png')
   },
 
   properties: {
     width: {
-      label: "Width",
-      type: "length-measure",
+      label: 'Width',
+      type: 'length-measure',
       defaultValue: {
         length: 90
       }
     },
     height: {
-      label: "Height",
-      type: "length-measure",
+      label: 'Height',
+      type: 'length-measure',
       defaultValue: {
         length: 100
       }
     },
     altitude: {
-      label: "Altitude",
-      type: "length-measure",
+      label: 'Altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 90
       }
     },
     thickness: {
-      label: "Thickness",
-      type: "length-measure",
+      label: 'Thickness',
+      type: 'length-measure',
       defaultValue: {
         length: 10
       }
     },
     flip: {
-      label: "Flip",
-      type: "checkbox",
+      label: 'Flip',
+      type: 'checkbox',
       defaultValue: 'false',
     },
   },
 
   render2D: function (element, layer, scene) {
 
-    const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
-    const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "3px", fill: "#0096fd", cursor: "move"};
+    const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '3px', fill: '#000'};
+    const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '3px', fill: '#0096fd', cursor: 'move'};
 
     let epsilon = 3;
 
@@ -66,8 +66,8 @@ export default {
     let length = element.properties.get('width').get('length');
     return (
       <g transform={`translate(${-length / 2}, 0)`}>
-        <path key="1" d={holePath} style={holeStyle}/>
-        <line key="2" x1={holeWidth / 2} y1={-10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
+        <path key='1' d={holePath} style={holeStyle}/>
+        <line key='2' x1={holeWidth / 2} y1={-10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
       </g>
     );
   },

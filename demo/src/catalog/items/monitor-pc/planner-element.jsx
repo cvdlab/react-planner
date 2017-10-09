@@ -148,16 +148,16 @@ export default {
   prototype: "items",
 
   info: {
-    tag: ['arredamento'],
+    tag: ['furnishings'],
     group: "Items",
-    title: "monitor PC",
-    description: "monitor PC",
+    title: "pc monitor",
+    description: "pc monitor",
     image: require('./monitorPC.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 100,

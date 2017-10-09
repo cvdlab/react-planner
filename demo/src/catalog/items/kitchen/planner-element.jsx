@@ -377,20 +377,20 @@ function makeObjectMinLOD() {
 }
 
 export default {
-  name: "cucina",
+  name: "kitchen",
   prototype: "items",
 
   info: {
-    tag: ['arredamento', 'metal'],
+    tag: ['furnishings', 'metal'],
     group: "Items",
-    title: "cucina",
-    description: "cucina",
+    title: "kitchen",
+    description: "kitchen",
     image: require('./kitchen.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
+      label: "altitude",
       type: "length-measure",
       defaultValue: {
         length: 0,

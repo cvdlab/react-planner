@@ -6,21 +6,21 @@ const DEPTH = 20;
 const HEIGHT = 40;
 
 export default {
-  name: "coat-hook",
-  prototype: "items",
+  name: 'coat-hook',
+  prototype: 'items',
 
   info: {
-    tag: ['Furnishings', 'Optional'],
-    group: "Items",
-    title: "Coat hook",
-    description: "Coat hook",
+    tag: ['furnishings', 'optional'],
+    group: 'Items',
+    title: 'Coat hook',
+    description: 'Coat hook',
     image: require('./coat-hook.png')
   },
 
   properties: {
     altitude: {
-      label: "altitude",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 120,
         unit: 'cm'
@@ -37,19 +37,19 @@ export default {
       textRotation = 180;
     }
 
-    let rect_style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
-    let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: "2px", fill: "#84e1ce"};
+    let rect_style = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
+    let arrow_style = {stroke: element.selected ? '#0096fd' : null, strokeWidth: '2px', fill: '#84e1ce'};
 
     return (
 
       <g transform={`translate(${-WIDTH / 2},${-DEPTH / 2})`}>
-        <rect key="1" x="0" y="0" width={WIDTH} height={DEPTH} style={rect_style}/>
-        <line key="2" x1={WIDTH / 2} x2={WIDTH / 2} y1={DEPTH} y2={1.5 * DEPTH} style={arrow_style}/>
-        <line key="3" x1={.45 * WIDTH} x2={WIDTH / 2} y1={1.2 * DEPTH} y2={1.5 * DEPTH} style={arrow_style}/>
-        <line key="4" x1={WIDTH / 2} x2={.55 * WIDTH} y1={1.5 * DEPTH} y2={1.2 * DEPTH} style={arrow_style}/>
-        <text key="5" x="0" y="0"
+        <rect key='1' x='0' y='0' width={WIDTH} height={DEPTH} style={rect_style}/>
+        <line key='2' x1={WIDTH / 2} x2={WIDTH / 2} y1={DEPTH} y2={1.5 * DEPTH} style={arrow_style}/>
+        <line key='3' x1={.45 * WIDTH} x2={WIDTH / 2} y1={1.2 * DEPTH} y2={1.5 * DEPTH} style={arrow_style}/>
+        <line key='4' x1={WIDTH / 2} x2={.55 * WIDTH} y1={1.5 * DEPTH} y2={1.2 * DEPTH} style={arrow_style}/>
+        <text key='5' x='0' y='0'
               transform={`translate(${WIDTH / 2}, ${DEPTH / 2}) scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.type}
         </text>
       </g>

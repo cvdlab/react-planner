@@ -61,37 +61,37 @@ function makeObjectMinLOD(RADIUS,HEIGHT) {
   return column
 }
 export default {
-  name: "colonna",
-  prototype: "items",
+  name: 'round column',
+  prototype: 'items',
 
   info: {
-    tag: [],
-    group: "Items",
-    title: "colonna",
-    description: "colonna",
+    tag: ['structure'],
+    group: 'items',
+    title: 'round column',
+    description: 'round column',
     image: require('./column.png')
   },
 
   properties: {
     altitude: {
-      label: "quota",
-      type: "length-measure",
+      label: 'altitude',
+      type: 'length-measure',
       defaultValue: {
         length: 0,
         unit: 'cm'
       }
     },
     height:{
-      label: "altezza",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 300,
         unit: 'cm'
       }
     },
     radius:{
-      label: "raggio",
-      type: "length-measure",
+      label: 'radius',
+      type: 'length-measure',
       defaultValue: {
         length: 20,
         unit: 'cm'
@@ -110,14 +110,14 @@ export default {
       textRotation = 180;
     }
 
-    let circleStyle = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: "2px", fill: "#84e1ce"};
+    let circleStyle = {stroke: element.selected ? '#0096fd' : '#000', strokeWidth: '2px', fill: '#84e1ce'};
 
     return (
       <g>
-        <circle key="1" cx="0" cy="0" r={RADIUS} style={circleStyle}/>
-        <text key="2" cx="0" cy="0"
+        <circle key='1' cx='0' cy='0' r={RADIUS} style={circleStyle}/>
+        <text key='2' cx='0' cy='0'
               transform={`scale(1,-1) rotate(${textRotation})`}
-              style={{textAnchor: "middle", fontSize: "11px"}}>
+              style={{textAnchor: 'middle', fontSize: '11px'}}>
           {element.type}
         </text>
       </g>
