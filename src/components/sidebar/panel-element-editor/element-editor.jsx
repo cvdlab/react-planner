@@ -11,6 +11,7 @@ import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import MdContentCopy from 'react-icons/lib/md/content-copy';
 import MdContentPaste from 'react-icons/lib/md/content-paste';
+import diff from 'immutablediff';
 
 const tableStyle = {
   marginTop: '10px',
@@ -395,10 +396,15 @@ export default class ElementEditor extends Component {
     )
   }
 
-  componentWillReceiveProps(nextProps) {
-    this.setState({
-      attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state),
-      propertiesFormData: this.initPropData(nextProps.element, nextProps.layer, nextProps.state)
+  componentWillReceiveProps({ element, layer, state }) {
+    let { prototype, id } = element;
+    let scene = this.props.state.get('scene');
+    let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
+    let selected = selectedLayer.getIn([prototype, id]);
+
+    if( diff( element, selected ).size ) this.setState({
+      attributesFormData: this.initAttrData(element, layer, state),
+      propertiesFormData: this.initPropData(element, layer, state)
     });
   }
 }
