@@ -3454,6 +3454,10 @@ react-icons@2.2.5:
   dependencies:
     react-icon-base "2.0.7"
 
+react-numeric-input@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/react-numeric-input/-/react-numeric-input-2.2.0.tgz#5f4f1ce99b32960a9ededa43670a5da225aef850"
+
 react-redux@5.0.6:
   version "5.0.6"
   resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-5.0.6.tgz#23ed3a4f986359d68b5212eaaa681e60d6574946"
