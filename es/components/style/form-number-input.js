@@ -1,45 +1,139 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
-import React from 'react';
-import FormTextInput from './form-text-input';
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-export default function FormNumberInput(_ref) {
-  var onChange = _ref.onChange,
-      rest = _objectWithoutProperties(_ref, ['onChange']);
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-  var onChangeCustom = function onChangeCustom(event) {
-    var value = event.target.value;
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-    rest.min = rest.min ? parseFloat(rest.min) : -Infinity;
-    rest.max = rest.max ? parseFloat(rest.max) : Infinity;
+import React, { Component } from 'react';
+import PropTypes from 'prop-types';
+import NumericInput from 'react-numeric-input';
+import * as SharedStyle from '../../shared-style';
 
-    if (parseFloat(value) <= (parseFloat(rest.min) || -Infinity) || parseFloat(value) >= (parseFloat(rest.max) || Infinity)) {
-      event.target.value = rest.min;
-      onChange(event);
-      event.target.select();
-    } else {
-      if (!isNaN(parseFloat(value)) && isFinite(value)) {
-        onChange(event);
+var STYLE_INPUT = {
+  display: 'block',
+  width: '100%',
+  padding: '0 2px',
+  fontSize: '13px',
+  lineHeight: '1.25',
+  color: '#55595c',
+  backgroundColor: SharedStyle.COLORS.white,
+  backgroundImage: 'none',
+  border: '1px solid rgba(0,0,0,.15)',
+  outline: 'none',
+  height: '30px'
+};
+
+var FormNumberInput = function (_Component) {
+  _inherits(FormNumberInput, _Component);
+
+  function FormNumberInput(props) {
+    _classCallCheck(this, FormNumberInput);
+
+    var _this = _possibleConstructorReturn(this, (FormNumberInput.__proto__ || Object.getPrototypeOf(FormNumberInput)).call(this, props));
+
+    _this.state = { focus: false };
+    return _this;
+  }
+
+  _createClass(FormNumberInput, [{
+    key: 'onChangeCustom',
+    value: function onChangeCustom(valueAsNumber, valueAsString, input) {
+      if (this.refs.realNumber.refs.input.checkValidity()) {
+        this.props.onChange({ target: { value: valueAsNumber } });
+        this.onValidCustom(valueAsNumber, valueAsString);
       } else {
-        if (value === '-') {
-          if (rest.min == 0) {
-            event.target.value = '0';
-            event.target.select();
-          }
-          onChange(event);
-        } else if (value === '0' || value === '') {
-          event.target.value = rest.min > 0 ? rest.min : '0';
-          onChange(event);
-          event.target.select();
-        }
+        this.onInvalidCustom(valueAsNumber, valueAsString);
       }
     }
-  };
+  }, {
+    key: 'onValidCustom',
+    value: function onValidCustom(valueAsNumber, valueAsString) {
+      if (this.refs.realNumber) this.refs.realNumber.refs.input.style.color = STYLE_INPUT.color;
+    }
+  }, {
+    key: 'onInvalidCustom',
+    value: function onInvalidCustom(error, valueAsNumber, valueAsString) {
+      if (this.refs.realNumber) this.refs.realNumber.refs.input.style.color = 'red';
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var _this2 = this;
 
-  var textProps = _extends({}, rest);
-  delete textProps.state;
+      var _props = this.props,
+          value = _props.value,
+          configs = _props.configs,
+          onChange = _props.onChange,
+          onValid = _props.onValid,
+          style = _props.style,
+          rest = _objectWithoutProperties(_props, ['value', 'configs', 'onChange', 'onValid', 'style']);
 
-  return React.createElement(FormTextInput, _extends({ onChange: onChangeCustom, autoComplete: 'off' }, textProps));
-}
+      var min = configs.min,
+          max = configs.max,
+          precision = configs.precision;
+
+      var step = 1 / Math.pow(10, precision);
+
+      return React.createElement(NumericInput, {
+        ref: 'realNumber',
+        onChange: this.onChangeCustom.bind(this),
+        onInvalid: this.onInvalidCustom.bind(this),
+        onInput: function onInput(evt) {
+          return _this2.refs.realNumber.refs.input.style.color = evt.nativeEvent.target.checkValidity() ? STYLE_INPUT.color : 'red';
+        },
+        step: step,
+        precision: precision,
+        value: value,
+        type: 'number',
+        min: min,
+        max: max,
+        pattern: '^-?([0-9]+)\.?([0-9]+)?',
+        style: {
+          wrap: { width: '100%' },
+          input: _extends({}, STYLE_INPUT, style, {
+            border: this.state.focus ? '1px solid #66afe9' : '1px solid rgba(0,0,0,.15)'
+          })
+        },
+        snap: true
+      });
+    }
+  }]);
+
+  return FormNumberInput;
+}(Component);
+
+export default FormNumberInput;
+
+
+FormNumberInput.propTypes = {
+  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
+  style: PropTypes.object,
+  onChange: PropTypes.func,
+  onValid: PropTypes.func,
+  configs: PropTypes.object
+};
+
+FormNumberInput.defaultProps = {
+  value: 0,
+  style: {},
+  onChange: function onChange() {
+    return console.log('onValid instead');
+  },
+  onValid: function onValid() {
+    return console.log('onValid not defined');
+  },
+  onInvalid: function onInvalid() {
+    return console.log('onInvalid not defined');
+  },
+  configs: {
+    min: Number.MIN_SAFE_INTEGER,
+    max: Number.MAX_SAFE_INTEGER,
+    precision: 3
+  }
+};

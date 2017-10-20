@@ -9,6 +9,7 @@ var firstTdStyle = { width: '6em' };
 export default function PropertyNumber(_ref) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
+      onValid = _ref.onValid,
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
       internalState = _ref.internalState,
@@ -57,6 +58,7 @@ export default function PropertyNumber(_ref) {
             onChange: function onChange(event) {
               return update(event.target.value);
             },
+            onValid: onValid,
             min: configs.min,
             max: configs.max })
         )
@@ -68,6 +70,7 @@ export default function PropertyNumber(_ref) {
 PropertyNumber.propTypes = {
   value: PropTypes.any.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onValid: PropTypes.func,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,

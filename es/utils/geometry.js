@@ -230,6 +230,10 @@ export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
   return -Math.atan2(y1 - y2, x2 - x1) * 180 / Math.PI;
 }
 
+export function angleBetweenTwoPoints(x1, y1, x2, y2) {
+  return Math.atan2(y2 - y1, x2 - x1);
+}
+
 export function samePoints(_ref, _ref2) {
   var x1 = _ref.x,
       y1 = _ref.y;

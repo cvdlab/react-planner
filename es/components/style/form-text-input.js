@@ -14,17 +14,17 @@ import React, { Component } from 'react';
 import * as SharedStyle from '../../shared-style';
 
 var STYLE_INPUT = {
-  display: "block",
-  width: "100%",
-  padding: "0 2px",
-  fontSize: "13px",
-  lineHeight: "1.25",
-  color: "#55595c",
+  display: 'block',
+  width: '100%',
+  padding: '0 2px',
+  fontSize: '13px',
+  lineHeight: '1.25',
+  color: '#55595c',
   backgroundColor: SharedStyle.COLORS.white,
-  backgroundImage: "none",
-  border: "1px solid rgba(0,0,0,.15)",
-  outline: "none",
-  height: "30px"
+  backgroundImage: 'none',
+  border: '1px solid rgba(0,0,0,.15)',
+  outline: 'none',
+  height: '30px'
 };
 
 var FormTextInput = function (_Component) {

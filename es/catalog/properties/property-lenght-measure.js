@@ -1,3 +1,5 @@
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 import React from 'react';
 import PropTypes from 'prop-types';
 import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
@@ -17,6 +19,7 @@ var unitContainerStyle = { width: '5em' };
 export default function PropertyLengthMeasure(_ref, _ref2) {
   var value = _ref.value,
       onUpdate = _ref.onUpdate,
+      onValid = _ref.onValid,
       configs = _ref.configs,
       sourceElement = _ref.sourceElement,
       internalState = _ref.internalState,
@@ -24,9 +27,13 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
   var catalog = _ref2.catalog;
 
 
-  var length = value.has('length') ? value.get('length') : 0;
-  var _length = value.has('_length') ? value.get('_length') : length;
-  var _unit = value.has('_unit') ? value.get('_unit') : UNIT_CENTIMETER;
+  var length = value.get('length') || 0;
+  var _length = value.get('_length') || length;
+  var _unit = value.get('_unit') || UNIT_CENTIMETER;
+
+  var hook = configs.hook,
+      label = configs.label,
+      configRest = _objectWithoutProperties(configs, ['hook', 'label']);
 
   var update = function update(lengthInput, unitInput) {
 
@@ -37,8 +44,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
       _unit: unitInput
     });
 
-    if (configs.hook) {
-      return configs.hook(merged, sourceElement, internalState, state).then(function (val) {
+    if (hook) {
+      return hook(merged, sourceElement, internalState, state).then(function (val) {
         return onUpdate(val);
       });
     }
@@ -61,7 +68,7 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
           React.createElement(
             FormLabel,
             null,
-            configs.label
+            label
           )
         ),
         React.createElement(
@@ -84,7 +91,8 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
                     onChange: function onChange(event) {
                       return update(event.target.value, _unit);
                     },
-                    min: configs.min, max: configs.max
+                    onValid: onValid,
+                    configs: configs
                   })
                 ),
                 React.createElement(
@@ -116,6 +124,7 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
 PropertyLengthMeasure.propTypes = {
   value: PropTypes.instanceOf(Map).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onValid: PropTypes.func,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,

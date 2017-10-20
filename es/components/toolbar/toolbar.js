@@ -219,9 +219,14 @@ export default function Toolbar(_ref, _ref2) {
   }];
 
   sorter = sorter.concat(toolbarButtons.map(function (Component, index) {
-    return {
+    return Component.prototype ? //if is a react component
+    {
       condition: true,
       dom: React.createElement(Component, { mode: mode, state: state, key: index })
+    } : { //else is a sortable toolbar button
+      index: Component.index,
+      condition: Component.condition,
+      dom: React.createElement(Component.dom, { mode: mode, state: state, key: index })
     };
   }));
 
@@ -258,7 +263,8 @@ Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  allowProjectFileSupport: PropTypes.bool.isRequired
+  allowProjectFileSupport: PropTypes.bool.isRequired,
+  toolbarButtons: PropTypes.array
 };
 
 Toolbar.contextTypes = {

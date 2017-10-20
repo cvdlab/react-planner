@@ -23,12 +23,9 @@ import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import MdContentCopy from 'react-icons/lib/md/content-copy';
 import MdContentPaste from 'react-icons/lib/md/content-paste';
+import diff from 'immutablediff';
 
-var tableStyle = {
-  marginTop: '10px',
-  marginRight: '0px',
-  marginLeft: 'auto'
-};
+var PRECISION = 2;
 
 var attrPorpSeparatorStyle = {
   margin: '0.5em 0.25em 0.5em 0',
@@ -78,11 +75,7 @@ var ElementEditor = function (_Component) {
       switch (element.prototype) {
         case 'items':
           {
-            return new Map({
-              x: element.x,
-              y: element.y,
-              rotation: math.toFixedFloat(element.rotation, 2)
-            });
+            return new Map(element);
           }
         case 'lines':
           {
@@ -124,13 +117,13 @@ var ElementEditor = function (_Component) {
             return new Map({
               offset: element.offset,
               offsetA: new Map({
-                length: math.toFixedFloat(startAt, 2),
-                _length: math.toFixedFloat(_lengthA, 2),
+                length: math.toFixedFloat(startAt, PRECISION),
+                _length: math.toFixedFloat(_lengthA, PRECISION),
                 _unit: _unitA
               }),
               offsetB: new Map({
-                length: math.toFixedFloat(endAt, 2),
-                _length: math.toFixedFloat(_lengthB, 2),
+                length: math.toFixedFloat(endAt, PRECISION),
+                _length: math.toFixedFloat(_lengthB, PRECISION),
                 _unit: _unitB
               })
             });
@@ -165,7 +158,9 @@ var ElementEditor = function (_Component) {
     value: function updateAttribute(attributeName, value) {
       var _this2 = this;
 
-      var attributesFormData = this.state.attributesFormData;
+      var _state = this.state,
+          propertiesFormData = _state.propertiesFormData,
+          attributesFormData = _state.attributesFormData;
 
 
       switch (this.props.element.prototype) {
@@ -176,6 +171,7 @@ var ElementEditor = function (_Component) {
           }
         case 'lines':
           {
+            console.log('asd', attributeName);
             switch (attributeName) {
               case 'lineLength':
                 {
@@ -187,7 +183,7 @@ var ElementEditor = function (_Component) {
                       v_a = _geometry$orderVertic2[0],
                       v_b = _geometry$orderVertic2[1];
 
-                  var v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2);
+                  var v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), PRECISION);
 
                   attributesFormData = attributesFormData.withMutations(function (attr) {
                     attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -223,45 +219,47 @@ var ElementEditor = function (_Component) {
             switch (attributeName) {
               case 'offsetA':
                 {
-                  var offset = void 0;
                   var line = this.props.layer.lines.get(this.props.element.line);
 
                   var orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)), this.props.layer.vertices.get(line.vertices.get(1))]);
 
-                  var _orderedVertices$ = orderedVertices[0],
+                  var _orderedVertices = _slicedToArray(orderedVertices, 2),
+                      _orderedVertices$ = _orderedVertices[0],
                       x0 = _orderedVertices$.x,
-                      y0 = _orderedVertices$.y;
-                  var _orderedVertices$2 = orderedVertices[1],
+                      y0 = _orderedVertices$.y,
+                      _orderedVertices$2 = _orderedVertices[1],
                       x1 = _orderedVertices$2.x,
                       y1 = _orderedVertices$2.y;
 
-
-                  var alpha = Math.atan2(y1 - y0, x1 - x0);
+                  var alpha = geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
                   var lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+                  var widthLength = this.props.element.properties.get('width').get('length');
+                  var halfWidthLength = widthLength / 2;
 
                   var lengthValue = value.get('length');
                   lengthValue = Math.max(lengthValue, 0);
-                  lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
+                  lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-                  var xp = (lengthValue + this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
-                  var yp = (lengthValue + this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
+                  var xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
+                  var yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
 
-                  offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+                  var offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-                  var endAt = math.toFixedFloat(lineLength - lineLength * offset - this.props.element.properties.get('width').get('length') / 2, 2);
+                  var endAt = math.toFixedFloat(lineLength - lineLength * offset - halfWidthLength, PRECISION);
+                  var offsetUnit = attributesFormData.getIn(['offsetB', '_unit']);
 
                   var offsetB = new Map({
                     length: endAt,
-                    _length: convert(endAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetB').get('_unit')),
-                    _unit: attributesFormData.get('offsetB').get('_unit')
+                    _length: convert(endAt).from(this.context.catalog.unit).to(offsetUnit),
+                    _unit: offsetUnit
                   });
 
                   attributesFormData = attributesFormData.set('offsetB', offsetB).set('offset', offset);
 
                   var offsetAttribute = new Map({
-                    length: math.toFixedFloat(lengthValue, 2),
+                    length: math.toFixedFloat(lengthValue, PRECISION),
                     _unit: value.get('_unit'),
-                    _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+                    _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
                   });
 
                   attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -270,45 +268,47 @@ var ElementEditor = function (_Component) {
                 }
               case 'offsetB':
                 {
-                  var _offset = void 0;
                   var _line = this.props.layer.lines.get(this.props.element.line);
 
-                  var _orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(_line.vertices.get(0)), this.props.layer.vertices.get(_line.vertices.get(1))]);
+                  var _orderedVertices2 = geometry.orderVertices([this.props.layer.vertices.get(_line.vertices.get(0)), this.props.layer.vertices.get(_line.vertices.get(1))]);
 
-                  var _orderedVertices$3 = _orderedVertices[0],
-                      _x = _orderedVertices$3.x,
-                      _y = _orderedVertices$3.y;
-                  var _orderedVertices$4 = _orderedVertices[1],
-                      _x2 = _orderedVertices$4.x,
-                      _y2 = _orderedVertices$4.y;
+                  var _orderedVertices3 = _slicedToArray(_orderedVertices2, 2),
+                      _orderedVertices3$ = _orderedVertices3[0],
+                      _x = _orderedVertices3$.x,
+                      _y = _orderedVertices3$.y,
+                      _orderedVertices3$2 = _orderedVertices3[1],
+                      _x2 = _orderedVertices3$2.x,
+                      _y2 = _orderedVertices3$2.y;
 
-
-                  var _alpha = Math.atan2(_y2 - _y, _x2 - _x);
+                  var _alpha = geometry.angleBetweenTwoPoints(_x, _y, _x2, _y2);
                   var _lineLength = geometry.pointsDistance(_x, _y, _x2, _y2);
+                  var _widthLength = this.props.element.properties.get('width').get('length');
+                  var _halfWidthLength = _widthLength / 2;
 
                   var _lengthValue = value.get('length');
                   _lengthValue = Math.max(_lengthValue, 0);
-                  _lengthValue = Math.min(_lengthValue, _lineLength - this.props.element.properties.get('width').get('length'));
+                  _lengthValue = Math.min(_lengthValue, _lineLength - _widthLength);
 
-                  var _xp = _x2 - (_lengthValue + this.props.element.properties.get('width').get('length') / 2) * Math.cos(_alpha);
-                  var _yp = _y2 - (_lengthValue + this.props.element.properties.get('width').get('length') / 2) * Math.sin(_alpha);
+                  var _xp = _x2 - (_lengthValue + _halfWidthLength) * Math.cos(_alpha);
+                  var _yp = _y2 - (_lengthValue + _halfWidthLength) * Math.sin(_alpha);
 
-                  _offset = geometry.pointPositionOnLineSegment(_x, _y, _x2, _y2, _xp, _yp);
+                  var _offset = geometry.pointPositionOnLineSegment(_x, _y, _x2, _y2, _xp, _yp);
 
-                  var startAt = math.toFixedFloat(_lineLength * _offset - this.props.element.properties.get('width').get('length') / 2, 2);
+                  var startAt = math.toFixedFloat(_lineLength * _offset - _halfWidthLength, PRECISION);
+                  var _offsetUnit = attributesFormData.getIn(['offsetA', '_unit']);
 
                   var offsetA = new Map({
                     length: startAt,
-                    _length: convert(startAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetA').get('_unit')),
-                    _unit: attributesFormData.get('offsetA').get('_unit')
+                    _length: convert(startAt).from(this.context.catalog.unit).to(_offsetUnit),
+                    _unit: _offsetUnit
                   });
 
                   attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', _offset);
 
                   var _offsetAttribute = new Map({
-                    length: math.toFixedFloat(_lengthValue, 2),
+                    length: math.toFixedFloat(_lengthValue, PRECISION),
                     _unit: value.get('_unit'),
-                    _length: math.toFixedFloat(convert(_lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+                    _length: math.toFixedFloat(convert(_lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
                   });
 
                   attributesFormData = attributesFormData.set(attributeName, _offsetAttribute);
@@ -328,14 +328,18 @@ var ElementEditor = function (_Component) {
       }
 
       this.setState({ attributesFormData: attributesFormData });
+      this.save(propertiesFormData, attributesFormData);
     }
   }, {
     key: 'updateProperty',
     value: function updateProperty(propertyName, value) {
-      var propertiesFormData = this.state.propertiesFormData;
+      var _state2 = this.state,
+          propertiesFormData = _state2.propertiesFormData,
+          attributesFormData = _state2.attributesFormData;
 
       propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
       this.setState({ propertiesFormData: propertiesFormData });
+      this.save(propertiesFormData, attributesFormData);
     }
   }, {
     key: 'reset',
@@ -344,33 +348,28 @@ var ElementEditor = function (_Component) {
     }
   }, {
     key: 'save',
-    value: function save(event) {
-      event.preventDefault();
-      var _state = this.state,
-          propertiesFormData = _state.propertiesFormData,
-          attributesFormData = _state.attributesFormData,
-          projectActions = this.context.projectActions;
-
+    value: function save(propertiesFormData, attributesFormData) {
 
       var properties = propertiesFormData.map(function (data) {
         return data.get('currentValue');
       });
 
-      projectActions.setProperties(properties);
+      this.context.projectActions.setProperties(properties);
+
       switch (this.props.element.prototype) {
         case 'items':
           {
-            projectActions.setItemsAttributes(attributesFormData);
+            this.context.projectActions.setItemsAttributes(attributesFormData);
             break;
           }
         case 'lines':
           {
-            projectActions.setLinesAttributes(attributesFormData);
+            this.context.projectActions.setLinesAttributes(attributesFormData);
             break;
           }
         case 'holes':
           {
-            projectActions.setHolesAttributes(attributesFormData);
+            this.context.projectActions.setHolesAttributes(attributesFormData);
             break;
           }
       }
@@ -390,9 +389,9 @@ var ElementEditor = function (_Component) {
     value: function render() {
       var _this3 = this;
 
-      var _state2 = this.state,
-          propertiesFormData = _state2.propertiesFormData,
-          attributesFormData = _state2.attributesFormData,
+      var _state3 = this.state,
+          propertiesFormData = _state3.propertiesFormData,
+          attributesFormData = _state3.attributesFormData,
           _context = this.context,
           projectActions = _context.projectActions,
           catalog = _context.catalog,
@@ -403,14 +402,14 @@ var ElementEditor = function (_Component) {
 
 
       return React.createElement(
-        'form',
-        { onSubmit: function onSubmit(e) {
-            return _this3.save(e);
-          } },
-        React.createElement(AttributesEditor, { element: element,
+        'div',
+        null,
+        React.createElement(AttributesEditor, {
+          element: element,
           onUpdate: this.updateAttribute,
           attributeFormData: attributesFormData,
-          state: appState }),
+          state: appState
+        }),
         React.createElement(
           'div',
           { style: attrPorpSeparatorStyle },
@@ -456,58 +455,25 @@ var ElementEditor = function (_Component) {
             sourceElement: element,
             internalState: _this3.state
           });
-        }),
-        React.createElement(
-          'table',
-          { style: tableStyle },
-          React.createElement(
-            'tbody',
-            null,
-            React.createElement(
-              'tr',
-              null,
-              React.createElement(
-                'td',
-                null,
-                React.createElement(
-                  DeleteButton,
-                  { size: 'small', onClick: function onClick(e) {
-                      return projectActions.remove();
-                    } },
-                  translator.t('Delete')
-                )
-              ),
-              React.createElement(
-                'td',
-                null,
-                React.createElement(
-                  CancelButton,
-                  { size: 'small', onClick: function onClick(e) {
-                      return _this3.reset();
-                    } },
-                  translator.t('Reset')
-                )
-              ),
-              React.createElement(
-                'td',
-                null,
-                React.createElement(
-                  FormSubmitButton,
-                  { size: 'small' },
-                  translator.t('Save')
-                )
-              )
-            )
-          )
-        )
+        })
       );
     }
   }, {
     key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      this.setState({
-        attributesFormData: this.initAttrData(nextProps.element, nextProps.layer, nextProps.state),
-        propertiesFormData: this.initPropData(nextProps.element, nextProps.layer, nextProps.state)
+    value: function componentWillReceiveProps(_ref3) {
+      var element = _ref3.element,
+          layer = _ref3.layer,
+          state = _ref3.state;
+      var prototype = element.prototype,
+          id = element.id;
+
+      var scene = this.props.state.get('scene');
+      var selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
+      var selected = selectedLayer.getIn([prototype, id]);
+
+      if (diff(selectedLayer, layer).size) this.setState({
+        attributesFormData: this.initAttrData(element, layer, state),
+        propertiesFormData: this.initPropData(element, layer, state)
       });
     }
   }]);

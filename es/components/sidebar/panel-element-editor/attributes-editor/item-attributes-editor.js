@@ -1,3 +1,7 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
+
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
@@ -17,7 +21,9 @@ export default function ItemAttributesEditor(_ref, _ref2) {
   var element = _ref.element,
       onUpdate = _ref.onUpdate,
       attributeFormData = _ref.attributeFormData,
-      state = _ref.state;
+      state = _ref.state,
+      rest = _objectWithoutProperties(_ref, ['element', 'onUpdate', 'attributeFormData', 'state']);
+
   var translator = _ref2.translator;
 
   var name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
@@ -42,9 +48,13 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           null,
-          React.createElement(FormTextInput, { value: name, onChange: function onChange(event) {
+          React.createElement(FormTextInput, {
+            value: name,
+            onChange: function onChange(event) {
               return onUpdate('name', event.target.value);
-            }, style: inputStyle })
+            },
+            style: inputStyle
+          })
         )
       ),
       React.createElement(
@@ -58,10 +68,15 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           null,
-          React.createElement(FormNumberInput, { value: renderedX, onChange: function onChange(event) {
+          React.createElement(FormNumberInput, _extends({
+            value: renderedX,
+            onChange: function onChange(event) {
               return onUpdate('x', event.target.value);
-            }, style: inputStyle,
-            state: state })
+            },
+            style: inputStyle,
+            state: state,
+            configs: { precision: 2 }
+          }, rest))
         )
       ),
       React.createElement(
@@ -75,10 +90,15 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           null,
-          React.createElement(FormNumberInput, { value: renderedY, onChange: function onChange(event) {
+          React.createElement(FormNumberInput, _extends({
+            value: renderedY,
+            onChange: function onChange(event) {
               return onUpdate('y', event.target.value);
-            }, style: inputStyle,
-            state: state })
+            },
+            style: inputStyle,
+            state: state,
+            configs: { precision: 2 }
+          }, rest))
         )
       ),
       React.createElement(
@@ -87,16 +107,21 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          translator.t("Rotation"),
+          translator.t('Rotation'),
           ':'
         ),
         React.createElement(
           'td',
           null,
-          React.createElement(FormNumberInput, { value: renderedR, onChange: function onChange(event) {
+          React.createElement(FormNumberInput, _extends({
+            value: renderedR,
+            onChange: function onChange(event) {
               return onUpdate('rotation', event.target.value);
             },
-            style: inputStyle, state: state })
+            style: inputStyle,
+            state: state,
+            configs: { precision: 2 }
+          }, rest))
         )
       )
     )
