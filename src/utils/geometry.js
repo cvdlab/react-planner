@@ -213,6 +213,10 @@ export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
   return -(Math.atan2(y1 - y2, x2 - x1)) * 180 / Math.PI;
 }
 
+export function angleBetweenTwoPoints(x1, y1, x2, y2) {
+  return Math.atan2(y2 - y1, x2 - x1);
+}
+
 export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
   return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
 }
