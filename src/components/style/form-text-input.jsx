@@ -2,17 +2,17 @@ import React, {Component} from 'react';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE_INPUT = {
-  display: "block",
-  width: "100%",
-  padding: "0 2px",
-  fontSize: "13px",
-  lineHeight: "1.25",
-  color: "#55595c",
+  display: 'block',
+  width: '100%',
+  padding: '0 2px',
+  fontSize: '13px',
+  lineHeight: '1.25',
+  color: '#55595c',
   backgroundColor: SharedStyle.COLORS.white,
-  backgroundImage: "none",
-  border: "1px solid rgba(0,0,0,.15)",
-  outline: "none",
-  height: "30px",
+  backgroundImage: 'none',
+  border: '1px solid rgba(0,0,0,.15)',
+  outline: 'none',
+  height: '30px',
 };
 
 
@@ -34,7 +34,7 @@ export default class FormTextInput extends Component {
         ...style,
         border: this.state.focus ? '1px solid #66afe9' : '1px solid rgba(0,0,0,.15)'
       }}
-      type="text"  {...rest}/>
+      type="text" {...rest}/>
   }
 }
 
