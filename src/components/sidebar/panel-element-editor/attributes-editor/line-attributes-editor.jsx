@@ -3,17 +3,11 @@ import PropTypes from 'prop-types';
 import { FormNumberInput, FormTextInput } from '../../../style/export';
 import { PropertyLengthMeasure } from '../../../../catalog/properties/export';
 
-const tableStyle = {
-  width: '100%'
-};
-const firstTdStyle = {
-  width: '6em'
-};
-const inputStyle = {
-  textAlign: 'left'
-};
+const tableStyle = { width: '100%' };
+const firstTdStyle = { width: '6em' };
+const inputStyle = { textAlign: 'left' };
 
-export default function LineAttributesEditor({element, onUpdate, attributeFormData, state}, {translator}) {
+export default function LineAttributesEditor({element, onUpdate, attributeFormData, state, ...rest}, {translator}) {
 
   let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let vertexOne = attributeFormData.has('vertexOne') ? attributeFormData.get('vertexOne') : null;
@@ -26,7 +20,11 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
       <tr>
         <td style={firstTdStyle}>{ translator.t('Name')}</td>
         <td>
-          <FormTextInput value={name} onChange={event => onUpdate('name', event.target.value)} style={inputStyle}/>
+          <FormTextInput
+            value={name}
+            onChange={event => onUpdate('name', event.target.value)}
+            style={inputStyle}
+          />
         </td>
       </tr>
       <tr>
@@ -34,8 +32,11 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
         <td>
           <FormNumberInput
             value={vertexOne.get('x')}
-            onChange={event => onUpdate('vertexOne', {'x': event.target.value})} style={inputStyle}
+            onChange={event => onUpdate('vertexOne', {'x': event.target.value})}
+            style={inputStyle}
             state={state}
+            configs={{precision: 2}}
+            {...rest}
           />
         </td>
       </tr>
@@ -44,8 +45,11 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
         <td>
           <FormNumberInput
             value={vertexOne.get('y')}
-            onChange={event => onUpdate('vertexOne', {'y': event.target.value})} style={inputStyle}
+            onChange={event => onUpdate('vertexOne', {'y': event.target.value})}
+            style={inputStyle}
             state={state}
+            configs={{precision: 2}}
+            {...rest}
           />
         </td>
       </tr>
@@ -54,8 +58,11 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
         <td>
           <FormNumberInput
             value={vertexTwo.get('x')}
-            onChange={event => onUpdate('vertexTwo', {'x': event.target.value})} style={inputStyle}
+            onChange={event => onUpdate('vertexTwo', {'x': event.target.value})}
+            style={inputStyle}
             state={state}
+            configs={{precision: 2}}
+            {...rest}
           />
         </td>
       </tr>
@@ -64,8 +71,11 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
         <td>
           <FormNumberInput
             value={vertexTwo.get('y')}
-            onChange={event => onUpdate('vertexTwo', {'y': event.target.value})} style={inputStyle}
+            onChange={event => onUpdate('vertexTwo', {'y': event.target.value})}
+            style={inputStyle}
             state={state}
+            configs={{precision: 2}}
+            {...rest}
           />
         </td>
       </tr>
@@ -74,7 +84,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
     <PropertyLengthMeasure
       value={ lineLength }
       onUpdate={mapped => onUpdate('lineLength', mapped)}
-      configs={{label: translator.t('Length'), min: 0, max: Infinity}}
+      configs={{label: translator.t('Length'), min: 0, max: Infinity, precision: 2}}
       state={state}
     />
   </div>;
@@ -83,6 +93,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
 LineAttributesEditor.propTypes = {
   element: PropTypes.object.isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onValid: PropTypes.func,
   attributeFormData: PropTypes.object.isRequired,
   state: PropTypes.object.isRequired
 };

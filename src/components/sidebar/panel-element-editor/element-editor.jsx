@@ -13,11 +13,7 @@ import MdContentCopy from 'react-icons/lib/md/content-copy';
 import MdContentPaste from 'react-icons/lib/md/content-paste';
 import diff from 'immutablediff';
 
-const tableStyle = {
-  marginTop: '10px',
-  marginRight: '0px',
-  marginLeft: 'auto'
-};
+const PRECISION = 2;
 
 const attrPorpSeparatorStyle = {
   margin: '0.5em 0.25em 0.5em 0',
@@ -60,11 +56,7 @@ export default class ElementEditor extends Component {
 
     switch (element.prototype) {
       case 'items': {
-        return new Map({
-          x: element.x,
-          y: element.y,
-          rotation: math.toFixedFloat(element.rotation, 2)
-        });
+        return new Map(element);
       }
       case 'lines': {
         let v_a = layer.vertices.get(element.vertices.get(0));
@@ -97,13 +89,13 @@ export default class ElementEditor extends Component {
         return new Map({
           offset: element.offset,
           offsetA: new Map({
-            length: math.toFixedFloat(startAt, 2),
-            _length: math.toFixedFloat(_lengthA, 2),
+            length: math.toFixedFloat(startAt, PRECISION),
+            _length: math.toFixedFloat(_lengthA, PRECISION),
             _unit: _unitA
           }),
           offsetB: new Map({
-            length: math.toFixedFloat(endAt, 2),
-            _length: math.toFixedFloat(_lengthB, 2),
+            length: math.toFixedFloat(endAt, PRECISION),
+            _length: math.toFixedFloat(_lengthB, PRECISION),
             _unit: _unitB
           })
         });
@@ -135,7 +127,7 @@ export default class ElementEditor extends Component {
 
   updateAttribute(attributeName, value) {
 
-    let {attributesFormData} = this.state;
+    let {propertiesFormData, attributesFormData} = this.state;
 
     switch (this.props.element.prototype) {
       case 'items': {
@@ -143,6 +135,7 @@ export default class ElementEditor extends Component {
         break;
       }
       case 'lines': {
+        console.log('asd', attributeName);
         switch(attributeName)
         {
           case 'lineLength':
@@ -152,7 +145,7 @@ export default class ElementEditor extends Component {
 
             let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
 
-            let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), 2);
+            let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), PRECISION);
 
             attributesFormData = attributesFormData.withMutations(attr => {
               attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -188,43 +181,44 @@ export default class ElementEditor extends Component {
         {
           case 'offsetA':
           {
-            let offset;
             let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
-              this.props.layer.vertices.get(line.vertices.get(1))]);
+            let orderedVertices = geometry.orderVertices([
+              this.props.layer.vertices.get(line.vertices.get(0)),
+              this.props.layer.vertices.get(line.vertices.get(1))
+            ]);
 
-            let {x: x0, y: y0} = orderedVertices[0];
-            let {x: x1, y: y1} = orderedVertices[1];
+            let [ {x: x0, y: y0}, {x: x1, y: y1} ] = orderedVertices;
 
-            let alpha = Math.atan2(y1 - y0, x1 - x0);
+            let alpha = geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
             let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+            let widthLength = this.props.element.properties.get('width').get('length');
+            let halfWidthLength = widthLength / 2;
 
             let lengthValue = value.get('length');
             lengthValue = Math.max(lengthValue, 0);
-            lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
+            lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-            let xp = (lengthValue +
-              this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha) + x0;
-            let yp = (lengthValue +
-              this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha) + y0;
+            let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
+            let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
 
-            offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-            let endAt = math.toFixedFloat(lineLength - (lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+            let endAt = math.toFixedFloat(lineLength - (lineLength * offset) - halfWidthLength, PRECISION);
+            let offsetUnit = attributesFormData.getIn(['offsetB', '_unit']);
 
             let offsetB = new Map({
               length: endAt,
-              _length: convert(endAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetB').get('_unit')),
-              _unit: attributesFormData.get('offsetB').get('_unit')
+              _length: convert(endAt).from(this.context.catalog.unit).to(offsetUnit),
+              _unit: offsetUnit
             });
 
             attributesFormData = attributesFormData.set('offsetB', offsetB).set('offset', offset);
 
             let offsetAttribute = new Map({
-              length: math.toFixedFloat(lengthValue, 2),
+              length: math.toFixedFloat(lengthValue, PRECISION),
               _unit: value.get('_unit'),
-              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
             });
 
             attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -233,43 +227,44 @@ export default class ElementEditor extends Component {
           }
           case 'offsetB':
           {
-            let offset;
             let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = geometry.orderVertices([this.props.layer.vertices.get(line.vertices.get(0)),
-              this.props.layer.vertices.get(line.vertices.get(1))]);
+            let orderedVertices = geometry.orderVertices([
+              this.props.layer.vertices.get(line.vertices.get(0)),
+              this.props.layer.vertices.get(line.vertices.get(1))
+            ]);
 
-            let {x: x0, y: y0} = orderedVertices[0];
-            let {x: x1, y: y1} = orderedVertices[1];
+            let [ {x: x0, y: y0}, {x: x1, y: y1} ] = orderedVertices;
 
-            let alpha = Math.atan2(y1 - y0, x1 - x0);
+            let alpha = geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
             let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+            let widthLength = this.props.element.properties.get('width').get('length');
+            let halfWidthLength = widthLength / 2;
 
             let lengthValue = value.get('length');
             lengthValue = Math.max(lengthValue, 0);
-            lengthValue = Math.min(lengthValue, lineLength - this.props.element.properties.get('width').get('length'));
+            lengthValue = Math.min(lengthValue, lineLength - widthLength);
 
-            let xp = x1 - (lengthValue +
-              this.props.element.properties.get('width').get('length') / 2) * Math.cos(alpha);
-            let yp = y1 - (lengthValue +
-              this.props.element.properties.get('width').get('length') / 2) * Math.sin(alpha);
+            let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
+            let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
 
-            offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-            let startAt = math.toFixedFloat((lineLength * offset) - this.props.element.properties.get('width').get('length') / 2, 2);
+            let startAt = math.toFixedFloat((lineLength * offset) - halfWidthLength, PRECISION);
+            let offsetUnit = attributesFormData.getIn(['offsetA', '_unit']);
 
             let offsetA = new Map({
               length: startAt,
-              _length: convert(startAt).from(this.context.catalog.unit).to(attributesFormData.get('offsetA').get('_unit')),
-              _unit: attributesFormData.get('offsetA').get('_unit')
+              _length: convert(startAt).from(this.context.catalog.unit).to(offsetUnit),
+              _unit: offsetUnit
             });
 
             attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
 
             let offsetAttribute = new Map({
-              length: math.toFixedFloat(lengthValue, 2),
+              length: math.toFixedFloat(lengthValue, PRECISION),
               _unit: value.get('_unit'),
-              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), 2)
+              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
             });
 
             attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -289,38 +284,39 @@ export default class ElementEditor extends Component {
     }
 
     this.setState({attributesFormData});
+    this.save(propertiesFormData, attributesFormData);
   }
 
   updateProperty(propertyName, value) {
-    let {state: {propertiesFormData}} = this;
+    let {state: {propertiesFormData, attributesFormData}} = this;
     propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
     this.setState({propertiesFormData});
+    this.save(propertiesFormData, attributesFormData);
   }
 
   reset() {
     this.setState({propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state)});
   }
 
-  save(event) {
-    event.preventDefault();
-    let {state: {propertiesFormData, attributesFormData}, context: {projectActions}} = this;
+  save(propertiesFormData, attributesFormData) {
 
     let properties = propertiesFormData.map(data => {
       return data.get('currentValue');
     });
 
-    projectActions.setProperties(properties);
+    this.context.projectActions.setProperties(properties);
+
     switch (this.props.element.prototype) {
       case 'items': {
-        projectActions.setItemsAttributes(attributesFormData);
+        this.context.projectActions.setItemsAttributes(attributesFormData);
         break;
       }
       case 'lines': {
-        projectActions.setLinesAttributes(attributesFormData);
+        this.context.projectActions.setLinesAttributes(attributesFormData);
         break;
       }
       case 'holes': {
-        projectActions.setHolesAttributes(attributesFormData);
+        this.context.projectActions.setHolesAttributes(attributesFormData);
         break;
       }
     }
@@ -342,12 +338,14 @@ export default class ElementEditor extends Component {
     } = this;
 
     return (
-      <form onSubmit={e => this.save(e)}>
+      <div>
 
-        <AttributesEditor element={element}
-                          onUpdate={this.updateAttribute}
-                          attributeFormData={attributesFormData}
-                          state={appState}/>
+        <AttributesEditor
+          element={element}
+          onUpdate={this.updateAttribute}
+          attributeFormData={attributesFormData}
+          state={appState}
+        />
 
         <div style={attrPorpSeparatorStyle}>
           <div style={headActionStyle}>
@@ -376,23 +374,7 @@ export default class ElementEditor extends Component {
           })
         }
 
-        <table style={tableStyle}>
-          <tbody>
-          <tr>
-            <td>
-              <DeleteButton size="small" onClick={e => projectActions.remove()}>{translator.t('Delete')}</DeleteButton>
-            </td>
-            <td>
-              <CancelButton size="small" onClick={e => this.reset()}>{translator.t('Reset')}</CancelButton>
-            </td>
-            <td>
-              <FormSubmitButton size="small">{translator.t('Save')}</FormSubmitButton>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-
-      </form>
+      </div>
     )
   }
 
@@ -402,7 +384,7 @@ export default class ElementEditor extends Component {
     let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
     let selected = selectedLayer.getIn([prototype, id]);
 
-    if( diff( element, selected ).size ) this.setState({
+    if( diff( selectedLayer, layer ).size ) this.setState({
       attributesFormData: this.initAttrData(element, layer, state),
       propertiesFormData: this.initPropData(element, layer, state)
     });

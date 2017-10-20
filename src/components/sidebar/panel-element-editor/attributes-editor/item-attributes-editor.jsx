@@ -13,7 +13,7 @@ let inputStyle = {
   textAlign: 'left'
 }
 
-export default function ItemAttributesEditor({element, onUpdate, attributeFormData, state}, {translator}) {
+export default function ItemAttributesEditor({element, onUpdate, attributeFormData, state, ...rest}, {translator}) {
   let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;
   let renderedY = attributeFormData.has('y') ? attributeFormData.get('y') : element.y;
@@ -23,24 +23,52 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
     <tbody>
     <tr>
       <td style={firstTdStyle}>Nome:</td>
-      <td><FormTextInput value={name} onChange={event => onUpdate('name', event.target.value)} style={inputStyle}/></td>
+      <td>
+        <FormTextInput
+          value={name}
+          onChange={event => onUpdate('name', event.target.value)}
+          style={inputStyle}
+        />
+      </td>
     </tr>
     <tr>
       <td style={firstTdStyle}>X:</td>
-      <td><FormNumberInput value={renderedX} onChange={event => onUpdate('x', event.target.value)} style={inputStyle}
-                           state={state}/>
+      <td>
+        <FormNumberInput
+          value={renderedX}
+          onChange={event => onUpdate('x', event.target.value)}
+          style={inputStyle}
+          state={state}
+          configs={{precision: 2}}
+          {...rest}
+        />
       </td>
     </tr>
     <tr>
       <td style={firstTdStyle}>Y:</td>
-      <td><FormNumberInput value={renderedY} onChange={event => onUpdate('y', event.target.value)} style={inputStyle}
-                           state={state}/>
+      <td>
+        <FormNumberInput
+          value={renderedY}
+          onChange={event => onUpdate('y', event.target.value)}
+          style={inputStyle}
+          state={state}
+          configs={{precision: 2}}
+          {...rest}
+        />
       </td>
     </tr>
     <tr>
-      <td style={firstTdStyle}>{translator.t("Rotation")}:</td>
-      <td><FormNumberInput value={renderedR} onChange={event => onUpdate('rotation', event.target.value)}
-                           style={inputStyle} state={state}/></td>
+      <td style={firstTdStyle}>{translator.t('Rotation')}:</td>
+      <td>
+        <FormNumberInput
+          value={renderedR}
+          onChange={event => onUpdate('rotation', event.target.value)}
+          style={inputStyle}
+          state={state}
+          configs={{precision: 2}}
+          {...rest}
+        />
+      </td>
     </tr>
     </tbody>
   </table>;

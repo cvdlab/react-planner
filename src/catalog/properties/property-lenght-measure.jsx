@@ -14,11 +14,12 @@ const firstTdStyle = {width: '6em'};
 const secondTdStyle = {padding: 0};
 const unitContainerStyle = {width: '5em'};
 
-export default function PropertyLengthMeasure({value, onUpdate, configs, sourceElement, internalState, state}, {catalog}) {
+export default function PropertyLengthMeasure({value, onUpdate, onValid, configs, sourceElement, internalState, state}, {catalog}) {
 
-  let length = value.has('length') ? value.get('length') : 0;
-  let _length = value.has('_length') ? value.get('_length') : length;
-  let _unit = value.has('_unit') ? value.get('_unit') : UNIT_CENTIMETER;
+  let length = value.get('length') || 0;
+  let _length = value.get('_length') || length;
+  let _unit = value.get('_unit') || UNIT_CENTIMETER;
+  let { hook, label, ...configRest} = configs;
 
   let update = (lengthInput, unitInput) => {
 
@@ -29,8 +30,8 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
       _unit: unitInput
     });
 
-    if (configs.hook) {
-      return configs.hook(merged, sourceElement, internalState, state).then(val => {
+    if (hook) {
+      return hook(merged, sourceElement, internalState, state).then(val => {
         return onUpdate(val);
       });
     }
@@ -42,7 +43,7 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
     <table className="PropertyLengthMeasure" style={propertyContainerStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
+        <td style={firstTdStyle}><FormLabel>{label}</FormLabel></td>
         <td style={secondTdStyle}>
           <table style={tableStyle}>
             <tbody>
@@ -51,11 +52,12 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
                 <FormNumberInput
                   value={_length}
                   onChange={event => update(event.target.value, _unit)}
-                  min={configs.min} max={configs.max}
+                  onValid={onValid}
+                  configs={configs}
                 />
               </td>
               <td style={unitContainerStyle}>
-                <FormSelect value={_unit} onChange={event => update(_length, event.target.value)}>
+                <FormSelect value={_unit} onChange={event => update(_length, event.target.value) }>
                   {
                     UNITS_LENGTH.map(el => <option key={el} value={el}>{el}</option>)
                   }
@@ -75,6 +77,7 @@ export default function PropertyLengthMeasure({value, onUpdate, configs, sourceE
 PropertyLengthMeasure.propTypes = {
   value: PropTypes.instanceOf(Map).isRequired,
   onUpdate: PropTypes.func.isRequired,
+  onValid: PropTypes.func,
   configs: PropTypes.object.isRequired,
   sourceElement: PropTypes.object,
   internalState: PropTypes.object,
