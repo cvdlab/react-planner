@@ -313,13 +313,9 @@ function opSetProperties(layer, prototype, ID, properties) {
 }
 
 function opUpdateProperties(layer, prototype, ID, properties) {
-  let newProp = fromJS(properties);
-  newProp.forEach( ( v, k ) =>
-  {
-    if( layer.getIn([prototype, ID, 'properties', k]) )
-    {
-      layer = layer.setIn([prototype, ID, 'properties', k], v);
-    }
+  fromJS(properties).forEach( ( v, k ) => {
+    if( layer.hasIn([prototype, ID, 'properties', k]) )
+      layer.mergeIn([prototype, ID, 'properties', k], v);
   });
 }
 
