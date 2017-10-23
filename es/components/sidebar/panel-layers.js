@@ -57,7 +57,7 @@ var firstTdStyle = { width: '6em' };
 var buttonLayerStyle = { display: 'table-cell' };
 var newLayerLableStyle = { margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center' };
 var newLayerLableHoverStyle = _extends({}, newLayerLableStyle, styleHoverColor);
-var layerInputTableStyle = { width: '100%', borderSpacing: "2px 0", padding: '5px 15px' };
+var layerInputTableStyle = { width: '100%', borderSpacing: '2px 0', padding: '5px 15px' };
 var inputTableButtonStyle = { float: 'right', marginTop: '0.5em', borderSpacing: '0' };
 
 var PanelLayers = function (_Component) {
@@ -257,7 +257,7 @@ var PanelLayers = function (_Component) {
               React.createElement(
                 'td',
                 { style: firstTdStyle },
-                this.context.translator.t("name"),
+                this.context.translator.t('Name'),
                 ':'
               ),
               React.createElement(
@@ -277,7 +277,7 @@ var PanelLayers = function (_Component) {
               React.createElement(
                 'td',
                 { style: firstTdStyle },
-                this.context.translator.t("opacity"),
+                this.context.translator.t('opacity'),
                 ':'
               ),
               React.createElement(
@@ -299,7 +299,7 @@ var PanelLayers = function (_Component) {
               React.createElement(
                 'td',
                 { style: firstTdStyle },
-                this.context.translator.t("altitude"),
+                this.context.translator.t('altitude'),
                 ':'
               ),
               React.createElement(
@@ -319,7 +319,7 @@ var PanelLayers = function (_Component) {
               React.createElement(
                 'td',
                 { style: firstTdStyle },
-                this.context.translator.t("order"),
+                this.context.translator.t('order'),
                 ':'
               ),
               React.createElement(
@@ -356,7 +356,7 @@ var PanelLayers = function (_Component) {
                           { size: 'small', onClick: function onClick(e) {
                               _this2.resetLayerMod(e);
                             } },
-                          this.context.translator.t("Reset")
+                          this.context.translator.t('Reset')
                         )
                       ),
                       React.createElement(
@@ -367,7 +367,7 @@ var PanelLayers = function (_Component) {
                           { size: 'small', onClick: function onClick(e) {
                               _this2.updateLayer(e, _this2.state.editingLayer);
                             } },
-                          this.context.translator.t("Save")
+                          this.context.translator.t('Save')
                         )
                       )
                     )

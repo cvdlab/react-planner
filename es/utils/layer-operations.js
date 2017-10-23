@@ -40,7 +40,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog) {
 
     line = catalog.factoryElement(type, {
       id: lineID,
-      name: NameGenerator.generateName('lines', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('lines', catalog.getIn(['elements', type, 'info', 'title'])),
       vertices: new List([v0.id, v1.id]),
       type: type
     }, properties);
@@ -231,7 +231,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
 
       var intersection = Geometry.intersectionFromTwoLineSegment({ x: x0, y: y0 }, { x: x1, y: y1 }, v0, v1);
 
-      if (intersection.type === "colinear") {
+      if (intersection.type === 'colinear') {
         if (!oldHoles) {
           oldHoles = [];
         }
@@ -260,7 +260,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
         points.push(v0, v1);
       }
 
-      if (intersection.type === "intersecting" && !hasCommonEndpoint) {
+      if (intersection.type === 'intersecting' && !hasCommonEndpoint) {
         splitLine(layer, line.id, intersection.point.x, intersection.point.y, catalog);
         points.push(intersection.point);
       }
@@ -302,11 +302,8 @@ export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
     return related.delete(index);
   });
 
-  if (vertex.areas.size + vertex.lines.size === 0) {
-    layer = layer.deleteIn(['vertices', vertex.id]);
-  } else {
-    layer = layer.setIn(['vertices', vertex.id], vertex);
-  }
+  layer = vertex.areas.size || vertex.lines.size ? layer.setIn(['vertices', vertex.id], vertex) : layer.deleteIn(['vertices', vertex.id]);
+
   return { layer: layer, vertex: vertex };
 }
 
@@ -316,9 +313,7 @@ export function mergeEqualsVertices(layer, vertexID) {
   var vertex = layer.getIn(['vertices', vertexID]);
 
   var doubleVertices = layer.vertices.filter(function (v) {
-    return v.id !== vertexID;
-  }).filter(function (v) {
-    return Geometry.samePoints(vertex, v);
+    return v.id !== vertexID && Geometry.samePoints(vertex, v);
   });
 
   if (doubleVertices.isEmpty()) return layer;
@@ -398,11 +393,8 @@ function opSetProperties(layer, prototype, ID, properties) {
 }
 
 function opUpdateProperties(layer, prototype, ID, properties) {
-  var newProp = fromJS(properties);
-  newProp.forEach(function (v, k) {
-    if (layer.getIn([prototype, ID, 'properties', k])) {
-      layer = layer.setIn([prototype, ID, 'properties', k], v);
-    }
+  fromJS(properties).forEach(function (v, k) {
+    if (layer.hasIn([prototype, ID, 'properties', k])) layer.mergeIn([prototype, ID, 'properties', k], v);
   });
 }
 
@@ -522,23 +514,16 @@ export function addArea(layer, type, verticesCoords, catalog) {
   layer = layer.withMutations(function (layer) {
     var areaID = IDBroker.acquireID();
 
-    var vertices = [];
-    verticesCoords.forEach(function (_ref8) {
-      var x = _ref8.x,
-          y = _ref8.y;
-
-      var _addVertex4 = addVertex(layer, x, y, 'areas', areaID),
-          vertex = _addVertex4.vertex;
-
-      vertices.push(vertex.id);
+    var vertices = verticesCoords.map(function (v) {
+      return addVertex(layer, v.x, v.y, 'areas', areaID).vertex.id;
     });
 
     area = catalog.factoryElement(type, {
       id: areaID,
-      name: NameGenerator.generateName('areas', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('areas', catalog.getIn(['elements', type, 'info', 'title'])),
       type: type,
-      prototype: "areas",
-      vertices: new List(vertices)
+      prototype: 'areas',
+      vertices: vertices
     });
 
     layer.setIn(['areas', areaID], area);
@@ -594,8 +579,8 @@ function ContainsPoint(polygon, pointX, pointY) {
     ay = by;
     bx = polygon[2 * i] - pointX;
     by = polygon[2 * i + 1] - pointY;
-    if (ay < 0 && by < 0) continue; // both "up" or both "down"
-    if (ay > 0 && by > 0) continue; // both "up" or both "down"
+    if (ay < 0 && by < 0) continue; // both 'up' or both 'down'
+    if (ay > 0 && by > 0) continue; // both 'up' or both 'down'
     if (ax < 0 && bx < 0) continue; // both points on the left
 
     if (ay === by && Math.min(ax, bx) < 0) return true;
@@ -634,25 +619,17 @@ export function detectAndUpdateAreas(layer, catalog) {
 
   var innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
 
-  var innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex).map(function (cycle) {
-    return new List(cycle.map(function (vertexIndex) {
+  var innerCyclesByVerticesID = innerCyclesByVerticesArrayIndex.map(function (cycle) {
+    return cycle.map(function (vertexIndex) {
       return verticesArrayIndex_to_vertexID[vertexIndex];
-    }));
+    });
   });
 
   // All area vertices should be ordered in counterclockwise order
-  innerCyclesByVerticesID = innerCyclesByVerticesID.withMutations(function (innerCyclesByVerticesID) {
-    innerCyclesByVerticesID.forEach(function (innerCycle, index) {
-      var innerCycleWithCoords = innerCycle.map(function (vertexID) {
-        return new Map({
-          x: layer.vertices.get(vertexID).x,
-          y: layer.vertices.get(vertexID).y
-        });
-      });
-      if (isClockWiseOrder(innerCycleWithCoords)) {
-        innerCyclesByVerticesID.set(index, innerCyclesByVerticesID.get(index).reverse());
-      }
-    });
+  innerCyclesByVerticesID = innerCyclesByVerticesID.map(function (area) {
+    return isClockWiseOrder(area.map(function (vertexID) {
+      return layer.vertices.get(vertexID);
+    })) ? area.reverse() : area;
   });
 
   var areaIDs = [];
@@ -688,13 +665,11 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     // Build a relationship between areas and their coordinates
-    var verticesCoordsForArea = areaIDs.map(function (areaID) {
-      return {
-        id: areaID,
-        vertices: layer.areas.get(areaID).vertices.map(function (vertexID) {
-          return new List([layer.vertices.get(vertexID).x, layer.vertices.get(vertexID).y]);
-        })
-      };
+    var verticesCoordsForArea = areaIDs.map(function (id) {
+      var vertices = layer.areas.get(id).vertices.map(function (vertexID) {
+        return layer.vertices.get(vertexID);
+      });
+      return { id: id, vertices: vertices };
     });
 
     // Find all holes for an area
@@ -749,7 +724,7 @@ export function addHole(layer, type, lineID, offset, catalog) {
 
     hole = catalog.factoryElement(type, {
       id: holeID,
-      name: NameGenerator.generateName('holes', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('holes', catalog.getIn(['elements', type, 'info', 'title'])),
       type: type,
       offset: offset,
       line: lineID
@@ -789,7 +764,7 @@ export function addItem(layer, type, x, y, width, height, rotation, catalog) {
 
     item = catalog.factoryElement(type, {
       id: itemID,
-      name: NameGenerator.generateName('items', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('items', catalog.getIn(['elements', type, 'info', 'title'])),
       type: type,
       height: height,
       width: width,
