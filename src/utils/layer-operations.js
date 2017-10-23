@@ -236,11 +236,11 @@ export function removeVertex(layer, vertexID, relatedPrototype, relatedID) {
     return related.delete(index);
   });
 
-  if (vertex.areas.size + vertex.lines.size === 0) {
-    layer = layer.deleteIn(['vertices', vertex.id]);
-  } else {
-    layer = layer.setIn(['vertices', vertex.id], vertex);
-  }
+  layer =
+    vertex.areas.size || vertex.lines.size ?
+    layer.setIn(['vertices', vertex.id], vertex) :
+    layer.deleteIn(['vertices', vertex.id]);
+
   return {layer, vertex};
 }
 
@@ -250,8 +250,7 @@ export function mergeEqualsVertices(layer, vertexID) {
   let vertex = layer.getIn(['vertices', vertexID]);
 
   let doubleVertices = layer.vertices
-    .filter(v => v.id !== vertexID)
-    .filter(v => Geometry.samePoints(vertex, v));
+    .filter(v => v.id !== vertexID && Geometry.samePoints(vertex, v));
 
   if (doubleVertices.isEmpty()) return layer;
 
@@ -410,18 +409,14 @@ export function addArea(layer, type, verticesCoords, catalog) {
   layer = layer.withMutations(layer => {
     let areaID = IDBroker.acquireID();
 
-    let vertices = [];
-    verticesCoords.forEach(({x, y}) => {
-      let {vertex} = addVertex(layer, x, y, 'areas', areaID);
-      vertices.push(vertex.id);
-    });
+    let vertices = verticesCoords.map( ( v ) => addVertex(layer, v.x, v.y, 'areas', areaID).vertex.id );
 
     area = catalog.factoryElement(type, {
       id: areaID,
       name: NameGenerator.generateName('areas', catalog.getIn(['elements', type, 'info', 'title'])),
       type,
       prototype: 'areas',
-      vertices: new List(vertices)
+      vertices
     });
 
     layer.setIn(['areas', areaID], area);
@@ -508,23 +503,13 @@ export function detectAndUpdateAreas(layer, catalog) {
 
   let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
 
-  let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
-    .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
+  let innerCyclesByVerticesID = innerCyclesByVerticesArrayIndex
+    .map(cycle => cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex]));
 
   // All area vertices should be ordered in counterclockwise order
-  innerCyclesByVerticesID = innerCyclesByVerticesID.withMutations(innerCyclesByVerticesID => {
-    innerCyclesByVerticesID.forEach((innerCycle, index) => {
-      let innerCycleWithCoords = innerCycle.map(vertexID => {
-        return new Map({
-          x: layer.vertices.get(vertexID).x,
-          y: layer.vertices.get(vertexID).y
-        });
-      });
-      if (isClockWiseOrder(innerCycleWithCoords)) {
-        innerCyclesByVerticesID.set(index, innerCyclesByVerticesID.get(index).reverse());
-      }
-    });
-  });
+  innerCyclesByVerticesID = innerCyclesByVerticesID.map( ( area ) =>
+    isClockWiseOrder( area.map(vertexID => layer.vertices.get(vertexID) ) ) ? area.reverse() : area
+  );
 
   let areaIDs = [];
 
@@ -550,13 +535,9 @@ export function detectAndUpdateAreas(layer, catalog) {
     });
 
     // Build a relationship between areas and their coordinates
-    let verticesCoordsForArea = areaIDs.map(areaID => {
-      return {
-        id: areaID,
-        vertices: layer.areas.get(areaID).vertices.map(vertexID => {
-          return new List([layer.vertices.get(vertexID).x, layer.vertices.get(vertexID).y]);
-        })
-      }
+    let verticesCoordsForArea = areaIDs.map(id => {
+      let vertices = layer.areas.get(id).vertices.map(vertexID => layer.vertices.get(vertexID));
+      return { id, vertices };
     });
 
     // Find all holes for an area

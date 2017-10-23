@@ -1,9 +1,10 @@
 import Graph from './graph';
 import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 import graphCycles from './graph-cycles';
+import {List} from 'immutable';
 
 export default function calculateInnerCycles(verticesArray, edgesArray) {
-  let innerCycles = [];
+  let innerCycles = new List();
 
   let graph = new Graph(verticesArray.length);
   edgesArray.forEach(line => {
@@ -24,7 +25,7 @@ export default function calculateInnerCycles(verticesArray, edgesArray) {
   let cycles = graphCycles(verticesArray, edges);
   cycles.v_cycles.forEach(cycle => {
     cycle.shift();
-    innerCycles.push(cycle);
+    innerCycles = innerCycles.push(cycle);
   });
 
   return innerCycles;
@@ -35,14 +36,12 @@ export function isClockWiseOrder(innerCycleWithCoords) {
 
   let i = 0;
   let twiceEnclosedArea = 0;
+  let size = innerCycleWithCoords.size;
 
-  for (i = 0; i < innerCycleWithCoords.size; i++) {
+  for (i = 0; i < size; i++) {
 
-    let x1 = innerCycleWithCoords.get(i).get('x');
-    let y1 = innerCycleWithCoords.get(i).get('y');
-
-    let x2 = innerCycleWithCoords.get((i + 1) % innerCycleWithCoords.size).get('x');
-    let y2 = innerCycleWithCoords.get((i + 1) % innerCycleWithCoords.size).get('y');
+    let { x: x1, y: y1 } = innerCycleWithCoords.get(i);
+    let { x: x2, y: y2 } = innerCycleWithCoords.get((i + 1) % size);
 
     twiceEnclosedArea += (x2 - x1) * (y2 + y1);
   }
