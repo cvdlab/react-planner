@@ -20,7 +20,7 @@ export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
 
     line = catalog.factoryElement(type, {
       id: lineID,
-      name: NameGenerator.generateName('lines', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('lines', catalog.getIn(['elements', type, 'info', 'title'])),
       vertices: new List([v0.id, v1.id]),
       type
     }, properties);
@@ -166,7 +166,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
         v0, v1
       );
 
-      if (intersection.type === "colinear") {
+      if (intersection.type === 'colinear') {
         if (!oldHoles) {
           oldHoles = [];
         }
@@ -197,7 +197,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
         points.push(v0, v1);
       }
 
-      if (intersection.type === "intersecting" && (!hasCommonEndpoint)) {
+      if (intersection.type === 'intersecting' && (!hasCommonEndpoint)) {
         splitLine(layer, line.id, intersection.point.x, intersection.point.y, catalog);
         points.push(intersection.point);
       }
@@ -418,9 +418,9 @@ export function addArea(layer, type, verticesCoords, catalog) {
 
     area = catalog.factoryElement(type, {
       id: areaID,
-      name: NameGenerator.generateName('areas', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('areas', catalog.getIn(['elements', type, 'info', 'title'])),
       type,
-      prototype: "areas",
+      prototype: 'areas',
       vertices: new List(vertices)
     });
 
@@ -472,8 +472,8 @@ function ContainsPoint(polygon, pointX, pointY) {
     ay = by;
     bx = polygon[2 * i] - pointX;
     by = polygon[2 * i + 1] - pointY;
-    if (ay < 0 && by < 0) continue;  // both "up" or both "down"
-    if (ay > 0 && by > 0) continue;  // both "up" or both "down"
+    if (ay < 0 && by < 0) continue;  // both 'up' or both 'down'
+    if (ay > 0 && by > 0) continue;  // both 'up' or both 'down'
     if (ax < 0 && bx < 0) continue;   // both points on the left
 
     if (ay === by && Math.min(ax, bx) < 0) return true;
@@ -610,7 +610,7 @@ export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
 
     hole = catalog.factoryElement(type, {
       id: holeID,
-      name: NameGenerator.generateName('holes', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('holes', catalog.getIn(['elements', type, 'info', 'title'])),
       type,
       offset,
       line: lineID
@@ -646,7 +646,7 @@ export function addItem(layer, type, x, y, width, height, rotation, catalog) {
 
     item = catalog.factoryElement(type, {
       id: itemID,
-      name: NameGenerator.generateName('items', catalog.get('elements').get(type).get('info').get('title')),
+      name: NameGenerator.generateName('items', catalog.getIn(['elements', type, 'info', 'title'])),
       type,
       height,
       width,
