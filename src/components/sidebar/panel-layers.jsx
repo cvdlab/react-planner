@@ -50,7 +50,7 @@ const firstTdStyle = {width: '6em'};
 const buttonLayerStyle = {display: 'table-cell'};
 const newLayerLableStyle = {margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center'};
 const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
-const layerInputTableStyle = {width: '100%', borderSpacing: "2px 0", padding: '5px 15px'};
+const layerInputTableStyle = {width: '100%', borderSpacing: '2px 0', padding: '5px 15px'};
 const inputTableButtonStyle = {float: 'right', marginTop: '0.5em', borderSpacing: '0'};
 
 export default class PanelLayers extends Component {
@@ -191,7 +191,7 @@ export default class PanelLayers extends Component {
             <table style={layerInputTableStyle}>
               <tbody>
               <tr style={{marginTop: '1em'}}>
-                <td style={firstTdStyle}>{this.context.translator.t("name")}:</td>
+                <td style={firstTdStyle}>{this.context.translator.t('Name')}:</td>
                 <td>
                   <FormTextInput
                     value={this.state.editingLayer.get('name')}
@@ -200,7 +200,7 @@ export default class PanelLayers extends Component {
                 </td>
               </tr>
               <tr>
-                <td style={firstTdStyle}>{this.context.translator.t("opacity")}:</td>
+                <td style={firstTdStyle}>{this.context.translator.t('opacity')}:</td>
                 <td>
                   <FormSlider
                     min={0}
@@ -211,7 +211,7 @@ export default class PanelLayers extends Component {
                 </td>
               </tr>
               <tr>
-                <td style={firstTdStyle}>{this.context.translator.t("altitude")}:</td>
+                <td style={firstTdStyle}>{this.context.translator.t('altitude')}:</td>
                 <td>
                   <FormNumberInput
                     value={this.state.editingLayer.get('altitude')}
@@ -220,7 +220,7 @@ export default class PanelLayers extends Component {
                 </td>
               </tr>
               <tr>
-                <td style={firstTdStyle}>{this.context.translator.t("order")}:</td>
+                <td style={firstTdStyle}>{this.context.translator.t('order')}:</td>
                 <td>
                   <FormNumberInput
                     value={this.state.editingLayer.get('order')}
@@ -235,10 +235,10 @@ export default class PanelLayers extends Component {
                     <tr>
                       <td><CancelButton size="small" onClick={ e => {
                         this.resetLayerMod(e);
-                      } }>{this.context.translator.t("Reset")}</CancelButton></td>
+                      } }>{this.context.translator.t('Reset')}</CancelButton></td>
                       <td><FormSubmitButton size="small" onClick={ e => {
                         this.updateLayer(e, this.state.editingLayer);
-                      } }>{this.context.translator.t("Save")}</FormSubmitButton></td>
+                      } }>{this.context.translator.t('Save')}</FormSubmitButton></td>
                     </tr>
                     </tbody>
                   </table>
