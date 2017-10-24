@@ -28,10 +28,7 @@ export default function PanelElementEditor({state}, {projectActions, translator}
     </Panel>;
 
   let layerRenderer = layer => Seq()
-    .concat(layer.lines)
-    .concat(layer.holes)
-    .concat(layer.areas)
-    .concat(layer.items)
+    .concat(layer.lines, layer.holes, layer.areas, layer.items)
     .filter(element => element.selected)
     .map(element => componentRenderer(element, layer))
     .valueSeq();
