@@ -127,7 +127,7 @@ export default class ElementEditor extends Component {
 
   updateAttribute(attributeName, value) {
 
-    let {propertiesFormData, attributesFormData} = this.state;
+    let {attributesFormData} = this.state;
 
     switch (this.props.element.prototype) {
       case 'items': {
@@ -284,40 +284,44 @@ export default class ElementEditor extends Component {
     }
 
     this.setState({attributesFormData});
-    this.save(propertiesFormData, attributesFormData);
+    this.save({attributesFormData});
   }
 
   updateProperty(propertyName, value) {
-    let {state: {propertiesFormData, attributesFormData}} = this;
+    let {state: {propertiesFormData}} = this;
     propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
     this.setState({propertiesFormData});
-    this.save(propertiesFormData, attributesFormData);
+    this.save({propertiesFormData});
   }
 
   reset() {
     this.setState({propertiesFormData: this.initPropData(this.props.element, this.props.layer, this.props.state)});
   }
 
-  save(propertiesFormData, attributesFormData) {
+  save({propertiesFormData, attributesFormData}) {
 
-    let properties = propertiesFormData.map(data => {
-      return data.get('currentValue');
-    });
+    if( propertiesFormData ) {
+      let properties = propertiesFormData.map(data => {
+        return data.get('currentValue');
+      });
 
-    this.context.projectActions.setProperties(properties);
+      this.context.projectActions.setProperties(properties);
+    }
 
-    switch (this.props.element.prototype) {
-      case 'items': {
-        this.context.projectActions.setItemsAttributes(attributesFormData);
-        break;
-      }
-      case 'lines': {
-        this.context.projectActions.setLinesAttributes(attributesFormData);
-        break;
-      }
-      case 'holes': {
-        this.context.projectActions.setHolesAttributes(attributesFormData);
-        break;
+    if( attributesFormData ) {
+      switch (this.props.element.prototype) {
+        case 'items': {
+          this.context.projectActions.setItemsAttributes(attributesFormData);
+          break;
+        }
+        case 'lines': {
+          this.context.projectActions.setLinesAttributes(attributesFormData);
+          break;
+        }
+        case 'holes': {
+          this.context.projectActions.setHolesAttributes(attributesFormData);
+          break;
+        }
       }
     }
   }
