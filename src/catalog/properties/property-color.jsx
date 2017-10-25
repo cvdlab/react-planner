@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FormLabel from '../../components/style/form-label'
-import FormColorInput from '../../components/style/form-color-input';
-
-const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
-const firstTdStyle = {width: '6em'};
+import { FormLabel, FormColorInput } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
 export default function PropertyColor({value, onUpdate, configs, sourceElement, internalState, state}) {
 
@@ -20,10 +17,10 @@ export default function PropertyColor({value, onUpdate, configs, sourceElement, 
   };
 
   return (
-    <table className="PropertyColor" style={tableStyle}>
+    <table className="PropertyColor" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}>
+        <td style={PropertyStyle.firstTdStyle}>
           <FormLabel>{configs.label}</FormLabel>
         </td>
         <td>

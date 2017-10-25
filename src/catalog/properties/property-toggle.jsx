@@ -1,10 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FormLabel from '../../components/style/form-label'
-import Button from '../../components/style/button';
+import { FormLabel, Button } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
-const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
-const firstTdStyle = {width: '6em'};
 
 export default function PropertyToggle({value, onUpdate, configs, sourceElement, internalState, state}) {
 
@@ -20,10 +18,10 @@ export default function PropertyToggle({value, onUpdate, configs, sourceElement,
   };
 
   return (
-    <table className="PropertyToggle" style={tableStyle}>
+    <table className="PropertyToggle" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
+        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
           <Button onClick={e => update(!value)} size="small">{configs.actionName}</Button>
         </td>

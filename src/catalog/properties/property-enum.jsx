@@ -1,11 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Seq} from 'immutable';
-import FormSelect from '../../components/style/form-select';
-import FormLabel from '../../components/style/form-label';
-
-const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
-const firstTdStyle = {width: '6em'};
+import { FormLabel, FormSelect } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
 export default function PropertyEnum({value, onUpdate, configs, sourceElement, internalState, state}) {
 
@@ -21,10 +18,10 @@ export default function PropertyEnum({value, onUpdate, configs, sourceElement, i
   };
 
   return (
-    <table className="PropertyEnum" style={tableStyle}>
+    <table className="PropertyEnum" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
+        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
           <FormSelect value={value} onChange={event => update(event.target.value)}>
             {Seq(configs.values)

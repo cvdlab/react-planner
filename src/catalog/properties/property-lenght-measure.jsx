@@ -2,15 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {UNITS_LENGTH, UNIT_CENTIMETER} from './../../constants';
 import convert from 'convert-units';
-import FormLabel from '../../components/style/form-label'
-import FormNumberInput from '../../components/style/form-number-input';
-import FormSelect from '../../components/style/form-select';
+import { FormLabel, FormNumberInput, FormSelect } from '../../components/style/export';
 import {Map} from 'immutable';
 import {toFixedFloat} from '../../utils/math';
+import PropertyStyle from './shared-property-style';
 
-const propertyContainerStyle = {borderSpacing: "2px 0", marginBottom: 2};
-const tableStyle = {borderCollapse: 'collapse'};
-const firstTdStyle = {width: '6em'};
+const internalTableStyle = {borderCollapse: 'collapse'};
 const secondTdStyle = {padding: 0};
 const unitContainerStyle = {width: '5em'};
 
@@ -40,12 +37,12 @@ export default function PropertyLengthMeasure({value, onUpdate, onValid, configs
   };
 
   return (
-    <table className="PropertyLengthMeasure" style={propertyContainerStyle}>
+    <table className="PropertyLengthMeasure" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}><FormLabel>{label}</FormLabel></td>
+        <td style={PropertyStyle.firstTdStyle}><FormLabel>{label}</FormLabel></td>
         <td style={secondTdStyle}>
-          <table style={tableStyle}>
+          <table style={internalTableStyle}>
             <tbody>
             <tr>
               <td>

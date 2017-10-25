@@ -1,10 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FormLabel from '../../components/style/form-label'
-import FormNumberInput from '../../components/style/form-number-input';
-
-const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
-const firstTdStyle = {width: '6em'};
+import { FormLabel, FormNumberInput } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
 export default function PropertyNumber({value, onUpdate, onValid, configs, sourceElement, internalState, state}) {
 
@@ -25,10 +22,10 @@ export default function PropertyNumber({value, onUpdate, onValid, configs, sourc
   };
 
   return (
-    <table className="PropertyNumber" style={tableStyle}>
+    <table className="PropertyNumber" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
+        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
           <FormNumberInput
             value={value}

@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FormLabel from '../../components/style/form-label'
-import FormTextInput from '../../components/style/form-text-input';
+import { FormLabel, FormTextInput } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
 const tableStyle = {width: "100%", borderSpacing: "2px 0", marginBottom: "2px"};
-const firstTdStyle = {width: '6em'};
+const firstTdStyle = {width: '6em', textTransform:'capitalize'};
 
 export default function PropertyString({value, onUpdate, configs, sourceElement, internalState, state}) {
 
@@ -20,10 +20,10 @@ export default function PropertyString({value, onUpdate, configs, sourceElement,
   };
 
   return (
-    <table className="PropertyString" style={tableStyle}>
+    <table className="PropertyString" style={PropertyStyle.tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
+        <td style={PropertyStyle.firstTdStyle}><FormLabel>{configs.label}</FormLabel></td>
         <td>
           <FormTextInput
             value={value}
