@@ -22,7 +22,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
   return <table style={tableStyle}>
     <tbody>
     <tr>
-      <td style={firstTdStyle}>Nome:</td>
+      <td style={firstTdStyle}>{translator.t('Name')}</td>
       <td>
         <FormTextInput
           value={name}
@@ -32,7 +32,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
       </td>
     </tr>
     <tr>
-      <td style={firstTdStyle}>X:</td>
+      <td style={firstTdStyle}>X</td>
       <td>
         <FormNumberInput
           value={renderedX}
@@ -45,7 +45,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
       </td>
     </tr>
     <tr>
-      <td style={firstTdStyle}>Y:</td>
+      <td style={firstTdStyle}>Y</td>
       <td>
         <FormNumberInput
           value={renderedY}
@@ -58,7 +58,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
       </td>
     </tr>
     <tr>
-      <td style={firstTdStyle}>{translator.t('Rotation')}:</td>
+      <td style={firstTdStyle}>{translator.t('Rotation')}</td>
       <td>
         <FormNumberInput
           value={renderedR}

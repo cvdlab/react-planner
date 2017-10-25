@@ -18,7 +18,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
     <table style={tableStyle}>
       <tbody>
       <tr>
-        <td style={firstTdStyle}>{ translator.t('Name')}</td>
+        <td style={firstTdStyle}>{translator.t('Name')}</td>
         <td>
           <FormTextInput
             value={name}
