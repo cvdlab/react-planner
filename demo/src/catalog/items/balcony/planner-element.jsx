@@ -77,11 +77,6 @@ export default {
     image: require('./balcony.png')
   },
   properties: {
-    patternColor: {
-      label: 'pattern color',
-      type: 'color',
-      defaultValue: '#f5f4f4'
-    },
     width: {
       label: 'width',
       type: 'length-measure',
@@ -113,6 +108,11 @@ export default {
         length: 0,
         unit: 'cm'
       }
+    },
+    patternColor: {
+      label: '2D color',
+      type: 'color',
+      defaultValue: '#f5f4f4'
     }
   },
 
