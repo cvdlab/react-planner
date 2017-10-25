@@ -1,10 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import FormLabel from '../../components/style/form-label';
-import FormTextInput from '../../components/style/form-text-input';
+import { FormLabel, FormTextInput } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
 var tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
-var firstTdStyle = { width: '6em' };
+var firstTdStyle = { width: '6em', textTransform: 'capitalize' };
 
 export default function PropertyString(_ref) {
   var value = _ref.value,
@@ -28,7 +28,7 @@ export default function PropertyString(_ref) {
 
   return React.createElement(
     'table',
-    { className: 'PropertyString', style: tableStyle },
+    { className: 'PropertyString', style: PropertyStyle.tableStyle },
     React.createElement(
       'tbody',
       null,
@@ -37,7 +37,7 @@ export default function PropertyString(_ref) {
         null,
         React.createElement(
           'td',
-          { style: firstTdStyle },
+          { style: PropertyStyle.firstTdStyle },
           React.createElement(
             FormLabel,
             null,

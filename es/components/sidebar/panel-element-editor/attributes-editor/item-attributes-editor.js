@@ -43,7 +43,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          'Nome:'
+          translator.t('Name')
         ),
         React.createElement(
           'td',
@@ -63,7 +63,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          'X:'
+          'X'
         ),
         React.createElement(
           'td',
@@ -85,7 +85,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          'Y:'
+          'Y'
         ),
         React.createElement(
           'td',
@@ -107,8 +107,7 @@ export default function ItemAttributesEditor(_ref, _ref2) {
         React.createElement(
           'td',
           { style: firstTdStyle },
-          translator.t('Rotation'),
-          ':'
+          translator.t('Rotation')
         ),
         React.createElement(
           'td',

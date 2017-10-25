@@ -158,9 +158,7 @@ var ElementEditor = function (_Component) {
     value: function updateAttribute(attributeName, value) {
       var _this2 = this;
 
-      var _state = this.state,
-          propertiesFormData = _state.propertiesFormData,
-          attributesFormData = _state.attributesFormData;
+      var attributesFormData = this.state.attributesFormData;
 
 
       switch (this.props.element.prototype) {
@@ -328,18 +326,16 @@ var ElementEditor = function (_Component) {
       }
 
       this.setState({ attributesFormData: attributesFormData });
-      this.save(propertiesFormData, attributesFormData);
+      this.save({ attributesFormData: attributesFormData });
     }
   }, {
     key: 'updateProperty',
     value: function updateProperty(propertyName, value) {
-      var _state2 = this.state,
-          propertiesFormData = _state2.propertiesFormData,
-          attributesFormData = _state2.attributesFormData;
+      var propertiesFormData = this.state.propertiesFormData;
 
       propertiesFormData = propertiesFormData.setIn([propertyName, 'currentValue'], value);
       this.setState({ propertiesFormData: propertiesFormData });
-      this.save(propertiesFormData, attributesFormData);
+      this.save({ propertiesFormData: propertiesFormData });
     }
   }, {
     key: 'reset',
@@ -348,30 +344,37 @@ var ElementEditor = function (_Component) {
     }
   }, {
     key: 'save',
-    value: function save(propertiesFormData, attributesFormData) {
+    value: function save(_ref) {
+      var propertiesFormData = _ref.propertiesFormData,
+          attributesFormData = _ref.attributesFormData;
 
-      var properties = propertiesFormData.map(function (data) {
-        return data.get('currentValue');
-      });
 
-      this.context.projectActions.setProperties(properties);
+      if (propertiesFormData) {
+        var properties = propertiesFormData.map(function (data) {
+          return data.get('currentValue');
+        });
 
-      switch (this.props.element.prototype) {
-        case 'items':
-          {
-            this.context.projectActions.setItemsAttributes(attributesFormData);
-            break;
-          }
-        case 'lines':
-          {
-            this.context.projectActions.setLinesAttributes(attributesFormData);
-            break;
-          }
-        case 'holes':
-          {
-            this.context.projectActions.setHolesAttributes(attributesFormData);
-            break;
-          }
+        this.context.projectActions.setProperties(properties);
+      }
+
+      if (attributesFormData) {
+        switch (this.props.element.prototype) {
+          case 'items':
+            {
+              this.context.projectActions.setItemsAttributes(attributesFormData);
+              break;
+            }
+          case 'lines':
+            {
+              this.context.projectActions.setLinesAttributes(attributesFormData);
+              break;
+            }
+          case 'holes':
+            {
+              this.context.projectActions.setHolesAttributes(attributesFormData);
+              break;
+            }
+        }
       }
     }
   }, {
@@ -389,9 +392,9 @@ var ElementEditor = function (_Component) {
     value: function render() {
       var _this3 = this;
 
-      var _state3 = this.state,
-          propertiesFormData = _state3.propertiesFormData,
-          attributesFormData = _state3.attributesFormData,
+      var _state = this.state,
+          propertiesFormData = _state.propertiesFormData,
+          attributesFormData = _state.attributesFormData,
           _context = this.context,
           projectActions = _context.projectActions,
           catalog = _context.catalog,
@@ -432,10 +435,10 @@ var ElementEditor = function (_Component) {
             ) : null
           )
         ),
-        propertiesFormData.entrySeq().map(function (_ref) {
-          var _ref2 = _slicedToArray(_ref, 2),
-              propertyName = _ref2[0],
-              data = _ref2[1];
+        propertiesFormData.entrySeq().map(function (_ref2) {
+          var _ref3 = _slicedToArray(_ref2, 2),
+              propertyName = _ref3[0],
+              data = _ref3[1];
 
           var currentValue = data.get('currentValue'),
               configs = data.get('configs');
@@ -460,10 +463,10 @@ var ElementEditor = function (_Component) {
     }
   }, {
     key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(_ref3) {
-      var element = _ref3.element,
-          layer = _ref3.layer,
-          state = _ref3.state;
+    value: function componentWillReceiveProps(_ref4) {
+      var element = _ref4.element,
+          layer = _ref4.layer,
+          state = _ref4.state;
       var prototype = element.prototype,
           id = element.id;
 

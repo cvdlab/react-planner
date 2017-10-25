@@ -3,11 +3,8 @@ var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = [
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Seq } from 'immutable';
-import FormSelect from '../../components/style/form-select';
-import FormLabel from '../../components/style/form-label';
-
-var tableStyle = { width: "100%", borderSpacing: "2px 0", marginBottom: "2px" };
-var firstTdStyle = { width: '6em' };
+import { FormLabel, FormSelect } from '../../components/style/export';
+import PropertyStyle from './shared-property-style';
 
 export default function PropertyEnum(_ref) {
   var value = _ref.value,
@@ -31,7 +28,7 @@ export default function PropertyEnum(_ref) {
 
   return React.createElement(
     'table',
-    { className: 'PropertyEnum', style: tableStyle },
+    { className: 'PropertyEnum', style: PropertyStyle.tableStyle },
     React.createElement(
       'tbody',
       null,
@@ -40,7 +37,7 @@ export default function PropertyEnum(_ref) {
         null,
         React.createElement(
           'td',
-          { style: firstTdStyle },
+          { style: PropertyStyle.firstTdStyle },
           React.createElement(
             FormLabel,
             null,

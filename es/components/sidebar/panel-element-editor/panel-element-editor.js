@@ -28,7 +28,7 @@ export default function PanelElementEditor(_ref, _ref2) {
   };
 
   var layerRenderer = function layerRenderer(layer) {
-    return Seq().concat(layer.lines).concat(layer.holes).concat(layer.areas).concat(layer.items).filter(function (element) {
+    return Seq().concat(layer.lines, layer.holes, layer.areas, layer.items).filter(function (element) {
       return element.selected;
     }).map(function (element) {
       return componentRenderer(element, layer);

@@ -4,15 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
 import convert from 'convert-units';
-import FormLabel from '../../components/style/form-label';
-import FormNumberInput from '../../components/style/form-number-input';
-import FormSelect from '../../components/style/form-select';
+import { FormLabel, FormNumberInput, FormSelect } from '../../components/style/export';
 import { Map } from 'immutable';
 import { toFixedFloat } from '../../utils/math';
+import PropertyStyle from './shared-property-style';
 
-var propertyContainerStyle = { borderSpacing: "2px 0", marginBottom: 2 };
-var tableStyle = { borderCollapse: 'collapse' };
-var firstTdStyle = { width: '6em' };
+var internalTableStyle = { borderCollapse: 'collapse' };
 var secondTdStyle = { padding: 0 };
 var unitContainerStyle = { width: '5em' };
 
@@ -55,7 +52,7 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
 
   return React.createElement(
     'table',
-    { className: 'PropertyLengthMeasure', style: propertyContainerStyle },
+    { className: 'PropertyLengthMeasure', style: PropertyStyle.tableStyle },
     React.createElement(
       'tbody',
       null,
@@ -64,7 +61,7 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
         null,
         React.createElement(
           'td',
-          { style: firstTdStyle },
+          { style: PropertyStyle.firstTdStyle },
           React.createElement(
             FormLabel,
             null,
@@ -76,7 +73,7 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
           { style: secondTdStyle },
           React.createElement(
             'table',
-            { style: tableStyle },
+            { style: internalTableStyle },
             React.createElement(
               'tbody',
               null,
