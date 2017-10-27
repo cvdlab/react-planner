@@ -43,5 +43,12 @@ export default {
   "Lines":"Lines",
   "Holes":"Holes",
   "Items":"Items",
-  "Areas":"Areas"
+  "Areas":"Areas",
+  "Snap to Point":"Snap to Point",
+  "Snap to Line":"Snap to Line",
+  "Snap to Segment":"Snap to Segment",
+  "Snap to Grid":"Snap to Grid",
+  "Mouse X Coordinate":"Mouse X Coordinate",
+  "Mouse Y Coordinate":"Mouse Y Coordinate",
+  "Scene Zoom Level":"Scene Zoom Level"
 }
