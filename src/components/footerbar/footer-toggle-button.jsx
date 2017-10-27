@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
 const toggleButtonStyle = {
-  width: '5em',
+  width: '5.5em',
   color: '#CCC',
   textAlign: 'center',
   cursor: 'pointer',
