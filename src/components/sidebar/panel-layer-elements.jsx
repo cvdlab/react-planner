@@ -9,6 +9,14 @@ import {
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import MdSearch from 'react-icons/lib/md/search';
+import diff from 'immutablediff';
+
+const VISIBLITY_MODE = [
+  MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
+  MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE,
+  MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE,
+  MODE_ROTATING_ITEM
+];
 
 const contentArea = {
   height: 'auto',
@@ -66,6 +74,19 @@ export default class PanelLayerElement extends Component {
     };
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if( this.state.matchString !== nextState.matchString ) return true;
+
+    let oldElements = this.state.elements;
+    let newElements = nextState.elements;
+
+    if( diff( oldElements.lines, newElements.lines ).size ) return true;
+    if( diff( oldElements.holes, newElements.holes ).size ) return true;
+    if( diff( oldElements.items, newElements.items ).size ) return true;
+
+    return false;
+  }
+
   componentWillReceiveProps( nextProps ) {
     let { scene } = nextProps.state;
     let layer = scene.layers.get(scene.selectedLayer);
@@ -119,14 +140,9 @@ export default class PanelLayerElement extends Component {
   };
 
   render() {
-    let { mode, scene } = this.props.state;
+    if (!VISIBLITY_MODE[this.props.state.mode]) return null;
 
-    if (![MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN,
-        MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
-        MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM,
-        MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE,
-        MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE].includes(mode)) return null;
-
+    let scene = this.props.state.scene;
     let layer = scene.layers.get(scene.selectedLayer);
 
     return (
