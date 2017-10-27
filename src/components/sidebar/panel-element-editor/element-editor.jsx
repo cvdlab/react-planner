@@ -50,6 +50,30 @@ export default class ElementEditor extends Component {
     this.updateAttribute = this.updateAttribute.bind(this);
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    let { attributesFormData : oldAttribute, propertiesFormData : oldProperties } = this.state;
+    let { attributesFormData : newAttribute, propertiesFormData : newProperties } = nextState;
+
+    if( diff( oldAttribute, newAttribute ).size ) return true;
+    if( diff( oldProperties, newProperties ).size ) return true;
+
+    if( diff( this.props.state.clipboardProperties, nextProps.state.clipboardProperties ).size ) return true;
+
+    return false;
+  }
+
+  componentWillReceiveProps({ element, layer, state }) {
+    let { prototype, id } = element;
+    let scene = this.props.state.get('scene');
+    let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
+    let selected = selectedLayer.getIn([prototype, id]);
+
+    if( diff( selectedLayer, layer ).size ) this.setState({
+      attributesFormData: this.initAttrData(element, layer, state),
+      propertiesFormData: this.initPropData(element, layer, state)
+    });
+  }
+
   initAttrData(element, layer, state) {
 
     element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)) : element;
@@ -135,7 +159,6 @@ export default class ElementEditor extends Component {
         break;
       }
       case 'lines': {
-        console.log('asd', attributeName);
         switch(attributeName)
         {
           case 'lineLength':
@@ -380,18 +403,6 @@ export default class ElementEditor extends Component {
 
       </div>
     )
-  }
-
-  componentWillReceiveProps({ element, layer, state }) {
-    let { prototype, id } = element;
-    let scene = this.props.state.get('scene');
-    let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
-    let selected = selectedLayer.getIn([prototype, id]);
-
-    if( diff( selectedLayer, layer ).size ) this.setState({
-      attributesFormData: this.initAttrData(element, layer, state),
-      propertiesFormData: this.initPropData(element, layer, state)
-    });
   }
 }
 
