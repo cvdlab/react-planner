@@ -48,6 +48,13 @@ export default class FooterToggleButton extends Component {
     }
   }
 
+  shouldComponentUpdate(nextProps, nextState) {
+    if( this.state.over != nextState.over ) return true;
+    if( this.state.active != nextState.active ) return true;
+
+    return false;
+  }
+
   componentWillReceiveProps(nextProps) {
     if( nextProps.toggleState != this.props.toggleState  )
       this.state.active = nextProps.toggleState;
