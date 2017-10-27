@@ -135,32 +135,7 @@ export default function Toolbar(
     </ToolbarButton>
     },
     {
-      index: 7, condition: mode3DCondition, dom: <ToolbarButton
-      active={[MODE_2D_ZOOM_IN].includes(mode)}
-      tooltip={translator.t('Zoom in')}
-      onClick={event => viewer2DActions.selectToolZoomIn()}>
-      <IconZoomPlus />
-    </ToolbarButton>
-    },
-    {
-      index: 8, condition: mode3DCondition, dom: <ToolbarButton
-      active={[MODE_2D_ZOOM_OUT].includes(mode)}
-      tooltip={translator.t('Zoom out')}
-      onClick={event => viewer2DActions.selectToolZoomOut()}>
-      <IconZoomMinus />
-    </ToolbarButton>
-    },
-    {
-      index: 9, condition: mode3DCondition, dom: <ToolbarButton
-      active={[MODE_2D_PAN].includes(mode)}
-      tooltip={translator.t('Pan')}
-      onClick={event => viewer2DActions.selectToolPan()}
-      >
-      <IconPan/>
-    </ToolbarButton>
-    },
-    {
-      index: 10, condition: true, dom: <ToolbarButton
+      index: 7, condition: true, dom: <ToolbarButton
       active={false}
       tooltip={translator.t('Undo (CTRL-Z)')}
       onClick={event => projectActions.undo()}>
@@ -168,7 +143,7 @@ export default function Toolbar(
     </ToolbarButton>
     },
     {
-      index: 11, condition: true, dom: <ToolbarButton
+      index: 8, condition: true, dom: <ToolbarButton
       active={[MODE_CONFIGURING_PROJECT].includes(mode)}
       tooltip={translator.t('Configure project')}
       onClick={event => projectActions.openProjectConfigurator()}>
