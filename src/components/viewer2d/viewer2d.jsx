@@ -232,7 +232,6 @@ export default function Viewer2D({state, width, height},
             break;
 
           case 'items':
-            //console.log( 'AAA', event, elementData );
             itemsActions.selectItem(elementData.layer, elementData.id);
             event.stopPropagation();
             break;
@@ -251,6 +250,7 @@ export default function Viewer2D({state, width, height},
 
       case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y, state.snapMask);
+        linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         event.stopPropagation();
         break;
 
