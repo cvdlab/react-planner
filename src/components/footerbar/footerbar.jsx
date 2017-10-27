@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
-import {SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK} from '../../utils/snap';
+import {SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_MASK} from '../../utils/snap';
 import {MODE_SNAPPING} from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import IconClose from 'react-icons/lib/fa/close';
@@ -75,53 +75,51 @@ export default class FooterBar extends Component {
     let warningLableStyle = warnings.length ? {color:SharedStyle.MATERIAL_COLORS[500].yellow} : {};
     let warningIconStyle = warningLableStyle;
 
+    let updateSnapMask = (val) => this.context.projectActions.toggleSnap(this.props.state.snapMask.merge(val));
+
     return (
       <div style={{...footerBarStyle, width: this.props.width, height: this.props.height}}>
 
         <If condition={MODE_SNAPPING.includes(mode)}>
           <div style={leftTextStyle}>
-            <div title="Mouse X Coordinates" style={coordStyle}>X : {x.toFixed(3)}</div>
-            <div title="Mouse Y Coordinates" style={coordStyle}>Y : {y.toFixed(3)}</div>
+            <div title={this.context.translator.t('Mouse X Coordinate')} style={coordStyle}>X : {x.toFixed(3)}</div>
+            <div title={this.context.translator.t('Mouse Y Coordinate')} style={coordStyle}>Y : {y.toFixed(3)}</div>
           </div>
 
-          <div style={leftTextStyle} title="Scene Zoom Level">Zoom: {zoom.toFixed(3)}X</div>
+          <div style={leftTextStyle} title={this.context.translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
 
           <div style={leftTextStyle}>
             <FooterToggleButton
               state={this.state}
-              toggleOn={() => {
-                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT: true}))
-              }}
-              toggleOff={() => {
-                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_POINT: false}))
-              }}
+              toggleOn={() => { updateSnapMask({SNAP_POINT: true}); }}
+              toggleOff={() => { updateSnapMask({SNAP_POINT: false}); }}
               text="Snap PT"
               toggleState={this.props.state.snapMask.get(SNAP_POINT)}
-              title="Snap to Point"
+              title={this.context.translator.t('Snap to Point')}
             />
             <FooterToggleButton
               state={this.state}
-              toggleOn={() => {
-                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE: true}))
-              }}
-              toggleOff={() => {
-                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_LINE: false}))
-              }}
+              toggleOn={() => { updateSnapMask({SNAP_LINE: true}); }}
+              toggleOff={() => { updateSnapMask({SNAP_LINE: false}); }}
               text="Snap LN"
               toggleState={this.props.state.snapMask.get(SNAP_LINE)}
-              title="Snap to Line"
+              title={this.context.translator.t('Snap to Line')}
             />
             <FooterToggleButton
               state={this.state}
-              toggleOn={() => {
-                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT: true}))
-              }}
-              toggleOff={() => {
-                this.context.projectActions.toggleSnap(this.props.state.snapMask.merge({SNAP_SEGMENT: false}))
-              }}
+              toggleOn={() => { updateSnapMask({SNAP_SEGMENT: true}); }}
+              toggleOff={() => { updateSnapMask({SNAP_SEGMENT: false}); }}
               text="Snap SEG"
               toggleState={this.props.state.snapMask.get(SNAP_SEGMENT)}
-              title="Snap to Segment"
+              title={this.context.translator.t('Snap to Segment')}
+            />
+            <FooterToggleButton
+              state={this.state}
+              toggleOn={() => { updateSnapMask({SNAP_GRID: true}); }}
+              toggleOff={() => { updateSnapMask({SNAP_GRID: false}); }}
+              text="Snap GRD"
+              toggleState={this.props.state.snapMask.get(SNAP_GRID)}
+              title={this.context.translator.t('Snap to Grid')}
             />
           </div>
         </If>
