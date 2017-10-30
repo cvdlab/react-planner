@@ -156,15 +156,14 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
       let hasCommonEndpoint =
-        (Geometry.samePoints(v0, {x: x0, y: y0})
-          || Geometry.samePoints(v0, {x: x1, y: y1})
-          || Geometry.samePoints(v1, {x: x0, y: y0})
-          || Geometry.samePoints(v1, {x: x1, y: y1}));
+        (Geometry.samePoints(v0, points[0])
+          || Geometry.samePoints(v0, points[1])
+          || Geometry.samePoints(v1, points[0])
+          || Geometry.samePoints(v1, points[1]));
 
 
       let intersection = Geometry.intersectionFromTwoLineSegment(
-        {x: x0, y: y0}, {x: x1, y: y1},
-        v0, v1
+        points[0], points[1], v0, v1
       );
 
       if (intersection.type === 'colinear') {
@@ -172,7 +171,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
           oldHoles = [];
         }
 
-        let orderedVertices = Geometry.orderVertices([{x: x0, y: y0}, {x: x1, y: y1}]);
+        let orderedVertices = Geometry.orderVertices(points);
 
         layer.lines.get(line.id).holes.forEach(holeID => {
           let hole = layer.holes.get(holeID);
