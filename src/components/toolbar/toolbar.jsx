@@ -15,12 +15,8 @@ import ToolbarLoadButton from './toolbar-load-button';
 import If from '../../utils/react-if';
 import {
   MODE_IDLE,
-  MODE_2D_PAN,
-  MODE_2D_ZOOM_IN,
-  MODE_2D_ZOOM_OUT,
   MODE_3D_VIEW,
   MODE_3D_FIRST_PERSON,
-  MODE_UPLOADING_IMAGE,
   MODE_VIEWING_CATALOG,
   MODE_CONFIGURING_PROJECT
 } from '../../constants';
@@ -74,6 +70,30 @@ const STYLE_TOOLTIP_PIN = {
   borderRight: '8px solid #000000',
   borderTop: '8px solid transparent',
   borderBottom: '8px solid transparent'
+};
+
+const sortButtonsCb = (a, b) => {
+  if (a.index === undefined || a.index === null) {
+    a.index = Number.MAX_SAFE_INTEGER;
+  }
+
+  if (b.index === undefined || b.index === null) {
+    b.index = Number.MAX_SAFE_INTEGER;
+  }
+
+  return a.index - b.index;
+};
+
+const mapButtonsCb = (el, ind) => {
+  return (
+    <If
+      key={ind}
+      condition={el.condition}
+      style={{position:'relative'}}
+    >
+      { el.dom }
+    </If>
+  );
 };
 
 export default function Toolbar(
@@ -152,46 +172,22 @@ export default function Toolbar(
     }
   ];
 
-  sorter = sorter.concat(toolbarButtons.map((Component, index) => {
+  sorter = sorter.concat(toolbarButtons.map((Component, key) => {
     return Component.prototype ? //if is a react component
     {
       condition: true,
-      dom: React.createElement(Component, { mode: mode, state: state, key: index })
+      dom: React.createElement(Component, { mode, state, key })
     }:
     {                           //else is a sortable toolbar button
       index: Component.index,
       condition: Component.condition,
-      dom: React.createElement( Component.dom, { mode: mode, state: state, key: index })
+      dom: React.createElement( Component.dom, { mode, state, key })
     };
   }));
 
-  sorter.sort((a, b) => {
-    if (a.index === undefined || a.index === null) {
-      a.index = Number.MAX_SAFE_INTEGER;
-    }
-
-    if (b.index === undefined || b.index === null) {
-      b.index = Number.MAX_SAFE_INTEGER;
-    }
-
-    return a.index - b.index;
-  });
-
   return (
     <aside style={{...ASIDE_STYLE, maxWidth: width, maxHeight: height}} className='toolbar'>
-
-      {sorter.map((el, ind) => {
-        return (
-          <If
-            key={ind}
-            condition={el.condition}
-            style={{position:'relative'}}
-          >
-            { el.dom }
-          </If>
-        );
-      })}
-
+      {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
     </aside>
   )
 }
