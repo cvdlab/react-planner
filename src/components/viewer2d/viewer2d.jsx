@@ -101,13 +101,12 @@ export default function Viewer2D({state, width, height},
   };
 
   let onMouseMove = viewerEvent => {
-    let event = viewerEvent.originalEvent;
 
+    //workaround that allow imageful component to work
     var evt = new Event('mousemove-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    event.preventDefault();
     let {x, y} = mapCursorPosition(viewerEvent);
 
     projectActions.updateMouseCoord({x, y});
@@ -115,53 +114,48 @@ export default function Viewer2D({state, width, height},
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
         linesActions.updateDrawingLine(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_HOLE:
         holesActions.updateDrawingHole(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_ITEM:
         itemsActions.updateDrawingItem(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_HOLE:
         holesActions.updateDraggingHole(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_LINE:
         linesActions.updateDraggingLine(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
         verticesActions.updateDraggingVertex(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.updateDraggingItem(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_ROTATING_ITEM:
         itemsActions.updateRotatingItem(x, y);
-        event.stopPropagation();
+        break;
     }
+
+    viewerEvent.originalEvent.stopPropagation();
   };
 
   let onMouseDown = viewerEvent => {
     let event = viewerEvent.originalEvent;
 
+    //workaround that allow imageful component to work
     var evt = new Event('mousedown-planner-event' );
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    event.preventDefault();
     let {x, y} = mapCursorPosition(viewerEvent);
 
     if( mode === constants.MODE_IDLE )
@@ -172,12 +166,10 @@ export default function Viewer2D({state, width, height},
       switch ( elementData.prototype ) {
         case 'lines':
           linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
-          event.stopPropagation();
           break;
 
         case 'vertices':
           verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, state.snapMask);
-          event.stopPropagation();
           break;
 
         case 'items':
@@ -185,17 +177,16 @@ export default function Viewer2D({state, width, height},
             itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);
           else
             itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
-          event.stopPropagation();
           break;
 
         case 'holes':
           holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
-          event.stopPropagation();
           break;
 
         default: break;
       }
     }
+    event.stopPropagation();
   };
 
   let onMouseUp = viewerEvent => {
@@ -205,7 +196,6 @@ export default function Viewer2D({state, width, height},
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    event.preventDefault();
     let {x, y} = mapCursorPosition(viewerEvent);
 
     switch (mode) {
@@ -218,77 +208,65 @@ export default function Viewer2D({state, width, height},
         switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
             areaActions.selectArea(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'lines':
             linesActions.selectLine(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'holes':
             holesActions.selectHole(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'items':
             itemsActions.selectItem(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'none':
             projectActions.unselectAll();
-            event.stopPropagation();
             break;
         }
         break;
 
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y, state.snapMask);
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_HOLE:
         holesActions.endDrawingHole(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_ITEM:
         itemsActions.endDrawingItem(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_LINE:
         linesActions.endDraggingLine(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
         verticesActions.endDraggingVertex(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.endDraggingItem(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_HOLE:
         holesActions.endDraggingHole(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_ROTATING_ITEM:
         itemsActions.endRotatingItem(x, y);
-        event.stopPropagation();
         break;
     }
+
+    event.stopPropagation();
   };
 
   let onChangeValue = (value) => {
