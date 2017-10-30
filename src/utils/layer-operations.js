@@ -64,18 +64,19 @@ export function splitLine(layer, lineID, x, y, catalog) {
 
   layer = layer.withMutations(layer => {
     let line = layer.getIn(['lines', lineID]);
-    let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
-    let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
+    let v0 = layer.vertices.get(line.vertices.get(0));
+    let v1 = layer.vertices.get(line.vertices.get(1));
+    let {x: x0, y: y0} = v0;
+    let {x: x1, y: y1} = v1;
 
     ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties));
     ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
 
     let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+    let minVertex = Geometry.minVertex(v0, v1);
 
     line.holes.forEach(holeID => {
       let hole = layer.holes.get(holeID);
-
-      let minVertex = Geometry.minVertex({x: x0, y: y0}, {x: x1, y: y1});
 
       let holeOffset = hole.offset;
       if (minVertex.x === x1 && minVertex.y === y1) {
