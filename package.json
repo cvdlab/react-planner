@@ -90,7 +90,7 @@
     "babel-preset-es2015-webpack2": "1.0.0",
     "babel-preset-react": "6.24.1",
     "const-version": "1.0.1",
-    "cross-env": "5.1.0",
+    "cross-env": "5.1.1",
     "file-loader": "1.1.5",
     "gh-pages": "1.0.0",
     "open-browser-webpack-plugin": "0.0.5",
