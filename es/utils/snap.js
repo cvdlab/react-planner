@@ -14,8 +14,14 @@ import * as Geometry from './geometry';
 export var SNAP_POINT = 'SNAP_POINT';
 export var SNAP_LINE = 'SNAP_LINE';
 export var SNAP_SEGMENT = 'SNAP_SEGMENT';
+export var SNAP_GRID = 'SNAP_GRID';
 
-export var SNAP_MASK = new Map({ SNAP_POINT: true, SNAP_LINE: true, SNAP_SEGMENT: true });
+export var SNAP_MASK = new Map({
+  SNAP_POINT: true,
+  SNAP_LINE: true,
+  SNAP_SEGMENT: true,
+  SNAP_GRID: false
+});
 
 var PointSnap = function (_Record) {
   _inherits(PointSnap, _Record);
@@ -35,11 +41,16 @@ var PointSnap = function (_Record) {
         distance: Geometry.pointsDistance(this.x, this.y, x, y)
       };
     }
+  }, {
+    key: 'isNear',
+    value: function isNear(x, y, distance) {
+      return ~(this.x - x) + 1 < distance && ~(this.y - y) + 1 < distance;
+    }
   }]);
 
   return PointSnap;
 }(Record({
-  type: "point",
+  type: 'point',
   x: -1, y: -1,
   radius: 1, priority: 1,
   related: new List()
@@ -61,11 +72,16 @@ var LineSnap = function (_Record2) {
         distance: Geometry.distancePointFromLine(this.a, this.b, this.c, x, y)
       });
     }
+  }, {
+    key: 'isNear',
+    value: function isNear(x, y, distance) {
+      return true;
+    }
   }]);
 
   return LineSnap;
 }(Record({
-  type: "line",
+  type: 'line',
   a: -1, b: -1, c: -1,
   radius: 1, priority: 1,
   related: new List()
@@ -87,29 +103,65 @@ var LineSegmentSnap = function (_Record3) {
         distance: Geometry.distancePointFromLineSegment(this.x1, this.y1, this.x2, this.y2, x, y)
       });
     }
+  }, {
+    key: 'isNear',
+    value: function isNear(x, y, distance) {
+      return true;
+    }
   }]);
 
   return LineSegmentSnap;
 }(Record({
-  type: "line-segment",
+  type: 'line-segment',
   x1: -1, y1: -1, x2: -1, y2: -1,
+  radius: 1, priority: 1,
+  related: new List()
+}));
+
+var GridSnap = function (_Record4) {
+  _inherits(GridSnap, _Record4);
+
+  function GridSnap() {
+    _classCallCheck(this, GridSnap);
+
+    return _possibleConstructorReturn(this, (GridSnap.__proto__ || Object.getPrototypeOf(GridSnap)).apply(this, arguments));
+  }
+
+  _createClass(GridSnap, [{
+    key: 'nearestPoint',
+    value: function nearestPoint(x, y) {
+      return {
+        x: this.x,
+        y: this.y,
+        distance: Geometry.pointsDistance(this.x, this.y, x, y)
+      };
+    }
+  }, {
+    key: 'isNear',
+    value: function isNear(x, y, distance) {
+      return ~(this.x - x) + 1 < distance && ~(this.y - y) + 1 < distance;
+    }
+  }]);
+
+  return GridSnap;
+}(Record({
+  type: 'grid',
+  x: -1, y: -1,
   radius: 1, priority: 1,
   related: new List()
 }));
 
 export function nearestSnap(snapElements, x, y, snapMask) {
 
-  return snapElements.valueSeq().filter(function (snap) {
-    switch (snap.type) {
-      case 'point':
-        return snapMask.get(SNAP_POINT);
-      case 'line':
-        return snapMask.get(SNAP_LINE);
-      case 'line-segment':
-        return snapMask.get(SNAP_SEGMENT);
-      default:
-        return false;
-    }
+  var filter = {
+    'point': snapMask.get(SNAP_POINT),
+    'line': snapMask.get(SNAP_LINE),
+    'line-segment': snapMask.get(SNAP_SEGMENT),
+    'grid': snapMask.get(SNAP_GRID)
+  };
+
+  return snapElements.valueSeq().filter(function (el) {
+    return filter[el.type] && el.isNear(x, y, el.radius);
   }).map(function (snap) {
     return { snap: snap, point: snap.nearestPoint(x, y) };
   }).filter(function (_ref) {
@@ -117,16 +169,11 @@ export function nearestSnap(snapElements, x, y, snapMask) {
         distance = _ref.point.distance;
     return distance < radius;
   }).min(function (_ref2, _ref3) {
-    var snap1 = _ref2.snap,
-        point1 = _ref2.point;
-    var snap2 = _ref3.snap,
-        point2 = _ref3.point;
-
-    if (snap1.priority === snap2.priority) {
-      if (point1.distance < point2.distance) return -1;else return 1;
-    } else {
-      if (snap1.priority > snap2.priority) return -1;else return 1;
-    }
+    var p1 = _ref2.snap.priority,
+        d1 = _ref2.point.distance;
+    var p2 = _ref3.snap.priority,
+        d2 = _ref3.point.distance;
+    return p1 === p2 ? d1 < d2 ? -1 : 1 : p1 > p2 ? -1 : 1;
   });
 }
 
@@ -163,6 +210,10 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
 
 export function addLineSegmentSnap(snapElements, x1, y1, x2, y2, radius, priority, related) {
   related = new List([related]);
-
   return snapElements.push(new LineSegmentSnap({ x1: x1, y1: y1, x2: x2, y2: y2, radius: radius, priority: priority, related: related }));
+}
+
+export function addGridSnap(snapElements, x, y, radius, priority, related) {
+  related = new List([related]);
+  return snapElements.push(new GridSnap({ x: x, y: y, radius: radius, priority: priority, related: related }));
 }

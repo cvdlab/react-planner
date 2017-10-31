@@ -67,6 +67,41 @@ var ElementEditor = function (_Component) {
   }
 
   _createClass(ElementEditor, [{
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      var _state = this.state,
+          oldAttribute = _state.attributesFormData,
+          oldProperties = _state.propertiesFormData;
+      var newAttribute = nextState.attributesFormData,
+          newProperties = nextState.propertiesFormData;
+
+
+      if (diff(oldAttribute, newAttribute).size) return true;
+      if (diff(oldProperties, newProperties).size) return true;
+
+      if (diff(this.props.state.clipboardProperties, nextProps.state.clipboardProperties).size) return true;
+
+      return false;
+    }
+  }, {
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(_ref) {
+      var element = _ref.element,
+          layer = _ref.layer,
+          state = _ref.state;
+      var prototype = element.prototype,
+          id = element.id;
+
+      var scene = this.props.state.get('scene');
+      var selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
+      var selected = selectedLayer.getIn([prototype, id]);
+
+      if (diff(selectedLayer, layer).size) this.setState({
+        attributesFormData: this.initAttrData(element, layer, state),
+        propertiesFormData: this.initPropData(element, layer, state)
+      });
+    }
+  }, {
     key: 'initAttrData',
     value: function initAttrData(element, layer, state) {
 
@@ -169,7 +204,6 @@ var ElementEditor = function (_Component) {
           }
         case 'lines':
           {
-            console.log('asd', attributeName);
             switch (attributeName) {
               case 'lineLength':
                 {
@@ -344,9 +378,9 @@ var ElementEditor = function (_Component) {
     }
   }, {
     key: 'save',
-    value: function save(_ref) {
-      var propertiesFormData = _ref.propertiesFormData,
-          attributesFormData = _ref.attributesFormData;
+    value: function save(_ref2) {
+      var propertiesFormData = _ref2.propertiesFormData,
+          attributesFormData = _ref2.attributesFormData;
 
 
       if (propertiesFormData) {
@@ -392,9 +426,9 @@ var ElementEditor = function (_Component) {
     value: function render() {
       var _this3 = this;
 
-      var _state = this.state,
-          propertiesFormData = _state.propertiesFormData,
-          attributesFormData = _state.attributesFormData,
+      var _state2 = this.state,
+          propertiesFormData = _state2.propertiesFormData,
+          attributesFormData = _state2.attributesFormData,
           _context = this.context,
           projectActions = _context.projectActions,
           catalog = _context.catalog,
@@ -435,10 +469,10 @@ var ElementEditor = function (_Component) {
             ) : null
           )
         ),
-        propertiesFormData.entrySeq().map(function (_ref2) {
-          var _ref3 = _slicedToArray(_ref2, 2),
-              propertyName = _ref3[0],
-              data = _ref3[1];
+        propertiesFormData.entrySeq().map(function (_ref3) {
+          var _ref4 = _slicedToArray(_ref3, 2),
+              propertyName = _ref4[0],
+              data = _ref4[1];
 
           var currentValue = data.get('currentValue'),
               configs = data.get('configs');
@@ -460,24 +494,6 @@ var ElementEditor = function (_Component) {
           });
         })
       );
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(_ref4) {
-      var element = _ref4.element,
-          layer = _ref4.layer,
-          state = _ref4.state;
-      var prototype = element.prototype,
-          id = element.id;
-
-      var scene = this.props.state.get('scene');
-      var selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
-      var selected = selectedLayer.getIn([prototype, id]);
-
-      if (diff(selectedLayer, layer).size) this.setState({
-        attributesFormData: this.initAttrData(element, layer, state),
-        propertiesFormData: this.initPropData(element, layer, state)
-      });
     }
   }]);
 

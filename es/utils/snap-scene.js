@@ -1,13 +1,14 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-import { addPointSnap, addLineSnap, addLineSegmentSnap } from './snap';
+import { addPointSnap, addLineSnap, addLineSegmentSnap, addGridSnap } from './snap';
 import * as Geometry from './geometry';
 import { Map, List } from 'immutable';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT } from './snap';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID } from './snap';
 
 export function sceneSnapElements(scene) {
   var snapElements = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new List();
   var snapMask = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Map();
+
 
   var a = void 0,
       b = void 0,
@@ -66,5 +67,25 @@ export function sceneSnapElements(scene) {
         });
       }
     });
+
+    if (snapMask.get(SNAP_GRID)) {
+      var divider = 5;
+      var gridCellSize = 100 / divider;
+      var xCycle = scene.get('width') / gridCellSize;
+      var yCycle = scene.get('height') / gridCellSize;
+
+      for (var x = 0; x < xCycle; x++) {
+        var xMul = x * gridCellSize;
+
+        for (var y = 0; y < yCycle; y++) {
+          var yMul = y * gridCellSize;
+
+          var onXCross = !(x % divider) ? true : false;
+          var onYCross = !(y % divider) ? true : false;
+
+          addGridSnap(snapElements, xMul, yMul, 10, onXCross && onYCross ? 15 : 10, null);
+        }
+      }
+    }
   });
 }

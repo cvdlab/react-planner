@@ -115,13 +115,11 @@ export default function Viewer2D(_ref, _ref2) {
   };
 
   var onMouseMove = function onMouseMove(viewerEvent) {
-    var event = viewerEvent.originalEvent;
 
+    //workaround that allow imageful component to work
     var evt = new Event('mousemove-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-
-    event.preventDefault();
 
     var _mapCursorPosition = mapCursorPosition(viewerEvent),
         x = _mapCursorPosition.x,
@@ -132,53 +130,47 @@ export default function Viewer2D(_ref, _ref2) {
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
         linesActions.updateDrawingLine(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_HOLE:
         holesActions.updateDrawingHole(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_ITEM:
         itemsActions.updateDrawingItem(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_HOLE:
         holesActions.updateDraggingHole(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_LINE:
         linesActions.updateDraggingLine(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
         verticesActions.updateDraggingVertex(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.updateDraggingItem(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_ROTATING_ITEM:
         itemsActions.updateRotatingItem(x, y);
-        event.stopPropagation();
+        break;
     }
+
+    viewerEvent.originalEvent.stopPropagation();
   };
 
   var onMouseDown = function onMouseDown(viewerEvent) {
     var event = viewerEvent.originalEvent;
 
+    //workaround that allow imageful component to work
     var evt = new Event('mousedown-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-
-    event.preventDefault();
 
     var _mapCursorPosition2 = mapCursorPosition(viewerEvent),
         x = _mapCursorPosition2.x,
@@ -191,28 +183,25 @@ export default function Viewer2D(_ref, _ref2) {
       switch (elementData.prototype) {
         case 'lines':
           linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
-          event.stopPropagation();
           break;
 
         case 'vertices':
           verticesActions.beginDraggingVertex(elementData.layer, elementData.id, x, y, state.snapMask);
-          event.stopPropagation();
           break;
 
         case 'items':
           if (elementData.part === 'rotation-anchor') itemsActions.beginRotatingItem(elementData.layer, elementData.id, x, y);else itemsActions.beginDraggingItem(elementData.layer, elementData.id, x, y);
-          event.stopPropagation();
           break;
 
         case 'holes':
           holesActions.beginDraggingHole(elementData.layer, elementData.id, x, y);
-          event.stopPropagation();
           break;
 
         default:
           break;
       }
     }
+    event.stopPropagation();
   };
 
   var onMouseUp = function onMouseUp(viewerEvent) {
@@ -221,8 +210,6 @@ export default function Viewer2D(_ref, _ref2) {
     var evt = new Event('mouseup-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
-
-    event.preventDefault();
 
     var _mapCursorPosition3 = mapCursorPosition(viewerEvent),
         x = _mapCursorPosition3.x,
@@ -238,77 +225,65 @@ export default function Viewer2D(_ref, _ref2) {
         switch (elementData ? elementData.prototype : 'none') {
           case 'areas':
             areaActions.selectArea(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'lines':
             linesActions.selectLine(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'holes':
             holesActions.selectHole(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'items':
-            //console.log( 'AAA', event, elementData );
             itemsActions.selectItem(elementData.layer, elementData.id);
-            event.stopPropagation();
             break;
 
           case 'none':
             projectActions.unselectAll();
-            event.stopPropagation();
             break;
         }
         break;
 
       case constants.MODE_WAITING_DRAWING_LINE:
         linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_LINE:
         linesActions.endDrawingLine(x, y, state.snapMask);
-        event.stopPropagation();
+        linesActions.beginDrawingLine(layerID, x, y, state.snapMask);
         break;
 
       case constants.MODE_DRAWING_HOLE:
         holesActions.endDrawingHole(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAWING_ITEM:
         itemsActions.endDrawingItem(layerID, x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_LINE:
         linesActions.endDraggingLine(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_VERTEX:
         verticesActions.endDraggingVertex(x, y, state.snapMask);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_ITEM:
         itemsActions.endDraggingItem(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_DRAGGING_HOLE:
         holesActions.endDraggingHole(x, y);
-        event.stopPropagation();
         break;
 
       case constants.MODE_ROTATING_ITEM:
         itemsActions.endRotatingItem(x, y);
-        event.stopPropagation();
         break;
     }
+
+    event.stopPropagation();
   };
 
   var onChangeValue = function onChangeValue(value) {

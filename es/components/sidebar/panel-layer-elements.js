@@ -16,6 +16,14 @@ import Panel from './panel';
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import MdSearch from 'react-icons/lib/md/search';
+import diff from 'immutablediff';
+
+var VISIBILITY_MODE = {
+  MODE_IDLE: MODE_IDLE, MODE_2D_ZOOM_IN: MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT: MODE_2D_ZOOM_OUT, MODE_2D_PAN: MODE_2D_PAN, MODE_3D_VIEW: MODE_3D_VIEW, MODE_3D_FIRST_PERSON: MODE_3D_FIRST_PERSON,
+  MODE_WAITING_DRAWING_LINE: MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE: MODE_DRAWING_LINE, MODE_DRAWING_HOLE: MODE_DRAWING_HOLE, MODE_DRAWING_ITEM: MODE_DRAWING_ITEM, MODE_DRAGGING_LINE: MODE_DRAGGING_LINE,
+  MODE_DRAGGING_VERTEX: MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM: MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE: MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE: MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE: MODE_UPLOADING_IMAGE,
+  MODE_ROTATING_ITEM: MODE_ROTATING_ITEM
+};
 
 var contentArea = {
   height: 'auto',
@@ -60,9 +68,7 @@ var PanelLayerElement = function (_Component) {
 
     var _this = _possibleConstructorReturn(this, (PanelLayerElement.__proto__ || Object.getPrototypeOf(PanelLayerElement)).call(this, props));
 
-    var scene = props.state.scene;
-
-    var layer = scene.layers.get(scene.selectedLayer);
+    var layer = props.layers.get(props.selectedLayer);
     var elements = {
       lines: layer.lines,
       holes: layer.holes,
@@ -78,11 +84,25 @@ var PanelLayerElement = function (_Component) {
   }
 
   _createClass(PanelLayerElement, [{
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      if (this.state.matchString !== nextState.matchString) return true;
+
+      var oldElements = this.state.elements;
+      var newElements = nextState.elements;
+
+      if (diff(oldElements.lines, newElements.lines).size) return true;
+      if (diff(oldElements.holes, newElements.holes).size) return true;
+      if (diff(oldElements.items, newElements.items).size) return true;
+
+      return false;
+    }
+  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
-      var scene = nextProps.state.scene;
+      var layer = nextProps.layers.get(nextProps.selectedLayer);
 
-      var layer = scene.layers.get(scene.selectedLayer);
+      if (diff(this.props.layers, nextProps.layers).size === 0) return;
 
       var elements = {
         lines: layer.lines,
@@ -90,7 +110,7 @@ var PanelLayerElement = function (_Component) {
         items: layer.items
       };
 
-      if (this.state.matchString != '') {
+      if (this.state.matchString !== '') {
         var regexp = new RegExp(this.state.matchString, 'i');
         var filterCb = function filterCb(el) {
           return regexp.test(el.get('name'));
@@ -111,7 +131,7 @@ var PanelLayerElement = function (_Component) {
   }, {
     key: 'matcharray',
     value: function matcharray(text) {
-      if (text == '') {
+      if (text === '') {
         this.setState({
           matchString: '',
           matchedElements: this.state.elements
@@ -138,14 +158,9 @@ var PanelLayerElement = function (_Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props$state = this.props.state,
-          mode = _props$state.mode,
-          scene = _props$state.scene;
+      if (!VISIBILITY_MODE[this.props.mode]) return null;
 
-
-      if (![MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE].includes(mode)) return null;
-
-      var layer = scene.layers.get(scene.selectedLayer);
+      var layer = this.props.layers.get(this.props.selectedLayer);
 
       return React.createElement(
         Panel,
@@ -269,7 +284,8 @@ export default PanelLayerElement;
 
 
 PanelLayerElement.propTypes = {
-  state: PropTypes.object.isRequired
+  mode: PropTypes.string.isRequired,
+  layers: PropTypes.object.isRequired
 };
 
 PanelLayerElement.contextTypes = {

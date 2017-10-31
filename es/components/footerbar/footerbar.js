@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../../utils/snap';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_MASK } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import IconClose from 'react-icons/lib/fa/close';
@@ -110,6 +110,10 @@ var FooterBar = function (_Component) {
       var warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
       var warningIconStyle = warningLableStyle;
 
+      var updateSnapMask = function updateSnapMask(val) {
+        return _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge(val));
+      };
+
       return React.createElement(
         'div',
         { style: _extends({}, footerBarStyle, { width: this.props.width, height: this.props.height }) },
@@ -121,20 +125,20 @@ var FooterBar = function (_Component) {
             { style: leftTextStyle },
             React.createElement(
               'div',
-              { title: 'Mouse X Coordinates', style: coordStyle },
+              { title: this.context.translator.t('Mouse X Coordinate'), style: coordStyle },
               'X : ',
               x.toFixed(3)
             ),
             React.createElement(
               'div',
-              { title: 'Mouse Y Coordinates', style: coordStyle },
+              { title: this.context.translator.t('Mouse Y Coordinate'), style: coordStyle },
               'Y : ',
               y.toFixed(3)
             )
           ),
           React.createElement(
             'div',
-            { style: leftTextStyle, title: 'Scene Zoom Level' },
+            { style: leftTextStyle, title: this.context.translator.t('Scene Zoom Level') },
             'Zoom: ',
             zoom.toFixed(3),
             'X'
@@ -145,38 +149,50 @@ var FooterBar = function (_Component) {
             React.createElement(FooterToggleButton, {
               state: this.state,
               toggleOn: function toggleOn() {
-                _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge({ SNAP_POINT: true }));
+                updateSnapMask({ SNAP_POINT: true });
               },
               toggleOff: function toggleOff() {
-                _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge({ SNAP_POINT: false }));
+                updateSnapMask({ SNAP_POINT: false });
               },
               text: 'Snap PT',
               toggleState: this.props.state.snapMask.get(SNAP_POINT),
-              title: 'Snap to Point'
+              title: this.context.translator.t('Snap to Point')
             }),
             React.createElement(FooterToggleButton, {
               state: this.state,
               toggleOn: function toggleOn() {
-                _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge({ SNAP_LINE: true }));
+                updateSnapMask({ SNAP_LINE: true });
               },
               toggleOff: function toggleOff() {
-                _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge({ SNAP_LINE: false }));
+                updateSnapMask({ SNAP_LINE: false });
               },
               text: 'Snap LN',
               toggleState: this.props.state.snapMask.get(SNAP_LINE),
-              title: 'Snap to Line'
+              title: this.context.translator.t('Snap to Line')
             }),
             React.createElement(FooterToggleButton, {
               state: this.state,
               toggleOn: function toggleOn() {
-                _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge({ SNAP_SEGMENT: true }));
+                updateSnapMask({ SNAP_SEGMENT: true });
               },
               toggleOff: function toggleOff() {
-                _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge({ SNAP_SEGMENT: false }));
+                updateSnapMask({ SNAP_SEGMENT: false });
               },
               text: 'Snap SEG',
               toggleState: this.props.state.snapMask.get(SNAP_SEGMENT),
-              title: 'Snap to Segment'
+              title: this.context.translator.t('Snap to Segment')
+            }),
+            React.createElement(FooterToggleButton, {
+              state: this.state,
+              toggleOn: function toggleOn() {
+                updateSnapMask({ SNAP_GRID: true });
+              },
+              toggleOff: function toggleOff() {
+                updateSnapMask({ SNAP_GRID: false });
+              },
+              text: 'Snap GRD',
+              toggleState: this.props.state.snapMask.get(SNAP_GRID),
+              title: this.context.translator.t('Snap to Grid')
             })
           )
         ),

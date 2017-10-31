@@ -134,6 +134,18 @@ var FooterContentButton = function (_Component) {
       this.setState({ active: isActive });
     }
   }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      if (this.state.over != nextState.over) return true;
+      if (this.state.closeOver != nextState.closeOver) return true;
+      if (this.state.active != nextState.active) return true;
+
+      if (this.props.content.length != nextProps.content.length) return true;
+      if (this.props.toggleState != nextProps.toggleState) return true;
+
+      return false;
+    }
+  }, {
     key: 'componentWillReceiveProps',
     value: function componentWillReceiveProps(nextProps) {
       if (nextProps.toggleState != this.props.toggleState) this.state.active = nextProps.toggleState;

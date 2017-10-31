@@ -1,10 +1,7 @@
 import buildWall from './wall-factory-3d';
 import React from 'react';
 import * as SharedStyle from '../../shared-style';
-
-function pointsDistance(x0, y0, x1, y1) {
-  return Math.sqrt(Math.pow(x1 - x0, 2) + Math.pow(y1 - y0, 2));
-}
+import * as Geometry from '../../utils/geometry';
 
 var epsilon = 3;
 var STYLE_BASE = { stroke: '#8E9BA2', strokeWidth: '1px', fill: '#8E9BA2' };
@@ -44,9 +41,7 @@ export default function WallFactory(name, info, textures) {
           x2 = _layer$vertices$get2.x,
           y2 = _layer$vertices$get2.y;
 
-      var diffX = x2 - x1;
-      var diffY = y2 - y1;
-      var length = Math.sqrt(diffX * diffX + diffY * diffY);
+      var length = Geometry.pointsDistance(x1, y1, x2, y2);
       var path = 'M' + 0 + ' ' + -epsilon + '  L' + length + ' ' + -epsilon + '  L' + length + ' ' + epsilon + '  L' + 0 + ' ' + epsilon + '  z';
       var length_5 = length / 5;
 

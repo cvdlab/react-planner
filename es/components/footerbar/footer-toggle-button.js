@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
 var toggleButtonStyle = {
-  width: '5em',
+  width: '5.5em',
   color: '#CCC',
   textAlign: 'center',
   cursor: 'pointer',
@@ -66,6 +66,14 @@ var FooterToggleButton = function (_Component) {
       } else {
         this.props.toggleOff();
       }
+    }
+  }, {
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      if (this.state.over != nextState.over) return true;
+      if (this.state.active != nextState.active) return true;
+
+      return false;
     }
   }, {
     key: 'componentWillReceiveProps',

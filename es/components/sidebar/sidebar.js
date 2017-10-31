@@ -43,7 +43,7 @@ export default function Sidebar(_ref) {
     React.createElement(
       'div',
       { className: 'layer-elements' },
-      React.createElement(PanelLayerElements, { state: state })
+      React.createElement(PanelLayerElements, { mode: state.mode, layers: state.scene.layers, selectedLayer: state.scene.selectedLayer })
     ),
     React.createElement(
       'div',

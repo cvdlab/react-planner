@@ -23,9 +23,18 @@ import FormNumberInput from '../style/form-number-input';
 import FormSubmitButton from '../style/form-submit-button';
 import FormSlider from '../style/form-slider';
 import CancelButton from '../style/cancel-button';
+import diff from 'immutablediff';
 
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 import * as SharedStyle from '../../shared-style';
+
+var VISIBILITY_MODE = {
+  MODE_IDLE: MODE_IDLE, MODE_2D_ZOOM_IN: MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT: MODE_2D_ZOOM_OUT, MODE_2D_PAN: MODE_2D_PAN,
+  MODE_3D_VIEW: MODE_3D_VIEW, MODE_3D_FIRST_PERSON: MODE_3D_FIRST_PERSON,
+  MODE_WAITING_DRAWING_LINE: MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE: MODE_DRAWING_LINE, MODE_DRAWING_HOLE: MODE_DRAWING_HOLE, MODE_DRAWING_ITEM: MODE_DRAWING_ITEM,
+  MODE_DRAGGING_LINE: MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX: MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM: MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE: MODE_DRAGGING_HOLE,
+  MODE_ROTATING_ITEM: MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE: MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE: MODE_FITTING_IMAGE
+};
 
 var styleEditButton = {
   cursor: 'pointer',
@@ -77,6 +86,16 @@ var PanelLayers = function (_Component) {
   }
 
   _createClass(PanelLayers, [{
+    key: 'shouldComponentUpdate',
+    value: function shouldComponentUpdate(nextProps, nextState) {
+      if (this.props.state.scene.layers.size !== nextProps.state.scene.layers.size) return true;
+      if (diff(this.props.state.sceneHistory, nextProps.state.sceneHistory).size) return true;
+      if (nextState.layerAddUIVisible != this.state.layerAddUIVisible) return true;
+      if (diff(this.state.editingLayer, nextState.editingLayer).size) return true;
+
+      return false;
+    }
+  }, {
     key: 'addLayer',
     value: function addLayer(e) {
       e.stopPropagation();
@@ -120,13 +139,9 @@ var PanelLayers = function (_Component) {
     value: function render() {
       var _this2 = this;
 
-      var _props$state = this.props.state,
-          scene = _props$state.scene,
-          mode = _props$state.mode;
+      if (!VISIBILITY_MODE[this.props.state.mode]) return null;
 
-
-      if (![MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE].includes(mode)) return null;
-
+      var scene = this.props.state.scene;
       var isLastLayer = scene.layers.size === 1;
 
       return React.createElement(
