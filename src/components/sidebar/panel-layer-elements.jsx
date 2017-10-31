@@ -11,7 +11,7 @@ import * as SharedStyle from '../../shared-style';
 import MdSearch from 'react-icons/lib/md/search';
 import diff from 'immutablediff';
 
-const VISIBLITY_MODE = {
+const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE,
   MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE,
@@ -137,7 +137,7 @@ export default class PanelLayerElement extends Component {
   };
 
   render() {
-    if (!VISIBLITY_MODE[this.props.mode]) return null;
+    if (!VISIBILITY_MODE[this.props.mode]) return null;
 
     let layer = this.props.layers.get(this.props.selectedLayer);
 

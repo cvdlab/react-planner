@@ -21,7 +21,7 @@ import {
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 
-const VISIBLITY_MODE = {
+const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN,
   MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM,
@@ -113,7 +113,7 @@ export default class PanelLayers extends Component {
   }
 
   render() {
-    if (!VISIBLITY_MODE[this.props.state.mode]) return null;
+    if (!VISIBILITY_MODE[this.props.state.mode]) return null;
 
     let scene = this.props.state.scene;
     let isLastLayer = scene.layers.size === 1;

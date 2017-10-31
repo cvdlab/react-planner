@@ -1,10 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import IconNewFile from 'react-icons/lib/fa/file-o';
 import IconPointer from 'react-icons/lib/fa/mouse-pointer';
-import IconZoomPlus from 'react-icons/lib/ti/zoom-in';
-import IconZoomMinus from 'react-icons/lib/ti/zoom-out';
-import IconPan from 'react-icons/lib/fa/hand-paper-o';
 import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
 import IconCatalog from 'react-icons/lib/fa/plus';
 import IconUndo from 'react-icons/lib/md/undo';
@@ -41,37 +38,6 @@ const ASIDE_STYLE = {
   padding: '10px'
 };
 
-const STYLE_TOOLTIP = {
-  position: 'absolute',
-  width: '140px',
-  color: SharedStyle.COLORS.white,
-  background: SharedStyle.COLORS.black,
-  height: '30px',
-  lineHeight: '30px',
-  textAlign: 'center',
-  visibility: 'visible',
-  borderRadius: '6px',
-  opacity: '0.8',
-  left: '100%',
-  top: '50%',
-  marginTop: '-15px',
-  marginLeft: '15px',
-  zIndex: '999',
-  fontSize: '12px',
-};
-
-const STYLE_TOOLTIP_PIN = {
-  position: 'absolute',
-  top: '50%',
-  right: '100%',
-  marginTop: '-8px',
-  width: '0',
-  height: '0',
-  borderRight: '8px solid #000000',
-  borderTop: '8px solid transparent',
-  borderBottom: '8px solid transparent'
-};
-
 const sortButtonsCb = (a, b) => {
   if (a.index === undefined || a.index === null) {
     a.index = Number.MAX_SAFE_INTEGER;
@@ -89,9 +55,9 @@ const mapButtonsCb = (el, ind) => {
     <If
       key={ind}
       condition={el.condition}
-      style={{position:'relative'}}
+      style={{position: 'relative'}}
     >
-      { el.dom }
+      {el.dom}
     </If>
   );
 };
@@ -104,18 +70,19 @@ export default class Toolbar extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return this.props.state.mode !== nextProps.state.mode;
+    return this.props.state.mode !== nextProps.state.mode ||
+      this.props.height !== nextProps.height ||
+      this.props.width !== nextProps.width;
   }
 
   render() {
 
     let {
-      props: { state, width, height, toolbarButtons, allowProjectFileSupport},
-      context: { projectActions, viewer2DActions, viewer3DActions, linesActions, holesActions, itemsActions, translator}
+      props: {state, width, height, toolbarButtons, allowProjectFileSupport},
+      context: {projectActions, viewer3DActions, translator}
     } = this;
 
     let mode = state.get('mode');
-    let mode3DCondition = ![MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode);
 
     let sorter = [
       {
@@ -123,7 +90,7 @@ export default class Toolbar extends Component {
         active={false}
         tooltip={translator.t('New project')}
         onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
-        <IconNewFile />
+        <IconNewFile/>
       </ToolbarButton>
       },
       {
@@ -140,7 +107,7 @@ export default class Toolbar extends Component {
           active={[MODE_VIEWING_CATALOG].includes(mode)}
           tooltip={translator.t('Open catalog')}
           onClick={event => projectActions.openCatalog()}>
-          <IconCatalog />
+          <IconCatalog/>
         </ToolbarButton>
       },
       {
@@ -148,7 +115,7 @@ export default class Toolbar extends Component {
         active={[MODE_3D_VIEW].includes(mode)}
         tooltip={translator.t('3D View')}
         onClick={event => viewer3DActions.selectTool3DView()}>
-        <Icon3D />
+        <Icon3D/>
       </ToolbarButton>
       },
       {
@@ -164,7 +131,7 @@ export default class Toolbar extends Component {
         active={[MODE_3D_FIRST_PERSON].includes(mode)}
         tooltip={translator.t('3D First Person')}
         onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
-        <Icon3DFirstPerson />
+        <Icon3DFirstPerson/>
       </ToolbarButton>
       },
       {
@@ -172,7 +139,7 @@ export default class Toolbar extends Component {
         active={false}
         tooltip={translator.t('Undo (CTRL-Z)')}
         onClick={event => projectActions.undo()}>
-        <IconUndo />
+        <IconUndo/>
       </ToolbarButton>
       },
       {
@@ -180,22 +147,22 @@ export default class Toolbar extends Component {
         active={[MODE_CONFIGURING_PROJECT].includes(mode)}
         tooltip={translator.t('Configure project')}
         onClick={event => projectActions.openProjectConfigurator()}>
-        <IconConfigure />
+        <IconConfigure/>
       </ToolbarButton>
       }
     ];
 
     sorter = sorter.concat(toolbarButtons.map((Component, key) => {
       return Component.prototype ? //if is a react component
-      {
-        condition: true,
-        dom: React.createElement(Component, { mode, state, key })
-      }:
-      {                           //else is a sortable toolbar button
-        index: Component.index,
-        condition: Component.condition,
-        dom: React.createElement( Component.dom, { mode, state, key })
-      };
+        {
+          condition: true,
+          dom: React.createElement(Component, {mode, state, key})
+        } :
+        {                           //else is a sortable toolbar button
+          index: Component.index,
+          condition: Component.condition,
+          dom: React.createElement(Component.dom, {mode, state, key})
+        };
     }));
 
     return (
