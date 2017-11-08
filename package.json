@@ -1,5 +1,5 @@
 {
-  "name": "@jake-niemiec/react-planner",
+  "name": "react-planner",
   "description": "react-planner is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
   "version": "0.0.0",
   "main": "src/index.js",
@@ -24,7 +24,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jakeNiemiec/react-planner.git"
+    "url": "https://github.com/cvdlab/react-planner.git"
   },
   "keywords": [
     "floorplanner",
