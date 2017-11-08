@@ -11,6 +11,7 @@ import ReactPlannerActions from './actions/export';
 import ReactPlannerReducers from './reducers/export';
 import ElementsFactories from './catalog/factories/export';
 import ReactPlannerUtils from './utils/export';
+import ExampleCatalog from './demo/src/catalog/mycatalog';
 
 export {
   Catalog,
@@ -25,5 +26,6 @@ export {
   ReactPlannerActions,
   ReactPlannerComponents,
   ReactPlannerSharedStyle,
-  ReactPlannerUtils
+  ReactPlannerUtils,
+  ExampleCatalog
 };

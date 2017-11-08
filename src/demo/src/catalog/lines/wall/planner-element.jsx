@@ -1,4 +1,4 @@
-import {ElementsFactories} from 'react-planner';
+import {ElementsFactories} from '../../../../../index';
 
 const info = {
   title: 'wall',

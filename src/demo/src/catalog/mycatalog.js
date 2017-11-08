@@ -1,4 +1,4 @@
-import {Catalog} from 'react-planner';
+import {Catalog} from '../../../index';
 
 let catalog = new Catalog();
 

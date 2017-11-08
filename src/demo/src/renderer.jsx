@@ -14,7 +14,7 @@ import {
   reducer as PlannerReducer,
   ReactPlanner,
   Plugins as PlannerPlugins,
-} from 'react-planner'; //react-planner
+} from '../../index'; //react-planner
 
 
 //define state

@@ -1,10 +1,9 @@
+const webpack = require('webpack');
+const path = require('path');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const path = require('path');
-const webpack = require('webpack');
 
 /**
- * --env.production
  * --env.port port
  */
 
@@ -12,7 +11,8 @@ const PAGE_TITLE = "React Planner";
 const VENDORS_LIBRARIES = ['immutable', 'react', 'react-dom', 'react-redux', 'redux', 'three'];
 
 module.exports = function (env) {
-  let isProduction = env && env.hasOwnProperty('production');
+  let isProduction = process.env.NODE_ENV === 'production';
+  let isQuiet = env && env.hasOwnProperty('quiet');
   let port = env && env.hasOwnProperty('port') ? env.port : 8080;
 
   if (isProduction) console.info('Webpack: Production mode'); else console.info('Webpack: Development mode');
@@ -20,7 +20,7 @@ module.exports = function (env) {
   let config = {
     context: path.resolve(__dirname),
     entry: {
-      app: './src/renderer.jsx',
+      app: path.join(__dirname, './src/demo/src/renderer.jsx'),
       vendor: VENDORS_LIBRARIES
     },
     output: {
@@ -34,12 +34,14 @@ module.exports = function (env) {
     devServer: {
       port: port,
       contentBase: path.join(__dirname, './dist'),
+      overlay: {
+        warnings: true,
+        errors: true
+      },
+      inline: true
     },
     resolve: {
-      extensions: ['.js', '.jsx'],
-      alias: {
-        'react-planner': path.join(__dirname, '../src/index')
-      }
+      extensions: ['.js', '.jsx']
     },
     module: {
       rules: [{
@@ -53,7 +55,6 @@ module.exports = function (env) {
               "transform-object-rest-spread"
             ],
             "presets": [
-              "es2015-webpack2",
               "react"
             ]
           }
@@ -74,14 +75,22 @@ module.exports = function (env) {
     },
     plugins: [
       new webpack.optimize.CommonsChunkPlugin({
-        names: ['vendor', 'manifest'],
-        minChunks: Infinity,
-        filename: '[chunkhash].[name].js'
+        names: 'vendor',
+        chunks: ['vendor', 'app'],
+        minChunks: 2
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        names: 'app',
+        chunks: ['app'],
+        minChunks: 2
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        names: ['manifest']
       }),
 
       new HtmlWebpackPlugin({
         title: PAGE_TITLE,
-        template: './src/index.html.ejs',
+        template: './src/demo/src/index.html.ejs',
         filename: 'index.html',
         inject: 'body',
       })
@@ -99,7 +108,7 @@ module.exports = function (env) {
   }
 
   if (!isProduction) {
-    config.plugins.push(new OpenBrowserPlugin({url: `http://localhost:${port}`}))
+    config.plugins.push(new OpenBrowserPlugin({url: `http://localhost:${port}`}));
   }
 
   return config;

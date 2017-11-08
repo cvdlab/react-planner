@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import IconSave from 'react-icons/lib/md/camera-alt';
-import {ReactPlannerComponents, ReactPlannerConstants} from 'react-planner';
+import {ReactPlannerComponents, ReactPlannerConstants} from '../../../index';
 
 const {
   MODE_IDLE,
