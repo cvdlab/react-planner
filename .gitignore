@@ -6,4 +6,4 @@ dist/*
 .vscode
 es/
 lib/
-demo/dist/
+src/demo/dist/
