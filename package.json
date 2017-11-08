@@ -101,6 +101,7 @@
     "rimraf": "2.6.2",
     "shortid": "2.2.8",
     "three": "0.87.1",
+    "uglifyjs-webpack-plugin": "^1.0.1",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.3"
   },

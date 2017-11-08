@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const fs = require('fs');
 const gitRev = require('git-rev-sync');
 const getGitLong = () => {
@@ -113,12 +114,11 @@ module.exports = function (env) {
   };
 
   if (isProduction) {
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
-
-    config.plugins.push(new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
+    config.plugins.push(new UglifyJSPlugin({
+      sourceMap: config.devtool && (
+        config.devtool.indexOf('sourcemap') >= 0 ||
+        config.devtool.indexOf('source-map') >= 0
+      )
     }));
   }
 
