@@ -2,6 +2,15 @@ const webpack = require('webpack');
 const path = require('path');
 const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const fs = require('fs');
+const gitRev = require('git-rev-sync');
+const getGitLong = () => {
+  try {
+    return fs.readFileSync('./REVISION', 'utf8').trim();
+  } catch (e) {
+    return gitRev.long() || 'error';
+  }
+};
 
 /**
  * --env.port port
@@ -87,7 +96,13 @@ module.exports = function (env) {
       new webpack.optimize.CommonsChunkPlugin({
         names: ['manifest']
       }),
-
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify(process.env.NODE_ENV || 'development'),
+        },
+        defineREV: JSON.stringify(getGitLong()),
+        defineVersion: JSON.stringify(require('./package.json').version)
+      }),
       new HtmlWebpackPlugin({
         title: PAGE_TITLE,
         template: './src/demo/src/index.html.ejs',
