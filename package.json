@@ -13,8 +13,7 @@
   "scripts": {
     "start": "webpack-dev-server --inline --env.port 9000",
     "profile": "webpack --profile --json --env.quiet > ./dist/profile.json",
-    "build-demo": "NODE_ENV=production webpack --config demo/webpack.config.js",
-    "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
+    "build": "npm run clean && NODE_ENV=production webpack",
     "add-build-to-vcs": "git add -A src/version.js && git add -A es && git add -A lib && git add -A demo/dist",
     "clean": "rimraf ./dist ./src/demo/dist",
     "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
