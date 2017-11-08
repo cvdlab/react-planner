@@ -1,6 +1,9 @@
 .idea
 npm-debug.log
 node_modules
-dist/*
+dist/
 !dist/index.html
 .vscode
+es/
+lib/
+src/demo/dist/

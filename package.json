@@ -1,27 +1,30 @@
 {
   "name": "react-planner",
-  "version": "1.7.0",
   "description": "react-planner is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
-  "main": "lib/index.js",
-  "module": "es/index.js",
+  "version": "0.0.0",
+  "main": "src/index.js",
+  "directories": {
+    "lib": "src",
+    "example": "src/demo",
+    "doc": "doc"
+  },
+  "module": "src/index.js",
   "jsnext:main": "es/index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --config demo/webpack.config.js --env.port 9000",
-    "build-demo": "webpack --config demo/webpack.config.js --env.production",
-    "build-commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
-    "build-es": "cross-env BABEL_ENV=es babel src --out-dir es",
-    "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
+    "start": "webpack-dev-server --inline --env.port 9000",
+    "profile": "webpack --profile --json --env.quiet > ./dist/profile.json",
+    "build": "npm run clean && NODE_ENV=production webpack",
     "add-build-to-vcs": "git add -A src/version.js && git add -A es && git add -A lib && git add -A demo/dist",
-    "clean": "rimraf lib es demo/dist",
+    "clean": "rimraf ./dist ./src/demo/dist",
     "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
     "update-version-file": "const-version ./package.json ./src/version.js",
     "version": "npm run update-version-file && npm run build && npm run add-build-to-vcs",
-    "postpublish": "npm run website-update",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cvdlab/react-planner.git"
+    "url": "https://github.com/cvdlab/react-planner.git"
   },
   "keywords": [
     "floorplanner",
@@ -67,20 +70,6 @@
   "dependencies": {
     "@mapbox/react-range": "0.0.7",
     "area-polygon": "1.0.1",
-    "convert-units": "2.3.1",
-    "html-webpack-plugin": "2.30.1",
-    "immutable": "3.8.2",
-    "immutablediff": "0.4.4",
-    "polylabel": "1.0.2",
-    "prop-types": "15.6.0",
-    "react-icons": "2.2.7",
-    "react-numeric-input": "2.2.0",
-    "react-redux": "5.0.6",
-    "react-svg-pan-zoom": "2.13.0",
-    "redux": "3.7.2",
-    "shortid": "2.2.8"
-  },
-  "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.26.0",
     "babel-loader": "7.1.2",
@@ -90,21 +79,43 @@
     "babel-preset-es2015-webpack2": "1.0.0",
     "babel-preset-react": "6.24.1",
     "const-version": "1.0.1",
+    "convert-units": "2.3.1",
     "cross-env": "5.1.1",
     "file-loader": "1.1.5",
     "gh-pages": "1.0.0",
+    "git-rev-sync": "1.9.1",
+    "html-webpack-plugin": "2.30.1",
+    "immutable": "3.8.2",
+    "immutablediff": "0.4.4",
     "open-browser-webpack-plugin": "0.0.5",
+    "polylabel": "1.0.2",
+    "prop-types": "15.6.0",
     "react": "16.0.0",
     "react-container-dimensions": "1.3.2",
     "react-dom": "16.0.0",
+    "react-icons": "2.2.7",
+    "react-numeric-input": "2.2.0",
+    "react-redux": "5.0.6",
+    "react-svg-pan-zoom": "2.13.0",
+    "redux": "3.7.2",
     "rimraf": "2.6.2",
+    "shortid": "2.2.8",
     "three": "0.87.1",
+    "uglifyjs-webpack-plugin": "^1.0.1",
     "webpack": "3.8.1",
     "webpack-dev-server": "2.9.3"
+  },
+  "babel": {
+    "presets": [
+      "react-app"
+    ]
   },
   "peerDependencies": {
     "react": "16.x",
     "react-dom": "16.x",
     "three": "0.87.x"
+  },
+  "devDependencies": {
+    "semantic-release": "^8.2.0"
   }
 }
