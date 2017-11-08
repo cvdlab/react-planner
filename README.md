@@ -22,16 +22,14 @@ import {Map} from 'immutable';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
-//download this demo catalog https://github.com/cvdlab/react-planner/tree/master/demo/src/catalog
-import MyCatalog from './catalog/mycatalog';
+import { ExampleCatalog } from 'react-planner';
 
 import {
   Models as PlannerModels,
   reducer as PlannerReducer,
   ReactPlanner,
   Plugins as PlannerPlugins,
-} from 'react-planner';
-
+} from 'react-planner'; //react-planner
 
 //define state
 let AppState = Map({
@@ -45,6 +43,7 @@ let reducer = (state, action) => {
   return state;
 };
 
+//init store
 let store = createStore(reducer, null, window.devToolsExtension ? window.devToolsExtension() : f => f);
 
 let plugins = [
@@ -62,6 +61,7 @@ ReactDOM.render(
       />
     </Provider>
   ),
+
   document.getElementById('app')
 );
 
