@@ -70,14 +70,14 @@ export default function WallFactory(name, info, textures) {
     wallElement.properties.textureA = {
       label: 'Covering A',
       type: 'enum',
-      defaultValue: 'bricks',
+      defaultValue: 'none',
       values: textureValues
     };
 
     wallElement.properties.textureB = {
       label: 'Covering B',
       type: 'enum',
-      defaultValue: 'bricks',
+      defaultValue: 'none',
       values: textureValues
     };
 

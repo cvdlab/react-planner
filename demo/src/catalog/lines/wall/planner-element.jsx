@@ -41,4 +41,21 @@ const textures = {
   },
 };
 
-export default ElementsFactories.WallFactory('wall', info, textures);
+const wall = ElementsFactories.WallFactory('wall', info, textures);
+
+wall.properties.textureA = {
+  label: 'Covering A',
+  type: 'enum',
+  defaultValue: 'bricks',
+  values: textureValues
+};
+
+wall.properties.textureB = {
+  label: 'Covering B',
+  type: 'enum',
+  defaultValue: 'bricks',
+  values: textureValues
+};
+
+export default wall;
+
