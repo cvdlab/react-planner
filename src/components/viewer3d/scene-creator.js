@@ -571,7 +571,9 @@ function updateBoundingBox(planData) {
  */
 function filterDiffs(diffArray, sceneData, oldSceneData) {
   return minimizeRemoveDiffsWhenSwitchingLayers(
-    minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData), sceneData, oldSceneData);
+    minimizeChangePropertiesAfterSelectionsDiffs(
+      minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData), sceneData, oldSceneData),
+    sceneData, oldSceneData);
 }
 
 /**
@@ -606,6 +608,31 @@ function minimizeRemoveDiffsWhenSwitchingLayers(diffArray, sceneData, oldSceneDa
 }
 
 /**
+ * Reduces the number of change properties diffs for selected elements
+ * @param diffArray the array of the diffs
+ * @param sceneData
+ * @param oldSceneData
+ * @returns {Array}
+ */
+function minimizeChangePropertiesAfterSelectionsDiffs(diffArray, sceneData, oldSceneData) {
+  let idsFound = {};
+  diffArray.forEach(diff => {
+    let split = diff.path.split('/');
+    if (split[5] === 'selected') {
+      idsFound[split[4]] = split[4];
+    }
+  });
+
+  return diffArray.filter(diff => {
+    let split = diff.path.split('/');
+    if (split[5] === 'properties') {
+      return idsFound[split[4]] ? false : true;
+    }
+    return true;
+  });
+}
+
+/**
  * Reduces the number of change properties diffs
  * @param diffArray the array of the diffs
  * @param sceneData
@@ -617,7 +644,7 @@ function minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData) {
   return diffArray.filter(diff => {
     let split = diff.path.split('/');
     if (split[5] === 'properties') {
-      return idsFound[split[4]] ? false : ( idsFound[split[4]] = 1 );
+      return idsFound[split[4]] ? false : (idsFound[split[4]] = true);
     } else if (split[5] === "misc") {
       // Remove misc changes
       return false;
