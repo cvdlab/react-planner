@@ -43,6 +43,10 @@ const textures = {
 
 const wall = ElementsFactories.WallFactory('wall', info, textures);
 
+let textureValues = {
+  'none': 'None'
+};
+
 wall.properties.textureA = {
   label: 'Covering A',
   type: 'enum',
