@@ -13,7 +13,7 @@
 //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 //    Pan - right mouse, or arrow keys / touch: three finter swipe
 
-var THREE = window.THREE || require('three');
+let THREE = window.THREE || require('three');
 let OrbitControls;
 
 module.exports = OrbitControls = function (object, domElement) {
@@ -117,18 +117,18 @@ module.exports = OrbitControls = function (object, domElement) {
   // this method is exposed, but perhaps it would be better if we can make it private...
   this.update = function () {
 
-    var offset = new THREE.Vector3();
+    let offset = new THREE.Vector3();
 
     // so camera.up is the orbit axis
-    var quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
-    var quatInverse = quat.clone().inverse();
+    let quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
+    let quatInverse = quat.clone().inverse();
 
-    var lastPosition = new THREE.Vector3();
-    var lastQuaternion = new THREE.Quaternion();
+    let lastPosition = new THREE.Vector3();
+    let lastQuaternion = new THREE.Quaternion();
 
     return function update() {
 
-      var position = scope.object.position;
+      let position = scope.object.position;
 
       offset.copy(position).sub(scope.target);
 
@@ -234,37 +234,37 @@ module.exports = OrbitControls = function (object, domElement) {
   // internals
   //
 
-  var scope = this;
+  let scope = this;
 
-  var changeEvent = {type: 'change'};
-  var startEvent = {type: 'start'};
-  var endEvent = {type: 'end'};
+  let changeEvent = {type: 'change'};
+  let startEvent = {type: 'start'};
+  let endEvent = {type: 'end'};
 
-  var STATE = {NONE: -1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5};
+  let STATE = {NONE: -1, ROTATE: 0, DOLLY: 1, PAN: 2, TOUCH_ROTATE: 3, TOUCH_DOLLY: 4, TOUCH_PAN: 5};
 
-  var state = STATE.NONE;
+  let state = STATE.NONE;
 
-  var EPS = 0.000001;
+  let EPS = 0.000001;
 
   // current position in spherical coordinates
-  var spherical = new THREE.Spherical();
-  var sphericalDelta = new THREE.Spherical();
+  let spherical = new THREE.Spherical();
+  let sphericalDelta = new THREE.Spherical();
 
-  var scale = 1;
-  var panOffset = new THREE.Vector3();
-  var zoomChanged = false;
+  let scale = 1;
+  let panOffset = new THREE.Vector3();
+  let zoomChanged = false;
 
-  var rotateStart = new THREE.Vector2();
-  var rotateEnd = new THREE.Vector2();
-  var rotateDelta = new THREE.Vector2();
+  let rotateStart = new THREE.Vector2();
+  let rotateEnd = new THREE.Vector2();
+  let rotateDelta = new THREE.Vector2();
 
-  var panStart = new THREE.Vector2();
-  var panEnd = new THREE.Vector2();
-  var panDelta = new THREE.Vector2();
+  let panStart = new THREE.Vector2();
+  let panEnd = new THREE.Vector2();
+  let panDelta = new THREE.Vector2();
 
-  var dollyStart = new THREE.Vector2();
-  var dollyEnd = new THREE.Vector2();
-  var dollyDelta = new THREE.Vector2();
+  let dollyStart = new THREE.Vector2();
+  let dollyEnd = new THREE.Vector2();
+  let dollyDelta = new THREE.Vector2();
 
   function getAutoRotationAngle() {
 
@@ -290,9 +290,9 @@ module.exports = OrbitControls = function (object, domElement) {
 
   }
 
-  var panLeft = function () {
+  let panLeft = function () {
 
-    var v = new THREE.Vector3();
+    let v = new THREE.Vector3();
 
     return function panLeft(distance, objectMatrix) {
 
@@ -305,9 +305,9 @@ module.exports = OrbitControls = function (object, domElement) {
 
   }();
 
-  var panUp = function () {
+  let panUp = function () {
 
-    var v = new THREE.Vector3();
+    let v = new THREE.Vector3();
 
     return function panUp(distance, objectMatrix) {
 
@@ -321,20 +321,20 @@ module.exports = OrbitControls = function (object, domElement) {
   }();
 
   // deltaX and deltaY are in pixels; right and down are positive
-  var pan = function () {
+  let pan = function () {
 
-    var offset = new THREE.Vector3();
+    let offset = new THREE.Vector3();
 
     return function pan(deltaX, deltaY) {
 
-      var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+      let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
       if (scope.object instanceof THREE.PerspectiveCamera) {
 
         // perspective
-        var position = scope.object.position;
+        let position = scope.object.position;
         offset.copy(position).sub(scope.target);
-        var targetDistance = offset.length();
+        let targetDistance = offset.length();
 
         // half of the fov is center to top of screen
         targetDistance *= Math.tan(( scope.object.fov / 2 ) * Math.PI / 180.0);
@@ -430,7 +430,7 @@ module.exports = OrbitControls = function (object, domElement) {
     rotateEnd.set(event.clientX, event.clientY);
     rotateDelta.subVectors(rotateEnd, rotateStart);
 
-    var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+    let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
     // rotating across whole screen goes 360 degrees around
     rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
@@ -531,10 +531,10 @@ module.exports = OrbitControls = function (object, domElement) {
   }
 
   function handleTouchStartDolly(event) {
-    var dx = event.touches[0].pageX - event.touches[1].pageX;
-    var dy = event.touches[0].pageY - event.touches[1].pageY;
+    let dx = event.touches[0].pageX - event.touches[1].pageX;
+    let dy = event.touches[0].pageY - event.touches[1].pageY;
 
-    var distance = Math.sqrt(dx * dx + dy * dy);
+    let distance = Math.sqrt(dx * dx + dy * dy);
 
     dollyStart.set(0, distance);
   }
@@ -547,7 +547,7 @@ module.exports = OrbitControls = function (object, domElement) {
     rotateEnd.set(event.touches[0].pageX, event.touches[0].pageY);
     rotateDelta.subVectors(rotateEnd, rotateStart);
 
-    var element = scope.domElement === document ? scope.domElement.body : scope.domElement;
+    let element = scope.domElement === document ? scope.domElement.body : scope.domElement;
 
     // rotating across whole screen goes 360 degrees around
     rotateLeft(2 * Math.PI * rotateDelta.x / element.clientWidth * scope.rotateSpeed);
@@ -561,10 +561,10 @@ module.exports = OrbitControls = function (object, domElement) {
   }
 
   function handleTouchMoveDolly(event) {
-    var dx = event.touches[0].pageX - event.touches[1].pageX;
-    var dy = event.touches[0].pageY - event.touches[1].pageY;
+    let dx = event.touches[0].pageX - event.touches[1].pageX;
+    let dy = event.touches[0].pageY - event.touches[1].pageY;
 
-    var distance = Math.sqrt(dx * dx + dy * dy);
+    let distance = Math.sqrt(dx * dx + dy * dy);
 
     dollyEnd.set(0, distance);
 

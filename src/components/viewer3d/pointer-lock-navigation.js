@@ -38,8 +38,8 @@ export function initPointerLock(camera, rendererElement) {
 
 function collision(controls, collisionArray) {
 
-  var rotationMatrix;
-  var cameraDirection = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
+  let rotationMatrix;
+  let cameraDirection = controls.getDirection(new THREE.Vector3(0, 0, 0)).clone();
 
   if (controls.moveForward()) {
     // Nothing to do!
@@ -61,8 +61,8 @@ function collision(controls, collisionArray) {
   if (rotationMatrix !== undefined) {
     cameraDirection.applyMatrix4(rotationMatrix);
   }
-  var rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection.normalize());
-  var intersects = rayCaster.intersectObjects(collisionArray, true);
+  let rayCaster = new THREE.Raycaster(controls.getObject().position, cameraDirection.normalize());
+  let intersects = rayCaster.intersectObjects(collisionArray, true);
 
   if ((intersects.length > 0 && intersects[0].distance < 10)) {
     return true;
@@ -79,13 +79,13 @@ function collision(controls, collisionArray) {
 /*
  function collision(object, boundingGeometry, collisionArray ) {
 
- for (var vertexIndex = 0; vertexIndex < boundingGeometry.geometry.vertices.length; vertexIndex++)	{
- var localVertex = boundingGeometry.geometry.vertices[vertexIndex].clone();
- var globalVertex = localVertex.applyMatrix4( object.matrix );
- var directionVector = globalVertex.sub( object.position );
+ for (let vertexIndex = 0; vertexIndex < boundingGeometry.geometry.vertices.length; vertexIndex++)	{
+ let localVertex = boundingGeometry.geometry.vertices[vertexIndex].clone();
+ let globalVertex = localVertex.applyMatrix4( object.matrix );
+ let directionVector = globalVertex.sub( object.position );
 
- var ray = new THREE.Raycaster(object.position, directionVector.clone().normalize());
- var collisionResults = ray.intersectObjects(collisionArray, true);
+ let ray = new THREE.Raycaster(object.position, directionVector.clone().normalize());
+ let collisionResults = ray.intersectObjects(collisionArray, true);
  if (collisionResults.length > 0 && collisionResults[0].distance < directionVector.length() - 1293) {
  console.log("collisione: ",collisionResults[0].distance," ",directionVector.length()-1293);
  return true;
@@ -103,9 +103,9 @@ function translateY(controls, ray, objects) {
   controls.isOnObject(false);
   ray.ray.origin.copy(controls.getObject().position);
   ray.ray.origin.y -= 10;
-  var intersections = ray.intersectObjects(objects, true);
+  let intersections = ray.intersectObjects(objects, true);
   if (intersections.length > 0) {
-    var distance = intersections[0].distance;
+    let distance = intersections[0].distance;
     if (distance > 0 && distance < 10) {
       controls.isOnObject(true);
     }

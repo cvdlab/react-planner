@@ -1,4 +1,4 @@
-var shortid = require('shortid');
+let shortid = require('shortid');
 
 export class IDBroker {
 

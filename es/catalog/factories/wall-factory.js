@@ -72,7 +72,7 @@ export default function WallFactory(name, info, textures) {
 
   if (textures && textures !== {}) {
 
-    var textureValues = {
+    let textureValues = {
       'none': 'None'
     };
 

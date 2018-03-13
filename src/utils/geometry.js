@@ -116,8 +116,8 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
     return {type: "parallel"};
   }
 
-  var uA = numA / denom;
-  var uB = numB / denom;
+  let uA = numA / denom;
+  let uB = numB / denom;
 
   if (uA >= (0 - EPSILON) && uA <= (1 + EPSILON) && uB >= (0 - EPSILON) && uB <= (1 + EPSILON)) {
     let point = {

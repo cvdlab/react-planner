@@ -103,7 +103,7 @@ export default function Viewer2D({state, width, height},
   let onMouseMove = viewerEvent => {
 
     //workaround that allow imageful component to work
-    var evt = new Event('mousemove-planner-event');
+    let evt = new Event('mousemove-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
@@ -152,7 +152,7 @@ export default function Viewer2D({state, width, height},
     let event = viewerEvent.originalEvent;
 
     //workaround that allow imageful component to work
-    var evt = new Event('mousedown-planner-event' );
+    let evt = new Event('mousedown-planner-event' );
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
@@ -192,7 +192,7 @@ export default function Viewer2D({state, width, height},
   let onMouseUp = viewerEvent => {
     let event = viewerEvent.originalEvent;
 
-    var evt = new Event('mouseup-planner-event' );
+    let evt = new Event('mouseup-planner-event' );
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 

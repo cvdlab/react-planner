@@ -4,7 +4,7 @@
  * @author angelxuanchang
  */
 
-var THREE = window.THREE || require('three');
+let THREE = window.THREE || require('three');
 let MTLLoader;
 
 MTLLoader = function( manager ) {
@@ -30,9 +30,9 @@ Object.assign( MTLLoader.prototype, THREE.EventDispatcher.prototype, {
 	 */
 	load: function ( url, onLoad, onProgress, onError ) {
 
-		var scope = this;
+		let scope = this;
 
-		var loader = new THREE.XHRLoader( this.manager );
+		let loader = new THREE.XHRLoader( this.manager );
 		loader.setPath( this.path );
 		loader.load( url, function ( text ) {
 
@@ -111,14 +111,14 @@ Object.assign( MTLLoader.prototype, THREE.EventDispatcher.prototype, {
 	 */
 	parse: function ( text ) {
 
-		var lines = text.split( '\n' );
-		var info = {};
-		var delimiter_pattern = /\s+/;
-		var materialsInfo = {};
+		let lines = text.split( '\n' );
+		let info = {};
+		let delimiter_pattern = /\s+/;
+		let materialsInfo = {};
 
-		for ( var i = 0; i < lines.length; i ++ ) {
+		for ( let i = 0; i < lines.length; i ++ ) {
 
-			var line = lines[ i ];
+			let line = lines[ i ];
 			line = line.trim();
 
 			if ( line.length === 0 || line.charAt( 0 ) === '#' ) {
@@ -128,12 +128,12 @@ Object.assign( MTLLoader.prototype, THREE.EventDispatcher.prototype, {
 
 			}
 
-			var pos = line.indexOf( ' ' );
+			let pos = line.indexOf( ' ' );
 
-			var key = ( pos >= 0 ) ? line.substring( 0, pos ) : line;
+			let key = ( pos >= 0 ) ? line.substring( 0, pos ) : line;
 			key = key.toLowerCase();
 
-			var value = ( pos >= 0 ) ? line.substring( pos + 1 ) : '';
+			let value = ( pos >= 0 ) ? line.substring( pos + 1 ) : '';
 			value = value.trim();
 
 			if ( key === 'newmtl' ) {
@@ -147,7 +147,7 @@ Object.assign( MTLLoader.prototype, THREE.EventDispatcher.prototype, {
 
 				if ( key === 'ka' || key === 'kd' || key === 'ks' ) {
 
-					var ss = value.split( delimiter_pattern, 3 );
+					let ss = value.split( delimiter_pattern, 3 );
 					info[ key ] = [ parseFloat( ss[ 0 ] ), parseFloat( ss[ 1 ] ), parseFloat( ss[ 2 ] ) ];
 
 				} else {
@@ -160,7 +160,7 @@ Object.assign( MTLLoader.prototype, THREE.EventDispatcher.prototype, {
 
 		}
 
-		var materialCreator = new MTLLoader.MaterialCreator( this.texturePath || this.path, this.materialOptions );
+		let materialCreator = new MTLLoader.MaterialCreator( this.texturePath || this.path, this.materialOptions );
 		materialCreator.setCrossOrigin( this.crossOrigin );
 		materialCreator.setManager( this.manager );
 		materialCreator.setMaterials( materialsInfo );
@@ -228,23 +228,23 @@ MTLLoader.MaterialCreator.prototype = {
 
 		if ( ! this.options ) return materialsInfo;
 
-		var converted = {};
+		let converted = {};
 
-		for ( var mn in materialsInfo ) {
+		for ( let mn in materialsInfo ) {
 
 			// Convert materials info into normalized form based on options
 
-			var mat = materialsInfo[ mn ];
+			let mat = materialsInfo[ mn ];
 
-			var covmat = {};
+			let covmat = {};
 
 			converted[ mn ] = covmat;
 
-			for ( var prop in mat ) {
+			for ( let prop in mat ) {
 
-				var save = true;
-				var value = mat[ prop ];
-				var lprop = prop.toLowerCase();
+				let save = true;
+				let value = mat[ prop ];
+				let lprop = prop.toLowerCase();
 
 				switch ( lprop ) {
 
@@ -295,7 +295,7 @@ MTLLoader.MaterialCreator.prototype = {
 
 	preload: function () {
 
-		for ( var mn in this.materialsInfo ) {
+		for ( let mn in this.materialsInfo ) {
 
 			this.create( mn );
 
@@ -311,9 +311,9 @@ MTLLoader.MaterialCreator.prototype = {
 
 	getAsArray: function() {
 
-		var index = 0;
+		let index = 0;
 
-		for ( var mn in this.materialsInfo ) {
+		for ( let mn in this.materialsInfo ) {
 
 			this.materialsArray[ index ] = this.create( mn );
 			this.nameLookup[ mn ] = index;
@@ -341,15 +341,15 @@ MTLLoader.MaterialCreator.prototype = {
 
 		// Create material
 
-		var mat = this.materialsInfo[ materialName ];
-		var params = {
+		let mat = this.materialsInfo[ materialName ];
+		let params = {
 
 			name: materialName,
 			side: this.side
 
 		};
 
-		var resolveURL = function ( baseUrl, url ) {
+		let resolveURL = function ( baseUrl, url ) {
 
 			if ( typeof url !== 'string' || url === '' )
 				return '';
@@ -362,9 +362,9 @@ MTLLoader.MaterialCreator.prototype = {
 			return baseUrl + url;
 		};
 
-		for ( var prop in mat ) {
+		for ( let prop in mat ) {
 
-			var value = mat[ prop ];
+			let value = mat[ prop ];
 
 			if ( value === '' ) continue;
 
@@ -393,7 +393,7 @@ MTLLoader.MaterialCreator.prototype = {
 
 					if ( params.map ) break; // Keep the first encountered texture
 
-					var texParams = this.getTextureParams( value, params );
+					let texParams = this.getTextureParams( value, params );
 
 					params.map = this.loadTexture( resolveURL( this.baseUrl, texParams.url ) );
 					params.map.repeat.copy( texParams.scale );
@@ -454,7 +454,7 @@ MTLLoader.MaterialCreator.prototype = {
 
 					if ( params.bumpMap ) break; // Keep the first encountered texture
 
-					var texParams = this.getTextureParams( value, params );
+					let texParams = this.getTextureParams( value, params );
 
 					params.bumpMap = this.loadTexture( resolveURL( this.baseUrl, texParams.url ) );
 					params.bumpMap.repeat.copy( texParams.scale );
@@ -478,15 +478,15 @@ MTLLoader.MaterialCreator.prototype = {
 
 	getTextureParams: function( value, matParams ) {
 
-		var texParams = {
+		let texParams = {
 
 			scale: new THREE.Vector2( 1, 1 ),
 			offset: new THREE.Vector2( 0, 0 ),
 
 		 };
 
-		var items = value.split(/\s+/);
-		var pos;
+		let items = value.split(/\s+/);
+		let pos;
 
 		pos = items.indexOf('-bm');
 		if (pos >= 0) {
@@ -519,9 +519,9 @@ MTLLoader.MaterialCreator.prototype = {
 
 	loadTexture: function ( url, mapping, onLoad, onProgress, onError ) {
 
-		var texture;
-		var loader = THREE.Loader.Handlers.get( url );
-		var manager = ( this.manager !== undefined ) ? this.manager : THREE.DefaultLoadingManager;
+		let texture;
+		let loader = THREE.Loader.Handlers.get( url );
+		let manager = ( this.manager !== undefined ) ? this.manager : THREE.DefaultLoadingManager;
 
 		if ( loader === null ) {
 

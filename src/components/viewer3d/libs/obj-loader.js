@@ -2,7 +2,7 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-var THREE = window.THREE || require('three');
+let THREE = window.THREE || require('three');
 let OBJLoader;
 
 OBJLoader = function (manager) {
@@ -44,9 +44,9 @@ OBJLoader.prototype = {
 
   load: function (url, onLoad, onProgress, onError) {
 
-    var scope = this;
+    let scope = this;
 
-    var loader = new THREE.XHRLoader(scope.manager);
+    let loader = new THREE.XHRLoader(scope.manager);
     loader.setPath(this.path);
     loader.load(url, function (text) {
 
@@ -70,7 +70,7 @@ OBJLoader.prototype = {
 
   _createParserState: function () {
 
-    var state = {
+    let state = {
       objects: [],
       object: {},
 
@@ -98,7 +98,7 @@ OBJLoader.prototype = {
 
         }
 
-        var previousMaterial = ( this.object && typeof this.object.currentMaterial === 'function' ? this.object.currentMaterial() : undefined );
+        let previousMaterial = ( this.object && typeof this.object.currentMaterial === 'function' ? this.object.currentMaterial() : undefined );
 
         this.object = {
           name: name || '',
@@ -114,7 +114,7 @@ OBJLoader.prototype = {
 
           startMaterial: function (name, libraries) {
 
-            var previous = this._finalize(false);
+            let previous = this._finalize(false);
 
             // New usemtl declaration overwrites an inherited material, except if faces were declared
             // after the material, then it must be preserved for proper MultiMaterial continuation.
@@ -124,7 +124,7 @@ OBJLoader.prototype = {
 
             }
 
-            var material = {
+            let material = {
               index: this.materials.length,
               name: name || '',
               mtllib: ( Array.isArray(libraries) && libraries.length > 0 ? libraries[libraries.length - 1] : '' ),
@@ -166,7 +166,7 @@ OBJLoader.prototype = {
 
           _finalize: function (end) {
 
-            var lastMultiMaterial = this.currentMaterial();
+            let lastMultiMaterial = this.currentMaterial();
             if (lastMultiMaterial && lastMultiMaterial.groupEnd === -1) {
 
               lastMultiMaterial.groupEnd = this.geometry.vertices.length / 3;
@@ -196,7 +196,7 @@ OBJLoader.prototype = {
 
         if (previousMaterial && previousMaterial.name && typeof previousMaterial.clone === "function") {
 
-          var declared = previousMaterial.clone(0);
+          let declared = previousMaterial.clone(0);
           declared.inherited = true;
           this.object.materials.push(declared);
 
@@ -218,29 +218,29 @@ OBJLoader.prototype = {
 
       parseVertexIndex: function (value, len) {
 
-        var index = parseInt(value, 10);
+        let index = parseInt(value, 10);
         return ( index >= 0 ? index - 1 : index + len / 3 ) * 3;
 
       },
 
       parseNormalIndex: function (value, len) {
 
-        var index = parseInt(value, 10);
+        let index = parseInt(value, 10);
         return ( index >= 0 ? index - 1 : index + len / 3 ) * 3;
 
       },
 
       parseUVIndex: function (value, len) {
 
-        var index = parseInt(value, 10);
+        let index = parseInt(value, 10);
         return ( index >= 0 ? index - 1 : index + len / 2 ) * 2;
 
       },
 
       addVertex: function (a, b, c) {
 
-        var src = this.vertices;
-        var dst = this.object.geometry.vertices;
+        let src = this.vertices;
+        let dst = this.object.geometry.vertices;
 
         dst.push(src[a + 0]);
         dst.push(src[a + 1]);
@@ -256,8 +256,8 @@ OBJLoader.prototype = {
 
       addVertexLine: function (a) {
 
-        var src = this.vertices;
-        var dst = this.object.geometry.vertices;
+        let src = this.vertices;
+        let dst = this.object.geometry.vertices;
 
         dst.push(src[a + 0]);
         dst.push(src[a + 1]);
@@ -267,8 +267,8 @@ OBJLoader.prototype = {
 
       addNormal: function (a, b, c) {
 
-        var src = this.normals;
-        var dst = this.object.geometry.normals;
+        let src = this.normals;
+        let dst = this.object.geometry.normals;
 
         dst.push(src[a + 0]);
         dst.push(src[a + 1]);
@@ -284,8 +284,8 @@ OBJLoader.prototype = {
 
       addUV: function (a, b, c) {
 
-        var src = this.uvs;
-        var dst = this.object.geometry.uvs;
+        let src = this.uvs;
+        let dst = this.object.geometry.uvs;
 
         dst.push(src[a + 0]);
         dst.push(src[a + 1]);
@@ -298,8 +298,8 @@ OBJLoader.prototype = {
 
       addUVLine: function (a) {
 
-        var src = this.uvs;
-        var dst = this.object.geometry.uvs;
+        let src = this.uvs;
+        let dst = this.object.geometry.uvs;
 
         dst.push(src[a + 0]);
         dst.push(src[a + 1]);
@@ -308,12 +308,12 @@ OBJLoader.prototype = {
 
       addFace: function (a, b, c, d, ua, ub, uc, ud, na, nb, nc, nd) {
 
-        var vLen = this.vertices.length;
+        let vLen = this.vertices.length;
 
-        var ia = this.parseVertexIndex(a, vLen);
-        var ib = this.parseVertexIndex(b, vLen);
-        var ic = this.parseVertexIndex(c, vLen);
-        var id;
+        let ia = this.parseVertexIndex(a, vLen);
+        let ib = this.parseVertexIndex(b, vLen);
+        let ic = this.parseVertexIndex(c, vLen);
+        let id;
 
         if (d === undefined) {
 
@@ -330,7 +330,7 @@ OBJLoader.prototype = {
 
         if (ua !== undefined) {
 
-          var uvLen = this.uvs.length;
+          let uvLen = this.uvs.length;
 
           ia = this.parseUVIndex(ua, uvLen);
           ib = this.parseUVIndex(ub, uvLen);
@@ -354,7 +354,7 @@ OBJLoader.prototype = {
         if (na !== undefined) {
 
           // Normals are many times the same. If so, skip function call and parseInt.
-          var nLen = this.normals.length;
+          let nLen = this.normals.length;
           ia = this.parseNormalIndex(na, nLen);
 
           ib = na === nb ? ia : this.parseNormalIndex(nb, nLen);
@@ -381,16 +381,16 @@ OBJLoader.prototype = {
 
         this.object.geometry.type = 'Line';
 
-        var vLen = this.vertices.length;
-        var uvLen = this.uvs.length;
+        let vLen = this.vertices.length;
+        let uvLen = this.uvs.length;
 
-        for (var vi = 0, l = vertices.length; vi < l; vi++) {
+        for (let vi = 0, l = vertices.length; vi < l; vi++) {
 
           this.addVertexLine(this.parseVertexIndex(vertices[vi], vLen));
 
         }
 
-        for (var uvi = 0, l = uvs.length; uvi < l; uvi++) {
+        for (let uvi = 0, l = uvs.length; uvi < l; uvi++) {
 
           this.addUVLine(this.parseUVIndex(uvs[uvi], uvLen));
 
@@ -410,7 +410,7 @@ OBJLoader.prototype = {
 
     console.time('OBJLoader');
 
-    var state = this._createParserState();
+    let state = this._createParserState();
 
     if (text.indexOf('\r\n') !== -1) {
 
@@ -419,15 +419,15 @@ OBJLoader.prototype = {
 
     }
 
-    var lines = text.split('\n');
-    var line = '', lineFirstChar = '', lineSecondChar = '';
-    var lineLength = 0;
-    var result = [];
+    let lines = text.split('\n');
+    let line = '', lineFirstChar = '', lineSecondChar = '';
+    let lineLength = 0;
+    let result = [];
 
     // Faster to just trim left side of the line. Use if available.
-    var trimLeft = ( typeof ''.trimLeft === 'function' );
+    let trimLeft = ( typeof ''.trimLeft === 'function' );
 
-    for (var i = 0, l = lines.length; i < l; i++) {
+    for (let i = 0, l = lines.length; i < l; i++) {
 
       line = lines[i];
 
@@ -539,8 +539,8 @@ OBJLoader.prototype = {
 
       } else if (lineFirstChar === "l") {
 
-        var lineParts = line.substring(1).trim().split(" ");
-        var lineVertices = [], lineUVs = [];
+        let lineParts = line.substring(1).trim().split(" ");
+        let lineVertices = [], lineUVs = [];
 
         if (line.indexOf("/") === -1) {
 
@@ -548,9 +548,9 @@ OBJLoader.prototype = {
 
         } else {
 
-          for (var li = 0, llen = lineParts.length; li < llen; li++) {
+          for (let li = 0, llen = lineParts.length; li < llen; li++) {
 
-            var parts = lineParts[li].split("/");
+            let parts = lineParts[li].split("/");
 
             if (parts[0] !== "") lineVertices.push(parts[0]);
             if (parts[1] !== "") lineUVs.push(parts[1]);
@@ -566,7 +566,7 @@ OBJLoader.prototype = {
         // or
         // g group_name
 
-        var name = result[0].substr(1).trim();
+        let name = result[0].substr(1).trim();
         state.startObject(name);
 
       } else if (this.regexp.material_use_pattern.test(line)) {
@@ -592,10 +592,10 @@ OBJLoader.prototype = {
         // where explicit usemtl defines geometry groups.
         // Example asset: examples/models/obj/cerberus/Cerberus.obj
 
-        var value = result[1].trim().toLowerCase();
+        let value = result[1].trim().toLowerCase();
         state.object.smooth = ( value === '1' || value === 'on' );
 
-        var material = state.object.currentMaterial();
+        let material = state.object.currentMaterial();
         if (material) {
 
           material.smooth = state.object.smooth;
@@ -615,20 +615,20 @@ OBJLoader.prototype = {
 
     state.finalize();
 
-    var container = new THREE.Group();
+    let container = new THREE.Group();
     container.materialLibraries = [].concat(state.materialLibraries);
 
-    for (var i = 0, l = state.objects.length; i < l; i++) {
+    for (let i = 0, l = state.objects.length; i < l; i++) {
 
-      var object = state.objects[i];
-      var geometry = object.geometry;
-      var materials = object.materials;
-      var isLine = ( geometry.type === 'Line' );
+      let object = state.objects[i];
+      let geometry = object.geometry;
+      let materials = object.materials;
+      let isLine = ( geometry.type === 'Line' );
 
       // Skip o/g line declarations that did not follow with any faces
       if (geometry.vertices.length === 0) continue;
 
-      var buffergeometry = new THREE.BufferGeometry();
+      let buffergeometry = new THREE.BufferGeometry();
 
       buffergeometry.addAttribute('position', new THREE.BufferAttribute(new Float32Array(geometry.vertices), 3));
 
@@ -650,12 +650,12 @@ OBJLoader.prototype = {
 
       // Create materials
 
-      var createdMaterials = [];
+      let createdMaterials = [];
 
-      for (var mi = 0, miLen = materials.length; mi < miLen; mi++) {
+      for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
 
-        var sourceMaterial = materials[mi];
-        var material = undefined;
+        let sourceMaterial = materials[mi];
+        let material = undefined;
 
         if (this.materials !== null) {
 
@@ -664,7 +664,7 @@ OBJLoader.prototype = {
           // mtl etc. loaders probably can't create line materials correctly, copy properties to a line material.
           if (isLine && material && !( material instanceof THREE.LineBasicMaterial )) {
 
-            var materialLine = new THREE.LineBasicMaterial();
+            let materialLine = new THREE.LineBasicMaterial();
             materialLine.copy(material);
             material = materialLine;
 
@@ -687,18 +687,18 @@ OBJLoader.prototype = {
 
       // Create mesh
 
-      var mesh;
+      let mesh;
 
       if (createdMaterials.length > 1) {
 
-        for (var mi = 0, miLen = materials.length; mi < miLen; mi++) {
+        for (let mi = 0, miLen = materials.length; mi < miLen; mi++) {
 
-          var sourceMaterial = materials[mi];
+          let sourceMaterial = materials[mi];
           buffergeometry.addGroup(sourceMaterial.groupStart, sourceMaterial.groupCount, mi);
 
         }
 
-        var multiMaterial = new THREE.MultiMaterial(createdMaterials);
+        let multiMaterial = new THREE.MultiMaterial(createdMaterials);
         mesh = ( !isLine ? new THREE.Mesh(buffergeometry, multiMaterial) : new THREE.Line(buffergeometry, multiMaterial) );
 
       } else {

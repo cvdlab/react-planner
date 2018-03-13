@@ -1,13 +1,13 @@
 export function browserDownload(json) {
-  var fileOutputLink = document.createElement('a');
+  let fileOutputLink = document.createElement('a');
 
-  var filename = "output" + Date.now() + ".json";
+  let filename = "output" + Date.now() + ".json";
   filename = window.prompt("Insert output filename", filename);
   if (!filename) return;
 
-  var output = JSON.stringify(json);
-  var data = new Blob([output], {type: 'text/plain'});
-  var url = window.URL.createObjectURL(data);
+  let output = JSON.stringify(json);
+  let data = new Blob([output], {type: 'text/plain'});
+  let url = window.URL.createObjectURL(data);
   fileOutputLink.setAttribute('download', filename);
   fileOutputLink.href = url;
   fileOutputLink.style.display = 'none';
@@ -19,14 +19,14 @@ export function browserDownload(json) {
 export function browserUpload() {
   return new Promise(function (resolve, reject) {
 
-    var fileInput = document.createElement('input');
+    let fileInput = document.createElement('input');
     fileInput.type = "file";
 
     fileInput.addEventListener('change', function (event) {
-      var file = event.target.files[0];
-      var reader = new FileReader();
+      let file = event.target.files[0];
+      let reader = new FileReader();
       reader.addEventListener('load', (fileEvent) => {
-        var loadedData = fileEvent.target.result;
+        let loadedData = fileEvent.target.result;
         resolve(loadedData);
       });
       reader.readAsText(file);
@@ -40,18 +40,18 @@ export function browserUpload() {
 export function browserImageUpload() {
   return new Promise(function (resolve, reject) {
 
-    var fileInput = document.createElement('input');
+    let fileInput = document.createElement('input');
     fileInput.type = "file";
 
     fileInput.addEventListener('change', function (event) {
-      var file = event.target.files[0];
-      var reader = new FileReader();
+      let file = event.target.files[0];
+      let reader = new FileReader();
       reader.addEventListener('load', (fileEvent) => {
-        var loadedData = fileEvent.target.result;
+        let loadedData = fileEvent.target.result;
 
-        var fileInput = document.createElement('input');
+        let fileInput = document.createElement('input');
 
-        var image = new Image();
+        let image = new Image();
         image.onload = ()=> {
           resolve({data: loadedData, width: image.width, height: image.height});
         };
