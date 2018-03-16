@@ -393,7 +393,7 @@ MTLLoader.MaterialCreator.prototype = {
 
 					if ( params.map ) break; // Keep the first encountered texture
 
-					let texParams = this.getTextureParams( value, params );
+					var texParams = this.getTextureParams( value, params );
 
 					params.map = this.loadTexture( resolveURL( this.baseUrl, texParams.url ) );
 					params.map.repeat.copy( texParams.scale );
@@ -454,7 +454,7 @@ MTLLoader.MaterialCreator.prototype = {
 
 					if ( params.bumpMap ) break; // Keep the first encountered texture
 
-					let texParams = this.getTextureParams( value, params );
+					var texParams = this.getTextureParams( value, params );
 
 					params.bumpMap = this.loadTexture( resolveURL( this.baseUrl, texParams.url ) );
 					params.bumpMap.repeat.copy( texParams.scale );
