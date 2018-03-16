@@ -664,7 +664,11 @@ export function detectAndUpdateAreas(layer, catalog) {
     // Build a relationship between areas and their coordinates
     var verticesCoordsForArea = areaIDs.map(function (id) {
       var vertices = layer.areas.get(id).vertices.map(function (vertexID) {
-        return layer.vertices.get(vertexID);
+        var _layer$vertices$get = layer.vertices.get(vertexID),
+            x = _layer$vertices$get.x,
+            y = _layer$vertices$get.y;
+
+        return new List([x, y]);
       });
       return { id: id, vertices: vertices };
     });

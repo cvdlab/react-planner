@@ -36,8 +36,8 @@ function compute_incidences(V, EV) {
   var incidences = V.map(function (vertex, i) {
     var incidence = [];
     EV.forEach(function (edge, j) {
-      var endpoint;
-      var position;
+      var endpoint = void 0;
+      var position = void 0;
 
       if (edge[0] === i) {
         endpoint = edge[1];
@@ -69,9 +69,9 @@ function compute_incidences(V, EV) {
 }
 
 function get_starting_edge(incidences, ev_mapping) {
-  var e;
-  var position;
-  var direction;
+  var e = void 0;
+  var position = void 0;
+  var direction = void 0;
   for (e = 0; e < ev_mapping.length; e += 1) {
     if (ev_mapping[e].color < 2) {
       direction = -1 * ev_mapping[e].direction;
@@ -89,9 +89,9 @@ function get_next_edge(incidences, edge, position, EV) {
   var items = incidences[EV[edge][position]];
   //console.log(items, incidences, EV, edge, position);
   var n_items = items.length;
-  var item;
-  var out;
-  var j;
+  var item = void 0;
+  var out = void 0;
+  var j = void 0;
   for (j = 0; j < n_items; j += 1) {
     item = items[j];
     if (item.index === edge) {
@@ -117,10 +117,10 @@ function find_cycles(V, EV) {
   var V_cycles = [];
   var E_cycles = [];
   var dir_E_cycles = [];
-  var V_cycle;
-  var E_cycle;
-  var dir_E_cycle;
-  var next;
+  var V_cycle = void 0;
+  var E_cycle = void 0;
+  var dir_E_cycle = void 0;
+  var next = void 0;
   var counter = 0;
   var start = get_starting_edge(incidences, ev_mapping);
 
@@ -160,9 +160,9 @@ function find_cycles(V, EV) {
 
 function find_short_cycles_indexes(v_cycles, e_cycles) {
   var indexes = [];
-  var e_cycle;
-  var v_cycle;
-  var i;
+  var e_cycle = void 0;
+  var v_cycle = void 0;
+  var i = void 0;
 
   for (i = 0; i < e_cycles.length; i += 1) {
     e_cycle = e_cycles[i];
@@ -187,8 +187,8 @@ function find_inner_cycles(V, EV) {
   var dir_e_cycles = cycles.dir_e_cycles;
   var rooms_values = cycles.e_cycles.map(function (cycle, i) {
     return cycle.map(function (edge, j) {
-      var v1;
-      var v2;
+      var v1 = void 0;
+      var v2 = void 0;
 
       var dir = dir_e_cycles[i][j] > 0;
 
@@ -235,26 +235,26 @@ module.exports = find_inner_cycles;
 * DATA
 */
 
-// var V = [[0.5774, 1.0], [1.0, 1.0], [1.1547, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.732], [1.0, 0.1547], [0.732, 0.0], [1.0491, 0.183], [-0.317, 0.549], [1.0, 0.268], [0.183, -0.3169], [0.5491, 1.049], [0.4642, 1.0], [0.0, -0.4226], [0.0, 1.0]]
-// var EV = [[0, 1], [2, 3], [5, 4], [7, 6], [2, 8], [3, 6], [4, 9], [0, 10], [9, 5], [8, 10], [7, 11], [12, 13], [6, 8], [6, 10], [4, 7], [4, 11], [4, 14], [5, 15], [11, 14], [0, 12], [13, 15], [0, 13], [1, 10], [3, 7], [5, 13]]
+// let V = [[0.5774, 1.0], [1.0, 1.0], [1.1547, 0.0], [1.0, 0.0], [0.0, 0.0], [0.0, 0.732], [1.0, 0.1547], [0.732, 0.0], [1.0491, 0.183], [-0.317, 0.549], [1.0, 0.268], [0.183, -0.3169], [0.5491, 1.049], [0.4642, 1.0], [0.0, -0.4226], [0.0, 1.0]]
+// let EV = [[0, 1], [2, 3], [5, 4], [7, 6], [2, 8], [3, 6], [4, 9], [0, 10], [9, 5], [8, 10], [7, 11], [12, 13], [6, 8], [6, 10], [4, 7], [4, 11], [4, 14], [5, 15], [11, 14], [0, 12], [13, 15], [0, 13], [1, 10], [3, 7], [5, 13]]
 
-// var V = [[0,0],[10,0],[10,10],[0,10], [100,100],[110,100],[110,110],[100,110], [5,0], [5,10]]
-// var V = [[0,0.5],[12,-0.7],[14,14],[-2,10], [103,106],[117,98],[96,112],[104,109], [5.5,0.8], [4.8,10.5]]
-// var EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9]] // IT WORKS
-// var EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9], [5,6], [6,7], [2,5]] // IT DOESN'T WORK
-// var EV = [[3,2],[2,1],[1,0],[0,3]] // IT WORKS
-// var EV = [[2,3],[1,2],[0,1],[3,0]] // IT WORKS
-// var EV = [[2,3],[1,2],[0,1],[3,0],[6,7],[5,6],[4,5],[7,4]] // IT WORKS
-// var EV = [[3,2],[2,1],[1,0],[0,3],[7,6],[6,5],[5,4],[4,7]] // IT WORKS
+// let V = [[0,0],[10,0],[10,10],[0,10], [100,100],[110,100],[110,110],[100,110], [5,0], [5,10]]
+// let V = [[0,0.5],[12,-0.7],[14,14],[-2,10], [103,106],[117,98],[96,112],[104,109], [5.5,0.8], [4.8,10.5]]
+// let EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9]] // IT WORKS
+// let EV = [[3,9],[9,2],[2,1],[1,8],[8,0],[0,3],[8,9], [5,6], [6,7], [2,5]] // IT DOESN'T WORK
+// let EV = [[3,2],[2,1],[1,0],[0,3]] // IT WORKS
+// let EV = [[2,3],[1,2],[0,1],[3,0]] // IT WORKS
+// let EV = [[2,3],[1,2],[0,1],[3,0],[6,7],[5,6],[4,5],[7,4]] // IT WORKS
+// let EV = [[3,2],[2,1],[1,0],[0,3],[7,6],[6,5],[5,4],[4,7]] // IT WORKS
 
-// var V = [[2,5],[5,6],[10,6.8],[23,8],[9.6,11.3],[20,15],[25,16],[29,18],[30,22],[4,11],[6,10],[24,25],[18,20],[27,7]]
-// var EV = [[0,1],[10,0],[9,10],[9,1],[1,2],[4,2],[3,13],[2,3],[4,5],[5,6],[6,7],[12,5],[12,11],[11,6],[11,8],[7,8],[9,4]]
+// let V = [[2,5],[5,6],[10,6.8],[23,8],[9.6,11.3],[20,15],[25,16],[29,18],[30,22],[4,11],[6,10],[24,25],[18,20],[27,7]]
+// let EV = [[0,1],[10,0],[9,10],[9,1],[1,2],[4,2],[3,13],[2,3],[4,5],[5,6],[6,7],[12,5],[12,11],[11,6],[11,8],[7,8],[9,4]]
 
 /**
 * MAIN
 */
 
-// var cycles_data = find_inner_cycles(V, EV)
+// let cycles_data = find_inner_cycles(V, EV)
 // console.log('############## OUTPUT')
 // console.log('EDGES:')
 // console.log(cycles_data.e_cycles)
