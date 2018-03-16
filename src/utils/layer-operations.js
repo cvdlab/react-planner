@@ -536,7 +536,9 @@ export function detectAndUpdateAreas(layer, catalog) {
 
     // Build a relationship between areas and their coordinates
     let verticesCoordsForArea = areaIDs.map(id => {
-      let vertices = layer.areas.get(id).vertices.map(vertexID => layer.vertices.get(vertexID));
+      let vertices = layer.areas.get(id).vertices.map(vertexID => {
+        let { x, y } = layer.vertices.get(vertexID); return new List([x,y]);
+      });
       return { id, vertices };
     });
 
