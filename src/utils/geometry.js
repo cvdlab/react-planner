@@ -6,10 +6,10 @@
  *  @return {number}
  */
 import {toFixedFloat, fAbs} from './math.js';
-import {EPSILON} from "../constants";
+import {EPSILON} from '../constants';
 
 export function compareVertices(v0, v1) {
-  return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x
+  return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x;
 }
 
 export function minVertex(v0, v1) {
@@ -40,18 +40,15 @@ export function verticesDistance(v1, v2) {
 }
 
 export function horizontalLine(y) {
-  return {a: 0, b: 1, c: -y}
+  return {a: 0, b: 1, c: -y};
 }
 
 export function verticalLine(x) {
-  return {a: 1, b: 0, c: -x}
+  return {a: 1, b: 0, c: -x};
 }
 
 export function linePassingThroughTwoPoints(x1, y1, x2, y2) {
-  // (x2 - x1)(y - y1) = (y2 - y1)(x - x1)
-  // (y1 - y2)x + (x2 - x1)y + (y2x1 - x2y1) = 0
-
-  if (x1 === x2 && y1 == y2) throw new Error("Geometry error");
+  if (x1 === x2 && y1 == y2) throw new Error('Geometry error');
   if (x1 === x2) return verticalLine(x);
   if (y1 === y2) return horizontalLine(y1);
 
@@ -108,12 +105,12 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
       let [lineSX, lineDX] = [line0, line1].sort((lineA, lineB) => comparator(lineA[0], lineB[0]));
 
       if (lineSX[1].x === lineDX[0].x) {
-        return {type: (lineDX[0].y <= lineSX[1].y) ? "colinear" : "none"};
+        return {type: (lineDX[0].y <= lineSX[1].y) ? 'colinear' : 'none'};
       } else {
-        return {type: (lineDX[0].x <= lineSX[1].x) ? "colinear" : "none"};
+        return {type: (lineDX[0].x <= lineSX[1].x) ? 'colinear' : 'none'};
       }
     }
-    return {type: "parallel"};
+    return {type: 'parallel'};
   }
 
   let uA = numA / denom;
@@ -124,10 +121,10 @@ export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
       x: x1 + (uA * (x2 - x1)),
       y: y1 + (uA * (y2 - y1))
     };
-    return {type: "intersecting", point};
+    return {type: 'intersecting', point};
   }
 
-  return {type: "none"};
+  return {type: 'none'};
 }
 
 export function distancePointFromLineSegment(x1, y1, x2, y2, xp, yp) {
