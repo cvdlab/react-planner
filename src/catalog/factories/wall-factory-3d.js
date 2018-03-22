@@ -165,7 +165,8 @@ export function buildWall(element, layer, scene, textures)
   let distance = verticesDistance( vertex0, vertex1 );
   let halfDistance = distance / 2;
 
-  let soul = new Mesh( new BoxGeometry(distance, height, thickness) );
+  let soulMaterial = new MeshBasicMaterial( {color: ( element.selected ? bboxColor : 0xD3D3D3 )} );
+  let soul = new Mesh( new BoxGeometry(distance, height, thickness), soulMaterial );
 
   let alpha = Math.asin((vertex1.y - vertex0.y) / (distance));
 
@@ -200,7 +201,7 @@ export function buildWall(element, layer, scene, textures)
     let holeBSP = new ThreeBSP( holeMesh );
 
     let wallWithHoleBSP = wallBSP.subtract( holeBSP );
-    soul = wallWithHoleBSP.toMesh( new MeshBasicMaterial( {color: ( element.selected ? bboxColor : 0xD3D3D3 )} ) );
+    soul = wallWithHoleBSP.toMesh( soulMaterial );
   });
 
   soul.name = 'soul';
