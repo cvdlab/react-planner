@@ -1,4 +1,4 @@
-import buildWall from './wall-factory-3d';
+import { buildWall, updatedWall } from './wall-factory-3d';
 import React from 'react';
 import * as SharedStyle from '../../shared-style';
 import * as Geometry from '../../utils/geometry';
@@ -52,8 +52,12 @@ export default function WallFactory(name, info, textures) {
     },
 
     render3D: function (element, layer, scene) {
-      return buildWall(element, layer, scene, textures)
+      return buildWall(element, layer, scene, textures);
     },
+
+    updateRender3D: (element, layer, scene, mesh, oldElement, differences, selfDestroy, selfBuild) => {
+      return updatedWall(element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild);
+    }
 
   };
 
