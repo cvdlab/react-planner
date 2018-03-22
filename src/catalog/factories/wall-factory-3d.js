@@ -15,8 +15,6 @@ import {
   VertexColors,
   BoxGeometry,
   MeshBasicMaterial,
-  FlatShading,
-  Geometry,
   Group
 } from 'three';
 
@@ -218,15 +216,15 @@ export function buildWall(element, layer, scene, textures)
   let frontFace = soul.clone();
   frontFace.material = frontMaterial;
   frontFace.scale.set( 1, 1, scaleFactor );
-  frontFace.position.x += texturedFaceDistance * Math.cos(alpha - ( Math.PI / 2 ) );
-  frontFace.position.z -= texturedFaceDistance * Math.sin(alpha - ( Math.PI / 2 ) );
+  frontFace.position.x += texturedFaceDistance * Math.cos(alpha - ( halfPI ) );
+  frontFace.position.z -= texturedFaceDistance * Math.sin(alpha - ( halfPI ) );
   frontFace.name = 'frontFace';
 
   let backFace = soul.clone();
   backFace.material = backMaterial;
   backFace.scale.set( 1, 1, scaleFactor );
-  backFace.position.x += texturedFaceDistance * Math.cos(alpha + ( Math.PI / 2 ) );
-  backFace.position.z -= texturedFaceDistance * Math.sin(alpha + ( Math.PI / 2 ) );
+  backFace.position.x += texturedFaceDistance * Math.cos(alpha + ( halfPI ) );
+  backFace.position.z -= texturedFaceDistance * Math.sin(alpha + ( halfPI ) );
   backFace.name = 'backFace';
 
   let merged = new Group();
@@ -236,8 +234,6 @@ export function buildWall(element, layer, scene, textures)
 }
 
 export function updatedWall( element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild ) {
-
-  console.log('updated', differences );
   let noPerf = () => { selfDestroy(); return selfBuild(); };
 
   let soul = mesh.getObjectByName('soul');
@@ -257,8 +253,8 @@ export function updatedWall( element, layer, scene, textures, mesh, oldElement, 
       let originalThickness = oldThickness / soul.scale.z;
       let alpha = soul.rotation.y;
 
-      let xTemp = texturedFaceDistance * Math.cos(alpha - ( Math.PI / 2 ) );
-      let zTemp = texturedFaceDistance * Math.sin(alpha - ( Math.PI / 2 ) );
+      let xTemp = texturedFaceDistance * Math.cos(alpha - ( halfPI ) );
+      let zTemp = texturedFaceDistance * Math.sin(alpha - ( halfPI ) );
 
       soul.scale.set( 1, 1, ( newThickness / originalThickness ) );
 
@@ -275,7 +271,7 @@ export function updatedWall( element, layer, scene, textures, mesh, oldElement, 
   return Promise.resolve(mesh);
 }
 
-export function _buildWall(element, layer, scene, textures) {
+export function buildWall_OLD(element, layer, scene, textures) {
 
   // Get the two vertices of the wall
   let vertex0 = layer.vertices.get(element.vertices.get(0));
