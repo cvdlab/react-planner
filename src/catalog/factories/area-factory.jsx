@@ -1,4 +1,4 @@
-import createArea from './area-factory-3d';
+import { createArea, updatedArea } from './area-factory-3d';
 import React from 'react';
 
 export default function AreaFactory(name, info, textures) {
@@ -55,6 +55,10 @@ export default function AreaFactory(name, info, textures) {
     render3D: function (element, layer, scene) {
       return createArea(element, layer, scene, textures)
     },
+
+    updateRender3D: (element, layer, scene, mesh, oldElement, differences, selfDestroy, selfBuild) => {
+      return updatedArea(element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild);
+    }
 
   };
 

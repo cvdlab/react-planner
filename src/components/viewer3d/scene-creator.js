@@ -80,7 +80,6 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
 export function updateScene(planData, sceneData, oldSceneData, diffArray, actions, catalog) {
 
   filterDiffs(diffArray, sceneData, oldSceneData).forEach(diff => {
-
     /* First of all I need to find the object I need to update */
     let modifiedPath = diff.path.split('/');
 
@@ -142,12 +141,18 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
 
   switch (modifiedPath[3]) {
     case 'vertices':
-      let vertex = layer.vertices.get(modifiedPath[4]);
-
       if( modifiedPath[5] !== 'selected' )
       {
-        vertex.areas.forEach( areaID => replaceObject( [0,0,0,'areas',areaID], layer, planData, actions, sceneData, oldSceneData, catalog ) );
-        vertex.lines.forEach( lineID => replaceObject( [0,0,0,'lines',lineID], layer, planData, actions, sceneData, oldSceneData, catalog ) );
+        let vertex = layer.vertices.get(modifiedPath[4]);
+
+        if( modifiedPath[5] === 'x' || modifiedPath[5] === 'y' ) {
+          vertex.lines.forEach( lineID => replaceObject( [0,0,0,'lines',lineID], layer, planData, actions, sceneData, oldSceneData, catalog ) );
+        }
+
+        if(modifiedPath[5] === 'areas') {
+          let areaID = vertex.areas.get(~~modifiedPath[6]);
+          replaceObject( [0,0,0,'areas',areaID], layer, planData, actions, sceneData, oldSceneData, catalog );
+        }
       }
       break;
     case 'holes':
@@ -238,7 +243,9 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       }
       else
       {
-        removeArea(planData, layer.id, modifiedPath[4]);
+        if( planData.sceneGraph.layers[layer.id].areas[modifiedPath[4]] ) {
+          removeArea(planData, layer.id, modifiedPath[4]);
+        }
         promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, actions.areaActions));
       }
       break;

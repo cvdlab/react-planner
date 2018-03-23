@@ -43,3 +43,10 @@ export const SECONDARY_COLOR = {
   icon: '#1CA6FC',
   border: '1px solid #FFF'
 };
+
+export const MESH_SELECTED = 0x99C3FB;
+
+export const AREA_MESH_COLOR = {
+  selected : MESH_SELECTED,
+  unselected : 0xF5F4F4
+};

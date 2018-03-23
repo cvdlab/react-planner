@@ -10,7 +10,8 @@ import {
   Mesh,
   MeshBasicMaterial,
   RepeatWrapping,
-  Vector2
+  Vector2,
+  DoubleSide
 } from 'three';
 import * as SharedStyle from '../../shared-style';
 
@@ -70,7 +71,7 @@ const assignUVs = (geometry) => {
   geometry.uvsNeedUpdate = true;
 };
 
-export default function createArea(element, layer, scene, textures) {
+export function createArea(element, layer, scene, textures) {
   let vertices = [];
 
   element.vertices.forEach(vertexID => {
@@ -81,9 +82,9 @@ export default function createArea(element, layer, scene, textures) {
   let color = element.properties.get('patternColor');
 
   if (element.selected) {
-    color = 0x99c3fb
+    color = SharedStyle.AREA_MESH_COLOR.selected;
   } else if (textureName && textureName !== 'none') {
-    color = SharedStyle.COLORS.white;
+    color = SharedStyle.AREA_MESH_COLOR.unselected;
   }
 
   let shape = new Shape();
@@ -92,8 +93,7 @@ export default function createArea(element, layer, scene, textures) {
     shape.lineTo(vertices[i].x, vertices[i].y);
   }
 
-  let areaMaterial1 = new MeshPhongMaterial({side: FrontSide, color});
-  let areaMaterial2 = new MeshPhongMaterial({side: BackSide, color});
+  let areaMaterial = new MeshPhongMaterial({side: DoubleSide, color});
 
   /* Create holes for the area */
   element.holes.forEach(holeID => {
@@ -117,19 +117,32 @@ export default function createArea(element, layer, scene, textures) {
 
   let texture = textures[textureName];
 
-  applyTexture(areaMaterial1, texture, width, height);
-  applyTexture(areaMaterial2, texture, width, height);
+  applyTexture(areaMaterial, texture, width, height);
 
-  let area = new Object3D();
-
-  let areaFace1 = new Mesh(shapeGeometry, areaMaterial1);
-  let areaFace2 = new Mesh(shapeGeometry, areaMaterial2);
-
-  area.add(areaFace1, areaFace2);
+  let area = new Mesh(shapeGeometry, areaMaterial);
 
   area.rotation.x -= Math.PI / 2;
+  area.name = 'floor';
 
   return Promise.resolve(area);
+}
+
+export function updatedArea( element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild ) {
+  let noPerf = () => { selfDestroy(); return selfBuild(); };
+  let floor = mesh.getObjectByName('floor');
+
+  if( differences[0] == 'selected' ) {
+    let color = element.selected ? SharedStyle.AREA_MESH_COLOR.selected : ( element.properties.get('patternColor') || SharedStyle.AREA_MESH_COLOR.unselected );
+    floor.material.color.set( color );
+  }
+  else if( differences[0] == 'properties' ){
+    if( differences[1] === 'texture' ) {
+      return noPerf();
+    }
+  }
+  else return noPerf();
+
+  return Promise.resolve(mesh);
 }
 
 /**
