@@ -503,8 +503,8 @@ export function detectAndUpdateAreas(layer, catalog) {
 
   let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
 
-  let innerCyclesByVerticesID = innerCyclesByVerticesArrayIndex
-    .map(cycle => cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex]));
+  let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
+    .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
 
   // All area vertices should be ordered in counterclockwise order
   innerCyclesByVerticesID = innerCyclesByVerticesID.map( ( area ) =>
