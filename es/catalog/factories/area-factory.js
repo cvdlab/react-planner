@@ -1,6 +1,6 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-import createArea from './area-factory-3d';
+import { createArea, updatedArea } from './area-factory-3d';
 import React from 'react';
 
 export default function AreaFactory(name, info, textures) {
@@ -54,6 +54,10 @@ export default function AreaFactory(name, info, textures) {
 
     render3D: function render3D(element, layer, scene) {
       return createArea(element, layer, scene, textures);
+    },
+
+    updateRender3D: function updateRender3D(element, layer, scene, mesh, oldElement, differences, selfDestroy, selfBuild) {
+      return updatedArea(element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild);
     }
 
   };

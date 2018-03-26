@@ -616,10 +616,10 @@ export function detectAndUpdateAreas(layer, catalog) {
 
   var innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
 
-  var innerCyclesByVerticesID = innerCyclesByVerticesArrayIndex.map(function (cycle) {
-    return cycle.map(function (vertexIndex) {
+  var innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex).map(function (cycle) {
+    return new List(cycle.map(function (vertexIndex) {
       return verticesArrayIndex_to_vertexID[vertexIndex];
-    });
+    }));
   });
 
   // All area vertices should be ordered in counterclockwise order

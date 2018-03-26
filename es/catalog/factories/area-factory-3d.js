@@ -1,4 +1,4 @@
-import { Shape, MeshPhongMaterial, ShapeGeometry, Box3, TextureLoader, BackSide, FrontSide, Object3D, Mesh, MeshBasicMaterial, RepeatWrapping, Vector2 } from 'three';
+import { Shape, MeshPhongMaterial, ShapeGeometry, Box3, TextureLoader, BackSide, FrontSide, Object3D, Mesh, MeshBasicMaterial, RepeatWrapping, Vector2, DoubleSide } from 'three';
 import * as SharedStyle from '../../shared-style';
 
 /**
@@ -55,7 +55,7 @@ var assignUVs = function assignUVs(geometry) {
   geometry.uvsNeedUpdate = true;
 };
 
-export default function createArea(element, layer, scene, textures) {
+export function createArea(element, layer, scene, textures) {
   var vertices = [];
 
   element.vertices.forEach(function (vertexID) {
@@ -66,9 +66,9 @@ export default function createArea(element, layer, scene, textures) {
   var color = element.properties.get('patternColor');
 
   if (element.selected) {
-    color = 0x99c3fb;
+    color = SharedStyle.AREA_MESH_COLOR.selected;
   } else if (textureName && textureName !== 'none') {
-    color = SharedStyle.COLORS.white;
+    color = SharedStyle.AREA_MESH_COLOR.unselected;
   }
 
   var shape = new Shape();
@@ -77,8 +77,7 @@ export default function createArea(element, layer, scene, textures) {
     shape.lineTo(vertices[i].x, vertices[i].y);
   }
 
-  var areaMaterial1 = new MeshPhongMaterial({ side: FrontSide, color: color });
-  var areaMaterial2 = new MeshPhongMaterial({ side: BackSide, color: color });
+  var areaMaterial = new MeshPhongMaterial({ side: DoubleSide, color: color });
 
   /* Create holes for the area */
   element.holes.forEach(function (holeID) {
@@ -105,19 +104,32 @@ export default function createArea(element, layer, scene, textures) {
 
   var texture = textures[textureName];
 
-  applyTexture(areaMaterial1, texture, width, height);
-  applyTexture(areaMaterial2, texture, width, height);
+  applyTexture(areaMaterial, texture, width, height);
 
-  var area = new Object3D();
-
-  var areaFace1 = new Mesh(shapeGeometry, areaMaterial1);
-  var areaFace2 = new Mesh(shapeGeometry, areaMaterial2);
-
-  area.add(areaFace1, areaFace2);
+  var area = new Mesh(shapeGeometry, areaMaterial);
 
   area.rotation.x -= Math.PI / 2;
+  area.name = 'floor';
 
   return Promise.resolve(area);
+}
+
+export function updatedArea(element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild) {
+  var noPerf = function noPerf() {
+    selfDestroy();return selfBuild();
+  };
+  var floor = mesh.getObjectByName('floor');
+
+  if (differences[0] == 'selected') {
+    var color = element.selected ? SharedStyle.AREA_MESH_COLOR.selected : element.properties.get('patternColor') || SharedStyle.AREA_MESH_COLOR.unselected;
+    floor.material.color.set(color);
+  } else if (differences[0] == 'properties') {
+    if (differences[1] === 'texture') {
+      return noPerf();
+    }
+  } else return noPerf();
+
+  return Promise.resolve(mesh);
 }
 
 /**

@@ -2,8 +2,8 @@ import { Shape, MeshPhongMaterial, ShapeGeometry, TextureLoader, BackSide, Front
 
 import ThreeBSP from '../../utils/threeCSG.es6';
 import { verticesDistance } from '../../utils/geometry';
+import * as SharedStyle from '../../shared-style';
 
-var bboxColor = 0x99c3fb;
 var halfPI = Math.PI / 2;
 
 /**
@@ -133,7 +133,7 @@ export function buildWall(element, layer, scene, textures) {
   var distance = verticesDistance(vertex0, vertex1);
   var halfDistance = distance / 2;
 
-  var soulMaterial = new MeshBasicMaterial({ color: element.selected ? bboxColor : 0xD3D3D3 });
+  var soulMaterial = new MeshBasicMaterial({ color: element.selected ? SharedStyle.MESH_SELECTED : 0xD3D3D3 });
   var soul = new Mesh(new BoxGeometry(distance, height, thickness), soulMaterial);
 
   var alpha = Math.asin((vertex1.y - vertex0.y) / distance);
@@ -213,7 +213,7 @@ export function updatedWall(element, layer, scene, textures, mesh, oldElement, d
   var backFace = mesh.getObjectByName('backFace');
 
   if (differences[0] == 'selected') {
-    soul.material = new MeshBasicMaterial({ color: element.selected ? bboxColor : 0xD3D3D3 });
+    soul.material = new MeshBasicMaterial({ color: element.selected ? SharedStyle.MESH_SELECTED : 0xD3D3D3 });
   } else if (differences[0] == 'properties') {
 
     if (differences[1] == 'thickness') {
@@ -451,7 +451,7 @@ export function buildWall_OLD(element, layer, scene, textures) {
 
   // If the wall is selected show a bounding box around it
   if (element.selected) {
-    pivot.add(createBoxHelper(wall1, bboxColor), createBoxHelper(wall2, bboxColor), createBoxHelper(topClosure, bboxColor), createBoxHelper(leftClosure, bboxColor), createBoxHelper(rightClosure, bboxColor));
+    pivot.add(createBoxHelper(wall1, SharedStyle.MESH_SELECTED), createBoxHelper(wall2, SharedStyle.MESH_SELECTED), createBoxHelper(topClosure, SharedStyle.MESH_SELECTED), createBoxHelper(leftClosure, SharedStyle.MESH_SELECTED), createBoxHelper(rightClosure, SharedStyle.MESH_SELECTED));
   }
 
   return Promise.resolve(pivot);
