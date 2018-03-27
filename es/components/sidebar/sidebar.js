@@ -7,6 +7,7 @@ import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
 import PanelLayerElements from './panel-layer-elements';
 import * as SharedStyle from '../../shared-style';
+import If from '../../utils/react-if';
 
 var STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
@@ -16,12 +17,46 @@ var STYLE = {
   paddingBottom: '20px'
 };
 
+var sortButtonsCb = function sortButtonsCb(a, b) {
+  if (a.index === undefined || a.index === null) {
+    a.index = Number.MAX_SAFE_INTEGER;
+  }
+
+  if (b.index === undefined || b.index === null) {
+    b.index = Number.MAX_SAFE_INTEGER;
+  }
+
+  return a.index - b.index;
+};
+
+var mapButtonsCb = function mapButtonsCb(el, ind) {
+  return React.createElement(
+    If,
+    { key: ind, condition: el.condition, style: { position: 'relative' } },
+    el.dom
+  );
+};
+
 export default function Sidebar(_ref) {
   var state = _ref.state,
       width = _ref.width,
       height = _ref.height,
       sidebarComponents = _ref.sidebarComponents;
 
+
+  var sorter = [{ index: 0, condition: true, dom: React.createElement(PanelLayers, { state: state }) }, { index: 1, condition: true, dom: React.createElement(PanelLayerElements, { mode: state.mode, layers: state.scene.layers, selectedLayer: state.scene.selectedLayer }) }, { index: 2, condition: true, dom: React.createElement(PanelElementEditor, { state: state }) }];
+
+  sorter = sorter.concat(sidebarComponents.map(function (Component, key) {
+    return Component.prototype ? //if is a react component
+    {
+      condition: true,
+      dom: React.createElement(Component, { state: state, key: key })
+    } : { //else is a sortable toolbar button
+      index: Component.index,
+      condition: Component.condition,
+      dom: React.createElement(Component.dom, { state: state, key: key })
+    };
+  }));
 
   return React.createElement(
     'aside',
@@ -35,24 +70,7 @@ export default function Sidebar(_ref) {
       },
       className: 'sidebar'
     },
-    React.createElement(
-      'div',
-      { className: 'layers' },
-      React.createElement(PanelLayers, { state: state })
-    ),
-    React.createElement(
-      'div',
-      { className: 'layer-elements' },
-      React.createElement(PanelLayerElements, { mode: state.mode, layers: state.scene.layers, selectedLayer: state.scene.selectedLayer })
-    ),
-    React.createElement(
-      'div',
-      { className: 'properties' },
-      React.createElement(PanelElementEditor, { state: state })
-    ),
-    sidebarComponents.map(function (Component, index) {
-      return React.createElement(Component, { state: state, key: index });
-    })
+    sorter.sort(sortButtonsCb).map(mapButtonsCb)
   );
 }
 

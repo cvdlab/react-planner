@@ -155,6 +155,10 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
 
         if (modifiedPath[5] === 'x' || modifiedPath[5] === 'y') {
           vertex.lines.forEach(function (lineID) {
+            var lineHoles = oldSceneData.layers.get(layer.id).lines.get(lineID).holes;
+            lineHoles.forEach(function (holeID) {
+              replaceObject([0, 0, 0, 'holes', holeID, 'selected'], layer, planData, actions, sceneData, oldSceneData, catalog);
+            });
             return replaceObject([0, 0, 0, 'lines', lineID], layer, planData, actions, sceneData, oldSceneData, catalog);
           });
           vertex.areas.forEach(function (areaID) {

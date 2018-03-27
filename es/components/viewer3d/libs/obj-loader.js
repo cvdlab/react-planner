@@ -370,9 +370,6 @@ OBJLoader.prototype = {
   },
 
   parse: function parse(text) {
-
-    console.time('OBJLoader');
-
     var state = this._createParserState();
 
     if (text.indexOf('\r\n') !== -1) {
@@ -620,8 +617,6 @@ OBJLoader.prototype = {
 
       container.add(mesh);
     }
-
-    console.timeEnd('OBJLoader');
 
     return container;
   }
