@@ -407,9 +407,6 @@ OBJLoader.prototype = {
   },
 
   parse: function (text) {
-
-    console.time('OBJLoader');
-
     let state = this._createParserState();
 
     if (text.indexOf('\r\n') !== -1) {
@@ -711,8 +708,6 @@ OBJLoader.prototype = {
       container.add(mesh);
 
     }
-
-    console.timeEnd('OBJLoader');
 
     return container;
 
