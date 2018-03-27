@@ -145,7 +145,11 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         let vertex = layer.vertices.get(modifiedPath[4]);
 
         if (modifiedPath[5] === 'x' || modifiedPath[5] === 'y') {
-          vertex.lines.forEach(lineID => replaceObject([0, 0, 0, 'lines', lineID], layer, planData, actions, sceneData, oldSceneData, catalog));
+          vertex.lines.forEach(lineID => {
+            let lineHoles = oldSceneData.layers.get(layer.id).lines.get(lineID).holes;
+            lineHoles.forEach(holeID => { replaceObject([0, 0, 0, 'holes', holeID, 'selected'], layer, planData, actions, sceneData, oldSceneData, catalog); });
+            return replaceObject([0, 0, 0, 'lines', lineID], layer, planData, actions, sceneData, oldSceneData, catalog);
+          });
           vertex.areas.forEach(areaID => replaceObject([0, 0, 0, 'areas', areaID], layer, planData, actions, sceneData, oldSceneData, catalog));
         }
 
