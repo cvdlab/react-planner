@@ -19,6 +19,7 @@ import * as SharedStyle from '../../shared-style';
 import IconClose from 'react-icons/lib/fa/close';
 import MdAddCircle from 'react-icons/lib/md/add-circle';
 import MdWarning from 'react-icons/lib/md/warning';
+import { VERSION } from '../../version';
 
 var footerBarStyle = {
   position: 'absolute',
@@ -201,7 +202,10 @@ var FooterBar = function (_Component) {
         }),
         this.props.softwareSignature ? React.createElement(
           'div',
-          { style: rightTextStyle },
+          {
+            style: rightTextStyle,
+            title: this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ' using React-Planner ' + VERSION)
+          },
           this.props.softwareSignature
         ) : null,
         React.createElement(

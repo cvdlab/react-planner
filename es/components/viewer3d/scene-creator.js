@@ -157,6 +157,9 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
           vertex.lines.forEach(function (lineID) {
             return replaceObject([0, 0, 0, 'lines', lineID], layer, planData, actions, sceneData, oldSceneData, catalog);
           });
+          vertex.areas.forEach(function (areaID) {
+            return replaceObject([0, 0, 0, 'areas', areaID], layer, planData, actions, sceneData, oldSceneData, catalog);
+          });
         }
 
         if (modifiedPath[5] === 'areas') {
