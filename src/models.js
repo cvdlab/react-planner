@@ -231,14 +231,14 @@ export class Catalog extends Record({
     })
   }
 
-  factoryElement(type, options, initialProperties = {}) {
+  factoryElement(type, options, initialProperties) {
     if (!this.elements.has(type)) {
       let catList = this.elements.map(element => element.name).toArray();
       throw new Error(`Element ${type} does not exist in catalog ${catList}`);
     }
 
     let element = this.elements.get(type);
-    let properties = element.properties.map((value, key) => initialProperties[key] || value.get('defaultValue'));
+    let properties = element.properties.map((value, key) => initialProperties && initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue'));
 
     switch (element.prototype) {
       case 'lines':

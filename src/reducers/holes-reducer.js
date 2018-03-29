@@ -107,8 +107,7 @@ function updateDrawingHole(state, layerID, x, y) {
       // I need min and max vertices on this line segment
       let minVertex = Geometry.minVertex({x: x1, y: y1}, {x: x2, y: y2});
       let maxVertex = Geometry.maxVertex({x: x1, y: y1}, {x: x2, y: y2});
-      let width = catalog.factoryElement(state.drawingSupport.get('type'), {}, {}).properties.get('width').get('length');
-
+      let width = catalog.factoryElement(state.drawingSupport.get('type')).properties.getIn(['width','length']);
 
       // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 

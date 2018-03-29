@@ -8,7 +8,7 @@ import calculateInnerCyles, {isClockWiseOrder} from './graph-inner-cycles';
 
 const flatten = list => list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
 
-export function addLine(layer, type, x0, y0, x1, y1, catalog, properties = {}) {
+export function addLine(layer, type, x0, y0, x1, y1, catalog, properties) {
   let line;
 
   layer = layer.withMutations(layer => {
@@ -69,8 +69,8 @@ export function splitLine(layer, lineID, x, y, catalog) {
     let {x: x0, y: y0} = v0;
     let {x: x1, y: y1} = v1;
 
-    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties));
-    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties));
+    ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.get('properties')));
+    ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.get('properties')));
 
     let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
     let minVertex = Geometry.minVertex(v0, v1);
@@ -585,7 +585,7 @@ export function detectAndUpdateAreas(layer, catalog) {
 }
 
 /** holes features **/
-export function addHole(layer, type, lineID, offset, catalog, properties = {}) {
+export function addHole(layer, type, lineID, offset, catalog, properties) {
   let hole;
 
   layer = layer.withMutations(layer => {
