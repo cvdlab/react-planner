@@ -75,9 +75,9 @@ export default class PanelLayers extends Component {
 
   shouldComponentUpdate(nextProps, nextState) {
     if( this.props.state.scene.layers.size !== nextProps.state.scene.layers.size ) return true;
-    if( diff( this.props.state.sceneHistory, nextProps.state.sceneHistory ).size ) return true;
     if( nextState.layerAddUIVisible != this.state.layerAddUIVisible ) return true;
     if( diff( this.state.editingLayer, nextState.editingLayer ).size ) return true;
+    if( diff( this.props.state.sceneHistory, nextProps.state.sceneHistory ).size ) return true;
 
     return false;
   }
