@@ -188,7 +188,7 @@ function setHolesAttributes(state, attributes) {
 function unselectAll(state) {
   let scene = state.scene;
 
-  scene = scene.update('layers', layer => layer.map(unselectAllOp));
+  scene = scene.update('layers', layer => layer.map(LayerOperations.unselectAll));
 
   return state.merge({
     scene,
@@ -202,7 +202,7 @@ function remove(state) {
 
   scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
     let { lines: selectedLines, holes: selectedHoles, items: selectedItems } = layer.selected;
-    unselectAllOp(layer);
+    LayerOperations.unselectAll(layer);
     selectedLines.forEach(lineID => LayerOperations.removeLine(layer, lineID));
     selectedHoles.forEach(holeID => LayerOperations.removeHole(layer, holeID));
     selectedItems.forEach(itemID => LayerOperations.removeItem(layer, itemID));
@@ -237,7 +237,7 @@ export function rollback(state) {
 
   let scene = sceneHistory
     .last
-    .update('layers', layer => layer.map(unselectAllOp));
+    .update('layers', layer => layer.map(LayerOperations.unselectAll));
 
   return state.merge({
     mode: MODE_IDLE,
