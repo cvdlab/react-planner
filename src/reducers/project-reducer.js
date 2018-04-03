@@ -1,4 +1,4 @@
-import {Seq, Map, List} from "immutable";
+import { Map, List } from 'immutable';
 import {
   LOAD_PROJECT,
   NEW_PROJECT,
@@ -30,25 +30,12 @@ import {
   PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY
 } from '../constants';
 
-import {State, Scene, Guide, Catalog} from "../models";
+import { State, Scene, Guide, Catalog } from '../models';
 
 import {
-  removeLine,
-  removeHole,
-  detectAndUpdateAreas,
-  setProperties as setPropertiesOp,
-  setItemsAttributes as setItemsAttributesOp,
-  setLinesAttributes as setLinesAttributesOp,
-  setHolesAttributes as setHolesAttributesOp,
-  select,
-  unselect,
-  unselectAll as unselectAllOp,
-  removeItem,
-  loadLayerFromJSON,
-  setPropertiesOnSelected,
-  updatePropertiesOnSelected,
-  setAttributesOnSelected
-} from '../utils/layer-operations';
+  LayerOperations,
+  history
+} from '../utils/export';
 
 export default function (state, action) {
 
@@ -148,53 +135,53 @@ function newProject(state) {
 }
 
 function loadProject(state, sceneJSON) {
-  return new State({scene: sceneJSON, catalog: state.catalog.toJS()});
+  return new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
 }
 
 function setProperties(state, properties) {
   let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => setPropertiesOnSelected(layer, properties)));
+  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setPropertiesOnSelected(layer, properties)));
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
-  })
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
+  });
 }
 
 function updateProperties(state, properties) {
   let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => updatePropertiesOnSelected(layer, properties)));
+  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.updatePropertiesOnSelected(layer, properties)));
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
-  })
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
+  });
 }
 
 function setItemsAttributes(state, attributes) {
   let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes, state.catalog)));
+  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog)));
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
 function setLinesAttributes(state, attributes) {
   let scene = state.scene;
 
-  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes, state.catalog)));
+  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog)));
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
 function setHolesAttributes(state, attributes) {
   let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => setAttributesOnSelected(layer, attributes, state.catalog)));
+  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog)));
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -205,8 +192,8 @@ function unselectAll(state) {
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
-  })
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
+  });
 }
 
 function remove(state) {
@@ -214,58 +201,48 @@ function remove(state) {
   let catalog = state.catalog;
 
   scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
-    let {lines: selectedLines, holes: selectedHoles, items: selectedItems} = layer.selected;
+    let { lines: selectedLines, holes: selectedHoles, items: selectedItems } = layer.selected;
     unselectAllOp(layer);
-    selectedLines.forEach(lineID => removeLine(layer, lineID));
-    selectedHoles.forEach(holeID => removeHole(layer, holeID));
-    selectedItems.forEach(itemID => removeItem(layer, itemID));
-    detectAndUpdateAreas(layer, catalog);
+    selectedLines.forEach(lineID => LayerOperations.removeLine(layer, lineID));
+    selectedHoles.forEach(holeID => LayerOperations.removeHole(layer, holeID));
+    selectedItems.forEach(itemID => LayerOperations.removeItem(layer, itemID));
+    LayerOperations.detectAndUpdateAreas(layer, catalog);
   }));
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
-  })
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
+  });
 }
 
 function undo(state) {
   let sceneHistory = state.sceneHistory;
-
-  if (state.scene === sceneHistory.last() && !sceneHistory.size > 1)
-    sceneHistory = sceneHistory.pop();
-
-  switch (sceneHistory.size) {
-    case 0:
-      return state;
-
-    case 1:
-      return state.merge({
-        mode: MODE_IDLE,
-        scene: sceneHistory.last(),
-      });
-
-    default:
-      return state.merge({
-        mode: MODE_IDLE,
-        scene: sceneHistory.last(),
-        sceneHistory: sceneHistory.pop()
-      });
+  if (state.scene === sceneHistory.last && sceneHistory.list.size > 1) {
+    sceneHistory = history.historyPop(sceneHistory);
   }
+
+  return state.merge({
+    mode: MODE_IDLE,
+    scene: sceneHistory.last,
+    sceneHistory: history.historyPop(sceneHistory)
+  });
 }
 
 export function rollback(state) {
   let sceneHistory = state.sceneHistory;
 
-  if (sceneHistory.isEmpty()) return state;
+  if (!sceneHistory.last || sceneHistory.list.isEmpty()) {
+    return state;
+  }
 
   let scene = sceneHistory
-    .last()
+    .last
     .update('layers', layer => layer.map(unselectAllOp));
 
   return state.merge({
     mode: MODE_IDLE,
     scene,
-    sceneHistory: state.sceneHistory.push(scene),
+    sceneHistory: history.historyPush(sceneHistory, scene),
     snapElements: new List(),
     activeSnapElement: null,
     drawingSupport: new Map(),
@@ -279,7 +256,7 @@ function setProjectProperties(state, properties) {
   return state.merge({
     mode: MODE_IDLE,
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -321,15 +298,14 @@ const copyProperties = (state, properties) => state.set('clipboardProperties', p
 
 const pasteProperties = (state) => updateProperties(state, state.get('clipboardProperties'));
 
-const pushLastSelectedCatalogElementToHistory = ( state, element ) => {
+const pushLastSelectedCatalogElementToHistory = (state, element) => {
   let currHistory = state.selectedElementsHistory;
 
-  let previousPosition = currHistory.findIndex( el => el.name === element.name );
-  if( previousPosition !== -1 )
-  {
-    currHistory = currHistory.splice( previousPosition, 1 );
+  let previousPosition = currHistory.findIndex(el => el.name === element.name);
+  if (previousPosition !== -1) {
+    currHistory = currHistory.splice(previousPosition, 1);
   }
-  currHistory = currHistory.splice( 0, 0, element );
+  currHistory = currHistory.splice(0, 0, element);
 
   return state.set('selectedElementsHistory', currHistory);
 };

@@ -5,9 +5,12 @@ import {
   MODE_IDLE,
   REMOVE_LAYER
 } from '../constants';
-import {Layer, Scene} from '../models';
-import IDBroker from '../utils/id-broker';
-import {unselectAll} from '../utils/layer-operations';
+import { Layer, Scene } from '../models';
+import {
+  IDBroker,
+  LayerOperations,
+  history
+} from '../utils/export';
 
 export default function (state, action) {
   switch (action.type) {
@@ -33,7 +36,7 @@ function addLayer(state, name, altitude) {
   name = name || `layer ${layerID}`;
   altitude = altitude || 0;
 
-  let layer = new Layer({id: layerID, name, altitude});
+  let layer = new Layer({ id: layerID, name, altitude });
   let scene = state.scene;
   scene = scene.merge({
     selectedLayer: layerID,
@@ -42,7 +45,7 @@ function addLayer(state, name, altitude) {
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   })
 }
 
@@ -50,12 +53,12 @@ function selectLayer(state, layerID) {
   let scene = state.scene;
   scene = scene.merge({
     selectedLayer: layerID,
-    layers: scene.layers.map(layer => unselectAll(layer))
+    layers: scene.layers.map(layer => LayerOperations.unselectAll(layer))
   });
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   })
 }
 
@@ -71,7 +74,7 @@ function setLayerProperties(state, layerID, properties) {
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -90,6 +93,6 @@ function removeLayer(state, layerID) {
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   })
 }

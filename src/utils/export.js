@@ -3,13 +3,19 @@ import * as GraphInnerCycles from './graph-inner-cycles';
 import * as MathUtils from './math';
 import * as SnapUtils from './snap';
 import * as SnapSceneUtils from './snap-scene';
+import * as history from './history';
+import * as IDBroker from './id-broker';
+import * as LayerOperations from './layer-operations';
 
 export {
   GeometryUtils,
   GraphInnerCycles,
   MathUtils,
   SnapUtils,
-  SnapSceneUtils
+  SnapSceneUtils,
+  history,
+  IDBroker,
+  LayerOperations
 };
 
 export default {
@@ -17,5 +23,8 @@ export default {
   GraphInnerCycles,
   MathUtils,
   SnapUtils,
-  SnapSceneUtils
+  SnapSceneUtils,
+  history,
+  IDBroker,
+  LayerOperations
 };

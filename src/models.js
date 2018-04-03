@@ -1,6 +1,7 @@
 import {Record, List, Map, fromJS} from 'immutable';
 import {MODE_IDLE} from './constants';
 import {SNAP_MASK} from './utils/snap';
+import {history} from './utils/export';
 
 let safeLoadMapList = (mapList, Model, defaultMap) => {
   return mapList
@@ -259,10 +260,24 @@ export class Catalog extends Record({
   }
 }
 
+export class HistoryStructure extends Record({
+  list: new List(),
+  first: null,
+  last: null
+}, 'HistoryStructure' ){
+  constructor( json = {} ){
+    super({
+      list: fromJS( json.list || [] ),
+      first: new Scene( json.scene ),
+      last: new Scene( json.last || json.scene )
+    });
+  }
+};
+
 export class State extends Record({
   mode: MODE_IDLE,
   scene: new Scene(),
-  sceneHistory: new List([new Scene()]),
+  sceneHistory: new HistoryStructure(),
   catalog: new Catalog(),
   viewer2D: new Map(),
   mouse: new Map({x: 0, y: 0}),
@@ -280,11 +295,10 @@ export class State extends Record({
   misc: new Map()   //additional info
 }, 'State') {
   constructor(json = {}) {
-    let scene = new Scene(json.scene);
     super({
       ...json,
-      scene,
-      sceneHistory: json.sceneHistory ? json.sceneHistory : new List([scene]),
+      scene: new Scene(json.scene),
+      sceneHistory: new HistoryStructure(json),
       catalog: new Catalog(json.catalog || {}),
       viewer2D: new Map(json.viewer2D || {}),
       drawingSupport: new Map(json.drawingSupport || {}),

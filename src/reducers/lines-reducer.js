@@ -15,20 +15,13 @@ import {
   MODE_DRAGGING_LINE
 } from '../constants';
 
-import * as Geometry from '../utils/geometry';
 import {
-  addLine,
-  replaceLineVertex,
-  removeLine,
-  select,
-  unselect,
-  addLineAvoidingIntersections,
-  unselectAll,
-  detectAndUpdateAreas, mergeEqualsVertices,
-} from '../utils/layer-operations';
-import {nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap} from '../utils/snap';
-import {sceneSnapElements} from '../utils/snap-scene';
-import {samePoints} from "../utils/geometry";
+  SnapUtils,
+  SnapSceneUtils,
+  GeometryUtils,
+  LayerOperations,
+  history
+} from '../utils/export';
 
 export default function (state, action) {
   switch (action.type) {
@@ -74,29 +67,29 @@ function selectToolDrawingLine(state, sceneComponentType) {
 function beginDrawingLine(state, layerID, x, y) {
   let catalog = state.catalog;
 
-  let snapElements = sceneSnapElements(state.scene, new List(), state.snapMask);
+  let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
   let snap = null;
 
   if (state.snapMask && !state.snapMask.isEmpty()) {
-    snap = nearestSnap(snapElements, x, y, state.snapMask);
+    snap = SnapUtils.nearestSnap(snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
 
     snapElements = snapElements.withMutations(snapElements => {
       let a, b, c;
-      ({a, b, c} = Geometry.horizontalLine(y));
-      addLineSnap(snapElements, a, b, c, 10, 3, null);
-      ({a, b, c} = Geometry.verticalLine(x));
-      addLineSnap(snapElements, a, b, c, 10, 3, null);
+      ({a, b, c} = GeometryUtils.horizontalLine(y));
+      SnapUtils.addLineSnap(snapElements, a, b, c, 10, 3, null);
+      ({a, b, c} = GeometryUtils.verticalLine(x));
+      SnapUtils.addLineSnap(snapElements, a, b, c, 10, 3, null);
     });
   }
 
   let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
-    unselectAll(layer);
-    let {line} = addLine(layer, drawingSupport.get('type'), x, y, x, y, catalog);
-    select(layer, 'lines', line.id);
-    select(layer, 'vertices', line.vertices.get(0));
-    select(layer, 'vertices', line.vertices.get(1));
+    LayerOperations.unselectAll(layer);
+    let {line} = LayerOperations.addLine(layer, drawingSupport.get('type'), x, y, x, y, catalog);
+    LayerOperations.select(layer, 'lines', line.id);
+    LayerOperations.select(layer, 'vertices', line.vertices.get(0));
+    LayerOperations.select(layer, 'vertices', line.vertices.get(1));
   }));
 
   return state.merge({
@@ -112,7 +105,7 @@ function updateDrawingLine(state, x, y) {
 
   let snap = null;
   if (state.snapMask && !state.snapMask.isEmpty()) {
-    snap = nearestSnap(state.snapElements, x, y, state.snapMask);
+    snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
   }
 
@@ -120,8 +113,8 @@ function updateDrawingLine(state, x, y) {
   let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
     let lineID = layer.getIn(['selected', 'lines']).first();
     let vertex;
-    ({layer, vertex} = replaceLineVertex(layer, lineID, 1, x, y));
-    select(layer, 'vertices', vertex.id);
+    ({layer, vertex} = LayerOperations.replaceLineVertex(layer, lineID, 1, x, y));
+    LayerOperations.select(layer, 'vertices', vertex.id);
     return layer;
   }));
 
@@ -136,7 +129,7 @@ function endDrawingLine(state, x, y) {
   let catalog = state.catalog;
 
   if (state.snapMask && !state.snapMask.isEmpty()) {
-    let snap = nearestSnap(state.snapElements, x, y, state.snapMask);
+    let snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
     if (snap) ({x, y} = snap.point);
   }
 
@@ -146,12 +139,12 @@ function endDrawingLine(state, x, y) {
     let line = layer.getIn(['lines', lineID]);
     let v0 = layer.vertices.get(line.vertices.get(0));
 
-    unselect(layer, 'lines', lineID);
-    unselect(layer, 'vertices', line.vertices.get(0));
-    unselect(layer, 'vertices', line.vertices.get(1));
-    removeLine(layer, lineID);
-    addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y, catalog);
-    detectAndUpdateAreas(layer, catalog);
+    LayerOperations.unselect(layer, 'lines', lineID);
+    LayerOperations.unselect(layer, 'vertices', line.vertices.get(0));
+    LayerOperations.unselect(layer, 'vertices', line.vertices.get(1));
+    LayerOperations.removeLine(layer, lineID);
+    LayerOperations.addLineAvoidingIntersections(layer, line.type, v0.x, v0.y, x, y, catalog);
+    LayerOperations.detectAndUpdateAreas(layer, catalog);
   }));
 
   return state.merge({
@@ -159,13 +152,13 @@ function endDrawingLine(state, x, y) {
     scene,
     snapElements: new List(),
     activeSnapElement: null,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush( state.sceneHistory, scene )
   });
 }
 
 function beginDraggingLine(state, layerID, lineID, x, y) {
 
-  let snapElements = sceneSnapElements(state.scene, new List(), state.snapMask);
+  let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
 
   let layer = state.scene.layers.get(layerID);
   let line = layer.lines.get(lineID);
@@ -206,8 +199,8 @@ function updateDraggingLine(state, x, y) {
   let activeSnapElement = null;
   let curSnap0 = null, curSnap1 = null;
   if (state.snapMask && !state.snapMask.isEmpty()) {
-    curSnap0 = nearestSnap(snapElements, newVertex0X, newVertex0Y, state.snapMask);
-    curSnap1 = nearestSnap(snapElements, newVertex1X, newVertex1Y, state.snapMask);
+    curSnap0 = SnapUtils.nearestSnap(snapElements, newVertex0X, newVertex0Y, state.snapMask);
+    curSnap1 = SnapUtils.nearestSnap(snapElements, newVertex1X, newVertex1Y, state.snapMask);
   }
 
   let deltaX = 0, deltaY = 0;
@@ -261,10 +254,10 @@ function endDraggingLine(state, x, y) {
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  let maxV = Geometry.maxVertex(vertex0, vertex1);
-  let minV = Geometry.minVertex(vertex0, vertex1);
+  let maxV = GeometryUtils.maxVertex(vertex0, vertex1);
+  let minV = GeometryUtils.minVertex(vertex0, vertex1);
 
-  let lineLength = Geometry.verticesDistance(minV,maxV);
+  let lineLength = GeometryUtils.verticesDistance(minV,maxV);
   let alpha = Math.atan2(maxV.y - minV.y, maxV.x - minV.x);
 
   let holesWithOffsetPosition = [];
@@ -292,8 +285,8 @@ function endDraggingLine(state, x, y) {
 
       if (state.snapMask && !state.snapMask.isEmpty()) {
 
-        let curSnap0 = nearestSnap(state.snapElements, newVertex0X, newVertex0Y, state.snapMask);
-        let curSnap1 = nearestSnap(state.snapElements, newVertex1X, newVertex1Y, state.snapMask);
+        let curSnap0 = SnapUtils.nearestSnap(state.snapElements, newVertex0X, newVertex0Y, state.snapMask);
+        let curSnap1 = SnapUtils.nearestSnap(state.snapElements, newVertex1X, newVertex1Y, state.snapMask);
 
         let deltaX = 0, deltaY = 0;
         if (curSnap0 && curSnap1) {
@@ -321,18 +314,18 @@ function endDraggingLine(state, x, y) {
         newVertex1Y += deltaY;
       }
 
-      mergeEqualsVertices(layer, line.vertices.get(0));
-      mergeEqualsVertices(layer, line.vertices.get(1));
+      LayerOperations.mergeEqualsVertices(layer, line.vertices.get(0));
+      LayerOperations.mergeEqualsVertices(layer, line.vertices.get(1));
 
-      removeLine(layer, lineID);
+      LayerOperations.removeLine(layer, lineID);
 
-      if(!samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
-        addLineAvoidingIntersections(layer, line.type,
+      if(!GeometryUtils.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
+        LayerOperations.addLineAvoidingIntersections(layer, line.type,
           newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
           catalog, line.properties, holesWithOffsetPosition);
       }
 
-      detectAndUpdateAreas(layer, catalog);
+      LayerOperations.detectAndUpdateAreas(layer, catalog);
     }));
 
     state.merge({
@@ -341,7 +334,7 @@ function endDraggingLine(state, x, y) {
       draggingSupport: null,
       activeSnapElement: null,
       snapElements: new List(),
-      sceneHistory: state.sceneHistory.push(scene)
+      sceneHistory: history.historyPush( state.sceneHistory, scene )
     });
   });
 }
@@ -350,20 +343,20 @@ function selectLine(state, layerID, lineID) {
   let scene = state.scene;
 
   scene = scene.merge({
-    layers: scene.layers.map(unselectAll),
+    layers: scene.layers.map(LayerOperations.unselectAll),
     selectedLayer: layerID
   });
 
   scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
       let line = layer.getIn(['lines', lineID]);
-      select(layer, 'lines', lineID);
-      select(layer, 'vertices', line.vertices.get(0));
-      select(layer, 'vertices', line.vertices.get(1));
+      LayerOperations.select(layer, 'lines', lineID);
+      LayerOperations.select(layer, 'vertices', line.vertices.get(0));
+      LayerOperations.select(layer, 'vertices', line.vertices.get(1));
     })
   );
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush( state.sceneHistory, scene )
   })
 }

@@ -1,4 +1,5 @@
 import {List, Map} from 'immutable';
+import {history} from '../utils/export';
 
 import {
   SELECT_TOOL_DRAWING_ITEM,
@@ -19,7 +20,6 @@ import {
 } from '../constants';
 
 import {addItem, removeItem, unselect, select, unselectAll} from '../utils/layer-operations';
-import * as Geometry from '../utils/geometry';
 
 export default function (state, action) {
   switch (action.type) {
@@ -94,7 +94,7 @@ function endDrawingItem(state, layerID, x, y) {
   let scene = state.scene.updateIn(['layers', layerID], layer => unselectAll(layer));
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene),
+    sceneHistory: history.historyPush( state.sceneHistory, scene ),
     drawingSupport: Map({
       type: state.drawingSupport.get('type')
     })
@@ -147,7 +147,7 @@ function endDraggingItem(state, x, y) {
   state = updateDraggingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
-    sceneHistory: state.sceneHistory.push(state.scene)
+    sceneHistory: history.historyPush( state.sceneHistory, state.scene )
   });
 }
 
@@ -194,7 +194,7 @@ function endRotatingItem(state, x, y) {
   state = updateRotatingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
-    sceneHistory: state.sceneHistory.push(state.scene)
+    sceneHistory: history.historyPush( state.sceneHistory, state.scene )
   });
 }
 
@@ -213,6 +213,6 @@ function selectItem(state, layerID, itemID) {
 
   return state.merge({
     scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush( state.sceneHistory, scene )
   })
 }
