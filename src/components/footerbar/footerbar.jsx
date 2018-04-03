@@ -6,9 +6,7 @@ import FooterContentButton from './footer-content-button';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_MASK } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
-import IconClose from 'react-icons/lib/fa/close';
-import MdAddCircle from 'react-icons/lib/md/add-circle';
-import MdWarning from 'react-icons/lib/md/warning';
+import {MdAddCircle, MdWarning} from 'react-icons/lib/md';
 import { VERSION } from '../../version';
 
 const footerBarStyle = {

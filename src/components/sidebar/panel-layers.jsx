@@ -2,10 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import IconVisible from 'react-icons/lib/fa/eye';
-import IconAdd from 'react-icons/lib/ti/plus';
-import IconDel from 'react-icons/lib/ti/minus';
-import IconEdit from 'react-icons/lib/fa/pencil';
-import IconTrash from 'react-icons/lib/fa/trash';
+import {TiPlus, TiDelete} from 'react-icons/lib/ti';
+import {FaPencil, FaTrash} from 'react-icons/lib/fa';
 import FormTextInput from '../style/form-text-input';
 import FormNumberInput from '../style/form-number-input';
 import FormSubmitButton from '../style/form-submit-button';
@@ -156,7 +154,7 @@ export default class PanelLayers extends Component {
                     }
                   </td>
                   <td style={iconColStyle}>
-                    <IconEdit
+                    <FaPencil
                       onClick={configureClick}
                       style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
                       title={this.context.translator.t('Configure layer')}
@@ -165,7 +163,7 @@ export default class PanelLayers extends Component {
                   <td style={iconColStyle}>
                     {
                       !isLastLayer ?
-                        <IconTrash
+                        <FaTrash
                           onClick={ e => {
                             this.delLayer(e, layerID)
                           } }
@@ -194,7 +192,7 @@ export default class PanelLayers extends Component {
           onMouseOut={ () => this.setState({headHovered: false}) }
           onClick={ (e) => this.addLayer(e) }
         >
-          { !this.state.layerAddUIVisible ? <IconAdd /> : <IconDel /> }
+          { !this.state.layerAddUIVisible ? <TiPlus /> : <TiDelete /> }
           <b style={styleAddLabel}>{this.context.translator.t('New layer')}</b>
         </p>
 

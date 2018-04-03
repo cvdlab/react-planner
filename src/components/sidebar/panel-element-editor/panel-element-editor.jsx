@@ -21,7 +21,7 @@ export default function PanelElementEditor({state}, {projectActions, translator}
       MODE_ROTATING_ITEM, MODE_UPLOADING_IMAGE, MODE_FITTING_IMAGE].includes(mode)) return null;
 
   let componentRenderer = (element, layer) =>
-    <Panel key={element.id} name={translator.t("Properties: [{0}] {1}", element.type, element.id)}>
+    <Panel key={element.id} name={translator.t("Properties: [{0}] {1}", element.type, element.id)} opened={true}>
       <div style={{padding: "5px 15px"}}>
         <ElementEditor element={element} layer={layer} state={state}/>
       </div>

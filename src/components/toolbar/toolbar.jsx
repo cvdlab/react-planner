@@ -1,11 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import IconNewFile from 'react-icons/lib/fa/file-o';
-import IconPointer from 'react-icons/lib/fa/mouse-pointer';
-import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
-import IconCatalog from 'react-icons/lib/fa/plus';
-import IconUndo from 'react-icons/lib/md/undo';
-import IconConfigure from 'react-icons/lib/md/settings';
+import { MdSettings, MdUndo, MdDirectionsRun} from 'react-icons/lib/md';
+import { FaFileO, FaMousePointer, FaPlus} from 'react-icons/lib/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
@@ -90,7 +86,7 @@ export default class Toolbar extends Component {
         active={false}
         tooltip={translator.t('New project')}
         onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
-        <IconNewFile/>
+        <FaFileO/>
       </ToolbarButton>
       },
       {
@@ -107,7 +103,7 @@ export default class Toolbar extends Component {
           active={[MODE_VIEWING_CATALOG].includes(mode)}
           tooltip={translator.t('Open catalog')}
           onClick={event => projectActions.openCatalog()}>
-          <IconCatalog/>
+          <FaPlus/>
         </ToolbarButton>
       },
       {
@@ -123,7 +119,7 @@ export default class Toolbar extends Component {
         active={[MODE_IDLE].includes(mode)}
         tooltip={translator.t('2D View')}
         onClick={event => projectActions.rollback()}>
-        {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <IconPointer/>}
+        {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <FaMousePointer/>}
       </ToolbarButton>
       },
       {
@@ -131,7 +127,7 @@ export default class Toolbar extends Component {
         active={[MODE_3D_FIRST_PERSON].includes(mode)}
         tooltip={translator.t('3D First Person')}
         onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
-        <Icon3DFirstPerson/>
+        <MdDirectionsRun/>
       </ToolbarButton>
       },
       {
@@ -139,7 +135,7 @@ export default class Toolbar extends Component {
         active={false}
         tooltip={translator.t('Undo (CTRL-Z)')}
         onClick={event => projectActions.undo()}>
-        <IconUndo/>
+        <MdUndo/>
       </ToolbarButton>
       },
       {
@@ -147,7 +143,7 @@ export default class Toolbar extends Component {
         active={[MODE_CONFIGURING_PROJECT].includes(mode)}
         tooltip={translator.t('Configure project')}
         onClick={event => projectActions.openProjectConfigurator()}>
-        <IconConfigure/>
+        <MdSettings/>
       </ToolbarButton>
       }
     ];
