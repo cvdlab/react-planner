@@ -3,17 +3,12 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
 
-/**
- * --env.production
- * --env.port port
- */
-
-const PAGE_TITLE = "React Planner";
+const PAGE_TITLE = 'React Planner';
 const VENDORS_LIBRARIES = ['immutable', 'react', 'react-dom', 'react-redux', 'redux', 'three'];
 
-module.exports = function (env) {
-  let isProduction = env && env.hasOwnProperty('production');
-  let port = env && env.hasOwnProperty('port') ? env.port : 8080;
+module.exports = (env, self) => {
+  let isProduction = self.hasOwnProperty('mode') ? ( self.mode === 'production' ) : true;
+  let port = self.hasOwnProperty('port') ? self.port : 8080;
 
   if (isProduction) console.info('Webpack: Production mode'); else console.info('Webpack: Development mode');
 
@@ -48,13 +43,13 @@ module.exports = function (env) {
         use: [{
           loader: 'babel-loader',
           options: {
-            "compact": false,
-            "plugins": [
-              "transform-object-rest-spread"
+            'compact': false,
+            'plugins': [
+              'transform-object-rest-spread'
             ],
-            "presets": [
-              "es2015-webpack2",
-              "react"
+            'presets': [
+              'es2015-webpack2',
+              'react'
             ]
           }
 
@@ -73,24 +68,31 @@ module.exports = function (env) {
       }]
     },
     plugins: [
-      new webpack.optimize.CommonsChunkPlugin({
-        names: ['vendor', 'manifest'],
-        minChunks: Infinity,
-        filename: '[chunkhash].[name].js'
-      }),
-
       new HtmlWebpackPlugin({
         title: PAGE_TITLE,
         template: './src/index.html.ejs',
         filename: 'index.html',
         inject: 'body',
       })
-    ]
+    ],
+    optimization: {
+      minimize: isProduction,
+      splitChunks: {
+        cacheGroups: {
+          default: false,
+          commons: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendor',
+              chunks: 'all',
+              minSize: 10000,
+              reuseExistingChunk: true
+          }
+        }
+      }
+    }
   };
 
   if (isProduction) {
-    config.plugins.push(new webpack.optimize.UglifyJsPlugin());
-
     config.plugins.push(new webpack.DefinePlugin({
       'process.env': {
         'NODE_ENV': JSON.stringify('production')
@@ -99,7 +101,7 @@ module.exports = function (env) {
   }
 
   if (!isProduction) {
-    config.plugins.push(new OpenBrowserPlugin({url: `http://localhost:${port}`}))
+    config.plugins.push(new OpenBrowserPlugin({url: `http://localhost:${port}`}));
   }
 
   return config;
