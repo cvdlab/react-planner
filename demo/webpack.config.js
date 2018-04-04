@@ -73,6 +73,7 @@ module.exports = (env, self) => {
         template: './src/index.html.ejs',
         filename: 'index.html',
         inject: 'body',
+        production: isProduction
       })
     ],
     optimization: {
