@@ -1,20 +1,11 @@
 import * as Three from 'three';
-import {HELVETIKER} from '../libs/helvetiker_regular.typeface.js';
-import {List} from 'immutable';
-import * as SharedStyle from '../../../shared-style';
+import { List } from 'immutable';
+import { COLORS } from '../../../shared-style';
 
-export default function (width, height, guide) {
+export default function (width, height, guide, font) {
   let step = guide.properties.get('step');
-  let colors;
+  let colors = guide.properties.has('color') ? new List([guide.properties.get('color')]) : guide.properties.get('colors');
 
-  if (guide.properties.has('color')) {
-    colors = new List([guide.properties.get('color')]);
-  } else {
-    colors = guide.properties.get('colors');
-  }
-
-  let fontLoader = new Three.FontLoader();
-  let font = fontLoader.parse(HELVETIKER); // For measures
   let streak = new Three.Object3D();
 
   let counter = 0;
@@ -25,7 +16,7 @@ export default function (width, height, guide) {
     geometry.vertices.push(new Three.Vector3(i, 0, 0));
     geometry.vertices.push(new Three.Vector3(i, 0, -height));
     let color = colors.get(counter % colors.size);
-    let material = new Three.LineBasicMaterial({color});
+    let material = new Three.LineBasicMaterial({ color });
 
     if (counter % 5 == 0) {
       let shape = new Three.TextGeometry(counter * step, {
@@ -34,7 +25,7 @@ export default function (width, height, guide) {
         font: font
       });
 
-      let wrapper = new Three.MeshBasicMaterial({color: SharedStyle.COLORS.black});
+      let wrapper = new Three.MeshBasicMaterial({ color: COLORS.black });
       let words = new Three.Mesh(shape, wrapper);
 
       words.rotation.x -= Math.PI / 2;
