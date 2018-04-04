@@ -40,7 +40,7 @@ var CatalogBreadcrumb = function CatalogBreadcrumb(_ref) {
       { key: ind, style: { display: 'flex' } },
       React.createElement(
         'div',
-        { style: !lastElement ? breadcrumbTextStyle : breadcrumbLastTextStyle, onClick: name.action },
+        { style: !lastElement ? breadcrumbTextStyle : breadcrumbLastTextStyle, onClick: name.action || null },
         name.name
       ),
       !lastElement ? React.createElement(Arrow, { style: breadcrumbTabStyle }) : null

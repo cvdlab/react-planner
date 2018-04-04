@@ -1,9 +1,6 @@
 import { BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX, MODE_DRAGGING_VERTEX, MODE_IDLE } from '../constants';
 import { Map, List } from 'immutable';
-import { sceneSnapElements } from '../utils/snap-scene';
-import { nearestSnap } from '../utils/snap';
-import { detectAndUpdateAreas, removeLine, addLineAvoidingIntersections, mergeEqualsVertices } from '../utils/layer-operations';
-import { orderVertices, pointsDistance, samePoints } from "../utils/geometry";
+import { LayerOperations, SnapSceneUtils, SnapUtils, GeometryUtils, history } from '../utils/export';
 
 export default function (state, action) {
   switch (action.type) {
@@ -23,7 +20,7 @@ export default function (state, action) {
 
 function beginDraggingVertex(state, layerID, vertexID, x, y) {
 
-  var snapElements = sceneSnapElements(state.scene, new List(), state.snapMask);
+  var snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
 
   return state.merge({
     mode: MODE_DRAGGING_VERTEX,
@@ -42,7 +39,7 @@ function updateDraggingVertex(state, x, y) {
 
   var snap = null;
   if (state.snapMask && !state.snapMask.isEmpty()) {
-    snap = nearestSnap(snapElements, x, y, state.snapMask);
+    snap = SnapUtils.nearestSnap(snapElements, x, y, state.snapMask);
     if (snap) {
       ;
       var _snap$point = snap.point;
@@ -90,11 +87,11 @@ function endDraggingVertex(state, x, y) {
 
           var oldHoles = [];
 
-          var orderedVertices = orderVertices([oldVertex, vertex]);
+          var orderedVertices = GeometryUtils.orderVertices([oldVertex, vertex]);
 
           line.holes.forEach(function (holeID) {
             var hole = layer.holes.get(holeID);
-            var oldLineLength = pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
+            var oldLineLength = GeometryUtils.pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
 
             var alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y, orderedVertices[1].x - orderedVertices[0].x);
 
@@ -110,16 +107,16 @@ function endDraggingVertex(state, x, y) {
             oldHoles.push({ hole: hole, offsetPosition: { x: xp, y: yp } });
           });
 
-          mergeEqualsVertices(layer, vertexID);
-          removeLine(layer, lineID);
+          LayerOperations.mergeEqualsVertices(layer, vertexID);
+          LayerOperations.removeLine(layer, lineID);
 
-          if (!samePoints(oldVertex, vertex)) {
-            addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties, oldHoles);
+          if (!GeometryUtils.samePoints(oldVertex, vertex)) {
+            LayerOperations.addLineAvoidingIntersections(layer, line.type, oldVertex.x, oldVertex.y, vertex.x, vertex.y, catalog, line.properties, oldHoles);
           }
         }
       });
 
-      detectAndUpdateAreas(layer, catalog);
+      LayerOperations.detectAndUpdateAreas(layer, catalog);
     });
   });
 
@@ -130,6 +127,6 @@ function endDraggingVertex(state, x, y) {
 
     activeSnapElement: null,
     snapElements: new List(),
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }

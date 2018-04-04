@@ -16,9 +16,7 @@ var flatten = function flatten(list) {
   }, []);
 };
 
-export function addLine(layer, type, x0, y0, x1, y1, catalog) {
-  var properties = arguments.length > 7 && arguments[7] !== undefined ? arguments[7] : {};
-
+export function addLine(layer, type, x0, y0, x1, y1, catalog, properties) {
   var line = void 0;
 
   layer = layer.withMutations(function (layer) {
@@ -103,11 +101,11 @@ export function splitLine(layer, lineID, x, y, catalog) {
     var x1 = v1.x,
         y1 = v1.y;
 
-    var _addLine = addLine(layer, line.type, x0, y0, x, y, catalog, line.properties);
+    var _addLine = addLine(layer, line.type, x0, y0, x, y, catalog, line.get('properties'));
 
     line0 = _addLine.line;
 
-    var _addLine2 = addLine(layer, line.type, x1, y1, x, y, catalog, line.properties);
+    var _addLine2 = addLine(layer, line.type, x1, y1, x, y, catalog, line.get('properties'));
 
     line1 = _addLine2.line;
 
@@ -715,9 +713,7 @@ export function detectAndUpdateAreas(layer, catalog) {
 }
 
 /** holes features **/
-export function addHole(layer, type, lineID, offset, catalog) {
-  var properties = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : {};
-
+export function addHole(layer, type, lineID, offset, catalog, properties) {
   var hole = void 0;
 
   layer = layer.withMutations(function (layer) {

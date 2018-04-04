@@ -1,9 +1,9 @@
 import { List, Map } from 'immutable';
+import { history } from '../utils/export';
 
 import { SELECT_TOOL_DRAWING_ITEM, UPDATE_DRAWING_ITEM, END_DRAWING_ITEM, BEGIN_DRAGGING_ITEM, UPDATE_DRAGGING_ITEM, END_DRAGGING_ITEM, BEGIN_ROTATING_ITEM, UPDATE_ROTATING_ITEM, END_ROTATING_ITEM, SELECT_ITEM, MODE_IDLE, MODE_DRAWING_ITEM, MODE_DRAGGING_ITEM, MODE_ROTATING_ITEM } from '../constants';
 
 import { addItem, removeItem, unselect, select, unselectAll } from '../utils/layer-operations';
-import * as Geometry from '../utils/geometry';
 
 export default function (state, action) {
   switch (action.type) {
@@ -88,7 +88,7 @@ function endDrawingItem(state, layerID, x, y) {
   });
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene),
+    sceneHistory: history.historyPush(state.sceneHistory, scene),
     drawingSupport: Map({
       type: state.drawingSupport.get('type')
     })
@@ -142,7 +142,7 @@ function endDraggingItem(state, x, y) {
   state = updateDraggingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
-    sceneHistory: state.sceneHistory.push(state.scene)
+    sceneHistory: history.historyPush(state.sceneHistory, state.scene)
   });
 }
 
@@ -191,7 +191,7 @@ function endRotatingItem(state, x, y) {
   state = updateRotatingItem(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
-    sceneHistory: state.sceneHistory.push(state.scene)
+    sceneHistory: history.historyPush(state.sceneHistory, state.scene)
   });
 }
 
@@ -211,6 +211,6 @@ function selectItem(state, layerID, itemID) {
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }

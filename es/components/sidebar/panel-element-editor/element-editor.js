@@ -21,8 +21,7 @@ import * as geometry from '../../../utils/geometry.js';
 import * as math from '../../../utils/math.js';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
-import MdContentCopy from 'react-icons/lib/md/content-copy';
-import MdContentPaste from 'react-icons/lib/md/content-paste';
+import { MdContentCopy, MdContentPaste } from 'react-icons/lib/md';
 import diff from 'immutablediff';
 
 var PRECISION = 2;

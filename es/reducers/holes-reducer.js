@@ -2,8 +2,10 @@ import { List, Map } from 'immutable';
 
 import { SELECT_TOOL_DRAWING_HOLE, UPDATE_DRAWING_HOLE, END_DRAWING_HOLE, BEGIN_DRAGGING_HOLE, UPDATE_DRAGGING_HOLE, END_DRAGGING_HOLE, SELECT_HOLE, MODE_IDLE, MODE_DRAWING_HOLE, MODE_DRAGGING_HOLE } from '../constants';
 
-import * as Geometry from '../utils/geometry';
+import { history, GeometryUtils } from '../utils/export';
+
 import { select, unselect, unselectAll, addHole, removeHole } from '../utils/layer-operations';
+
 import { nearestSnap, addPointSnap, addLineSnap, addLineSegmentSnap, SNAP_POINT, SNAP_LINE, SNAP_SEGMENT } from '../utils/snap';
 
 export default function (state, action) {
@@ -99,14 +101,14 @@ function updateDrawingHole(state, layerID, x, y) {
         // I need min and max vertices on this line segment
 
 
-        var minVertex = Geometry.minVertex({ x: x1, y: y1 }, { x: x2, y: y2 });
-        var maxVertex = Geometry.maxVertex({ x: x1, y: y1 }, { x: x2, y: y2 });
-        var width = catalog.factoryElement(state.drawingSupport.get('type'), {}, {}).properties.get('width').get('length');
+        var minVertex = GeometryUtils.minVertex({ x: x1, y: y1 }, { x: x2, y: y2 });
+        var maxVertex = GeometryUtils.maxVertex({ x: x1, y: y1 }, { x: x2, y: y2 });
+        var width = catalog.factoryElement(state.drawingSupport.get('type')).properties.getIn(['width', 'length']);
 
         // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 
         // let width = hole.properties.get('width').get('length');
-        var lineLength = Geometry.pointsDistance(x1, y1, x2, y2);
+        var lineLength = GeometryUtils.pointsDistance(x1, y1, x2, y2);
         var alpha = Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
 
         var cosWithThreshold = function cosWithThreshold(alpha) {
@@ -134,28 +136,28 @@ function updateDrawingHole(state, layerID, x, y) {
 
         var offset = void 0;
         if (x < minLeftVertexHole.x) {
-          offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
+          offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
         } else if (x > maxRightVertexHole.x) {
-          offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
+          offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
         } else {
 
           if (x === minLeftVertexHole.x && x === maxRightVertexHole.x) {
 
             if (y < minLeftVertexHole.y) {
-              offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
+              offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
               offset = minVertex.x === x1 && minVertex.y === y1 ? offset : 1 - offset;
             } else if (y > maxRightVertexHole.y) {
-              offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
+              offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
               offset = minVertex.x === x1 && minVertex.y === y1 ? offset : 1 - offset;
             } else {
-              offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+              offset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
             }
           } else {
-            offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+            offset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
           }
         }
 
-        // let offset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+        // let offset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
 
         var _addHole = addHole(layer, state.drawingSupport.get('type'), lineID, offset, catalog),
             hole = _addHole.hole;
@@ -177,7 +179,7 @@ function endDrawingHole(state, layerID, x, y) {
   });
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -228,13 +230,13 @@ function updateDraggingHole(state, x, y) {
   var _snap$point2 = snap.point;
   x = _snap$point2.x;
   y = _snap$point2.y;
-  var minVertex = Geometry.minVertex(v0, v1);
-  var maxVertex = Geometry.maxVertex(v0, v1);
+  var minVertex = GeometryUtils.minVertex(v0, v1);
+  var maxVertex = GeometryUtils.maxVertex(v0, v1);
 
   // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 
   var width = hole.properties.get('width').get('length');
-  var lineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+  var lineLength = GeometryUtils.pointsDistance(v0.x, v0.y, v1.x, v1.y);
   var alpha = Math.atan2(Math.abs(v1.y - v0.y), Math.abs(v1.x - v0.x));
 
   var cosWithThreshold = function cosWithThreshold(alpha) {
@@ -266,28 +268,28 @@ function updateDraggingHole(state, x, y) {
 
   if (x < minLeftVertexHole.x) {
     // Snap point is previous the the line
-    offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
+    offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
   } else {
     // Snap point is after the line or on the line
     if (x > maxRightVertexHole.x) {
-      offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
+      offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
     } else if (x === minLeftVertexHole.x && x === maxRightVertexHole.x) {
       // I am on a vertical line, I need to check y coordinates
       if (y < minLeftVertexHole.y) {
-        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
+        offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, minLeftVertexHole.x, minLeftVertexHole.y);
 
         offset = minVertex === v0 ? offset : 1 - offset;
       } else if (y > maxRightVertexHole.y) {
-        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
+        offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, maxRightVertexHole.x, maxRightVertexHole.y);
 
         offset = minVertex === v0 ? offset : 1 - offset;
       } else {
-        offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, x, y);
+        offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, x, y);
 
         offset = minVertex === v0 ? offset : 1 - offset;
       }
     } else {
-      offset = Geometry.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, x, y);
+      offset = GeometryUtils.pointPositionOnLineSegment(minVertex.x, minVertex.y, maxVertex.x, maxVertex.y, x, y);
     }
   }
 
@@ -302,7 +304,7 @@ function endDraggingHole(state, x, y) {
   state = updateDraggingHole(state, x, y);
   return state.merge({
     mode: MODE_IDLE,
-    sceneHistory: state.sceneHistory.push(state.scene)
+    sceneHistory: history.historyPush(state.sceneHistory, state.scene)
   });
 }
 
@@ -322,6 +324,6 @@ function selectHole(state, layerID, holeID) {
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }

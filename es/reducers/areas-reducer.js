@@ -1,5 +1,7 @@
 import { select, unselectAll } from '../utils/layer-operations';
 
+import { history } from '../utils/export';
+
 import { SELECT_AREA } from '../constants';
 
 export default function (state, action) {
@@ -32,6 +34,6 @@ function selectArea(state, layerID, areaID) {
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }

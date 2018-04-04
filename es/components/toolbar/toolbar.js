@@ -10,12 +10,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import IconNewFile from 'react-icons/lib/fa/file-o';
-import IconPointer from 'react-icons/lib/fa/mouse-pointer';
-import Icon3DFirstPerson from 'react-icons/lib/md/directions-run';
-import IconCatalog from 'react-icons/lib/fa/plus';
-import IconUndo from 'react-icons/lib/md/undo';
-import IconConfigure from 'react-icons/lib/md/settings';
+import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/lib/md';
+import { FaFileO, FaMousePointer, FaPlus } from 'react-icons/lib/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
@@ -121,7 +117,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
             } },
-          React.createElement(IconNewFile, null)
+          React.createElement(FaFileO, null)
         )
       }, {
         index: 1, condition: allowProjectFileSupport,
@@ -139,7 +135,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return projectActions.openCatalog();
             } },
-          React.createElement(IconCatalog, null)
+          React.createElement(FaPlus, null)
         )
       }, {
         index: 4, condition: true, dom: React.createElement(
@@ -161,7 +157,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return projectActions.rollback();
             } },
-          [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, null) : React.createElement(IconPointer, null)
+          [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, null) : React.createElement(FaMousePointer, null)
         )
       }, {
         index: 6, condition: true, dom: React.createElement(
@@ -172,7 +168,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return viewer3DActions.selectTool3DFirstPerson();
             } },
-          React.createElement(Icon3DFirstPerson, null)
+          React.createElement(MdDirectionsRun, null)
         )
       }, {
         index: 7, condition: true, dom: React.createElement(
@@ -183,7 +179,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return projectActions.undo();
             } },
-          React.createElement(IconUndo, null)
+          React.createElement(MdUndo, null)
         )
       }, {
         index: 8, condition: true, dom: React.createElement(
@@ -194,7 +190,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return projectActions.openProjectConfigurator();
             } },
-          React.createElement(IconConfigure, null)
+          React.createElement(MdSettings, null)
         )
       }];
 

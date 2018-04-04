@@ -14,10 +14,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import IconVisible from 'react-icons/lib/fa/eye';
-import IconAdd from 'react-icons/lib/ti/plus';
-import IconDel from 'react-icons/lib/ti/minus';
-import IconEdit from 'react-icons/lib/fa/pencil';
-import IconTrash from 'react-icons/lib/fa/trash';
+import { TiPlus, TiDelete } from 'react-icons/lib/ti';
+import { FaPencil, FaTrash } from 'react-icons/lib/fa';
 import FormTextInput from '../style/form-text-input';
 import FormNumberInput from '../style/form-number-input';
 import FormSubmitButton from '../style/form-submit-button';
@@ -89,9 +87,9 @@ var PanelLayers = function (_Component) {
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
       if (this.props.state.scene.layers.size !== nextProps.state.scene.layers.size) return true;
-      if (diff(this.props.state.sceneHistory, nextProps.state.sceneHistory).size) return true;
       if (nextState.layerAddUIVisible != this.state.layerAddUIVisible) return true;
       if (diff(this.state.editingLayer, nextState.editingLayer).size) return true;
+      if (diff(this.props.state.sceneHistory, nextProps.state.sceneHistory).size) return true;
 
       return false;
     }
@@ -206,7 +204,7 @@ var PanelLayers = function (_Component) {
                 React.createElement(
                   'td',
                   { style: iconColStyle },
-                  React.createElement(IconEdit, {
+                  React.createElement(FaPencil, {
                     onClick: configureClick,
                     style: !isCurrentLayer ? styleEditButton : styleEditButtonHover,
                     title: _this2.context.translator.t('Configure layer')
@@ -215,7 +213,7 @@ var PanelLayers = function (_Component) {
                 React.createElement(
                   'td',
                   { style: iconColStyle },
-                  !isLastLayer ? React.createElement(IconTrash, {
+                  !isLastLayer ? React.createElement(FaTrash, {
                     onClick: function onClick(e) {
                       _this2.delLayer(e, layerID);
                     },
@@ -253,7 +251,7 @@ var PanelLayers = function (_Component) {
               return _this2.addLayer(e);
             }
           },
-          !this.state.layerAddUIVisible ? React.createElement(IconAdd, null) : React.createElement(IconDel, null),
+          !this.state.layerAddUIVisible ? React.createElement(TiPlus, null) : React.createElement(TiDelete, null),
           React.createElement(
             'b',
             { style: styleAddLabel },

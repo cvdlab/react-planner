@@ -1,9 +1,9 @@
-import { Seq, Map, List } from "immutable";
+import { Map, List } from 'immutable';
 import { LOAD_PROJECT, NEW_PROJECT, OPEN_CATALOG, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT, SELECT_TOOL_EDIT, MODE_IDLE, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, SET_PROJECT_PROPERTIES, OPEN_PROJECT_CONFIGURATOR, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING, COPY_PROPERTIES, PASTE_PROPERTIES, PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY } from '../constants';
 
-import { State, Scene, Guide, Catalog } from "../models";
+import { State, Scene, Guide, Catalog } from '../models';
 
-import { removeLine, removeHole, detectAndUpdateAreas, setProperties as setPropertiesOp, setItemsAttributes as setItemsAttributesOp, setLinesAttributes as setLinesAttributesOp, setHolesAttributes as setHolesAttributesOp, select, unselect, unselectAll as unselectAllOp, removeItem, loadLayerFromJSON, setPropertiesOnSelected, updatePropertiesOnSelected, setAttributesOnSelected } from '../utils/layer-operations';
+import { LayerOperations, history } from '../utils/export';
 
 export default function (state, action) {
 
@@ -112,33 +112,33 @@ function loadProject(state, sceneJSON) {
 function setProperties(state, properties) {
   var scene = state.scene;
   scene = scene.set('layers', scene.layers.map(function (layer) {
-    return setPropertiesOnSelected(layer, properties);
+    return LayerOperations.setPropertiesOnSelected(layer, properties);
   }));
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
 function updateProperties(state, properties) {
   var scene = state.scene;
   scene = scene.set('layers', scene.layers.map(function (layer) {
-    return updatePropertiesOnSelected(layer, properties);
+    return LayerOperations.updatePropertiesOnSelected(layer, properties);
   }));
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
 function setItemsAttributes(state, attributes) {
   var scene = state.scene;
   scene = scene.set('layers', scene.layers.map(function (layer) {
-    return setAttributesOnSelected(layer, attributes, state.catalog);
+    return LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog);
   }));
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -146,23 +146,23 @@ function setLinesAttributes(state, attributes) {
   var scene = state.scene;
 
   scene = scene.set('layers', scene.layers.map(function (layer) {
-    return setAttributesOnSelected(layer, attributes, state.catalog);
+    return LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog);
   }));
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
 function setHolesAttributes(state, attributes) {
   var scene = state.scene;
   scene = scene.set('layers', scene.layers.map(function (layer) {
-    return setAttributesOnSelected(layer, attributes, state.catalog);
+    return LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog);
   }));
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -170,12 +170,12 @@ function unselectAll(state) {
   var scene = state.scene;
 
   scene = scene.update('layers', function (layer) {
-    return layer.map(unselectAllOp);
+    return layer.map(LayerOperations.unselectAll);
   });
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
@@ -190,63 +190,54 @@ function remove(state) {
           selectedHoles = _layer$selected.holes,
           selectedItems = _layer$selected.items;
 
-      unselectAllOp(layer);
+      LayerOperations.unselectAll(layer);
       selectedLines.forEach(function (lineID) {
-        return removeLine(layer, lineID);
+        return LayerOperations.removeLine(layer, lineID);
       });
       selectedHoles.forEach(function (holeID) {
-        return removeHole(layer, holeID);
+        return LayerOperations.removeHole(layer, holeID);
       });
       selectedItems.forEach(function (itemID) {
-        return removeItem(layer, itemID);
+        return LayerOperations.removeItem(layer, itemID);
       });
-      detectAndUpdateAreas(layer, catalog);
+      LayerOperations.detectAndUpdateAreas(layer, catalog);
     });
   });
 
   return state.merge({
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 
 function undo(state) {
   var sceneHistory = state.sceneHistory;
-
-  if (state.scene === sceneHistory.last() && !sceneHistory.size > 1) sceneHistory = sceneHistory.pop();
-
-  switch (sceneHistory.size) {
-    case 0:
-      return state;
-
-    case 1:
-      return state.merge({
-        mode: MODE_IDLE,
-        scene: sceneHistory.last()
-      });
-
-    default:
-      return state.merge({
-        mode: MODE_IDLE,
-        scene: sceneHistory.last(),
-        sceneHistory: sceneHistory.pop()
-      });
+  if (state.scene === sceneHistory.last && sceneHistory.list.size > 1) {
+    sceneHistory = history.historyPop(sceneHistory);
   }
+
+  return state.merge({
+    mode: MODE_IDLE,
+    scene: sceneHistory.last,
+    sceneHistory: history.historyPop(sceneHistory)
+  });
 }
 
 export function rollback(state) {
   var sceneHistory = state.sceneHistory;
 
-  if (sceneHistory.isEmpty()) return state;
+  if (!sceneHistory.last || sceneHistory.list.isEmpty()) {
+    return state;
+  }
 
-  var scene = sceneHistory.last().update('layers', function (layer) {
-    return layer.map(unselectAllOp);
+  var scene = sceneHistory.last.update('layers', function (layer) {
+    return layer.map(LayerOperations.unselectAll);
   });
 
   return state.merge({
     mode: MODE_IDLE,
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene),
+    sceneHistory: history.historyPush(sceneHistory, scene),
     snapElements: new List(),
     activeSnapElement: null,
     drawingSupport: new Map(),
@@ -260,7 +251,7 @@ function setProjectProperties(state, properties) {
   return state.merge({
     mode: MODE_IDLE,
     scene: scene,
-    sceneHistory: state.sceneHistory.push(scene)
+    sceneHistory: history.historyPush(state.sceneHistory, scene)
   });
 }
 

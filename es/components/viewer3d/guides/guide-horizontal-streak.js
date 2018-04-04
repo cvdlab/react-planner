@@ -1,20 +1,11 @@
 import * as Three from 'three';
-import { HELVETIKER } from '../libs/helvetiker_regular.typeface.js';
 import { List } from 'immutable';
-import * as SharedStyle from '../../../shared-style';
+import { COLORS } from '../../../shared-style';
 
-export default function (width, height, guide) {
+export default function (width, height, guide, font) {
   var step = guide.properties.get('step');
-  var colors = void 0;
+  var colors = guide.properties.has('color') ? new List([guide.properties.get('color')]) : guide.properties.get('colors');
 
-  if (guide.properties.has('color')) {
-    colors = new List([guide.properties.get('color')]);
-  } else {
-    colors = guide.properties.get('colors');
-  }
-
-  var fontLoader = new Three.FontLoader();
-  var font = fontLoader.parse(HELVETIKER); // For measures
   var streak = new Three.Object3D();
   var counter = 0;
 
@@ -33,7 +24,7 @@ export default function (width, height, guide) {
         font: font
       });
 
-      var wrapper = new Three.MeshBasicMaterial({ color: SharedStyle.COLORS.black });
+      var wrapper = new Three.MeshBasicMaterial({ color: COLORS.black });
       var words = new Three.Mesh(shape, wrapper);
 
       words.rotation.x -= Math.PI / 2;

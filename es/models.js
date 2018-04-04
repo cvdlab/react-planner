@@ -11,6 +11,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import { Record, List, Map, fromJS } from 'immutable';
 import { MODE_IDLE } from './constants';
 import { SNAP_MASK } from './utils/snap';
+import { history } from './utils/export';
 
 var safeLoadMapList = function safeLoadMapList(mapList, Model, defaultMap) {
   return mapList ? new Map(mapList).map(function (m) {
@@ -305,9 +306,7 @@ export var Catalog = function (_Record11) {
 
   _createClass(Catalog, [{
     key: 'factoryElement',
-    value: function factoryElement(type, options) {
-      var initialProperties = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-
+    value: function factoryElement(type, options, initialProperties) {
       if (!this.elements.has(type)) {
         var catList = this.elements.map(function (element) {
           return element.name;
@@ -317,7 +316,7 @@ export var Catalog = function (_Record11) {
 
       var element = this.elements.get(type);
       var properties = element.properties.map(function (value, key) {
-        return initialProperties[key] || value.get('defaultValue');
+        return initialProperties && initialProperties.has(key) ? initialProperties.get(key) : value.get('defaultValue');
       });
 
       switch (element.prototype) {
@@ -347,18 +346,39 @@ export var Catalog = function (_Record11) {
   elements: new Map()
 }, 'Catalog'));
 
-export var State = function (_Record12) {
-  _inherits(State, _Record12);
+export var HistoryStructure = function (_Record12) {
+  _inherits(HistoryStructure, _Record12);
+
+  function HistoryStructure() {
+    var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, HistoryStructure);
+
+    return _possibleConstructorReturn(this, (HistoryStructure.__proto__ || Object.getPrototypeOf(HistoryStructure)).call(this, {
+      list: fromJS(json.list || []),
+      first: new Scene(json.scene),
+      last: new Scene(json.last || json.scene)
+    }));
+  }
+
+  return HistoryStructure;
+}(Record({
+  list: new List(),
+  first: null,
+  last: null
+}, 'HistoryStructure'));;
+
+export var State = function (_Record13) {
+  _inherits(State, _Record13);
 
   function State() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
     _classCallCheck(this, State);
 
-    var scene = new Scene(json.scene);
     return _possibleConstructorReturn(this, (State.__proto__ || Object.getPrototypeOf(State)).call(this, _extends({}, json, {
-      scene: scene,
-      sceneHistory: json.sceneHistory ? json.sceneHistory : new List([scene]),
+      scene: new Scene(json.scene),
+      sceneHistory: new HistoryStructure(json),
       catalog: new Catalog(json.catalog || {}),
       viewer2D: new Map(json.viewer2D || {}),
       drawingSupport: new Map(json.drawingSupport || {}),
@@ -372,7 +392,7 @@ export var State = function (_Record12) {
 }(Record({
   mode: MODE_IDLE,
   scene: new Scene(),
-  sceneHistory: new List([new Scene()]),
+  sceneHistory: new HistoryStructure(),
   catalog: new Catalog(),
   viewer2D: new Map(),
   mouse: new Map({ x: 0, y: 0 }),
