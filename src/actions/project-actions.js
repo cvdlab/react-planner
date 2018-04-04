@@ -31,25 +31,25 @@ export function loadProject(sceneJSON) {
   return {
     type: LOAD_PROJECT,
     sceneJSON
-  }
+  };
 }
 
 export function newProject() {
   return {
     type: NEW_PROJECT
-  }
+  };
 }
 
 export function saveProject() {
   return {
     type: SAVE_PROJECT
-  }
+  };
 }
 
 export function openCatalog() {
   return {
     type: OPEN_CATALOG
-  }
+  };
 }
 
 export function changeCatalogPage(newPage, oldPage) {
@@ -70,13 +70,13 @@ export function goBackToCatalogPage(newPage) {
 export function selectToolEdit() {
   return {
     type: SELECT_TOOL_EDIT
-  }
+  };
 }
 
 export function unselectAll() {
   return {
     type: UNSELECT_ALL
-  }
+  };
 }
 
 
@@ -84,7 +84,7 @@ export function setProperties(properties) {
   return {
     type: SET_PROPERTIES,
     properties
-  }
+  };
 }
 
 export function setItemsAttributes(itemsAttributes) {
@@ -94,7 +94,7 @@ export function setItemsAttributes(itemsAttributes) {
   return {
     type: SET_ITEMS_ATTRIBUTES,
     itemsAttributes
-  }
+  };
 }
 
 export function setLinesAttributes(linesAttributes) {
@@ -109,7 +109,7 @@ export function setLinesAttributes(linesAttributes) {
   return {
     type: SET_LINES_ATTRIBUTES,
     linesAttributes
-  }
+  };
 }
 
 export function setHolesAttributes(holesAttributes) {
@@ -119,45 +119,45 @@ export function setHolesAttributes(holesAttributes) {
   return {
     type: SET_HOLES_ATTRIBUTES,
     holesAttributes
-  }
+  };
 }
 
 export function remove() {
   return {
     type: REMOVE
-  }
+  };
 }
 
 export function undo() {
   return {
     type: UNDO
-  }
+  };
 }
 
 export function rollback() {
   return {
     type: ROLLBACK
-  }
+  };
 }
 
 export function openProjectConfigurator() {
   return {
     type: OPEN_PROJECT_CONFIGURATOR
-  }
+  };
 }
 
 export function setProjectProperties(properties) {
   return {
     type: SET_PROJECT_PROPERTIES,
     properties
-  }
+  };
 }
 
 export function initCatalog(catalog) {
   return {
     type: INIT_CATALOG,
     catalog
-  }
+  };
 }
 
 export function updateMouseCoord(coords = {x, y}) {
