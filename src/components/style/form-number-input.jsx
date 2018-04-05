@@ -25,6 +25,9 @@ export default class FormNumberInput extends Component {
   }
 
   onChangeCustom(valueAsNumber, valueAsString, input) {
+    if(valueAsNumber == null) valueAsNumber = '';
+        valueAsString = valueAsNumber.toString()
+        input.value = valueAsString;
     if( this.refs.realNumber.refs.input.checkValidity() )
     {
       this.props.onChange( { target: { value: valueAsNumber } } );
