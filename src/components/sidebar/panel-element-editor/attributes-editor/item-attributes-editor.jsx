@@ -39,7 +39,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
           onChange={event => onUpdate('x', event.target.value)}
           style={inputStyle}
           state={state}
-          configs={{precision: 2}}
+          precision={2}
           {...rest}
         />
       </td>
@@ -52,7 +52,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
           onChange={event => onUpdate('y', event.target.value)}
           style={inputStyle}
           state={state}
-          configs={{precision: 2}}
+          precision={2}
           {...rest}
         />
       </td>
@@ -65,7 +65,7 @@ export default function ItemAttributesEditor({element, onUpdate, attributeFormDa
           onChange={event => onUpdate('rotation', event.target.value)}
           style={inputStyle}
           state={state}
-          configs={{precision: 2}}
+          precision={2}
           {...rest}
         />
       </td>

@@ -1,6 +1,5 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import NumericInput from 'react-numeric-input';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE_INPUT = {
@@ -9,7 +8,7 @@ const STYLE_INPUT = {
   padding: '0 2px',
   fontSize: '13px',
   lineHeight: '1.25',
-  color: '#55595c',
+  color: SharedStyle.PRIMARY_COLOR.input,
   backgroundColor: SharedStyle.COLORS.white,
   backgroundImage: 'none',
   border: '1px solid rgba(0,0,0,.15)',
@@ -19,61 +18,43 @@ const STYLE_INPUT = {
 
 export default class FormNumberInput extends Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {focus: false};
-  }
-
-  onChangeCustom(valueAsNumber, valueAsString, input) {
-    if( this.refs.realNumber.refs.input.checkValidity() )
-    {
-      this.props.onChange( { target: { value: valueAsNumber } } );
-      this.onValidCustom(valueAsNumber, valueAsString);
-    }
-    else
-    {
-      this.onInvalidCustom(valueAsNumber, valueAsString);
-    }
-  }
-
-  onValidCustom( valueAsNumber, valueAsString ) {
-    if( this.refs.realNumber) this.refs.realNumber.refs.input.style.color = STYLE_INPUT.color;
-
-  }
-
-  onInvalidCustom( error, valueAsNumber, valueAsString ) {
-    if( this.refs.realNumber) this.refs.realNumber.refs.input.style.color = 'red';
+  constructor(props, context) {
+    super(props, context);
+    this.state = {
+      focus: false,
+      valid: true
+    };
   }
 
   render() {
 
-    let {value, configs, onChange, onValid, style, ...rest} = this.props;
-    let { min, max, precision } = configs;
-    let step = 1 / Math.pow(10, precision);
+    let { value, min, max, precision, onChange, onValid, onInvalid, style, placeholder } = this.props;
+    let numericInputStyle = { ...STYLE_INPUT, ...style };
 
-    return <NumericInput
-      ref="realNumber"
-      onChange={this.onChangeCustom.bind(this)}
-      onInvalid={this.onInvalidCustom.bind(this)}
-      onInput={(evt) => this.refs.realNumber.refs.input.style.color = evt.nativeEvent.target.checkValidity() ? STYLE_INPUT.color : 'red' }
-      step={step}
-      precision={precision}
+    if (this.state.focus) numericInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
+
+    let regexp = new RegExp(`^-?([0-9]+)\\.?([0-9]{0,${precision}})?$`);
+    value = regexp.test(value) ? value : parseFloat(value).toFixed(precision);
+
+    return <input
+      type="text"
       value={value}
-      type={'number'}
-      min={min}
-      max={max}
-      pattern={'^-?([0-9]+)\.?([0-9]+)?'}
-      style={
-        {
-          wrap: { width: '100%'},
-          input: {
-            ...STYLE_INPUT,
-            ...style,
-            border: this.state.focus ? '1px solid #66afe9' : '1px solid rgba(0,0,0,.15)'
-          }
+      style={numericInputStyle}
+      onChange={(evt) => {
+        let valid = regexp.test(evt.nativeEvent.target.value);
+
+        if (valid) {
+          onChange({ target: { value: evt.nativeEvent.target.value } });
+          onValid(evt.nativeEvent);
         }
-      }
-      snap
+        else {
+          onInvalid(evt.nativeEvent);
+        }
+        this.setState({ valid });
+      }}
+      onFocus={e => this.setState({ focus: true })}
+      onBlur={e => this.setState({ focus: false })}
+      placeholder={placeholder}
     />;
   }
 }
@@ -83,7 +64,11 @@ FormNumberInput.propTypes = {
   style: PropTypes.object,
   onChange: PropTypes.func,
   onValid: PropTypes.func,
-  configs: PropTypes.object
+  onInvalid: PropTypes.func,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  precision: PropTypes.number,
+  placeholder: PropTypes.string
 };
 
 FormNumberInput.defaultProps = {
@@ -92,9 +77,7 @@ FormNumberInput.defaultProps = {
   onChange: () => console.log('onValid instead'),
   onValid: () => console.log('onValid not defined'),
   onInvalid: () => console.log('onInvalid not defined'),
-  configs: {
-    min: Number.MIN_SAFE_INTEGER,
-    max: Number.MAX_SAFE_INTEGER,
-    precision: 3
-  }
+  min: Number.MIN_SAFE_INTEGER,
+  max: Number.MAX_SAFE_INTEGER,
+  precision: 3
 };

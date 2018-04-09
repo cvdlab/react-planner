@@ -35,7 +35,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
             onChange={event => onUpdate('vertexOne', {'x': event.target.value})}
             style={inputStyle}
             state={state}
-            configs={{precision: 2}}
+            precision={2}
             {...rest}
           />
         </td>
@@ -48,7 +48,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
             onChange={event => onUpdate('vertexOne', {'y': event.target.value})}
             style={inputStyle}
             state={state}
-            configs={{precision: 2}}
+            precision={2}
             {...rest}
           />
         </td>
@@ -61,7 +61,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
             onChange={event => onUpdate('vertexTwo', {'x': event.target.value})}
             style={inputStyle}
             state={state}
-            configs={{precision: 2}}
+            precision={2}
             {...rest}
           />
         </td>
@@ -74,7 +74,7 @@ export default function LineAttributesEditor({element, onUpdate, attributeFormDa
             onChange={event => onUpdate('vertexTwo', {'y': event.target.value})}
             style={inputStyle}
             state={state}
-            configs={{precision: 2}}
+            precision={2}
             {...rest}
           />
         </td>

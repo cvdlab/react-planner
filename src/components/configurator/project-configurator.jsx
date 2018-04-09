@@ -51,14 +51,22 @@ export default class ProjectConfigurator extends Component {
         <form onSubmit={e => this.onSubmit(e)}>
           <FormBlock>
             <FormLabel htmlFor='width'>{translator.t('width')}</FormLabel>
-            <FormNumberInput id='width' placeholder='width' value={dataWidth}
-                             onChange={e => this.setState({dataWidth: e.target.value})}/>
+            <FormNumberInput
+              id='width'
+              placeholder='width'
+              value={dataWidth}
+              onChange={e => this.setState({dataWidth: e.target.value})}
+            />
           </FormBlock>
 
           <FormBlock>
             <FormLabel htmlFor='height'>{translator.t('height')}</FormLabel>
-            <FormNumberInput id='height' placeholder='height' value={dataHeight}
-                             onChange={e => this.setState({dataHeight: e.target.value})}/>
+            <FormNumberInput
+              id='height'
+              placeholder='height'
+              value={dataHeight}
+              onChange={e => this.setState({dataHeight: e.target.value})}
+            />
           </FormBlock>
 
           <table style={{float: 'right'}}>

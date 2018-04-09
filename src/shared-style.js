@@ -24,7 +24,7 @@ export const MATERIAL_COLORS = {
     deep_orange: '#FF5722',
     brown: '#795548',
     grey: '#9E9E9E',
-    blue_grey:'#607D8B'
+    blue_grey: '#607D8B'
   }
 };
 
@@ -34,7 +34,8 @@ export const PRIMARY_COLOR = {
   icon: '#C2C2C2',
   border: '1px solid #555',
   text_main: COLORS.white,
-  text_alt: '#EBEBEB'
+  text_alt: '#EBEBEB',
+  input: '#55595C'
 };
 
 export const SECONDARY_COLOR = {
@@ -47,6 +48,6 @@ export const SECONDARY_COLOR = {
 export const MESH_SELECTED = 0x99C3FB;
 
 export const AREA_MESH_COLOR = {
-  selected : MESH_SELECTED,
-  unselected : 0xF5F4F4
+  selected: MESH_SELECTED,
+  unselected: 0xF5F4F4
 };
