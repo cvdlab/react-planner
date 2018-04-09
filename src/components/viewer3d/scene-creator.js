@@ -16,10 +16,15 @@ export function parseData(sceneData, actions, catalog) {
   };
 
   planData.plan = new Three.Object3D();
+  planData.plan.name = 'plan';
 
   // Add a grid to the plan
   planData.grid = createGrid(sceneData);
+  planData.grid.name = 'grid';
+
   planData.boundingBox = new Three.Box3().setFromObject(planData.grid);
+  planData.boundingBox.name = 'boundingBox';
+
   let promises = [];
 
   sceneData.layers.forEach(layer => {
@@ -479,6 +484,7 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
     }
 
     let pivot = new Three.Object3D();
+    pivot.name = 'pivot';
     pivot.add(object);
 
     let line = layer.lines.get(holeData.line);
@@ -567,6 +573,7 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
     }
 
     let pivot = new Three.Object3D();
+    pivot.name = 'pivot';
     pivot.add(line3D);
 
     pivot.position.x = vertex0.x;
@@ -619,6 +626,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
     }
 
     let pivot = new Three.Object3D();
+    pivot.name = 'pivot';
     pivot.add(area3D);
     pivot.position.y = layer.altitude;
     planData.plan.add(pivot);
@@ -658,6 +666,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
     }
 
     let pivot = new Three.Object3D();
+    pivot.name = 'pivot';
     pivot.add(item3D);
 
     pivot.rotation.y = item.rotation * Math.PI / 180;

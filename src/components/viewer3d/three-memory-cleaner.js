@@ -34,18 +34,33 @@ function disposeMaterial(material) {
 }
 
 function disposeMesh(mesh) {
-  if (!(mesh instanceof Three.Mesh || mesh instanceof Three.BoxHelper || mesh instanceof Three.LineSegments)) {
-    return;
-  }
   disposeGeometry(mesh.geometry);
   disposeMultimaterial(mesh.material);
   disposeMaterial(mesh.material);
-  mesh = null;
+}
+
+function disposeNested( obj ) {
+  if( obj.children &&  obj.children.length )
+  {
+    for( let i = obj.children.length - 1; i >= 0; i-- )
+    {
+      let curr = obj.children[i];
+      if( curr.children && curr.children.length ) disposeNested( curr );
+
+      if ((curr instanceof Three.Mesh || curr instanceof Three.BoxHelper || curr instanceof Three.LineSegments)) {
+        disposeMesh(curr);
+      }
+      obj.remove(curr);
+      curr = null;
+    }
+  }
 }
 
 export function disposeScene(scene3D) {
   scene3D.traverse(child => {
-    disposeMesh(child);
+    disposeNested( child );
+    scene3D.remove( child );
+    child = null;
   });
 }
 

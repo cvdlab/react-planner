@@ -7,6 +7,7 @@ export default function (width, height, guide, font) {
   let colors = guide.properties.has('color') ? new List([guide.properties.get('color')]) : guide.properties.get('colors');
 
   let streak = new Three.Object3D();
+  streak.name = 'streak';
 
   let counter = 0;
 

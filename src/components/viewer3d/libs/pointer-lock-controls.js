@@ -12,9 +12,11 @@ module.exports = PointerLockControls = function ( camera ) {
   camera.rotation.set( 0, 0, 0 );
 
   let pitchObject = new THREE.Object3D();
+  pitchObject.name = 'pitchObject';
   pitchObject.add( camera );
 
   let yawObject = new THREE.Object3D();
+  yawObject.name = 'yawObject';
   yawObject.position.y = 10;
   yawObject.add( pitchObject );
 

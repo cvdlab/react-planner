@@ -128,6 +128,7 @@ export default class Viewer3DFirstPerson extends React.Component {
     // Add a pointer to the scene
 
     let pointer = new Three.Object3D();
+    pointer.name = 'pointer';
 
     let pointerMaterial = new Three.MeshBasicMaterial({depthTest: false, depthWrite: false, color: SharedStyle.COLORS.black});
     let pointerGeometry1 = new Three.Geometry();

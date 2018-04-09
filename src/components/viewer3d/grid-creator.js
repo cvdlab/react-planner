@@ -6,6 +6,7 @@ import guideVerticalStreak from './guides/guide-vertical-streak';
 export default function createGrid(scene) {
 
   let grid = new Three.Object3D();
+  grid.name = 'grid';
   let fontLoader = new Three.FontLoader();
   let font = fontLoader.parse(HELVETIKER); // For measures
   let { guides, width, height } = scene;

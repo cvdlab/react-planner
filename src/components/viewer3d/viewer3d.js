@@ -19,6 +19,7 @@ export default class Scene3DViewer extends React.Component {
     this.width = props.width;
     this.height = props.height;
     this.stopRendering = false;
+    this.renderingID = 0;
 
     this.renderer = window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true});
     window.__threeRenderer = this.renderer;
@@ -116,6 +117,7 @@ export default class Scene3DViewer extends React.Component {
     // create orbit controls
     let orbitController = new OrbitControls(camera, this.renderer.domElement);
     let spotLightTarget = new Three.Object3D();
+    spotLightTarget.name = 'spotLightTarget';
     spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
     scene3D.add(spotLightTarget);
     spotLight1.target = spotLightTarget;
@@ -136,7 +138,6 @@ export default class Scene3DViewer extends React.Component {
       scene3D.remove(planData.grid);
 
       scene3D.traverse((child) => {
-        console.log(child);
         if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
           child.geometry = convertToBufferGeometry(child.geometry);
       });
@@ -180,7 +181,6 @@ export default class Scene3DViewer extends React.Component {
       };
 
       planData.plan.traverse((child) => {
-        console.log(child);
         if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
           child.geometry = convertToBufferGeometry(child.geometry);
       });
@@ -223,7 +223,7 @@ export default class Scene3DViewer extends React.Component {
         }
 
         this.renderer.render(scene3D, camera);
-        requestAnimationFrame(render);
+        this.renderingID = requestAnimationFrame(render);
       }
     };
 
@@ -236,6 +236,8 @@ export default class Scene3DViewer extends React.Component {
   }
 
   componentWillUnmount() {
+    cancelAnimationFrame( this.renderingID );
+
     this.orbitControls.dispose();
     this.stopRendering = true;
 
@@ -243,13 +245,14 @@ export default class Scene3DViewer extends React.Component {
     this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
 
     disposeScene(this.scene3D);
+    this.scene3D.remove(this.planData.boundingBox);
     this.scene3D.remove(this.planData.plan);
     this.scene3D.remove(this.planData.grid);
 
     this.scene3D = null;
-    // this.planData.sceneGraph = null;
     this.planData = null;
-
+    this.camera = null;
+    this.orbitControls = null;
   }
 
   componentWillReceiveProps(nextProps) {
@@ -278,7 +281,6 @@ export default class Scene3DViewer extends React.Component {
     }
 
     renderer.setSize(width, height);
-    //renderer.render(scene3D, camera);
   }
 
   render() {
