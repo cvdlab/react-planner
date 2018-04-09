@@ -34,6 +34,10 @@ export default class FormNumberInput extends Component {
     if (this.state.focus) numericInputStyle.border = `1px solid ${SharedStyle.SECONDARY_COLOR.main}`;
 
     let regexp = new RegExp(`^-?([0-9]+)\\.?([0-9]{0,${precision}})?$`);
+
+    if( !isNaN(min) && isFinite(min) && value < min ) value = min;
+    if( !isNaN(max) && isFinite(max) && value > max ) value = max;
+
     value = regexp.test(value) ? value : parseFloat(value).toFixed(precision);
 
     return <input
