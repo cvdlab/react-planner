@@ -45,10 +45,10 @@ export default class FormNumberInput extends Component {
 
         if (valid) {
           onChange({ target: { value: evt.nativeEvent.target.value } });
-          onValid(evt.nativeEvent);
+          if( onValid ) onValid(evt.nativeEvent);
         }
         else {
-          onInvalid(evt.nativeEvent);
+          if( onInvalid ) onInvalid(evt.nativeEvent);
         }
         this.setState({ valid });
       }}
@@ -62,7 +62,7 @@ export default class FormNumberInput extends Component {
 FormNumberInput.propTypes = {
   value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
   style: PropTypes.object,
-  onChange: PropTypes.func,
+  onChange: PropTypes.func.isRequired,
   onValid: PropTypes.func,
   onInvalid: PropTypes.func,
   min: PropTypes.number,
@@ -74,9 +74,6 @@ FormNumberInput.propTypes = {
 FormNumberInput.defaultProps = {
   value: 0,
   style: {},
-  onChange: () => console.log('onValid instead'),
-  onValid: () => console.log('onValid not defined'),
-  onInvalid: () => console.log('onInvalid not defined'),
   min: Number.MIN_SAFE_INTEGER,
   max: Number.MAX_SAFE_INTEGER,
   precision: 3
