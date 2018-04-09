@@ -50,7 +50,7 @@ export default function PropertyLengthMeasure({value, onUpdate, onValid, configs
                   value={_length}
                   onChange={event => update(event.target.value, _unit)}
                   onValid={onValid}
-                  configs={configs}
+                  {...configRest}
                 />
               </td>
               <td style={unitContainerStyle}>
