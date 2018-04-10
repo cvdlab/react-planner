@@ -242,18 +242,9 @@ export default {
     p4.position.x += 0.05;
     p4.position.y += cattedraY - 0.05;
 
+    let boxMaterials = [materialTexture, materialTexture,materialTexture,materialTexture, green, materialTexture];
 
-    let boxMaterials = [
-      new Three.MeshLambertMaterial({map: texture}),
-      new Three.MeshLambertMaterial({map: texture}),
-      new Three.MeshLambertMaterial({map: texture}),
-      new Three.MeshLambertMaterial({map: texture}),
-      new Three.MeshBasicMaterial({color: 0x669966}), //top
-      new Three.MeshLambertMaterial({map: texture})
-    ];
-
-    let tMaterial = new Three.MeshFaceMaterial(boxMaterials);
-    let plane = new Three.Mesh(new Three.BoxGeometry(cattedraX, cattedraY, 0.04), tMaterial);
+    let plane = new Three.Mesh(new Three.BoxGeometry(cattedraX, cattedraY, 0.04), boxMaterials);
     plane.position.x += cattedraX / 2;
     plane.position.y += cattedraY / 2;
     plane.position.z += cattedraZ;
