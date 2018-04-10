@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MdSettings, MdUndo, MdDirectionsRun} from 'react-icons/lib/md';
-import { FaFileO, FaMousePointer, FaPlus} from 'react-icons/lib/fa';
+import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/lib/md';
+import { FaFileO, FaMousePointer, FaPlus } from 'react-icons/lib/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
@@ -51,7 +51,7 @@ const mapButtonsCb = (el, ind) => {
     <If
       key={ind}
       condition={el.condition}
-      style={{position: 'relative'}}
+      style={{ position: 'relative' }}
     >
       {el.dom}
     </If>
@@ -74,8 +74,8 @@ export default class Toolbar extends Component {
   render() {
 
     let {
-      props: {state, width, height, toolbarButtons, allowProjectFileSupport},
-      context: {projectActions, viewer3DActions, translator}
+      props: { state, width, height, toolbarButtons, allowProjectFileSupport },
+      context: { projectActions, viewer3DActions, translator }
     } = this;
 
     let mode = state.get('mode');
@@ -83,19 +83,19 @@ export default class Toolbar extends Component {
     let sorter = [
       {
         index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
-        active={false}
-        tooltip={translator.t('New project')}
-        onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
-        <FaFileO/>
-      </ToolbarButton>
+          active={false}
+          tooltip={translator.t('New project')}
+          onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
+          <FaFileO />
+        </ToolbarButton>
       },
       {
         index: 1, condition: allowProjectFileSupport,
-        dom: <ToolbarSaveButton state={state}/>
+        dom: <ToolbarSaveButton state={state} />
       },
       {
         index: 2, condition: allowProjectFileSupport,
-        dom: <ToolbarLoadButton state={state}/>
+        dom: <ToolbarLoadButton state={state} />
       },
       {
         index: 3, condition: true,
@@ -103,48 +103,48 @@ export default class Toolbar extends Component {
           active={[MODE_VIEWING_CATALOG].includes(mode)}
           tooltip={translator.t('Open catalog')}
           onClick={event => projectActions.openCatalog()}>
-          <FaPlus/>
+          <FaPlus />
         </ToolbarButton>
       },
       {
         index: 4, condition: true, dom: <ToolbarButton
-        active={[MODE_3D_VIEW].includes(mode)}
-        tooltip={translator.t('3D View')}
-        onClick={event => viewer3DActions.selectTool3DView()}>
-        <Icon3D/>
-      </ToolbarButton>
+          active={[MODE_3D_VIEW].includes(mode)}
+          tooltip={translator.t('3D View')}
+          onClick={event => viewer3DActions.selectTool3DView()}>
+          <Icon3D />
+        </ToolbarButton>
       },
       {
         index: 5, condition: true, dom: <ToolbarButton
-        active={[MODE_IDLE].includes(mode)}
-        tooltip={translator.t('2D View')}
-        onClick={event => projectActions.rollback()}>
-        {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D/> : <FaMousePointer/>}
-      </ToolbarButton>
+          active={[MODE_IDLE].includes(mode)}
+          tooltip={translator.t('2D View')}
+          onClick={event => projectActions.rollback()}>
+          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D /> : <FaMousePointer />}
+        </ToolbarButton>
       },
       {
         index: 6, condition: true, dom: <ToolbarButton
-        active={[MODE_3D_FIRST_PERSON].includes(mode)}
-        tooltip={translator.t('3D First Person')}
-        onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
-        <MdDirectionsRun/>
-      </ToolbarButton>
+          active={[MODE_3D_FIRST_PERSON].includes(mode)}
+          tooltip={translator.t('3D First Person')}
+          onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
+          <MdDirectionsRun />
+        </ToolbarButton>
       },
       {
         index: 7, condition: true, dom: <ToolbarButton
-        active={false}
-        tooltip={translator.t('Undo (CTRL-Z)')}
-        onClick={event => projectActions.undo()}>
-        <MdUndo/>
-      </ToolbarButton>
+          active={false}
+          tooltip={translator.t('Undo (CTRL-Z)')}
+          onClick={event => projectActions.undo()}>
+          <MdUndo />
+        </ToolbarButton>
       },
       {
         index: 8, condition: true, dom: <ToolbarButton
-        active={[MODE_CONFIGURING_PROJECT].includes(mode)}
-        tooltip={translator.t('Configure project')}
-        onClick={event => projectActions.openProjectConfigurator()}>
-        <MdSettings/>
-      </ToolbarButton>
+          active={[MODE_CONFIGURING_PROJECT].includes(mode)}
+          tooltip={translator.t('Configure project')}
+          onClick={event => projectActions.openProjectConfigurator()}>
+          <MdSettings />
+        </ToolbarButton>
       }
     ];
 
@@ -152,17 +152,17 @@ export default class Toolbar extends Component {
       return Component.prototype ? //if is a react component
         {
           condition: true,
-          dom: React.createElement(Component, {mode, state, key})
+          dom: React.createElement(Component, { mode, state, key })
         } :
         {                           //else is a sortable toolbar button
           index: Component.index,
           condition: Component.condition,
-          dom: React.createElement(Component.dom, {mode, state, key})
+          dom: React.createElement(Component.dom, { mode, state, key })
         };
     }));
 
     return (
-      <aside style={{...ASIDE_STYLE, maxWidth: width, maxHeight: height}} className='toolbar'>
+      <aside style={{ ...ASIDE_STYLE, maxWidth: width, maxHeight: height }} className='toolbar'>
         {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
       </aside>
     )
