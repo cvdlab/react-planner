@@ -267,6 +267,7 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     this.scene3D = null;
     this.planData = null;
+    this.renderer.renderLists.dispose();
   }
 
   componentWillReceiveProps(nextProps) {
