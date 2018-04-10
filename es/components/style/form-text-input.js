@@ -19,7 +19,7 @@ var STYLE_INPUT = {
   padding: '0 2px',
   fontSize: '13px',
   lineHeight: '1.25',
-  color: '#55595c',
+  color: SharedStyle.PRIMARY_COLOR.input,
   backgroundColor: SharedStyle.COLORS.white,
   backgroundImage: 'none',
   border: '1px solid rgba(0,0,0,.15)',
@@ -48,6 +48,9 @@ var FormTextInput = function (_Component) {
           style = _props.style,
           rest = _objectWithoutProperties(_props, ['style']);
 
+      var textInputStyle = _extends({}, STYLE_INPUT, style);
+      if (this.state.focus) textInputStyle.border = '1px solid ' + SharedStyle.SECONDARY_COLOR.main;
+
       return React.createElement('input', _extends({
         onFocus: function onFocus(e) {
           return _this2.setState({ focus: true });
@@ -55,10 +58,9 @@ var FormTextInput = function (_Component) {
         onBlur: function onBlur(e) {
           return _this2.setState({ focus: false });
         },
-        style: _extends({}, STYLE_INPUT, style, {
-          border: this.state.focus ? '1px solid #66afe9' : '1px solid rgba(0,0,0,.15)'
-        }),
-        type: 'text' }, rest));
+        style: textInputStyle,
+        type: 'text'
+      }, rest));
     }
   }]);
 

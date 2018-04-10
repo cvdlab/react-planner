@@ -82,10 +82,14 @@ var ProjectConfigurator = function (_Component) {
               { htmlFor: 'width' },
               translator.t('width')
             ),
-            React.createElement(FormNumberInput, { id: 'width', placeholder: 'width', value: dataWidth,
+            React.createElement(FormNumberInput, {
+              id: 'width',
+              placeholder: 'width',
+              value: dataWidth,
               onChange: function onChange(e) {
                 return _this2.setState({ dataWidth: e.target.value });
-              } })
+              }
+            })
           ),
           React.createElement(
             FormBlock,
@@ -95,10 +99,14 @@ var ProjectConfigurator = function (_Component) {
               { htmlFor: 'height' },
               translator.t('height')
             ),
-            React.createElement(FormNumberInput, { id: 'height', placeholder: 'height', value: dataHeight,
+            React.createElement(FormNumberInput, {
+              id: 'height',
+              placeholder: 'height',
+              value: dataHeight,
               onChange: function onChange(e) {
                 return _this2.setState({ dataHeight: e.target.value });
-              } })
+              }
+            })
           ),
           React.createElement(
             'table',

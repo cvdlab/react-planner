@@ -7,6 +7,7 @@ export default function (width, height, guide, font) {
   var colors = guide.properties.has('color') ? new List([guide.properties.get('color')]) : guide.properties.get('colors');
 
   var streak = new Three.Object3D();
+  streak.name = 'streak';
   var counter = 0;
 
   for (var i = 0; i <= height; i += step) {

@@ -75,7 +75,7 @@ function LineAttributesEditor(_ref, _ref2) {
               },
               style: inputStyle,
               state: state,
-              configs: { precision: 2 }
+              precision: 2
             }, rest))
           )
         ),
@@ -97,7 +97,7 @@ function LineAttributesEditor(_ref, _ref2) {
               },
               style: inputStyle,
               state: state,
-              configs: { precision: 2 }
+              precision: 2
             }, rest))
           )
         ),
@@ -119,7 +119,7 @@ function LineAttributesEditor(_ref, _ref2) {
               },
               style: inputStyle,
               state: state,
-              configs: { precision: 2 }
+              precision: 2
             }, rest))
           )
         ),
@@ -141,7 +141,7 @@ function LineAttributesEditor(_ref, _ref2) {
               },
               style: inputStyle,
               state: state,
-              configs: { precision: 2 }
+              precision: 2
             }, rest))
           )
         )

@@ -1,3 +1,5 @@
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
 function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
 
 import React from 'react';
@@ -83,14 +85,13 @@ export default function PropertyLengthMeasure(_ref, _ref2) {
                 React.createElement(
                   'td',
                   null,
-                  React.createElement(FormNumberInput, {
+                  React.createElement(FormNumberInput, _extends({
                     value: _length,
                     onChange: function onChange(event) {
                       return update(event.target.value, _unit);
                     },
-                    onValid: onValid,
-                    configs: configs
-                  })
+                    onValid: onValid
+                  }, configRest))
                 ),
                 React.createElement(
                   'td',

@@ -34,7 +34,8 @@ export var PRIMARY_COLOR = {
   icon: '#C2C2C2',
   border: '1px solid #555',
   text_main: COLORS.white,
-  text_alt: '#EBEBEB'
+  text_alt: '#EBEBEB',
+  input: '#55595C'
 };
 
 export var SECONDARY_COLOR = {

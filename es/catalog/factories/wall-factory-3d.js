@@ -301,6 +301,7 @@ export function buildWall_OLD(element, layer, scene, textures) {
 
   // We will rotate on the bottom-left vertex, so we need a pivot in the origin
   var pivot = new Object3D();
+  pivot.name = 'pivot';
 
   // Create a Shape from the coordinates
   var rectShape = createShape(wallCoords);

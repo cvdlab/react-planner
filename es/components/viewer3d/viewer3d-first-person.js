@@ -146,6 +146,7 @@ var Viewer3DFirstPerson = function (_React$Component) {
       // Add a pointer to the scene
 
       var pointer = new Three.Object3D();
+      pointer.name = 'pointer';
 
       var pointerMaterial = new Three.MeshBasicMaterial({ depthTest: false, depthWrite: false, color: SharedStyle.COLORS.black });
       var pointerGeometry1 = new Three.Geometry();
@@ -284,6 +285,7 @@ var Viewer3DFirstPerson = function (_React$Component) {
 
       this.scene3D = null;
       this.planData = null;
+      this.renderer.renderLists.dispose();
     }
   }, {
     key: 'componentWillReceiveProps',
