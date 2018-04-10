@@ -1,11 +1,11 @@
-"use strict";
+'use strict';
 
 import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import * as Three from 'three';
-import {parseData, updateScene} from './scene-creator';
-import {disposeScene} from './three-memory-cleaner';
+import { parseData, updateScene } from './scene-creator';
+import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import * as SharedStyle from '../../shared-style';
@@ -18,10 +18,9 @@ export default class Scene3DViewer extends React.Component {
     this.lastMousePosition = {};
     this.width = props.width;
     this.height = props.height;
-    this.stopRendering = false;
     this.renderingID = 0;
 
-    this.renderer = window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true});
+    this.renderer = window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
     window.__threeRenderer = this.renderer;
   }
 
@@ -35,7 +34,7 @@ export default class Scene3DViewer extends React.Component {
       projectActions: this.context.projectActions
     };
 
-    let {state} = this.props;
+    let { state } = this.props;
     let data = state.scene;
     let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
 
@@ -122,109 +121,19 @@ export default class Scene3DViewer extends React.Component {
     scene3D.add(spotLightTarget);
     spotLight1.target = spotLightTarget;
 
-
-    /************************************/
-    /********* SCENE EXPORTER ***********/
-    /************************************/
-
-    // let exportScene = () => {
-    //
-    //   let convertToBufferGeometry = (geometry) => {
-    //     console.log("geometry = ", geometry);
-    //     let bufferGeometry = new Three.BufferGeometry().fromGeometry(geometry);
-    //     return bufferGeometry;
-    //   };
-    //
-    //   scene3D.remove(planData.grid);
-    //
-    //   scene3D.traverse((child) => {
-    //     if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
-    //       child.geometry = convertToBufferGeometry(child.geometry);
-    //   });
-    //
-    //   let output = scene3D.toJSON();
-    //
-    //   output = JSON.stringify(output, null, '\t');
-    //   output = output.replace(/[\n\t]+([\d\.e\-\[\]]+)/g, '$1');
-    //
-    //   let name = prompt('insert file name');
-    //   name = name.trim() || 'scene';
-    //   let blob = new Blob([output], {type: 'text/plain'});
-    //
-    //   let fileOutputLink = document.createElement('a');
-    //   let url = window.URL.createObjectURL(blob);
-    //   fileOutputLink.setAttribute('download', name);
-    //   fileOutputLink.href = url;
-    //   document.body.appendChild(fileOutputLink);
-    //   fileOutputLink.click();
-    //   document.body.removeChild(fileOutputLink);
-    //
-    //   scene3D.add(planData.grid);
-    //
-    // };
-
-    // window.exportScene = exportScene;
-
-    /************************************/
-
-
-    /************************************/
-    /********** PLAN EXPORTER ***********/
-    /************************************/
-
-
-    // let exportPlan = () => {
-    //
-    //   let convertToBufferGeometry = (geometry) => {
-    //     console.log("geometry = ", geometry);
-    //     return new Three.BufferGeometry().fromGeometry(geometry);
-    //   };
-    //
-    //   planData.plan.traverse((child) => {
-    //     if (child instanceof Three.Mesh && !(child.geometry instanceof Three.BufferGeometry))
-    //       child.geometry = convertToBufferGeometry(child.geometry);
-    //   });
-    //
-    //   let output = planData.plan.toJSON();
-    //
-    //   output = JSON.stringify(output, null, '\t');
-    //   output = output.replace(/[\n\t]+([\d\.e\-\[\]]+)/g, '$1');
-    //
-    //   let name = prompt('insert file name');
-    //   name = name.trim() || 'plan';
-    //   let blob = new Blob([output], {type: 'text/plain'});
-    //
-    //   let fileOutputLink = document.createElement('a');
-    //   let url = window.URL.createObjectURL(blob);
-    //   fileOutputLink.setAttribute('download', name);
-    //   fileOutputLink.href = url;
-    //   document.body.appendChild(fileOutputLink);
-    //   fileOutputLink.click();
-    //   document.body.removeChild(fileOutputLink);
-    //
-    //   scene3D.add(planData.grid);
-    //
-    // };
-
-    // window.exportPlan = exportPlan;
-
-    /************************************/
-
     let render = () => {
-      if (!this.stopRendering) {
-        orbitController.update();
-        spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
-        spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
-        camera.updateMatrix();
-        camera.updateMatrixWorld();
+      orbitController.update();
+      spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
+      spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
+      camera.updateMatrix();
+      camera.updateMatrixWorld();
 
-        for (let elemID in planData.sceneGraph.LODs) {
-          planData.sceneGraph.LODs[elemID].update(camera)
-        }
-
-        this.renderer.render(scene3D, camera);
-        this.renderingID = requestAnimationFrame(render);
+      for (let elemID in planData.sceneGraph.LODs) {
+        planData.sceneGraph.LODs[elemID].update(camera);
       }
+
+      this.renderer.render(scene3D, camera);
+      this.renderingID = requestAnimationFrame(render);
     };
 
     render();
@@ -236,10 +145,9 @@ export default class Scene3DViewer extends React.Component {
   }
 
   componentWillUnmount() {
-    cancelAnimationFrame( this.renderingID );
+    cancelAnimationFrame(this.renderingID);
 
     this.orbitControls.dispose();
-    this.stopRendering = true;
 
     this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
     this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
@@ -256,8 +164,7 @@ export default class Scene3DViewer extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    let {width, height} = nextProps;
-    let {camera, renderer, scene3D} = this;
+    let { width, height } = nextProps;
 
     let actions = {
       areaActions: this.context.areaActions,
@@ -270,23 +177,20 @@ export default class Scene3DViewer extends React.Component {
     this.width = width;
     this.height = height;
 
-    camera.aspect = width / height;
+    this.camera.aspect = width / height;
 
-    camera.updateProjectionMatrix();
+    this.camera.updateProjectionMatrix();
 
     if (nextProps.state.scene !== this.props.state.scene) {
-
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
       updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
     }
 
-    renderer.setSize(width, height);
+    this.renderer.setSize(width, height);
   }
 
   render() {
-    return React.createElement("div", {
-      ref: "canvasWrapper"
-    });
+    return React.createElement('div', { ref: 'canvasWrapper' });
   }
 }
 
