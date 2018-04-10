@@ -245,7 +245,6 @@ export default class Scene3DViewer extends React.Component {
     this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
 
     disposeScene(this.scene3D);
-    this.scene3D.remove(this.planData.boundingBox);
     this.scene3D.remove(this.planData.plan);
     this.scene3D.remove(this.planData.grid);
 
