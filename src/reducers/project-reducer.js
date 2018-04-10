@@ -231,7 +231,7 @@ function undo(state) {
 export function rollback(state) {
   let sceneHistory = state.sceneHistory;
 
-  if (!sceneHistory.last || sceneHistory.list.isEmpty()) {
+  if (!sceneHistory.last && sceneHistory.list.isEmpty()) {
     return state;
   }
 
