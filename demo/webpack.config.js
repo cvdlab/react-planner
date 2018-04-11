@@ -101,6 +101,10 @@ module.exports = (env, self) => {
     }));
   }
 
+  config.plugins.push(new webpack.DefinePlugin({
+    isProduction: JSON.stringify(isProduction)
+  }));
+
   if (!isProduction) {
     config.plugins.push(new OpenBrowserPlugin({url: `http://localhost:${port}`}));
   }
