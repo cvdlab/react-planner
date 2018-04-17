@@ -12,7 +12,6 @@
 
 [![react-planner][preview_image]][demo]
 
-
 ## Usage
 
 ``` es6
@@ -57,8 +56,12 @@ let plugins = [
 ReactDOM.render(
   (
     <Provider store={store}>
-      <ReactPlanner catalog={MyCatalog} width={800} height={600} plugins={plugins}
-                    stateExtractor={state => state.get('react-planner')}
+      <ReactPlanner
+        catalog={MyCatalog}
+        width={800}
+        height={600}
+        plugins={plugins}
+        stateExtractor={state => state.get('react-planner')}
       />
     </Provider>
   ),
@@ -69,11 +72,9 @@ ReactDOM.render(
 
 ## Docs
 
-Cooming soon!
-
-## Contributing
-
-Your contributions (issues and pull request) are very appreciated!
+- [Create a Property](docs/HOW_TO_CREATE_A_PROPERTY.md)
+- [Create a Catalog](docs/HOW_TO_CREATE_A_CATALOG.md)
+- [Create a Catalog's Element](docs/HOW_TO_CREATE_AN_ELEMENT.md)
 
 ## Authors
 
@@ -86,6 +87,15 @@ Your contributions (issues and pull request) are very appreciated!
 
 Developed @ [CVDLAB][cvdlab]
 
+## Contributing
+
+Your contributions (issues and pull request) are very appreciated!
+
+## Contributors
+
+ - [JikkuJose](https://github.com/JikkuJose)
+ - [Yeri-Kim](https://github.com/Yeri-Kim)
+
 ## License
 
 MIT
@@ -94,7 +104,7 @@ MIT
 [npm_label]: https://img.shields.io/npm/v/react-planner.svg?maxAge=2592000?style=plastic
 [npm_link]: https://www.npmjs.com/package/react-planner
 [js]: https://img.shields.io/badge/javascript-ES6-fbde34.svg
-[react_version]: https://img.shields.io/badge/react%20version-15.0.0%20or%20later-61dafb.svg
+[react_version]: https://img.shields.io/badge/react%20version-16.0.0%20or%20later-61dafb.svg
 [preview_image]: https://raw.githubusercontent.com/cvdlab/react-planner/master/preview.png
 [demo]: https://cvdlab.github.io/react-planner
 [cvdlab]: http://cvdlab.org/
