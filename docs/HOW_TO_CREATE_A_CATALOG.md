@@ -28,4 +28,4 @@ You could also register a category with the function *catalog.registerCategory* 
 
 If an Element is being added without pushing it into any category, it will be shown in the Catalog's main page
 
-> See how to [*Create a Catalog's Element*](docs/HOW_TO_CREATE_AN_ELEMENT.md)
+> See how to [*Create a Catalog's Element*](HOW_TO_CREATE_AN_ELEMENT.md)

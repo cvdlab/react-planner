@@ -86,7 +86,7 @@ export default {
 ## Element's Properties:
 
 You can specify any prevoiusly registered Catalog's Property. For register a property you should call the *Catalog.registerPropertyType* function.
-> See [Create a Property](docs/HOW_TO_CREATE_A_PROPERTY.md)
+> See [Create a Property](HOW_TO_CREATE_A_PROPERTY.md)
 
 ## Element's render2D:
 
