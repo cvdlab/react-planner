@@ -44,7 +44,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "electric panel",
     description: "electric panel",
     image: require('./electricalPanel.png')

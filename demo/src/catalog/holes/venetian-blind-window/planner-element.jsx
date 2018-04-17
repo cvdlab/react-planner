@@ -11,7 +11,6 @@ export default {
 
   info: {
     tag: ['Window'],
-    group: 'Vertical Closing',
     title: 'Venetian Blind Window',
     description: 'Venetian Blind Window',
     image: require('./veneziana.png')

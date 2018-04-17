@@ -8,7 +8,6 @@ export default {
 
   info: {
     tag: ['gate'],
-    group: 'gate',
     title: 'gate',
     description: 'hole in the wall',
     image: require('./gate.png')

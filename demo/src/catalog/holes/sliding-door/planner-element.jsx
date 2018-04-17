@@ -84,7 +84,6 @@ export default {
   info: {
     tag: ['door'],
     title: 'sliding door',
-    group: 'door',
     description: 'iron door',
     image: require('./slidingDoor.png')
   },

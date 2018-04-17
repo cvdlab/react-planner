@@ -44,7 +44,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "hub",
     description: "hub",
     image: require('./hub.png')

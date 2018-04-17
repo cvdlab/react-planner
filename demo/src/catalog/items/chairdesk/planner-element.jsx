@@ -542,7 +542,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: "Items",
     title: "chairdesk",
     description: "office chair",
     image: require('./chairdesk.png')

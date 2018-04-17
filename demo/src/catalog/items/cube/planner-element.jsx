@@ -9,7 +9,6 @@ export default {
   info: {
     title: "cube",
     tag: ['demo'],
-    group: "Items",
     description: "Demo item",
     image: require('./cube.png')
   },

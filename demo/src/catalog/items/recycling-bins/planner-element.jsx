@@ -11,7 +11,6 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    group: "Items",
     title: "recycling bins",
     description: "Recycling-bins",
     image: require('./recycling-bins.png')

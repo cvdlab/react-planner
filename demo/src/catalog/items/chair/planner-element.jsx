@@ -249,7 +249,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: "Items",
     title: "chair",
     description: "chair",
     image: require('./chair.png')

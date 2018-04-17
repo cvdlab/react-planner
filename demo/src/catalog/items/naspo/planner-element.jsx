@@ -221,7 +221,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "naspo",
     description: "naspo",
     image: require('./naspo.png')

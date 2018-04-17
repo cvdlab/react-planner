@@ -245,7 +245,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: 'Items',
     title: 'air conditioner',
     description: 'air conditioner',
     image: require('./air_conditioner.png')

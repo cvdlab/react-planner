@@ -551,7 +551,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "three-phase panel",
     description: "electric panel",
     image: require('./threePhasePanel.png')

@@ -100,7 +100,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood', 'metal'],
-    group: "Items",
     title: "projector",
     description: "projector",
     image: require('./projector.png')

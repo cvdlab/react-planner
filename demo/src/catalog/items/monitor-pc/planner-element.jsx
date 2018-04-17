@@ -149,7 +149,6 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    group: "Items",
     title: "pc monitor",
     description: "pc monitor",
     image: require('./monitorPC.png')

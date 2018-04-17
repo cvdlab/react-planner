@@ -13,7 +13,6 @@ export default {
   info: {
     title: "tv",
     tag: ['furnishing', 'electronics'],
-    group: "Items",
     description: "LCD TV",
     image: require('./tv.png')
   },

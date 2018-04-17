@@ -296,7 +296,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "sink",
     description: "sink",
     image: require('./sink.png')

@@ -9,7 +9,6 @@ export default {
   info: {
     title: "image",
     tag: ['image'],
-    group: "Items",
     description: "Image",
     image: require('./image.png')
   },

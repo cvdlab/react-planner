@@ -176,7 +176,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "metal detector",
     description: "metal detector",
     image: require('./metalDetector.png')

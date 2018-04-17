@@ -267,7 +267,6 @@ export default {
 
   info: {
     tag: ['door'],
-    group: 'door',
     title: 'double panic door',
     description: 'iron door',
     image: require('./panicDoorDouble.png')

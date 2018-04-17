@@ -186,7 +186,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metallo','plastic'],
-    group: "Items",
     title: "hanger",
     description: "hanger",
     image: require('./hanger.png')

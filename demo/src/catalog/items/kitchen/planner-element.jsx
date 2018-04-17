@@ -382,7 +382,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "kitchen",
     description: "kitchen",
     image: require('./kitchen.png')

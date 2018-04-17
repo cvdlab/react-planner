@@ -10,7 +10,6 @@ export default {
   info: {
     title: "simple stair",
     tag: ['building', 'stair'],
-    group: "Items",
     description: "Simple stair",
     image: require('./simple-stair.png')
   },

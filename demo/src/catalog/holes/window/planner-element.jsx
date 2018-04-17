@@ -12,7 +12,6 @@ export default {
   info: {
     title: "window",
     tag: ['window'],
-    group: "Vertical Closing",
     description: "Window",
     image: require('./window.png')
   },

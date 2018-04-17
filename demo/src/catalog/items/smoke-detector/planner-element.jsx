@@ -107,7 +107,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "smoke detector",
     description: "smoke detector",
     image: require('./smokeDetector.png')

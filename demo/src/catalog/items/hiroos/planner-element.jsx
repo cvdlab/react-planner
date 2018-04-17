@@ -68,7 +68,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "hiroos",
     description: "hiroos",
     image: require('./hiroos.png')

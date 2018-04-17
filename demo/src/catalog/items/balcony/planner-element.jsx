@@ -71,7 +71,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: 'balcony',
     title: 'balcony',
     description: 'balcony',
     image: require('./balcony.png')

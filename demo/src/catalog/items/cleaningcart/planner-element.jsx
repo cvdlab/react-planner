@@ -745,7 +745,6 @@ export default {
 
   info: {
     tag: ['metal','plastic'],
-    group: 'Items',
     title: 'cleaning cart',
     description: 'cleaning cart',
     image: require('./cleaning_cart.png')

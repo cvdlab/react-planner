@@ -12,7 +12,6 @@ export default {
   info: {
     title: "door",
     tag: ['door'],
-    group: "Horizontal communication",
     description: "Wooden door",
     image: require('./door.png')
   },

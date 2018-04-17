@@ -333,7 +333,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: 'items',
     title: 'canteen table',
     description: 'canteen table',
     image: require('./canteen_table.png')

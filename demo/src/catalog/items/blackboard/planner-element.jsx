@@ -11,7 +11,6 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    group: "Items",
     title: "Blackboard",
     description: "Blackboard",
     image: require('./blackboard.png')

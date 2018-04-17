@@ -3,7 +3,6 @@ import {ElementsFactories} from 'react-planner';
 const info = {
   title: 'wall',
   tag: ['wall'],
-  group: 'Vertical closure',
   description: 'Wall with bricks or painted',
   image: require('./wall.png'),
   visibility: {

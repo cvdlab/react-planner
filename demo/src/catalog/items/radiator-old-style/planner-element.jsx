@@ -206,7 +206,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'cast iron'],
-    group: "Items",
     title: "cast iron radiator",
     description: "cast iron radiator",
     image: require('./OldStyleRadiator.png')

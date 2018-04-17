@@ -66,7 +66,6 @@ export default {
 
   info: {
     tag: ['structure'],
-    group: 'items',
     title: 'round column',
     description: 'round column',
     image: require('./column.png')

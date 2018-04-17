@@ -11,7 +11,6 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    group: "Items",
     title: "Trash",
     description: "Trash",
     image: require('./trash.png')

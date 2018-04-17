@@ -481,7 +481,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: "Items",
     title: "desk",
     description: "desk",
     image: require('./desk.png')

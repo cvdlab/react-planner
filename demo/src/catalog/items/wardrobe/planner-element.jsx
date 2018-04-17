@@ -192,7 +192,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "wardrobe",
     description: "wardrobe",
     image: require('./wardrobe.png')

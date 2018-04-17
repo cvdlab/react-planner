@@ -140,7 +140,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "umbrella stand",
     description: "umbrella stand",
     image: require('./umbrellaStand.png')

@@ -16,7 +16,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood', 'metal'],
-    group: 'items',
     title: 'multimedia chalkboard',
     description: 'multimedia chalkboard',
     image: require('./lim.png')

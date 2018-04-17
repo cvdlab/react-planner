@@ -11,7 +11,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood', 'metal'],
-    group: 'items',
     title: 'child chair desk',
     description: 'child chair desk',
     image: require('./chairDesk.png')

@@ -133,7 +133,6 @@ export default {
 
   info: {
     tag: ['telecomunication'],
-    group: "Items",
     title: "router Wifi",
     description: "router Wifi",
     image: require('./routerWifi.png')

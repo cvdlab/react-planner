@@ -238,7 +238,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: 'armchair',
     title: 'armchairs',
     description: 'armchairs',
     image: require('./armchairs.png')

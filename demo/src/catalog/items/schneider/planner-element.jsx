@@ -232,7 +232,6 @@ export default {
 
   info: {
     tag: ['metal'],
-    group: "Items",
     title: "schneider",
     description: "schneider",
     image: require('./schneider.png')

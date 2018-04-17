@@ -352,7 +352,6 @@ export default {
 
   info: {
     tag: ['security', 'metal'],
-    group: 'items',
     title: 'camera',
     description: 'camera',
     image: require('./camera.png')

@@ -19,7 +19,6 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    group: "teaching post",
     title: "Teaching post",
     description: "Teaching post",
     image: require('./teaching-post.png')

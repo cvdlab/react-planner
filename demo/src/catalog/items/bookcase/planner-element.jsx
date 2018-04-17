@@ -141,7 +141,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: 'Items',
     title: 'bookcase',
     description: 'bookcase',
     image: require('./bookcase.png')

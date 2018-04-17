@@ -202,7 +202,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'metal'],
-    group: "Items",
     title: "fridge",
     description: "fridge",
     image: require('./fridge.png')

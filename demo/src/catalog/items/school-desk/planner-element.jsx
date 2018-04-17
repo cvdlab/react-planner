@@ -19,7 +19,6 @@ export default {
 
   info: {
     tag: ['furnishings'],
-    group: "Items",
     title: "School desk",
     description: "School desk",
     image: require('./school-desk.png')

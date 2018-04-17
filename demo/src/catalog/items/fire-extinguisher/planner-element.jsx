@@ -230,7 +230,6 @@ export default {
 
   info: {
     tag: ['security'],
-    group: "Items",
     title: "Fire extinguisher",
     description: "Fire extinguisher",
     image: require('./fire-extinguisher.png')

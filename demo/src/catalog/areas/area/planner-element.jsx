@@ -3,7 +3,6 @@ import {ElementsFactories} from 'react-planner';
 let info = {
   title: "area",
   tag: ['area'],
-  group: "Horizontal Closure",
   description: "Generic Room",
   image: ""
 };

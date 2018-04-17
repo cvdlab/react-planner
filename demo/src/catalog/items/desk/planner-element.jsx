@@ -132,7 +132,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: 'Items',
     title: 'school desk',
     description: 'school desk',
     image: require('./desk.png')

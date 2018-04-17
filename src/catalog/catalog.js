@@ -116,7 +116,6 @@ export default class Catalog {
 
     if (!json.hasOwnProperty('info')) throw new Error(`Element ${name} doesn't have info`);
     if (!json.info.hasOwnProperty('tag')) throw new Error(`Element ${name} doesn't have tag`);
-    if (!json.info.hasOwnProperty('group')) throw new Error(`Element ${name} doesn't have group`);
     if (!json.info.hasOwnProperty('description')) throw new Error(`Element ${name} doesn't have description`);
     if (!json.info.hasOwnProperty('image')) throw new Error(`Element ${name} doesn't have image`);
 

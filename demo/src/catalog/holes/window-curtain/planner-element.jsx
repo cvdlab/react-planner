@@ -11,7 +11,6 @@ export default {
 
   info: {
     tag: ['Finestre'],
-    group: "Vertical Closing",
     title: "Curtain window",
     description: "Curtain window",
     image: require('./window-curtain.png')

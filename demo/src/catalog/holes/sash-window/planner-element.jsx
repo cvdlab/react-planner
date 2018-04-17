@@ -12,7 +12,6 @@ export default {
   info: {
     title: "sash window",
     tag: ['window'],
-    group: "Vertical closure",
     description: "Sash window",
     image: require('./window.png')
   },

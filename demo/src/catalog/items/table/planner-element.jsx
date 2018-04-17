@@ -88,7 +88,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood'],
-    group: "Items",
     title: "table",
     description: "table",
     image: require('./table.png')

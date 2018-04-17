@@ -121,7 +121,6 @@ export default {
 
   info: {
     tag: ['furnishings', 'wood', 'metal'],
-    group: 'Iiems',
     title: 'bench',
     description: 'bench',
     image: require('./bench.png')
