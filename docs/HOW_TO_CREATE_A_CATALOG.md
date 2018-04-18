@@ -20,7 +20,7 @@ export default catalog;
 
 ```
 
-We conventionally use [*babel-plugin-import-glob*](https://github.com/novemberborn/babel-plugin-import-glob) for import multiple Elements at the same time, but you could also import them individually.
+We conventionally use [*babel-plugin-import-glob*](https://github.com/novemberborn/babel-plugin-import-glob) to import multiple Elements at the same time,although you could keep importing them individually.
 
 For add an Element to the Catalog you should call the *catalog.registerElement* function passing the Element as parameter.
 
