@@ -1,4 +1,4 @@
-import { BoxHelper, Box3 } from 'three';
+import {BoxHelper, Box3, ObjectLoader} from 'three';
 import {loadObjWithMaterial} from '../../utils/load-obj';
 import path from 'path';
 import convert from 'convert-units';
@@ -13,7 +13,7 @@ const width = {length: 180, unit: 'cm'};
 const depth = {length: 60, unit: 'cm'};
 const height = {length: 70, unit: 'cm'};
 
-let cached3DSofa = null;
+let cachedJSONSofa = null;
 
 export default {
   name: 'sofa',
@@ -38,7 +38,8 @@ export default {
     return (
       <g transform={`translate(${-width.length / 2},${-depth.length / 2})`}>
         <rect x="0" y="0" width={width.length} height={depth.length} style={style}/>
-        <line x1={width.length / 2} x2={width.length / 2} y1={depth.length} y2={1.5 * depth.length} style={arrow_style}/>
+        <line x1={width.length / 2} x2={width.length / 2} y1={depth.length} y2={1.5 * depth.length}
+              style={arrow_style}/>
         <line
           x1={.35 * width.length}
           x2={width.length / 2}
@@ -97,14 +98,17 @@ export default {
       return object;
     };
 
-    if (cached3DSofa) {
-      return Promise.resolve(onLoadItem(cached3DSofa.clone()));
+    if (cachedJSONSofa) {
+      let loader = new ObjectLoader();
+      let object = loader.parse(cachedJSONSofa);
+      return Promise.resolve(onLoadItem(object));
     }
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
       .then(object => {
-        cached3DSofa = object;
-        return onLoadItem(cached3DSofa.clone())
+        cachedJSONSofa = object.toJSON();
+        let loader = new ObjectLoader();
+        return onLoadItem(loader.parse(cachedJSONSofa))
       })
   }
 };
