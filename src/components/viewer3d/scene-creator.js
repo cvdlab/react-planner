@@ -267,7 +267,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
             catalog,
             actions.itemsActions,
             () => removeItem(planData, layer.id, modifiedPath[4]),
-            () => addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions)
+            () => addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions)
           )
         );
       }
