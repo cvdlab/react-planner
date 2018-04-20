@@ -15,19 +15,16 @@ import {
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 
-const Icon2D = () => <p style={{
+const iconTextStyle = {
   fontSize: '19px',
   textDecoration: 'none',
   fontWeight: 'bold',
-  margin: '0px'
-}}>2D</p>;
+  margin: '0px',
+  userSelect: 'none'
+};
 
-const Icon3D = () => <p style={{
-  fontSize: '19px',
-  textDecoration: 'none',
-  fontWeight: 'bold',
-  margin: '0px'
-}}>3D</p>;
+const Icon2D = () => <p style={iconTextStyle}>2D</p>;
+const Icon3D = () => <p style={iconTextStyle}>3D</p>;
 
 const ASIDE_STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
