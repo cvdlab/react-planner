@@ -75,13 +75,12 @@ export default {
 
       object.scale.set(newWidth / width.length, newHeight / height.length, newDepth / depth.length);
 
-      if (element.selected) {
-        let box = new BoxHelper(object, 0x99c3fb);
-        box.material.linewidth = 2;
-        box.material.depthTest = false;
-        box.renderOrder = 1000;
-        object.add(box);
-      }
+      let box = new BoxHelper(object, 0x99c3fb);
+      box.material.linewidth = 2;
+      box.material.depthTest = false;
+      box.renderOrder = 1000;
+      box.visible = element.selected;
+      object.add(box);
 
       // Normalize the origin of this item
       let boundingBox = new Box3().setFromObject(object);
@@ -109,6 +108,29 @@ export default {
         cachedJSONSofa = object.toJSON();
         let loader = new ObjectLoader();
         return onLoadItem(loader.parse(cachedJSONSofa))
-      })
+      });
+  },
+
+  updateRender3D: ( element, layer, scene, mesh, oldElement, differences, selfDestroy, selfBuild ) => {
+
+    let noPerf = () => { selfDestroy(); return selfBuild(); };
+
+    if( differences.indexOf('selected') !== -1 )
+    {
+      mesh.traverse(( child ) => {
+        if ( child instanceof BoxHelper ) {
+          child.visible = element.selected;
+        }
+      });
+
+      return Promise.resolve(mesh);
+    }
+
+    if( differences.indexOf('rotation') !== -1 ) {
+      mesh.rotation.y = element.rotation * Math.PI / 180;
+      return Promise.resolve(mesh);
+    }
+
+    return noPerf();
   }
 };
