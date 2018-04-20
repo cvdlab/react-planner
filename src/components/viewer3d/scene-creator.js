@@ -692,7 +692,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
 
 }
 
-function updateItem(sceneData, oldSceneData, planData, layer, itemID, differences, catalog, itemsActions) {
+function updateItem(sceneData, oldSceneData, planData, layer, itemID, differences, catalog, itemsActions, selfDestroy, selfBuild) {
 
   let item = layer.items.get(itemID);
   let oldItem = oldSceneData.layers.get(layer.id).items.get(itemID);
@@ -700,7 +700,7 @@ function updateItem(sceneData, oldSceneData, planData, layer, itemID, difference
 
   if (!mesh) return null;
 
-  return catalog.getElement(item.type).updateRender3D(item, layer, sceneData, mesh, oldItem, differences);
+  return catalog.getElement(item.type).updateRender3D(item, layer, sceneData, mesh, oldItem, differences, selfDestroy, selfBuild);
 }
 
 // Apply interact function to children of an Object3D
