@@ -19,28 +19,25 @@ import If from '../../utils/react-if';
 import { MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 
+var iconTextStyle = {
+  fontSize: '19px',
+  textDecoration: 'none',
+  fontWeight: 'bold',
+  margin: '0px',
+  userSelect: 'none'
+};
+
 var Icon2D = function Icon2D() {
   return React.createElement(
     'p',
-    { style: {
-        fontSize: '19px',
-        textDecoration: 'none',
-        fontWeight: 'bold',
-        margin: '0px'
-      } },
+    { style: iconTextStyle },
     '2D'
   );
 };
-
 var Icon3D = function Icon3D() {
   return React.createElement(
     'p',
-    { style: {
-        fontSize: '19px',
-        textDecoration: 'none',
-        fontWeight: 'bold',
-        margin: '0px'
-      } },
+    { style: iconTextStyle },
     '3D'
   );
 };

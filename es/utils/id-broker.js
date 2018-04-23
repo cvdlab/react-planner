@@ -9,20 +9,14 @@ export var IDBroker = function () {
     _classCallCheck(this, IDBroker);
   }
 
-  _createClass(IDBroker, [{
+  _createClass(IDBroker, null, [{
     key: 'acquireID',
     value: function acquireID() {
       return shortid.generate();
     }
-
-    // releaseID(ID){
-    //
-    // }
-
   }]);
 
   return IDBroker;
 }();
 
-var IDBrokerInstance = new IDBroker();
-export default IDBrokerInstance;
+export default IDBroker;

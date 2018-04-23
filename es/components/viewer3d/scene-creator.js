@@ -241,7 +241,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
         promises.push(updateItem(sceneData, oldSceneData, planData, layer, modifiedPath[4], modifiedPath.slice(5), catalog, actions.itemsActions, function () {
           return removeItem(planData, layer.id, modifiedPath[4]);
         }, function () {
-          return addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions);
+          return addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions);
         }));
       } else {
         removeItem(planData, layer.id, modifiedPath[4]);
@@ -688,7 +688,7 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
   });
 }
 
-function updateItem(sceneData, oldSceneData, planData, layer, itemID, differences, catalog, itemsActions) {
+function updateItem(sceneData, oldSceneData, planData, layer, itemID, differences, catalog, itemsActions, selfDestroy, selfBuild) {
 
   var item = layer.items.get(itemID);
   var oldItem = oldSceneData.layers.get(layer.id).items.get(itemID);
@@ -696,7 +696,7 @@ function updateItem(sceneData, oldSceneData, planData, layer, itemID, difference
 
   if (!mesh) return null;
 
-  return catalog.getElement(item.type).updateRender3D(item, layer, sceneData, mesh, oldItem, differences);
+  return catalog.getElement(item.type).updateRender3D(item, layer, sceneData, mesh, oldItem, differences, selfDestroy, selfBuild);
 }
 
 // Apply interact function to children of an Object3D

@@ -81,10 +81,6 @@ function updateDrawingHole(state, layerID, x, y) {
   }var scene = state.scene.updateIn(['layers', layerID], function (layer) {
     return layer.withMutations(function (layer) {
       var selectedHole = layer.getIn(['selected', 'holes']).first();
-      if (selectedHole) {
-        unselect(layer, 'holes', selectedHole);
-        removeHole(layer, selectedHole);
-      }
 
       if (snap) {
         var lineID = snap.snap.related.get(0);
@@ -107,7 +103,6 @@ function updateDrawingHole(state, layerID, x, y) {
 
         // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
 
-        // let width = hole.properties.get('width').get('length');
         var lineLength = GeometryUtils.pointsDistance(x1, y1, x2, y2);
         var alpha = Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
 
@@ -157,13 +152,42 @@ function updateDrawingHole(state, layerID, x, y) {
           }
         }
 
-        // let offset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, x, y);
+        //if hole does exist, update
+        if (selectedHole && snap) {
+          layer = layer.mergeIn(['holes', selectedHole], { offset: offset, line: lineID });
 
-        var _addHole = addHole(layer, state.drawingSupport.get('type'), lineID, offset, catalog),
-            hole = _addHole.hole;
+          //remove from old line ( if present )
+          var index = layer.get('lines').findEntry(function (line) {
+            return line.id !== lineID && line.get('holes').contains(selectedHole);
+          });
 
-        select(layer, 'holes', hole.id);
+          if (index) {
+            var removed = index[1].get('holes').filter(function (hl) {
+              return hl !== selectedHole;
+            });
+            layer = layer.setIn(['lines', index[0], 'holes'], removed);
+          }
+
+          //add to line
+          var line_holes = layer.getIn(['lines', lineID, 'holes']);
+          if (!line_holes.contains(selectedHole)) {
+            layer = layer.setIn(['lines', lineID, 'holes'], line_holes.push(selectedHole));
+          }
+        }
+        //if hole does not exist, create
+        else if (!selectedHole && snap) {
+            var _addHole = addHole(layer, state.drawingSupport.get('type'), lineID, offset, catalog),
+                hole = _addHole.hole;
+
+            select(layer, 'holes', hole.id);
+          }
       }
+      //i've lost the snap while trying to drop the hole
+      else if (false && selectedHole) //think if enable
+          {
+            unselect(layer, 'holes', selectedHole);
+            removeHole(layer, selectedHole);
+          }
     });
   });
 
