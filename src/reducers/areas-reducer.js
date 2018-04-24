@@ -22,7 +22,7 @@ function selectArea(state, layerID, areaID) {
   let scene = state.scene;
 
   scene = scene.merge({
-    layers: scene.layers.map(unselectAll),
+    layers: state.alterate ? scene.layers : scene.layers.map(unselectAll),
     selectedLayer: layerID
   });
 

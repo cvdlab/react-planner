@@ -358,7 +358,7 @@ function selectHole(state, layerID, holeID) {
   let scene = state.scene;
 
   scene = scene.merge({
-    layers: scene.layers.map(unselectAll),
+    layers: state.alterate ? scene.layers : scene.layers.map(unselectAll),
     selectedLayer: layerID
   });
 
