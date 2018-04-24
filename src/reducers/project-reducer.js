@@ -27,7 +27,8 @@ import {
   THROW_WARNING,
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
-  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY
+  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
+  ALTERATE_STATE
 } from '../constants';
 
 import { State, Scene, Guide, Catalog } from '../models';
@@ -118,6 +119,9 @@ export default function (state, action) {
 
     case PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY:
       return pushLastSelectedCatalogElementToHistory(state, action.element);
+
+    case ALTERATE_STATE:
+      return setAlterateState(state);
 
     default:
       return state;
@@ -308,4 +312,9 @@ const pushLastSelectedCatalogElementToHistory = (state, element) => {
   currHistory = currHistory.splice(0, 0, element);
 
   return state.set('selectedElementsHistory', currHistory);
+};
+
+
+const setAlterateState = ( state ) => {
+  return state.set('alterate', !state.alterate );
 };

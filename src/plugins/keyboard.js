@@ -8,7 +8,17 @@ import {
   SELECT_ITEM,
   SELECT_LINE
 } from '../constants';
-import { rollback, undo, remove, toggleSnap, copyProperties, pasteProperties } from '../actions/project-actions';
+
+import {
+  rollback,
+  undo,
+  remove,
+  toggleSnap,
+  copyProperties,
+  pasteProperties,
+  setAlterateState
+} from '../actions/project-actions';
+
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../utils/snap';
 
 const KEY_DELETE = 46;
@@ -18,6 +28,7 @@ const KEY_Z = 90;
 const KEY_ALT = 18;
 const KEY_C = 67;
 const KEY_V = 86;
+const KEY_CTRL = 17;
 
 export default function keyboard() {
 
@@ -83,6 +94,11 @@ export default function keyboard() {
           store.dispatch(pasteProperties());
           break;
         }
+        case KEY_CTRL:
+        {
+          store.dispatch(setAlterateState());
+          break;
+        }
       }
 
     });
@@ -97,6 +113,11 @@ export default function keyboard() {
         {
           if (MODE_SNAPPING.includes(mode))
             store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
+          break;
+        }
+        case KEY_CTRL:
+        {
+          store.dispatch(setAlterateState());
           break;
         }
       }
