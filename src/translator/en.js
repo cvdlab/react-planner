@@ -50,5 +50,6 @@ export default {
   "Snap to Grid":"Snap to Grid",
   "Mouse X Coordinate":"Mouse X Coordinate",
   "Mouse Y Coordinate":"Mouse Y Coordinate",
-  "Scene Zoom Level":"Scene Zoom Level"
-}
+  "Scene Zoom Level":"Scene Zoom Level",
+  "Groups":"Groups"
+};

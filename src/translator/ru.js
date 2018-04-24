@@ -50,5 +50,6 @@ export default {
   "Snap to Grid": "Привязка к сетке",
   "Mouse X Coordinate": "X-координата курсора",
   "Mouse Y Coordinate": "Y-координата курсора",
-  "Scene Zoom Level": "Уровень приближениия сцены"
-}
+  "Scene Zoom Level": "Уровень приближениия сцены",
+  "Groups":"группы"
+};

@@ -176,6 +176,23 @@ export class Layer extends Record({
   }
 }
 
+export class Group extends Record({
+  ...sharedAttributes,
+  prototype: 'groups',
+  x: 0,
+  y: 0,
+  rotation: 0,
+  elements: new ElementsSet()
+}, 'Group') {
+  constructor(json = {}) {
+    super({
+      ...json,
+      properties: fromJS(json.properties || {}),
+      elements: new ElementsSet()
+    })
+  }
+}
+
 
 export const DefaultLayers = new Map({
   'layer-1': new Layer({id: 'layer-1', name: 'default'})
@@ -187,6 +204,7 @@ export class Scene extends Record({
   layers: new Map(),
   guides: new Map(),
   selectedLayer: null,
+  groups: new Map(),
   width: 3000,
   height: 2000,
   meta: new Map()   //additional info
@@ -198,6 +216,7 @@ export class Scene extends Record({
       guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
       layers,
       selectedLayer: layers.first().id,
+      groups: fromJS(json.groups || {}),
       meta: json.meta ? fromJS(json.meta) : new Map()
     })
   }
@@ -220,7 +239,7 @@ export class CatalogElement extends Record({
 
 export class Catalog extends Record({
   ready: false,
-  page: "root",
+  page: 'root',
   path: new List(),
   elements: new Map(),
 }, 'Catalog') {

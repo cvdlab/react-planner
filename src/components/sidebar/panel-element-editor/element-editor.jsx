@@ -350,11 +350,11 @@ export default class ElementEditor extends Component {
 
   copyProperties( properties ) {
     this.context.projectActions.copyProperties( properties );
-  };
+  }
 
   pasteProperties() {
     this.context.projectActions.pasteProperties();
-  };
+  }
 
   render() {
     let {

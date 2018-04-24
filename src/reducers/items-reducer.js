@@ -214,5 +214,5 @@ function selectItem(state, layerID, itemID) {
   return state.merge({
     scene,
     sceneHistory: history.historyPush( state.sceneHistory, scene )
-  })
+  });
 }
