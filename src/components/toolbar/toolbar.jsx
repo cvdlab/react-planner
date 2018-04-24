@@ -65,7 +65,8 @@ export default class Toolbar extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.state.mode !== nextProps.state.mode ||
       this.props.height !== nextProps.height ||
-      this.props.width !== nextProps.width;
+      this.props.width !== nextProps.width ||
+      this.props.state.alterate !== nextProps.state.alterate;
   }
 
   render() {
@@ -116,7 +117,7 @@ export default class Toolbar extends Component {
           active={[MODE_IDLE].includes(mode)}
           tooltip={translator.t('2D View')}
           onClick={event => projectActions.rollback()}>
-          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D /> : <FaMousePointer />}
+          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D /> : <FaMousePointer style={{color: state.alterate ? SharedStyle.MATERIAL_COLORS[500].orange : ''}} />}
         </ToolbarButton>
       },
       {
@@ -144,6 +145,8 @@ export default class Toolbar extends Component {
         </ToolbarButton>
       }
     ];
+
+    console.log( state );
 
     sorter = sorter.concat(toolbarButtons.map((Component, key) => {
       return Component.prototype ? //if is a react component
