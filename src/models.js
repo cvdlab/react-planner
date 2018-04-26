@@ -176,19 +176,20 @@ export class Layer extends Record({
   }
 }
 
+//Map{ layer_id : { lines, items, holes, areas }}
 export class Group extends Record({
   ...sharedAttributes,
   prototype: 'groups',
   x: 0,
   y: 0,
   rotation: 0,
-  elements: new ElementsSet()
+  elements: new Map()
 }, 'Group') {
   constructor(json = {}) {
     super({
       ...json,
       properties: fromJS(json.properties || {}),
-      elements: new ElementsSet()
+      elements: new Map()
     })
   }
 }

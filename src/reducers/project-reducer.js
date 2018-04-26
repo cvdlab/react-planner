@@ -33,6 +33,8 @@ import {
 
 import { State, Scene, Guide, Catalog } from '../models';
 
+import { Project } from '../class/export';
+
 import {
   LayerOperations,
   history
@@ -314,7 +316,7 @@ const pushLastSelectedCatalogElementToHistory = (state, element) => {
   return state.set('selectedElementsHistory', currHistory);
 };
 
-
 const setAlterateState = ( state ) => {
-  return state.set('alterate', !state.alterate );
+  //return state.set('alterate', !state.alterate );
+  return Project.setAlterate( state );
 };

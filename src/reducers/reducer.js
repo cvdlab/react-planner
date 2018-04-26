@@ -2,6 +2,7 @@ import {
   PROJECT_ACTIONS,
   VIEWER2D_ACTIONS,
   VIEWER3D_ACTIONS,
+  GROUP_ACTIONS,
   ITEMS_ACTIONS,
   HOLE_ACTIONS,
   LINE_ACTIONS,
@@ -15,6 +16,7 @@ import {
   ReactPlannerHolesReducer,
   ReactPlannerItemsReducer,
   ReactPlannerLinesReducer,
+  ReactPlannerGroupsReducer,
   ReactPlannerProjectReducer,
   ReactPlannerSceneReducer,
   ReactPlannerVerticesReducer,
@@ -34,6 +36,7 @@ export default function appReducer(state, action) {
   if( HOLE_ACTIONS[action.type] ) return ReactPlannerHolesReducer(...arguments);
   if( LINE_ACTIONS[action.type] ) return ReactPlannerLinesReducer(...arguments);
   if( AREA_ACTIONS[action.type] ) return ReactPlannerAreasReducer(...arguments);
+  if( GROUP_ACTIONS[action.type] ) return ReactPlannerGroupsReducer(...arguments);
   if( SCENE_ACTIONS[action.type] ) return ReactPlannerSceneReducer(...arguments);
   if( VERTEX_ACTIONS[action.type] ) return ReactPlannerVerticesReducer(...arguments);
 

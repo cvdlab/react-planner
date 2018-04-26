@@ -48,6 +48,11 @@ export const BEGIN_ROTATING_ITEM = 'BEGIN_ROTATING_ITEM';
 export const UPDATE_ROTATING_ITEM = 'UPDATE_ROTATING_ITEM';
 export const END_ROTATING_ITEM = 'END_ROTATING_ITEM';
 
+//ACTIONS groups
+export const ADD_GROUP = 'ADD_GROUP';
+export const SELECT_GROUP = 'SELECT_GROUP';
+export const ADD_TO_GROUP = 'ADD_TO_GROUP';
+
 //ACTION drawings
 export const SELECT_HOLE = 'SELECT_HOLE';
 export const SELECT_AREA = 'SELECT_AREA';
@@ -162,6 +167,12 @@ export const LINE_ACTIONS = {
 
 export const AREA_ACTIONS = {
   SELECT_AREA
+};
+
+export const GROUP_ACTIONS = {
+  ADD_GROUP,
+  SELECT_GROUP,
+  ADD_TO_GROUP
 };
 
 export const SCENE_ACTIONS = {

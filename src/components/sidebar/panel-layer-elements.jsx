@@ -57,7 +57,7 @@ const searchInputStyle = {fontSize: '1em', width: '100%', height: '1em', padding
 export default class PanelLayerElement extends Component {
 
   constructor(props, context) {
-    super(props);
+    super(props, context);
 
     let layer = props.layers.get(props.selectedLayer);
     let elements = {
@@ -134,7 +134,7 @@ export default class PanelLayerElement extends Component {
         items: this.state.elements.items.filter(filterCb)
       }
     });
-  };
+  }
 
   render() {
     if (!VISIBILITY_MODE[this.props.mode]) return null;
@@ -221,7 +221,7 @@ export default class PanelLayerElement extends Component {
 
         </div>
       </Panel>
-    )
+    );
   }
 
 }
