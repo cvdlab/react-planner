@@ -66,8 +66,8 @@ export default class Panel extends Component {
           {headComponents}
           {
             opened ?
-            <FaAngleUp style={STYLE_ARROW} /> :
-            <FaAngleDown style={STYLE_ARROW} />
+              <FaAngleUp style={STYLE_ARROW} /> :
+              <FaAngleDown style={STYLE_ARROW} />
           }
         </h3>
 

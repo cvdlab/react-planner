@@ -3,42 +3,48 @@ import {
   Line
 } from './export';
 import IDBroker from '../utils/id-broker';
-import { Map } from 'immutable';
+import { Map, List } from 'immutable';
 import { Group as GroupModel } from '../models';
 
 class Group{
 
   static select( state, groupID ){
     console.log('select group');
-    let group = state.scene.getIn([ 'groups', groupID ]);
+    let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
 
     Project.setAlterate( state );
 
-    group.entrySeq().forEach( groupLayer => {
-
-      let groupLayerID = groupLayer[0];
-      let groupLayerElements = groupLayer[1];
+    layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
 
       let { lines, holes, items, areas } = groupLayerElements;
 
-      lines.forEach( lineID => { Line.select( state, groupLayerID, lineID ); });
+      if( lines ) lines.forEach( lineID => { Line.select( state, groupLayerID, lineID ); });
       //TODO per gli altri elementi
 
     });
 
     Project.setAlterate( state );
 
-    return state;
+    let groups = state.getIn(['scene', 'groups']).map( g  => g.set('selected', false) );
+
+    return state.setIn(['scene', 'groups'], groups).setIn([ 'scene', 'groups', groupID, 'selected' ], true);
   }
 
   static create( state ){
+    console.log('create', state);
     let groupID = IDBroker.acquireID();
     return state.setIn(['scene', 'groups', groupID], new GroupModel({ id: groupID, name: groupID}) );
   }
 
   static addElement( state, groupID, layerID, elementPrototype, elementID ){
-    console.log('TODO addElement', state, groupID, layerID, elementPrototype, elementID);
-    return state;
+    console.log('addElement', state, groupID, layerID, elementPrototype, elementID);
+    let actualList = state.getIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype]) || new List();
+    return state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.push(elementID));
+  }
+
+  static setProperties( state, groupID, properties ){
+    console.log('setProperties', state);
+    return state.mergeIn(['scene', 'groups', groupID], properties);
   }
 
 }

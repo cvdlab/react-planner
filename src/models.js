@@ -1,7 +1,6 @@
 import {Record, List, Map, fromJS} from 'immutable';
 import {MODE_IDLE} from './constants';
 import {SNAP_MASK} from './utils/snap';
-import {history} from './utils/export';
 
 let safeLoadMapList = (mapList, Model, defaultMap) => {
   return mapList
@@ -57,7 +56,7 @@ export class ElementsSet extends Record({
       holes: new List(json.holes || []),
       areas: new List(json.areas || []),
       items: new List(json.items || [])
-    })
+    });
   }
 }
 
@@ -69,8 +68,9 @@ const sharedAttributes =
   name: '',
   misc: new Map(),
   selected: false,
-  properties: new Map()
-}
+  properties: new Map(),
+  visible: true
+};
 
 export class Vertex extends Record({
   ...sharedAttributes,
@@ -85,7 +85,7 @@ export class Vertex extends Record({
       ...json,
       lines: new List(json.lines || []),
       areas: new List(json.areas || [])
-    })
+    });
   }
 }
 
@@ -101,7 +101,7 @@ export class Line extends Record({
       properties: fromJS(json.properties || {}),
       vertices: new List(json.vertices || []),
       holes: new List(json.holes || []),
-    })
+    });
   }
 }
 
@@ -115,7 +115,7 @@ export class Hole extends Record({
     super({
       ...json,
       properties: fromJS(json.properties || {})
-    })
+    });
   }
 }
 
@@ -130,7 +130,7 @@ export class Area extends Record({
       ...json,
       properties: fromJS(json.properties || {}),
       vertices: new List(json.vertices || [])
-    })
+    });
   }
 }
 
@@ -145,7 +145,7 @@ export class Item extends Record({
     super({
       ...json,
       properties: fromJS(json.properties || {})
-    })
+    });
   }
 }
 
@@ -190,7 +190,7 @@ export class Group extends Record({
       ...json,
       properties: fromJS(json.properties || {}),
       elements: new Map()
-    })
+    });
   }
 }
 
@@ -219,7 +219,7 @@ export class Scene extends Record({
       selectedLayer: layers.first().id,
       groups: fromJS(json.groups || {}),
       meta: json.meta ? fromJS(json.meta) : new Map()
-    })
+    });
   }
 }
 
@@ -249,7 +249,7 @@ export class Catalog extends Record({
     super({
       elements,
       ready: !elements.isEmpty()
-    })
+    });
   }
 
   factoryElement(type, options, initialProperties) {
@@ -292,7 +292,7 @@ export class HistoryStructure extends Record({
       last: new Scene( json.last || json.scene )
     });
   }
-};
+}
 
 export class State extends Record({
   mode: MODE_IDLE,
@@ -326,7 +326,7 @@ export class State extends Record({
       draggingSupport: new Map(json.draggingSupport || {}),
       rotatingSupport: new Map(json.rotatingSupport || {}),
       misc: json.misc ? fromJS(json.misc) : new Map()
-    })
+    });
   }
 }
 

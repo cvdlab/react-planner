@@ -23,42 +23,12 @@ export default function (state, action) {
       console.log('ADD_TO_GROUP');
       return Group.addElement( state, action.groupID, action.layerID, action.elementPrototype, action.elementID );
 
+    case GROUP_ACTIONS.SET_GROUP_PROPERTIES:
+      console.log('SET_GROUP_PROPERTIES', state);
+      return Group.setProperties( state, action.groupID, action.properties );
+
     default:
       return state;
   }
 }
 
-
-function selectGroup(state, groupID) {
-  /*
-  let scene = state.scene;
-
-  scene = scene.merge({
-    layers: scene.layers.map(unselectAll),
-    groups: {
-      groupID: {
-        selected: true
-      }
-    }
-  });
-
-  scene.groups.get( groupID ).entrySeq().forEach( groupLayer => {
-
-    let groupLayerID = groupLayer[0];
-    let groupLayerElements = groupLayer[1];
-
-    let { lines, holes, items, areas } = groupLayerElements;
-
-    state = state.set('alterate', !state.alterate );
-
-    lines.forEach( lineID => {
-    });
-
-  });
-
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush( state.sceneHistory, scene )
-  });
-  */
-}

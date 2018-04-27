@@ -22,3 +22,11 @@ export function addToGroup( groupID, layerID, elementPrototype, elementID ) {
     elementID
   };
 }
+
+export function setGroupProperties( groupID, properties ) {
+  return {
+    type: GROUP_ACTIONS.SET_GROUP_PROPERTIES,
+    groupID,
+    properties
+  };
+}

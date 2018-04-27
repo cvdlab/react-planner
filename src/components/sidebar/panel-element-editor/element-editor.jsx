@@ -1,9 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Map, fromJS} from 'immutable';
-import FormSubmitButton from '../../style/form-submit-button';
-import CancelButton from '../../style/cancel-button';
-import DeleteButton from '../../style/delete-button';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import * as geometry from '../../../utils/geometry.js';
 import * as math from '../../../utils/math.js';

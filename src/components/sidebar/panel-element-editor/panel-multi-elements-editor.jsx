@@ -68,15 +68,12 @@ export default class PanelMultiElementsEditor extends Component {
                   </FormSelect>
                 </td>
                 <td style={{cursor:'pointer', padding:'0.5em 0', textAlign:'center'}} onClick={ e => {
-                  //this.addSelectToGroup( this.props.state, this.state.selectedGroupID, selectedLayer, selecteds );
                   if( !this.state.selectedGroupID || this.state.selectedGroupID === '' || !selecteds || !selecteds.size ) return;
-
-                  console.log('GOING ON');
 
                   let selectedJs = selecteds.toJS();
 
-                  for( let lineID in selectedJs.lines )
-                    this.context.groupsActions.addToGroup( this.state.selectedGroupID, selectedLayer, 'lines', lineID );
+                  for( let x = 0; x < selectedJs.lines.length; x++ )
+                    this.context.groupsActions.addToGroup( this.state.selectedGroupID, selectedLayer, 'lines', selectedJs.lines[x] );
 
                 }}>+</td>
               </tr>

@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import PanelElementEditor from './panel-element-editor/panel-element-editor';
+import PanelGroupEditor from './panel-group-editor';
 import PanelMultiElementsEditor from './panel-element-editor/panel-multi-elements-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
@@ -45,12 +46,15 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
     selected.areas.size > 1 ||
     selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
 
+  let selectedGroup = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
+
   let sorter = [
     { index: 0, condition: true, dom: <PanelLayers state={state} /> },
     { index: 1, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
     { index: 2, condition: true, dom: <PanelGroups state={state} /> },
     { index: 3, condition: !multiselected, dom: <PanelElementEditor state={state} /> },
     { index: 4, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
+    { index: 4, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> },
     //{ index: 999999, condition: true, dom: <PanelGuides state={state}/> },
   ];
 
