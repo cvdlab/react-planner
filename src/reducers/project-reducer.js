@@ -195,6 +195,7 @@ function unselectAll(state) {
   let scene = state.scene;
 
   scene = scene.update('layers', layer => layer.map(LayerOperations.unselectAll));
+  scene = scene.update('groups', groupList => groupList.map( group =>  group.set('selected', false) ) );
 
   return state.merge({
     scene,

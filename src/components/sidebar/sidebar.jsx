@@ -53,8 +53,8 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
     { index: 1, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
     { index: 2, condition: true, dom: <PanelGroups state={state} /> },
     { index: 3, condition: !multiselected, dom: <PanelElementEditor state={state} /> },
-    { index: 4, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
-    { index: 4, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> },
+    //{ index: 4, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
+    { index: 5, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> },
     //{ index: 999999, condition: true, dom: <PanelGuides state={state}/> },
   ];
 

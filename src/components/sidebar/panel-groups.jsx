@@ -2,9 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
-import IconVisible from 'react-icons/lib/fa/eye';
 import {TiPlus, TiDelete} from 'react-icons/lib/ti';
-import {FaPencil, FaTrash} from 'react-icons/lib/fa';
+import {FaPencil, FaTrash, FaEye, FaChain} from 'react-icons/lib/fa';
+import { Map } from 'immutable';
 
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -21,7 +21,6 @@ const VISIBILITY_MODE = {
 };
 
 const styleEditButton = {
-  cursor: 'pointer',
   marginLeft: '5px',
   border: '0px',
   background: 'none',
@@ -33,14 +32,12 @@ const styleEditButton = {
 const tablegroupStyle = {
   width: '100%',
   cursor: 'pointer',
-  overflowY: 'auto',
   maxHeight: '20em',
-  display: 'block',
   padding: '0 1em',
   marginLeft: '1px'
 };
 
-const iconColStyle = {width: '2em'};
+const iconColStyle = {width: '2em', textAlign: 'center'};
 const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
 const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
 const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
@@ -56,8 +53,7 @@ export default class PanelGroups extends Component {
 
     this.state = {
       newEmptyHover: false,
-      newSelectedHover: false,
-      groupIdHover: null
+      newSelectedHover: false
     };
   }
 
@@ -78,9 +74,7 @@ export default class PanelGroups extends Component {
         { groups.size ? <table style={tablegroupStyle}>
           <thead>
             <tr>
-              <th colSpan="2"></th>
-              <th>{this.context.translator.t('X')}</th>
-              <th>{this.context.translator.t('Y')}</th>
+              <th colSpan="3"></th>
               <th>{this.context.translator.t('Elements')}</th>
               <th>{this.context.translator.t('Name')}</th>
             </tr>
@@ -96,39 +90,62 @@ export default class PanelGroups extends Component {
                   this.context.sceneActions.setgroupProperties(groupID, {visible: !group.get('visible')});
                 };
 
+                let chainToGroup = e => {
+                  this.props.state.getIn(['scene', 'layers']).forEach((layer) => {
+
+                    let layerID = layer.get('id');
+                    let layerElements = {
+                      'lines': layer.get('lines'),
+                      'items': layer.get('items'),
+                      'holes': layer.get('holes'),
+                      'areas': layer.get('areas')
+                    };
+
+                    for( let elementPrototype in layerElements )
+                    {
+                      let ElementList = layerElements[elementPrototype];
+                      ElementList.filter( el => el.get('selected') ).forEach( element => {
+                        this.context.groupsActions.addToGroup( groupID, layerID, elementPrototype, element.get('id') );
+                      });
+                    }
+                  });
+
+                  selectClick(e);
+                };
+
                 let isCurrentgroup = group.get('selected');
-                let isHoverd = groupID === this.state.groupIdHover;
-                let shouldHighlight = isCurrentgroup || isHoverd;
+                let shouldHighlight = isCurrentgroup;
                 let rowStyle = !shouldHighlight ? null : styleHoverColor;
+
+                let dimension = group.get('elements').reduce( ( sum, layer ) => {
+                  return sum + layer.reduce( ( lSum, elProt ) => lSum + elProt.size, 0 );
+                }, 0);
 
                 return (
                   <tr
                     key={groupID}
                     style={rowStyle}
-                    onMouseOver={ () => this.setState({groupIdHover: groupID}) }
-                    onMouseOut={ () => this.setState({groupIdHover: groupID}) }
                   >
-                    <td style={iconColStyle}>
-                      <IconVisible
+                    <td style={iconColStyle} title="Toggle Group Visibility">
+                      <FaEye
                         onClick={swapVisibility}
                         style={!group.get('visible') ? styleEyeHidden : styleEyeVisible}
                       />
                     </td>
-                    <td style={iconColStyle}>
-                      <FaTrash
-                        onClick={ e => this.delgroup(e, groupID) }
+                    <td style={iconColStyle} title="Chain selected Elements to Group">
+                      <FaChain
+                        onClick={chainToGroup}
                         style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
-                        title={this.context.translator.t('Delete group')}
                       />
                     </td>
-                    <td onClick={selectClick} style={{width:'3em', textAlign:'center'}}>
-                      {parseFloat(group.get('x')).toFixed(2)}
-                    </td>
-                    <td onClick={selectClick} style={{width:'3em', textAlign:'center'}}>
-                      {parseFloat(group.get('y')).toFixed(2)}
+                    <td style={iconColStyle} title={this.context.translator.t('Delete group')}>
+                      <FaTrash
+                        onClick={ e => this.context.groupsActions.removeGroup(groupID) }
+                        style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
+                      />
                     </td>
                     <td onClick={selectClick} style={{width:'0em', textAlign:'center'}}>
-                      0
+                      { dimension }
                     </td>
                     <td onClick={selectClick}>
                       {group.get('name')}
@@ -140,7 +157,7 @@ export default class PanelGroups extends Component {
           </tbody>
         </table> : null }
 
-        <table style={{width:'100%'}}>
+        <table style={{width:'100%', marginTop: '0.1em'}}>
           <tbody>
             <tr>
               <td
@@ -165,23 +182,6 @@ export default class PanelGroups extends Component {
           </tbody>
         </table>
 
-        {/*<div style={{padding: '5px 15px'}}>
-          <div style={{cursor:'pointer', fontSize:'2em'}} title="Add Group" onClick={
-            e => this.context.groupsActions.addGroup()
-          }>++++++</div>
-          {
-            groups.size ? groups.entrySeq().map( ([ groupID, group ]) =>
-              <div
-                key={groupID}
-                onClick={e => this.context.groupsActions.selectGroup(groupID)}
-                style={ group.get('selected') ? elementSelectedStyle : elementStyle }
-                title={ group.get('elements').size ? group.get('name') : 'Empty Group' }
-              >
-                <div style={{ color: ( group.get('elements').size ? 'auto' : 'red' ) }}>{group.get('name')}</div>
-              </div>
-            ) : null
-          }
-        </div>*/}
       </Panel>
     )
   }

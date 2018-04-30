@@ -1,25 +1,25 @@
 import { Layer } from './export';
+import { LayerOperations, history } from '../utils/export';
 
 class Line{
 
   static select( state, layerID, lineID ){
-    console.log('select Line');
-    let scene = state.scene;
-    let line = scene.getIn([ 'layers', layerID, 'lines', lineID ]);
+    let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
 
-    scene = scene.merge({
-      layers: state.alterate ? scene.layers : scene.layers.map(LayerOperations.unselectAll),
+    state = state.mergeIn(['scene'], {
+      layers: state.alterate ? state.scene.layers : state.scene.layers.map(LayerOperations.unselectAll),
       selectedLayer: layerID
     });
 
-    Layer.select( layerID, 'lines', lineID );
-    Layer.select( layerID, 'vertices', line.vertices.get(0) );
-    Layer.select( layerID, 'vertices', line.vertices.get(1) );
+    state = Layer.select( state, layerID, 'lines', lineID );
+    state = Layer.select( state, layerID, 'vertices', line.vertices.get(0) );
+    state = Layer.select( state, layerID, 'vertices', line.vertices.get(1) );
 
-    return state.merge({
-      scene,
-      sceneHistory: history.historyPush( state.sceneHistory, scene )
+    state = state.merge({
+      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
     });
+
+    return state;
   }
 
 }

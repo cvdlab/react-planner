@@ -2,11 +2,9 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
-import IconVisible from 'react-icons/lib/fa/eye';
 import {TiPlus, TiDelete} from 'react-icons/lib/ti';
-import {FaPencil, FaTrash} from 'react-icons/lib/fa';
+import {FaPencil, FaChainBroken, FaEye} from 'react-icons/lib/fa';
 import { FormNumberInput, FormTextInput } from '../style/export';
-import { Group } from '../../class/export';
 import { Map } from 'immutable';
 
 import {
@@ -27,7 +25,6 @@ const tableStyle = { width: '100%' };
 const firstTdStyle = { width: '6em' };
 const inputStyle = { textAlign: 'left' };
 const styleEditButton = {
-  cursor: 'pointer',
   marginLeft: '5px',
   border: '0px',
   background: 'none',
@@ -39,19 +36,12 @@ const styleEditButton = {
 const tablegroupStyle = {
   width: '100%',
   cursor: 'pointer',
-  overflowY: 'auto',
   maxHeight: '20em',
-  display: 'block',
-  padding: '0 1em',
   marginLeft: '1px',
-  marginTop:'1em'
+  marginTop: '1em'
 };
 
 const iconColStyle = {width: '2em'};
-const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
-const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleEyeVisible = {fontSize: '1.25em'};
-const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
 
 export default class PanelGroupEditor extends Component {
 
@@ -84,7 +74,7 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormTextInput
                     value={group.get('name')}
-                    onChange={event => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'name': event.target.value }) ) }
+                    onChange={e => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'name': e.target.value }) ) }
                     style={inputStyle}
                   />
                 </td>
@@ -94,7 +84,7 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('x')}
-                    onChange={event => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'x': event.target.value }) ) }
+                    onChange={e => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'x': e.target.value }) ) }
                     style={inputStyle}
                     state={this.props.state}
                     precision={2}
@@ -106,7 +96,7 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('y')}
-                    onChange={event => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'y': event.target.value }) ) }
+                    onChange={e => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'y': e.target.value }) ) }
                     style={inputStyle}
                     state={this.props.state}
                     precision={2}
@@ -115,86 +105,56 @@ export default class PanelGroupEditor extends Component {
               </tr>
             </tbody>
           </table>
-          { elements.size ?
-            <table style={tablegroupStyle}>
-              <thead>
-                <tr>
-                  <th></th>
-                  <th>{this.context.translator.t('Layer')}</th>
-                  <th>{this.context.translator.t('Prototype')}</th>
-                  <th>{this.context.translator.t('Name')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {
-                  elements.entrySeq().map(([ layerID, layerElements ]) => {
+          {
+            elements.size ?
+              <div>
+                <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>Group's Elements</p>
+                <table style={tablegroupStyle}>
+                  <thead>
+                    <tr>
+                      <th style={iconColStyle}></th>
+                      <th>{this.context.translator.t('Layer')}</th>
+                      <th>{this.context.translator.t('Prototype')}</th>
+                      <th>{this.context.translator.t('Name')}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {
+                      elements.entrySeq().map(([ layerID, layerElements ]) => {
 
+                        return layerElements.entrySeq().map(([elementPrototype, ElementList]) => {
 
+                          return ElementList.valueSeq().map( elementID => {
+                            let element = this.props.state.getIn(['scene', 'layers', layerID, elementPrototype, elementID]);
 
-                    return layerElements.get('lines').size ? layerElements.get('lines').toJS().map( lineID => {
-
-                      let element = this.props.state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
-
-                      return <tr
-                        key={lineID}
-                      >
-                        <td style={iconColStyle}>
-                          <FaTrash
-                            onClick={ e => console.log('TODO') }
-                            style={styleEditButton}
-                            title={this.context.translator.t('Delete')}
-                          />
-                        </td>
-                        <td style={{width:'3em', textAlign:'center'}}>
-                          {layerID}
-                        </td>
-                        <td style={{width:'3em', textAlign:'center'}}>
-                          {'lines'}
-                        </td>
-                        <td style={{width:'0em', textAlign:'center'}}>
-                          {element.name}
-                        </td>
-                      </tr>
-                    }) : null;
-
-                    /*return (
-                      <tr
-                        key={groupID}
-                        style={rowStyle}
-                        onMouseOver={ () => this.setState({groupIdHover: groupID}) }
-                        onMouseOut={ () => this.setState({groupIdHover: groupID}) }
-                      >
-                        <td style={iconColStyle}>
-                          <IconVisible
-                            onClick={swapVisibility}
-                            style={!group.get('visible') ? styleEyeHidden : styleEyeVisible}
-                          />
-                        </td>
-                        <td style={iconColStyle}>
-                          <FaTrash
-                            onClick={ e => this.delgroup(e, groupID) }
-                            style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
-                            title={this.context.translator.t('Delete group')}
-                          />
-                        </td>
-                        <td onClick={selectClick} style={{width:'3em', textAlign:'center'}}>
-                          {parseFloat(group.get('x')).toFixed(2)}
-                        </td>
-                        <td onClick={selectClick} style={{width:'3em', textAlign:'center'}}>
-                          {parseFloat(group.get('y')).toFixed(2)}
-                        </td>
-                        <td onClick={selectClick} style={{width:'0em', textAlign:'center'}}>
-                          0
-                        </td>
-                        <td onClick={selectClick}>
-                          {group.get('name')}
-                        </td>
-                      </tr>
-                    );*/
-                  })
-                }
-              </tbody>
-            </table> : null }
+                            return <tr
+                              key={elementID}
+                            >
+                              <td style={iconColStyle} title="Un-chain Element from  Group">
+                                <FaChainBroken
+                                  onClick={ e => this.context.groupsActions.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
+                                  style={styleEditButton}
+                                />
+                              </td>
+                              <td style={{textAlign:'center'}}>
+                                {layerID}
+                              </td>
+                              <td style={{textAlign:'center', textTransform:'capitalize'}}>
+                                {elementPrototype}
+                              </td>
+                              <td style={{textAlign:'center'}}>
+                                {element.name}
+                              </td>
+                            </tr>;
+                          });
+                        });
+                      })
+                    }
+                  </tbody>
+                </table>
+              </div> :
+              null
+          }
         </div>
       </Panel>
     );
