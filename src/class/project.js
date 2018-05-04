@@ -1,7 +1,7 @@
 class Project{
 
   static setAlterate( state ){
-    return state.set('alterate', !state.alterate );
+    return { updatedState: state.set('alterate', !state.alterate ) };
   }
 
 }

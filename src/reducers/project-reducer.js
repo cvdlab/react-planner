@@ -319,5 +319,5 @@ const pushLastSelectedCatalogElementToHistory = (state, element) => {
 
 const setAlterateState = ( state ) => {
   //return state.set('alterate', !state.alterate );
-  return Project.setAlterate( state );
+  return Project.setAlterate( state ).updatedState;
 };

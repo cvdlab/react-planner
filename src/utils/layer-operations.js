@@ -1,10 +1,11 @@
-/** lines features **/
 import {Map, List, fromJS} from 'immutable';
 import {Vertex} from '../models';
-import IDBroker from './id-broker';
-import NameGenerator from './name-generator';
-import * as Geometry from './geometry';
-import calculateInnerCyles, {isClockWiseOrder} from './graph-inner-cycles';
+import {
+  IDBroker,
+  NameGenerator,
+  GeometryUtils,
+  GraphInnerCycles
+} from './export';
 
 const flatten = list => list.reduce((a, b) => a.concat(Array.isArray(b) ? flatten(b) : b), []);
 
@@ -72,8 +73,8 @@ export function splitLine(layer, lineID, x, y, catalog) {
     ({line: line0} = addLine(layer, line.type, x0, y0, x, y, catalog, line.get('properties')));
     ({line: line1} = addLine(layer, line.type, x1, y1, x, y, catalog, line.get('properties')));
 
-    let splitPointOffset = Geometry.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
-    let minVertex = Geometry.minVertex(v0, v1);
+    let splitPointOffset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
+    let minVertex = GeometryUtils.minVertex(v0, v1);
 
     line.holes.forEach(holeID => {
       let hole = layer.holes.get(holeID);
@@ -125,9 +126,9 @@ export function addLinesFromPoints(layer, type, points, catalog, properties, hol
 
             let {x: xp, y: yp} = holeWithOffsetPoint.offsetPosition;
 
-            if (Geometry.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
+            if (GeometryUtils.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
 
-              let newOffset = Geometry.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
+              let newOffset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
 
               if (newOffset >= 0 && newOffset <= 1) {
 
@@ -156,13 +157,13 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
       let [v0, v1] = line.vertices.map(vertexID => vertices.get(vertexID)).toArray();
 
       let hasCommonEndpoint =
-        (Geometry.samePoints(v0, points[0])
-          || Geometry.samePoints(v0, points[1])
-          || Geometry.samePoints(v1, points[0])
-          || Geometry.samePoints(v1, points[1]));
+        (GeometryUtils.samePoints(v0, points[0])
+          || GeometryUtils.samePoints(v0, points[1])
+          || GeometryUtils.samePoints(v1, points[0])
+          || GeometryUtils.samePoints(v1, points[1]));
 
 
-      let intersection = Geometry.intersectionFromTwoLineSegment(
+      let intersection = GeometryUtils.intersectionFromTwoLineSegment(
         points[0], points[1], v0, v1
       );
 
@@ -171,11 +172,11 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
           oldHoles = [];
         }
 
-        let orderedVertices = Geometry.orderVertices(points);
+        let orderedVertices = GeometryUtils.orderVertices(points);
 
         layer.lines.get(line.id).holes.forEach(holeID => {
           let hole = layer.holes.get(holeID);
-          let oldLineLength = Geometry.pointsDistance(v0.x, v0.y, v1.x, v1.y);
+          let oldLineLength = GeometryUtils.pointsDistance(v0.x, v0.y, v1.x, v1.y);
 
           let alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y,
             orderedVertices[1].x - orderedVertices[0].x);
@@ -211,7 +212,7 @@ export function addLineAvoidingIntersections(layer, type, x0, y0, x1, y1, catalo
 
 /** vertices features **/
 export function addVertex(layer, x, y, relatedPrototype, relatedID) {
-  let vertex = layer.vertices.find(vertex => Geometry.samePoints(vertex, {x, y}));
+  let vertex = layer.vertices.find(vertex => GeometryUtils.samePoints(vertex, {x, y}));
 
   if (vertex) {
     vertex = vertex.update(relatedPrototype, related => related.push(relatedID));
@@ -250,7 +251,7 @@ export function mergeEqualsVertices(layer, vertexID) {
   let vertex = layer.getIn(['vertices', vertexID]);
 
   let doubleVertices = layer.vertices
-    .filter(v => v.id !== vertexID && Geometry.samePoints(vertex, v));
+    .filter(v => v.id !== vertexID && GeometryUtils.samePoints(vertex, v));
 
   if (doubleVertices.isEmpty()) return layer;
 
@@ -439,51 +440,6 @@ export function removeArea(layer, areaID) {
 
 const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 
-//https://github.com/MartyWallace/PolyK
-function ContainsPoint(polygon, pointX, pointY) {
-  let n = polygon.length >> 1;
-
-  let ax, lup;
-  let ay = polygon[2 * n - 3] - pointY;
-  let bx = polygon[2 * n - 2] - pointX;
-  let by = polygon[2 * n - 1] - pointY;
-
-  if (bx === 0 && by === 0) return false; // point on edge
-
-  // let lup = by > ay;
-  for (let ii = 0; ii < n; ii++) {
-    ax = bx;
-    ay = by;
-    bx = polygon[2 * ii] - pointX;
-    by = polygon[2 * ii + 1] - pointY;
-    if (bx === 0 && by === 0) return false; // point on edge
-    if (ay === by) continue;
-    lup = by > ay;
-  }
-
-  let depth = 0;
-  for (let i = 0; i < n; i++) {
-    ax = bx;
-    ay = by;
-    bx = polygon[2 * i] - pointX;
-    by = polygon[2 * i + 1] - pointY;
-    if (ay < 0 && by < 0) continue;  // both 'up' or both 'down'
-    if (ay > 0 && by > 0) continue;  // both 'up' or both 'down'
-    if (ax < 0 && bx < 0) continue;   // both points on the left
-
-    if (ay === by && Math.min(ax, bx) < 0) return true;
-    if (ay === by) continue;
-
-    let lx = ax + (bx - ax) * (-ay) / (by - ay);
-    if (lx === 0) return false;      // point on edge
-    if (lx > 0) depth++;
-    if (ay === 0 && lup && by > ay) depth--;  // hit vertex, both up
-    if (ay === 0 && !lup && by < ay) depth--; // hit vertex, both down
-    lup = by > ay;
-  }
-  return (depth & 1) === 1;
-}
-
 export function detectAndUpdateAreas(layer, catalog) {
 
   let verticesArray = [];           //array with vertices coords
@@ -501,14 +457,14 @@ export function detectAndUpdateAreas(layer, catalog) {
 
   linesArray = layer.lines.map(line => line.vertices.map(vertexID => vertexID_to_verticesArrayIndex[vertexID]).toArray());
 
-  let innerCyclesByVerticesArrayIndex = calculateInnerCyles(verticesArray, linesArray);
+  let innerCyclesByVerticesArrayIndex = GraphInnerCycles.calculateInnerCycles(verticesArray, linesArray);
 
   let innerCyclesByVerticesID = new List(innerCyclesByVerticesArrayIndex)
     .map(cycle => new List(cycle.map(vertexIndex => verticesArrayIndex_to_vertexID[vertexIndex])));
 
   // All area vertices should be ordered in counterclockwise order
   innerCyclesByVerticesID = innerCyclesByVerticesID.map( ( area ) =>
-    isClockWiseOrder( area.map(vertexID => layer.vertices.get(vertexID) ) ) ? area.reverse() : area
+    GraphInnerCycles.isClockWiseOrder( area.map(vertexID => layer.vertices.get(vertexID) ) ) ? area.reverse() : area
   );
 
   let areaIDs = [];
@@ -549,7 +505,7 @@ export function detectAndUpdateAreas(layer, catalog) {
       let areaVerticesList = verticesCoordsForArea[i].vertices.flatten().toArray();
       for (j = 0; j < verticesCoordsForArea.length; j++) {
         if (i !== j) {
-          let isHole = ContainsPoint(areaVerticesList,
+          let isHole = GeometryUtils.ContainsPoint(areaVerticesList,
             verticesCoordsForArea[j].vertices.get(0).get(0),
             verticesCoordsForArea[j].vertices.get(0).get(1));
           if (isHole) {

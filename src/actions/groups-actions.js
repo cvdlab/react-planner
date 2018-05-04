@@ -6,6 +6,12 @@ export function addGroup() {
   };
 }
 
+export function addGroupFromSelected() {
+  return {
+    type: GROUP_ACTIONS.ADD_GROUP_FROM_SELECTED
+  };
+}
+
 export function selectGroup(groupID) {
   return {
     type: GROUP_ACTIONS.SELECT_GROUP,
@@ -51,6 +57,13 @@ export function setGroupProperties( groupID, properties ) {
 export function removeGroup( groupID ) {
   return {
     type: GROUP_ACTIONS.REMOVE_GROUP,
+    groupID
+  };
+}
+
+export function removeGroupAndDeleteElements( groupID ) {
+  return {
+    type: GROUP_ACTIONS.REMOVE_GROUP_AND_DELETE_ELEMENTS,
     groupID
   };
 }

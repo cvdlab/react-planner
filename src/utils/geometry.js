@@ -232,7 +232,7 @@ export function extendLine(x1, y1, x2, y2, newDistance, precision = 6) {
   return {
     x: toFixedFloat(x1 + (Math.cos(rad) * newDistance), precision),
     y: toFixedFloat(y1 + (Math.sin(rad) * newDistance), precision),
-  }
+  };
 }
 
 export function roundVertex(vertex, precision = 6) {
@@ -240,4 +240,49 @@ export function roundVertex(vertex, precision = 6) {
   vertex.set('y', toFixedFloat(vertex.get('y'), precision));
 
   return vertex;
+}
+
+//https://github.com/MartyWallace/PolyK
+export function ContainsPoint(polygon, pointX, pointY) {
+  let n = polygon.length >> 1;
+
+  let ax, lup;
+  let ay = polygon[2 * n - 3] - pointY;
+  let bx = polygon[2 * n - 2] - pointX;
+  let by = polygon[2 * n - 1] - pointY;
+
+  if (bx === 0 && by === 0) return false; // point on edge
+
+  // let lup = by > ay;
+  for (let ii = 0; ii < n; ii++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * ii] - pointX;
+    by = polygon[2 * ii + 1] - pointY;
+    if (bx === 0 && by === 0) return false; // point on edge
+    if (ay === by) continue;
+    lup = by > ay;
+  }
+
+  let depth = 0;
+  for (let i = 0; i < n; i++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * i] - pointX;
+    by = polygon[2 * i + 1] - pointY;
+    if (ay < 0 && by < 0) continue;  // both 'up' or both 'down'
+    if (ay > 0 && by > 0) continue;  // both 'up' or both 'down'
+    if (ax < 0 && bx < 0) continue;   // both points on the left
+
+    if (ay === by && Math.min(ax, bx) < 0) return true;
+    if (ay === by) continue;
+
+    let lx = ax + (bx - ax) * (-ay) / (by - ay);
+    if (lx === 0) return false;      // point on edge
+    if (lx > 0) depth++;
+    if (ay === 0 && lup && by > ay) depth--;  // hit vertex, both up
+    if (ay === 0 && !lup && by < ay) depth--; // hit vertex, both down
+    lup = by > ay;
+  }
+  return (depth & 1) === 1;
 }

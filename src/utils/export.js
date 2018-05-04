@@ -6,6 +6,7 @@ import * as SnapSceneUtils from './snap-scene';
 import * as history from './history';
 import * as LayerOperations from './layer-operations';
 import IDBroker from './id-broker';
+import NameGenerator from './name-generator';
 
 export {
   GeometryUtils,
@@ -15,7 +16,8 @@ export {
   SnapSceneUtils,
   history,
   IDBroker,
-  LayerOperations
+  LayerOperations,
+  NameGenerator
 };
 
 export default {
@@ -26,5 +28,6 @@ export default {
   SnapSceneUtils,
   history,
   IDBroker,
-  LayerOperations
+  LayerOperations,
+  NameGenerator
 };
