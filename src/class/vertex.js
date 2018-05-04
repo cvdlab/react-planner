@@ -55,7 +55,7 @@ class Vertex{
   static remove( state, layerID, vertexID, relatedPrototype, relatedID ) {
     let vertex = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]);
 
-    vertex = vertex.update(relatedPrototype, related => {
+    if( relatedPrototype && relatedID ) vertex = vertex.update(relatedPrototype, related => {
       let index = related.findIndex(ID => relatedID === ID);
       return related.delete(index);
     });
