@@ -20,7 +20,6 @@ import {
   SnapUtils,
   SnapSceneUtils,
   GeometryUtils,
-  LayerOperations,
   history
 } from '../utils/export';
 
@@ -234,7 +233,6 @@ function updateDraggingLine(state, x, y) {
 }
 
 function endDraggingLine(state, x, y) {
-  let catalog = state.catalog;
   let {draggingSupport} = state;
   let layerID = draggingSupport.get('layerID');
   let layer = state.scene.layers.get(layerID);
@@ -263,68 +261,70 @@ function endDraggingLine(state, x, y) {
     holesWithOffsetPosition.push({hole, offsetPosition});
   });
 
-  return state.withMutations(state => {
-    let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
+  let diffX = x - draggingSupport.get('startPointX');
+  let diffY = y - draggingSupport.get('startPointY');
+  let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
+  let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
+  let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
+  let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
 
-      let diffX = x - draggingSupport.get('startPointX');
-      let diffY = y - draggingSupport.get('startPointY');
-      let newVertex0X = draggingSupport.get('startVertex0X') + diffX;
-      let newVertex0Y = draggingSupport.get('startVertex0Y') + diffY;
-      let newVertex1X = draggingSupport.get('startVertex1X') + diffX;
-      let newVertex1Y = draggingSupport.get('startVertex1Y') + diffY;
+  if (state.snapMask && !state.snapMask.isEmpty()) {
 
-      if (state.snapMask && !state.snapMask.isEmpty()) {
+    let curSnap0 = SnapUtils.nearestSnap(state.snapElements, newVertex0X, newVertex0Y, state.snapMask);
+    let curSnap1 = SnapUtils.nearestSnap(state.snapElements, newVertex1X, newVertex1Y, state.snapMask);
 
-        let curSnap0 = SnapUtils.nearestSnap(state.snapElements, newVertex0X, newVertex0Y, state.snapMask);
-        let curSnap1 = SnapUtils.nearestSnap(state.snapElements, newVertex1X, newVertex1Y, state.snapMask);
-
-        let deltaX = 0, deltaY = 0;
-        if (curSnap0 && curSnap1) {
-          if (curSnap0.point.distance < curSnap1.point.distance) {
-            deltaX = curSnap0.point.x - newVertex0X;
-            deltaY = curSnap0.point.y - newVertex0Y;
-          } else {
-            deltaX = curSnap1.point.x - newVertex1X;
-            deltaY = curSnap1.point.y - newVertex1Y;
-          }
-        } else {
-          if (curSnap0) {
-            deltaX = curSnap0.point.x - newVertex0X;
-            deltaY = curSnap0.point.y - newVertex0Y;
-          }
-          if (curSnap1) {
-            deltaX = curSnap1.point.x - newVertex1X;
-            deltaY = curSnap1.point.y - newVertex1Y;
-          }
-        }
-
-        newVertex0X += deltaX;
-        newVertex0Y += deltaY;
-        newVertex1X += deltaX;
-        newVertex1Y += deltaY;
+    let deltaX = 0, deltaY = 0;
+    if (curSnap0 && curSnap1) {
+      if (curSnap0.point.distance < curSnap1.point.distance) {
+        deltaX = curSnap0.point.x - newVertex0X;
+        deltaY = curSnap0.point.y - newVertex0Y;
+      } else {
+        deltaX = curSnap1.point.x - newVertex1X;
+        deltaY = curSnap1.point.y - newVertex1Y;
       }
-
-      LayerOperations.mergeEqualsVertices(layer, line.vertices.get(0));
-      LayerOperations.mergeEqualsVertices(layer, line.vertices.get(1));
-
-      LayerOperations.removeLine(layer, lineID);
-
-      if(!GeometryUtils.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
-        LayerOperations.addLineAvoidingIntersections(layer, line.type,
-          newVertex0X, newVertex0Y, newVertex1X, newVertex1Y,
-          catalog, line.properties, holesWithOffsetPosition);
+    } else {
+      if (curSnap0) {
+        deltaX = curSnap0.point.x - newVertex0X;
+        deltaY = curSnap0.point.y - newVertex0Y;
       }
+      if (curSnap1) {
+        deltaX = curSnap1.point.x - newVertex1X;
+        deltaY = curSnap1.point.y - newVertex1Y;
+      }
+    }
 
-      LayerOperations.detectAndUpdateAreas(layer, catalog);
-    }));
+    newVertex0X += deltaX;
+    newVertex0Y += deltaY;
+    newVertex1X += deltaX;
+    newVertex1Y += deltaY;
+  }
 
-    state.merge({
-      mode: MODE_IDLE,
-      scene,
-      draggingSupport: null,
-      activeSnapElement: null,
-      snapElements: new List(),
-      sceneHistory: history.historyPush( state.sceneHistory, scene )
-    });
+  state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(0) ).updatedState;
+  state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(1) ).updatedState;
+
+  state = Line.remove( state, layerID, lineID ).updatedState;
+
+  if(!GeometryUtils.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
+    state = Line.createAvoidingIntersections(
+      state,
+      layerID,
+      line.type,
+      newVertex0X,
+      newVertex0Y,
+      newVertex1X,
+      newVertex1Y,
+      line.properties,
+      holesWithOffsetPosition
+    ).updatedState;
+  }
+
+  state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+
+  return state.merge({
+    mode: MODE_IDLE,
+    draggingSupport: null,
+    activeSnapElement: null,
+    snapElements: new List(),
+    sceneHistory: history.historyPush( state.sceneHistory, state.scene )
   });
 }
