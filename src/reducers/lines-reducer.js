@@ -1,4 +1,5 @@
 import {List, Map} from 'immutable';
+import {Line, Layer} from '../class/export';
 
 import {
   SELECT_TOOL_DRAWING_LINE,
@@ -124,7 +125,7 @@ function updateDrawingLine(state, x, y) {
   });
 }
 
-function endDrawingLine(state, x, y) {
+function _endDrawingLine(state, x, y) {
 
   let catalog = state.catalog;
 
@@ -154,6 +155,35 @@ function endDrawingLine(state, x, y) {
     activeSnapElement: null,
     sceneHistory: history.historyPush( state.sceneHistory, scene )
   });
+}
+
+function endDrawingLine(state, x, y) {
+
+  if (state.snapMask && !state.snapMask.isEmpty()) {
+    let snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
+    if (snap) ({x, y} = snap.point);
+  }
+
+  let layerID = state.getIn(['drawingSupport', 'layerID']);
+  let layer = state.getIn(['scene','layers', layerID]);
+
+  let lineID = state.getIn(['scene', 'layers', layerID, 'selected', 'lines']).first();
+  let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
+
+  let v0 = layer.vertices.get(line.vertices.get(0));
+
+  state = Line.remove( state, layerID, lineID ).updatedState;
+  state = Line.createAvoidingIntersections( state, layerID, line.type, v0.x, v0.y, x, y ).updatedState;
+  state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+
+  state = state.merge({
+    mode: MODE_WAITING_DRAWING_LINE,
+    snapElements: new List(),
+    activeSnapElement: null,
+    sceneHistory: history.historyPush( state.sceneHistory, state.scene )
+  });
+
+  return state;
 }
 
 function beginDraggingLine(state, layerID, lineID, x, y) {

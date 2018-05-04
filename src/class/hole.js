@@ -1,7 +1,30 @@
-import { Layer, Group } from './export';
-import { LayerOperations, history } from '../utils/export';
+import { Layer, Group, layer } from './export';
+import {
+  LayerOperations,
+  history,
+  IDBroker,
+  NameGenerator
+} from '../utils/export';
 
 class Hole{
+
+  static create( state, layerID, type, lineID, offset, properties ) {
+
+    let holeID = IDBroker.acquireID();
+
+    let hole = state.catalog.factoryElement(type, {
+      id: holeID,
+      name: NameGenerator.generateName('holes', state.catalog.getIn(['elements', type, 'info', 'title'])),
+      type,
+      offset,
+      line: lineID
+    }, properties);
+
+    state = state.setIn(['scene', 'layers', layerID, 'holes', holeID], hole);
+    state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], holes => holes.push(holeID));
+
+    return { updatedState: state, hole };
+  }
 
   static select( state, layerID, holeID ){
     state = state.mergeIn(['scene'], {
