@@ -48,7 +48,7 @@ export default function (state, action) {
       return endDraggingLine(state, action.x, action.y);
 
     case SELECT_LINE:
-      return selectLine(state, action.layerID, action.lineID);
+      return Line.select(state, action.layerID, action.lineID).updatedState;
 
     default:
       return state;
@@ -66,8 +66,6 @@ function selectToolDrawingLine(state, sceneComponentType) {
 
 /** lines operations **/
 function beginDrawingLine(state, layerID, x, y) {
-  let catalog = state.catalog;
-
   let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
   let snap = null;
 
@@ -85,17 +83,14 @@ function beginDrawingLine(state, layerID, x, y) {
   }
 
   let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
-  let scene = state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
-    LayerOperations.unselectAll(layer);
-    let {line} = LayerOperations.addLine(layer, drawingSupport.get('type'), x, y, x, y, catalog);
-    LayerOperations.select(layer, 'lines', line.id);
-    LayerOperations.select(layer, 'vertices', line.vertices.get(0));
-    LayerOperations.select(layer, 'vertices', line.vertices.get(1));
-  }));
+
+  state = Layer.unselectAll( state, layerID ).updatedState;
+
+  let { updatedState: stateL, line } = Line.create( state, layerID, drawingSupport.get('type'), x, y, x, y );
+  state = Line.select( stateL, layerID, line.id ).updatedState;
 
   return state.merge({
     mode: MODE_DRAWING_LINE,
-    scene,
     snapElements,
     activeSnapElement: snap ? snap.snap : null,
     drawingSupport
@@ -331,27 +326,5 @@ function endDraggingLine(state, x, y) {
       snapElements: new List(),
       sceneHistory: history.historyPush( state.sceneHistory, scene )
     });
-  });
-}
-
-function selectLine(state, layerID, lineID) {
-  let scene = state.scene;
-
-  scene = scene.merge({
-    layers: state.alterate ? scene.layers : scene.layers.map(LayerOperations.unselectAll),
-    selectedLayer: layerID
-  });
-
-  scene = scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
-      let line = layer.getIn(['lines', lineID]);
-      LayerOperations.select(layer, 'lines', lineID);
-      LayerOperations.select(layer, 'vertices', line.vertices.get(0));
-      LayerOperations.select(layer, 'vertices', line.vertices.get(1));
-    })
-  );
-
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush( state.sceneHistory, scene )
   });
 }
