@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { Area, Line, Hole, Item } from './export';
+import { Area, Line, Hole, Item, Vertex } from './export';
 import {
   GraphInnerCycles,
   GeometryUtils,
@@ -139,6 +139,33 @@ class Layer{
         areaHoles = areaHoles.remove( areaHoles.indexOf(doubleHoleID) );
       });
       state = state.setIn(['scene', 'layers', layerID, 'areas', areaID, 'holes'], areaHoles);
+    });
+
+    return { updatedState: state };
+  }
+
+  static mergeEqualsVertices( state, layerID, vertexID ) {
+    //1. find vertices to remove
+    let vertex = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]);
+
+    let doubleVertices = state.getIn(['scene', 'layers', layerID, 'vertices'])
+      .filter(v => v.id !== vertexID && GeometryUtils.samePoints(vertex, v));
+
+    if (doubleVertices.isEmpty()) return { updatedState: state };
+
+    //2. remove double vertices
+    doubleVertices.forEach(doubleVertex => {
+      doubleVertex.lines.forEach(lineID => {
+        state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices'], vertices => vertices.map(v => v === doubleVertex.id ? vertexID : v));
+        state = Vertex.addElement( state, layerID, vertexID, 'lines', lineID ).updatedState;
+      });
+
+      doubleVertex.areas.forEach(areaID => {
+        state = state.updateIn(['scene', 'layers', layerID, 'areas', areaID, 'vertices'], vertices => vertices.map(v => v === doubleVertex.id ? vertexID : v));
+        state = Vertex.addElement( state, layerID, vertexID, 'areas', areaID ).updatedState;
+      });
+
+      state = Vertex.remove( state, layerID, doubleVertex.id ).updatedState;
     });
 
     return { updatedState: state };
