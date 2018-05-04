@@ -219,6 +219,19 @@ class Line{
     return { updatedState: state };
   }
 
+  static replaceVertex ( state, layerID, lineID, vertexIndex, x, y ) {
+    let vertexID = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex]);
+
+    state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState;
+    let { updatedState: stateV, vertex } = Vertex.add( state, layerID, x, y, 'lines', lineID );
+    state = stateV;
+
+    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex], vertex.id);
+    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], state.getIn(['scene', 'layers', layerID, 'lines', lineID]) );
+
+    return { updatedState: state, line: state.getIn(['scene', 'layers', layerID, 'lines', lineID]), vertex };
+  }
+
 }
 
 export { Line as default };
