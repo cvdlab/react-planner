@@ -1,5 +1,5 @@
 import { List } from 'immutable';
-import { Area } from './export';
+import { Area, Line, Hole, Item } from './export';
 import {
   GraphInnerCycles,
   GeometryUtils,
@@ -21,6 +21,17 @@ class Layer{
     state = state.setIn(['scene', 'layers', layerID, elementPrototype, elementID, 'selected'], false);
     state = state.updateIn(['scene', 'layers', layerID, 'selected', elementPrototype], elems => elems.filter( el => el.id === elementID ));
     return {updatedState: state};
+  }
+
+  static unselectAll( state, layerID ) {
+    let { lines, holes, items, areas } = state.getIn(['scene', 'layers', layerID]);
+
+    if( lines ) lines.forEach( line => { state = Line.unselect( state, layerID, line.id ).updatedState; });
+    if( holes ) holes.forEach( hole => { state = Hole.unselect( state, layerID, hole.id ).updatedState; });
+    if( items ) items.forEach( item => { state = Item.unselect( state, layerID, item.id ).updatedState; });
+    if( areas ) areas.forEach( area => { state = Area.unselect( state, layerID, area.id ).updatedState; });
+
+    return { updatedState: state };
   }
 
   static removeElement( state, layerID, elementPrototype, elementID ) {
