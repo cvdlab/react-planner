@@ -214,6 +214,10 @@ export function angleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(y2 - y1, x2 - x1);
 }
 
+export function absAngleBetweenTwoPoints(x1, y1, x2, y2) {
+  return Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
+}
+
 export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
   return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
 }
@@ -285,4 +289,14 @@ export function ContainsPoint(polygon, pointX, pointY) {
     lup = by > ay;
   }
   return (depth & 1) === 1;
+}
+
+export function cosWithThreshold(alpha, threshold) {
+  let cos = Math.cos(alpha);
+  return cos < threshold ? 0 : cos;
+}
+
+export function sinWithThreshold(alpha, threshold) {
+  let sin = Math.sin(alpha);
+  return sin < threshold ? 0 : sin;
 }
