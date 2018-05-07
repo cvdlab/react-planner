@@ -1,10 +1,10 @@
-import { Layer, Group } from './export';
+import { Layer, Group, layer } from './export';
 import {
   history,
   IDBroker,
   NameGenerator
 } from '../utils/export';
-import { Map} from 'immutable';
+import { Map, fromJS } from 'immutable';
 
 import {
   MODE_IDLE,
@@ -211,6 +211,39 @@ class Item{
     });
 
     return { updatedState: state };
+  }
+
+  static setProperties( state, layerID, itemID, properties ) {
+    state = state.setIn(['scene', 'layers', layerID, 'items', itemID], properties);
+
+    return { updatedState: state };
+  }
+
+  static setJsProperties( state, layerID, itemID, properties ) {
+    return this.setProperties( state, layerID, itemID, fromJS(properties) );
+  }
+
+  static updateProperties( state, layerID, itemID, properties) {
+    properties.forEach( ( v, k ) => {
+      if( state.hasIn(['scene', 'layers', layerID, 'items', itemID, 'properties', k]) )
+        state = state.mergeIn(['scene', 'layers', layerID, 'items', itemID, 'properties', k], v);
+    });
+
+    return { updatedState: state };
+  }
+
+  static updateJsProperties( state, layerID, itemID, properties) {
+    return this.updateProperties( state, layerID, itemID, fromJS(properties) );
+  }
+
+  static setAttributes( state, layerID, itemID, itemAttributes) {
+    state = state.mergeIn(['scene', 'layers', layerID, 'items', itemID], itemAttributes);
+    return { updatedState: state };
+  }
+
+  static setJsAttributes( state, layerID, itemID, itemAttributes) {
+    itemAttributes = fromJS(itemAttributes);
+    return this.setAttributes(state, layerID, itemID, itemAttributes);
   }
 
 }

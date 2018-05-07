@@ -1,4 +1,4 @@
-import {Map, List} from 'immutable';
+import {Map, List, fromJS} from 'immutable';
 import {
   Group,
   Layer,
@@ -522,6 +522,53 @@ class Line{
       snapElements: new List(),
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )
     });
+
+    return { updatedState: state };
+  }
+
+  static setProperties( state, layerID, lineID, properties ) {
+    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], properties);
+
+    return { updatedState: state };
+  }
+
+  static setJsProperties( state, layerID, lineID, properties ) {
+    return this.setProperties( state, layerID, lineID, fromJS(properties) );
+  }
+
+  static updateProperties( state, layerID, lineID, properties) {
+    properties.forEach( ( v, k ) => {
+      if( state.hasIn(['scene', 'layers', layerID, 'lines', lineID, 'properties', k]) )
+        state = state.mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'properties', k], v);
+    });
+
+    return { updatedState: state };
+  }
+
+  static updateJsProperties( state, layerID, lineID, properties) {
+    return this.updateProperties( state, layerID, lineID, fromJS(properties) );
+  }
+
+  static setAttributes( state, layerID, lineID, lineAttributes ) {
+    let lAttr = lineAttributes.toJS();
+    let {vertexOne, vertexTwo, lineLength} = lAttr;
+
+    delete lAttr['vertexOne'];
+    delete lAttr['vertexTwo'];
+    delete lAttr['lineLength'];
+
+    state = state
+      .mergeIn(['scene', 'layers', layerID, 'lines', lineID], fromJS(lAttr))
+      .mergeIn(['scene', 'layers', layerID, 'vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
+      .mergeIn(['scene', 'layers', layerID, 'vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y})
+      .mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'misc'], new Map({'_unitLength': lineLength._unit}));
+
+    state = Layer.mergeEqualsVertices( state, layerID, vertexOne.id );
+
+    if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y)
+      state = Layer.mergeEqualsVertices( state, layerID, vertexTwo.id );
+
+    state = Layer.detectAndUpdateAreas( state, layerID );
 
     return { updatedState: state };
   }

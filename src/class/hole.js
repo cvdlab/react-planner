@@ -1,4 +1,4 @@
-import { Map, List } from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 import { Layer, Group } from './export';
 
 import {
@@ -360,6 +360,47 @@ class Hole{
       mode: MODE_IDLE,
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )
     });
+
+    return { updatedState: state };
+  }
+
+  static setProperties( state, layerID, holeID, properties ) {
+    state = state.setIn(['scene', 'layers', layerID, 'holes', holeID], properties);
+
+    return { updatedState: state };
+  }
+
+  static setJsProperties( state, layerID, holeID, properties ) {
+    return this.setProperties( state, layerID, holeID, fromJS(properties) );
+  }
+
+  static updateProperties( state, layerID, holeID, properties) {
+    properties.forEach( ( v, k ) => {
+      if( state.hasIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k]) )
+        state = state.mergeIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k], v);
+    });
+
+    return { updatedState: state };
+  }
+
+  static updateJsProperties( state, layerID, holeID, properties) {
+    return this.updateProperties( state, layerID, holeID, fromJS(properties) );
+  }
+
+  static setAttributes(state, layerID, holeID, holesAttributes) {
+
+    let hAttr = holesAttributes.toJS();
+    let {offsetA, offsetB, offset} = hAttr;
+
+    delete hAttr['offsetA'];
+    delete hAttr['offsetB'];
+    delete hAttr['offset'];
+
+    let misc = new Map({_unitA: offsetA._unit, _unitB: offsetB._unit});
+
+    state = state
+      .mergeIn(['scene', 'layers', layerID, 'holes', holeID], fromJS(hAttr))
+      .mergeDeepIn(['scene', 'layers', layerID, 'holes', holeID], new Map({offset, misc}));
 
     return { updatedState: state };
   }

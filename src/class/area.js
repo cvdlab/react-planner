@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable';
 import { Layer, Vertex, Group } from './export';
 import {
   LayerOperations,
@@ -81,6 +82,33 @@ class Area{
     });
 
     return {updatedState: state};
+  }
+
+  static setProperties( state, layerID, areaID, properties ) {
+    state = state.setIn(['scene', 'layers', layerID, 'areas', areaID], properties);
+
+    return { updatedState: state };
+  }
+
+  static setJsProperties( state, layerID, areaID, properties ) {
+    return this.setProperties( state, layerID, areaID, fromJS(properties) );
+  }
+
+  static updateProperties( state, layerID, areaID, properties) {
+    properties.forEach( ( v, k ) => {
+      if( state.hasIn(['scene', 'layers', layerID, 'areas', areaID, 'properties', k]) )
+        state = state.mergeIn(['scene', 'layers', layerID, 'areas', areaID, 'properties', k], v);
+    });
+
+    return { updatedState: state };
+  }
+
+  static updateJsProperties( state, layerID, areaID, properties) {
+    return this.updateProperties( state, layerID, areaID, fromJS(properties) );
+  }
+
+  static setAttributes( state ) {
+    return { updatedState: state };
   }
 
 }
