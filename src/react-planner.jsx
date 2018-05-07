@@ -21,7 +21,7 @@ const {FooterBar} = FooterBarComponents;
 
 const toolbarW = 50;
 const sidebarW = 300;
-const footerBarH= 20;
+const footerBarH = 20;
 
 const wrapperStyle = {
   display: 'flex',
@@ -67,7 +67,8 @@ class ReactPlanner extends Component {
     return (
       <div style={{...wrapperStyle, height}}>
         <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
-        <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
+        <Content width={contentW} height={contentH} state={extractedState} {...props}
+                 onWheel={event => event.preventDefault()}/>
         <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
         <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
       </div>
