@@ -108,7 +108,7 @@ export default class PanelGroupEditor extends Component {
           {
             elements.size ?
               <div>
-                <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>Group's Elements</p>
+                <p style={{textAlign:'center', borderBottom:SharedStyle.PRIMARY_COLOR.border , paddingBottom:'1em'}}>{this.context.translator.t('Group\'s Elements')}</p>
                 <table style={tablegroupStyle}>
                   <thead>
                     <tr>
@@ -130,7 +130,7 @@ export default class PanelGroupEditor extends Component {
                             return <tr
                               key={elementID}
                             >
-                              <td style={iconColStyle} title="Un-chain Element from  Group">
+                              <td style={iconColStyle} title={this.context.translator.t('Un-chain Element from Group')}>
                                 <FaChainBroken
                                   onClick={ e => this.context.groupsActions.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
                                   style={styleEditButton}

@@ -126,19 +126,19 @@ export default class PanelGroups extends Component {
                     key={groupID}
                     style={rowStyle}
                   >
-                    <td style={iconColStyle} title="Toggle Group Visibility">
+                    <td style={iconColStyle} title={this.context.translator.t('Toggle Group Visibility')}>
                       <FaEye
                         onClick={swapVisibility}
                         style={!group.get('visible') ? styleEyeHidden : styleEyeVisible}
                       />
                     </td>
-                    <td style={iconColStyle} title="Chain selected Elements to Group">
+                    <td style={iconColStyle} title={this.context.translator.t('Chain selected Elements to Group')}>
                       <FaChain
                         onClick={chainToGroup}
                         style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
                       />
                     </td>
-                    <td style={iconColStyle} title="Un-chain all Group's Elements and remove Group">
+                    <td style={iconColStyle} title={this.context.translator.t('Un-chain all Group\'s Elements and remove Group')}>
                       <FaChainBroken
                         onClick={ e => this.context.groupsActions.removeGroup(groupID) }
                         style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
@@ -173,7 +173,7 @@ export default class PanelGroups extends Component {
                 onClick={ e => this.context.groupsActions.addGroup() }
               >
                 <TiPlus />
-                <b style={styleAddLabel}>New empty Group</b>
+                <b style={styleAddLabel}>{this.context.translator.t('New Empty Group')}</b>
               </td>
               <td
                 style={ !this.state.newSelectedHover ? newLayerLableStyle : newLayerLableHoverStyle }
@@ -182,7 +182,7 @@ export default class PanelGroups extends Component {
                 onClick={ e => this.context.groupsActions.addGroupFromSelected() }
               >
                 <TiPlus />
-                <b style={styleAddLabel}>New Group from selected</b>
+                <b style={styleAddLabel}>{this.context.translator.t('New Group from selected')}</b>
               </td>
             </tr>
           </tbody>
