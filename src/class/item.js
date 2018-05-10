@@ -1,4 +1,4 @@
-import { Layer, Group, layer } from './export';
+import { Layer, Group } from './export';
 import {
   history,
   IDBroker,
@@ -38,11 +38,7 @@ class Item{
     state = Layer.unselectAll( state, layerID ).updatedState;
     state = state.mergeIn(['scene', 'selectedLayer'], layerID);
 
-    state = Layer.select( state, layerID, 'items', itemID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = Layer.selectElement( state, layerID, 'items', itemID ).updatedState;
 
     return { updatedState: state };
   }
@@ -62,10 +58,6 @@ class Item{
 
   static unselect( state, layerID, itemID ) {
     state = Layer.unselect( state, layerID, 'items', itemID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState: state };
   }

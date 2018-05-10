@@ -45,11 +45,7 @@ class Hole{
   static select( state, layerID, holeID ){
     state = Layer.unselectAll( state, layerID ).updatedState;
     state = state.setIn(['scene', 'selectedLayer'], layerID);
-    state = Layer.select( state, layerID, 'holes', holeID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = Layer.selectElement( state, layerID, 'holes', holeID ).updatedState;
 
     return { updatedState: state };
   }
@@ -75,10 +71,6 @@ class Hole{
 
   static unselect( state, layerID, holeID ) {
     state = Layer.unselect( state, layerID, 'holes', holeID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState: state };
   }

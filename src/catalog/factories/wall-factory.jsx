@@ -1,5 +1,5 @@
-import { buildWall, updatedWall } from './wall-factory-3d';
 import React from 'react';
+import { buildWall, updatedWall } from './wall-factory-3d';
 import * as SharedStyle from '../../shared-style';
 import * as Geometry from '../../utils/geometry';
 
@@ -68,25 +68,24 @@ export default function WallFactory(name, info, textures) {
     };
 
     for (let textureName in textures) {
-      textureValues[textureName] = textures[textureName].name
+      textureValues[textureName] = textures[textureName].name;
     }
 
     wallElement.properties.textureA = {
       label: 'Covering A',
       type: 'enum',
-      defaultValue: 'none',
+      defaultValue: textureValues.bricks ? 'bricks' : 'none',
       values: textureValues
     };
 
     wallElement.properties.textureB = {
       label: 'Covering B',
       type: 'enum',
-      defaultValue: 'none',
+      defaultValue: textureValues.bricks ? 'bricks' : 'none',
       values: textureValues
     };
 
   }
 
   return wallElement;
-
 }

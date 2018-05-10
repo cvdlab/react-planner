@@ -6,7 +6,6 @@ import {
   Vertex
 } from './export';
 import {
-  LayerOperations,
   history,
   IDBroker,
   NameGenerator,
@@ -40,26 +39,17 @@ class Line{
 
     state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], line);
 
-    //missing history?
-
     return {updatedState: state, line};
   }
 
   static select( state, layerID, lineID ){
+    state = Layer.select( state, layerID ).updatedState;
+
     let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
 
-    state = state.mergeIn(['scene'], {
-      layers: state.alterate ? state.scene.layers : state.scene.layers.map(LayerOperations.unselectAll),
-      selectedLayer: layerID
-    });
-
-    state = Layer.select( state, layerID, 'lines', lineID ).updatedState;
-    state = Layer.select( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
-    state = Layer.select( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = Layer.selectElement( state, layerID, 'lines', lineID ).updatedState;
+    state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
+    state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
 
     return {updatedState: state};
   }
@@ -67,17 +57,19 @@ class Line{
   static remove( state, layerID, lineID ) {
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
-    state = this.unselect( state, layerID, lineID ).updatedState;
-    line.holes.forEach(holeID => state = Hole.remove(state, layerID, holeID).updatedState);
-    state = Layer.removeElement( state, layerID, 'lines', lineID ).updatedState;
+    if( line ) {
+      state = this.unselect( state, layerID, lineID ).updatedState;
+      line.holes.forEach(holeID => state = Hole.remove(state, layerID, holeID).updatedState);
+      state = Layer.removeElement( state, layerID, 'lines', lineID ).updatedState;
 
-    line.vertices.forEach(vertexID => state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState);
+      line.vertices.forEach(vertexID => state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState);
 
-    state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'lines', lineID).updatedState );
+      state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'lines', lineID).updatedState );
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+      state = state.merge({
+        sceneHistory: history.historyPush( state.sceneHistory, state.scene )
+      });
+    }
 
     return {updatedState: state};
   }
@@ -85,13 +77,11 @@ class Line{
   static unselect( state, layerID, lineID ) {
     let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
 
-    state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
-    state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
-    state = Layer.unselect( state, layerID, 'lines', lineID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    if( line ) {
+      state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
+      state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
+      state = Layer.unselect( state, layerID, 'lines', lineID ).updatedState;
+    }
 
     return {updatedState: state};
   }
@@ -300,7 +290,7 @@ class Line{
     let { updatedState: stateLV, vertex } = Line.replaceVertex( state, layerID, lineID, 1, x, y );
     state = stateLV;
 
-    state = Layer.select( state, layerID, 'vertices', vertex.id).updatedState;
+    state = Layer.selectElement( state, layerID, 'vertices', vertex.id).updatedState;
 
     state = state.merge({ activeSnapElement: snap ? snap.snap : null });
 

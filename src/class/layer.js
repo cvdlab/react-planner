@@ -1,26 +1,52 @@
 import { List } from 'immutable';
-import { Area, Line, Hole, Item, Vertex } from './export';
+import { Project, Area, Line, Hole, Item, Vertex } from './export';
 import {
   GraphInnerCycles,
   GeometryUtils,
-  history
+  history,
+  IDBroker
 } from '../utils/export';
+import { Layer as LayerModel } from '../models';
 
 const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 
 class Layer{
 
-  static select( state, layerID, elementPrototype, elementID ){
+  static create( state, name, altitude ) {
+    let layerID = IDBroker.acquireID();
+    name = name || `layer ${layerID}`;
+    altitude = altitude || 0;
+
+    let layer = new LayerModel({ id: layerID, name, altitude });
+
+    state = state.setIn(['scene', 'selectedLayer'], layerID );
+    state = state.updateIn(['scene', 'layers'], layers => layers.set(layerID, layer) );
+
+    state = state.merge({
+      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
+    });
+
+    return { updatedState: state };
+  }
+
+  static select( state, layerID ) {
+    if( !state.get('alterate') ) state = Project.unselectAll( state ).updatedState;
+    state = state.setIn(['scene', 'selectedLayer'], layerID);
+
+    return { updatedState: state };
+  }
+
+  static selectElement( state, layerID, elementPrototype, elementID ){
     state = state.setIn(['scene', 'layers', layerID, elementPrototype, elementID, 'selected'], true);
     state = state.updateIn(['scene', 'layers', layerID, 'selected', elementPrototype], elems => elems.push(elementID));
 
-    return {updatedState: state};
+    return { updatedState: state };
   }
 
   static unselect( state, layerID, elementPrototype, elementID ){
     state = state.setIn(['scene', 'layers', layerID, elementPrototype, elementID, 'selected'], false);
     state = state.updateIn(['scene', 'layers', layerID, 'selected', elementPrototype], elems => elems.filter( el => el.id === elementID ));
-    return {updatedState: state};
+    return { updatedState: state };
   }
 
   static unselectAll( state, layerID ) {
@@ -30,6 +56,31 @@ class Layer{
     if( holes ) holes.forEach( hole => { state = Hole.unselect( state, layerID, hole.id ).updatedState; });
     if( items ) items.forEach( item => { state = Item.unselect( state, layerID, item.id ).updatedState; });
     if( areas ) areas.forEach( area => { state = Area.unselect( state, layerID, area.id ).updatedState; });
+
+    return { updatedState: state };
+  }
+
+  static setProperties( state, layerID, properties ) {
+    state = state.mergeIn(['scene', 'layers', layerID], properties);
+    state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? a.altitude - b.altitude : a.order - b.order ));
+    state = state.merge({
+      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
+    });
+
+    return { updatedState: state };
+  }
+
+  static remove( state, layerID ) {
+    state = state.removeIn(['scene', 'layers', layerID]);
+
+    state = state.setIn(
+      ['scene', 'selectedLayer'],
+      state.scene.selectedLayer !== layerID ? state.scene.selectedLayer : state.scene.layers.first().id
+    );
+
+    state = state.merge({
+      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
+    });
 
     return { updatedState: state };
   }
@@ -144,28 +195,75 @@ class Layer{
     return { updatedState: state };
   }
 
+  static removeZeroLengthLines( state, layerID ) {
+    let updatedState = state.getIn(['scene', 'layers', layerID, 'lines']).reduce(
+      ( newState, line ) =>
+      {
+        let v_id0 = line.getIn(['vertices', 0]);
+        let v_id1 = line.getIn(['vertices', 1]);
+
+        let v0 = newState.getIn(['scene', 'layers', layerID, 'vertices', v_id0]);
+        let v1 = newState.getIn(['scene', 'layers', layerID, 'vertices', v_id1]);
+
+        if( GeometryUtils.verticesDistance( v0, v1 ) === 0 )
+        {
+          newState = Line.remove( newState, layerID, line.id ).updatedState;
+        }
+
+        return newState;
+      },
+      state
+    );
+
+    return { updatedState };
+  }
+
   static mergeEqualsVertices( state, layerID, vertexID ) {
     //1. find vertices to remove
     let vertex = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]);
 
     let doubleVertices = state.getIn(['scene', 'layers', layerID, 'vertices'])
-      .filter(v => v.id !== vertexID && GeometryUtils.samePoints(vertex, v));
+      .filter(v => {
+        return (
+          v.id !== vertexID &&
+          GeometryUtils.samePoints(vertex, v)// &&
+          //!v.lines.contains( vertexID ) &&
+          //!v.areas.contains( vertexID )
+        );
+      });
 
     if (doubleVertices.isEmpty()) return { updatedState: state };
 
-    //2. remove double vertices
     doubleVertices.forEach(doubleVertex => {
-      doubleVertex.lines.forEach(lineID => {
-        state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices'], vertices => vertices.map(v => v === doubleVertex.id ? vertexID : v));
-        state = Vertex.addElement( state, layerID, vertexID, 'lines', lineID ).updatedState;
-      });
+      let reduced = doubleVertex.lines.reduce(
+        ( reducedState, lineID ) => {
 
-      doubleVertex.areas.forEach(areaID => {
-        state = state.updateIn(['scene', 'layers', layerID, 'areas', areaID, 'vertices'], vertices => vertices.map(v => v === doubleVertex.id ? vertexID : v));
-        state = Vertex.addElement( state, layerID, vertexID, 'areas', areaID ).updatedState;
-      });
+          reducedState = reducedState.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices'], vertices => {
+            if( vertices ) {
+              return vertices.map(v => v === doubleVertex.id ? vertexID : v);
+            }
+          });
+          reducedState = Vertex.addElement( reducedState, layerID, vertexID, 'lines', lineID ).updatedState;
 
-      state = Vertex.remove( state, layerID, doubleVertex.id ).updatedState;
+          return reducedState;
+        },
+        state
+      );
+
+      let biReduced = doubleVertex.areas.reduce(
+        ( reducedState, areaID ) => {
+
+          reducedState = reducedState.updateIn(['scene', 'layers', layerID, 'areas', areaID, 'vertices'], vertices => {
+            if( vertices ) return vertices.map(v => v === doubleVertex.id ? vertexID : v);
+          });
+          reducedState = Vertex.addElement( reducedState, layerID, vertexID, 'areas', areaID ).updatedState;
+
+          return reducedState;
+        },
+        reduced
+      );
+
+      state = Vertex.remove( biReduced, layerID, doubleVertex.id, null, null, true ).updatedState;
     });
 
     return { updatedState: state };

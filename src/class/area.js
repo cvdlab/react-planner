@@ -1,7 +1,6 @@
 import { fromJS } from 'immutable';
 import { Layer, Vertex, Group } from './export';
 import {
-  LayerOperations,
   history,
   IDBroker,
   NameGenerator
@@ -41,16 +40,8 @@ class Area{
   }
 
   static select( state, layerID, areaID ){
-    state = state.mergeIn(['scene'], {
-      layers: state.alterate ? state.scene.layers : state.scene.layers.map(LayerOperations.unselectAll),
-      selectedLayer: layerID
-    });
-
-    state = Layer.select( state, layerID, 'areas', areaID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = Layer.select( state, layerID ).updatedState;
+    state = Layer.selectElement( state, layerID, 'areas', areaID ).updatedState;
 
     return {updatedState: state};
   }
@@ -76,10 +67,6 @@ class Area{
 
   static unselect( state, layerID, areaID ) {
     state = Layer.unselect( state, layerID, 'areas', areaID ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return {updatedState: state};
   }

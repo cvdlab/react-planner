@@ -6,11 +6,9 @@ import {
   Area,
   Layer
 } from './export';
-import IDBroker from '../utils/id-broker';
 import { List } from 'immutable';
 import { Group as GroupModel } from '../models';
-import { unselectAll } from '../utils/layer-operations';
-import { history } from '../utils/export';
+import { history, IDBroker } from '../utils/export';
 
 class Group{
 
@@ -20,8 +18,7 @@ class Group{
     state = Project.setAlterate( state ).updatedState;
 
     layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
-
-      state = state.updateIn( ['scene', 'layers', groupLayerID], unselectAll );
+      state = Layer.unselectAll( state, groupLayerID ).updatedState;
 
       let lines = groupLayerElements.get('lines');
       let holes = groupLayerElements.get('holes');
@@ -40,41 +37,18 @@ class Group{
 
     state = state.setIn(['scene', 'groups'], groups).setIn([ 'scene', 'groups', groupID, 'selected' ], true);
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState: state };
   }
 
   static unselect( state, groupID ){
-
     let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
-
-    layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
-
-      let lines = groupLayerElements.get('lines');
-      let holes = groupLayerElements.get('holes');
-      let items = groupLayerElements.get('items');
-      let areas = groupLayerElements.get('areas');
-
-      if( lines ) lines.forEach( lineID => { state = Line.unselect( state, groupLayerID, lineID ).updatedState; });
-      if( holes ) holes.forEach( holeID => { state = Hole.unselect( state, groupLayerID, holeID ).updatedState; });
-      if( items ) items.forEach( itemID => { state = Item.unselect( state, groupLayerID, itemID ).updatedState; });
-      if( areas ) areas.forEach( areaID => { state = Area.unselect( state, groupLayerID, areaID ).updatedState; });
-    });
-
-    state = state.setIn([ 'scene', 'groups', groupID, 'selected' ], false);
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    let reduced = layerList.reduce( ( newState, layer, layerID ) => Layer.unselectAll( newState, layerID ).updatedState, state );
+    state = reduced.setIn([ 'scene', 'groups', groupID, 'selected' ], false);
 
     return { updatedState: state };
   }
 
   static create( state ){
-    console.log('create', state);
     let groupID = IDBroker.acquireID();
 
     state = state.setIn(['scene', 'groups', groupID], new GroupModel({ id: groupID, name: groupID}) );
@@ -87,7 +61,6 @@ class Group{
   }
 
   static createFromSelectedElements( state ){
-    console.log('createFromSelectedElements', state);
     let groupID = IDBroker.acquireID();
 
     state = state.setIn(['scene', 'groups', groupID], new GroupModel({ id: groupID, name: groupID}) );
@@ -115,7 +88,6 @@ class Group{
   }
 
   static addElement( state, groupID, layerID, elementPrototype, elementID ){
-    console.log('addElement', state, groupID, layerID, elementPrototype, elementID);
     let actualList = state.getIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype]) || new List();
 
     if( actualList.contains(elementID) )
@@ -133,7 +105,6 @@ class Group{
   }
 
   static removeElement( state, groupID, layerID, elementPrototype, elementID ) {
-    console.log('removeElement', state, groupID, layerID, elementPrototype, elementID);
     let actualList = state.getIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype]);
 
     if( !actualList || !actualList.contains(elementID) )
@@ -151,8 +122,6 @@ class Group{
   }
 
   static setProperties( state, groupID, properties ){
-    console.log('setProperties', state);
-
     state = state.mergeIn(['scene', 'groups', groupID], properties);
 
     state = state.merge({
@@ -163,7 +132,6 @@ class Group{
   }
 
   static remove( state, groupID ) {
-    console.log('remove', state, groupID);
     state = state.removeIn(['scene', 'groups', groupID]);
 
     state = state.merge({
@@ -174,13 +142,10 @@ class Group{
   }
 
   static removeAndDeleteElements( state, groupID ) {
-    console.log('removeAndDeleteElements', state);
-
     let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
 
     layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
-
-      state = state.updateIn( ['scene', 'layers', groupLayerID], unselectAll );
+      state = Layer.unselectAll( state, groupLayerID ).updatedState;
 
       let lines = groupLayerElements.get('lines');
       let holes = groupLayerElements.get('holes');
@@ -193,7 +158,7 @@ class Group{
           state = Layer.detectAndUpdateAreas( state, groupLayerID ).updatedState;
         });
       }
-      //( actually ) no effect by hole's destruction
+
       if( holes ) holes.forEach( holeID => { state = Hole.remove( state, groupLayerID, holeID ).updatedState; });
       if( items ) items.forEach( itemID => { state = Item.remove( state, groupLayerID, itemID ).updatedState; });
       //( actually ) no effect by area's destruction
