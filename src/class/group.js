@@ -8,7 +8,7 @@ import {
 } from './export';
 import { List } from 'immutable';
 import { Group as GroupModel } from '../models';
-import { history, IDBroker } from '../utils/export';
+import { history, IDBroker, MathUtils } from '../utils/export';
 
 class Group{
 
@@ -96,6 +96,42 @@ class Group{
     }
 
     state = state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.push(elementID));
+
+    let elementDom = document.querySelector(`[data-id="${elementID}"]`);
+    let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
+
+    let paper = document.getElementById('svg-drawing-paper');
+    let { x: pX, y: pY } = paper.getBoundingClientRect();
+
+    let elCx = elX - pX + ( elW / 2 );
+    let elCy = elY - pY + ( elH / 2 );
+
+    let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
+
+    let m1 = [
+      [ a, b, c ],
+      [ d, e, f ],
+      [ 0, 0, 1 ]
+    ];
+
+    let m2 = [
+      [ elCx, SVGHeight - elCy, 0 ],
+      [ 0   , 1   , 0 ],
+      [ 0   , 0   , 1 ]
+    ];
+
+    let transformResult = MathUtils.multiplyMatrices( m1, m2 );
+
+    let elCxT = transformResult[0][0];
+    let elCyT = transformResult[0][1];
+
+    let groupX = state.getIn(['scene', 'groups', groupID, 'x']);
+    let groupY = state.getIn(['scene', 'groups', groupID, 'y']);
+
+    let medianX = ( groupX + elCxT ) / 2;
+    let medianY = ( groupY + elCyT ) / 2;
+
+    state = Group.setProperties( state, groupID, { x: medianX, y: medianY } ).updatedState;
 
     state = state.merge({
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )

@@ -17,7 +17,7 @@ export default function State({state, catalog}) {
   return (
     <g>
       <rect x="0" y="0" width={width} height={height} fill={SharedStyle.COLORS.white}/>
-      <g transform={`translate(0, ${scene.height}) scale(1, -1)`}>
+      <g transform={`translate(0, ${scene.height}) scale(1, -1)`} id="svg-drawing-paper">
         <Scene scene={scene} catalog={catalog}/>
         {activeSnapElement}
         {snapElements}
