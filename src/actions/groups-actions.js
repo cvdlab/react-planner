@@ -62,6 +62,14 @@ export function setGroupProperties( groupID, properties ) {
   };
 }
 
+export function setGroupBarycenter( groupID, barycenter ) {
+  return {
+    type: GROUP_ACTIONS.SET_GROUP_BARYCENTER,
+    groupID,
+    barycenter
+  };
+}
+
 export function removeGroup( groupID ) {
   return {
     type: GROUP_ACTIONS.REMOVE_GROUP,
@@ -73,5 +81,22 @@ export function removeGroupAndDeleteElements( groupID ) {
   return {
     type: GROUP_ACTIONS.REMOVE_GROUP_AND_DELETE_ELEMENTS,
     groupID
+  };
+}
+
+export function groupTranslate( groupID, x, y ) {
+  return {
+    type: GROUP_ACTIONS.GROUP_TRANSLATE,
+    groupID,
+    x,
+    y
+  };
+}
+
+export function groupRotate( groupID, alpha ) {
+  return {
+    type: GROUP_ACTIONS.GROUP_TRANSLATE,
+    groupID,
+    alpha
   };
 }

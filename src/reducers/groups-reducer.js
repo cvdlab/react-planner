@@ -27,11 +27,20 @@ export default function (state, action) {
     case GROUP_ACTIONS.SET_GROUP_PROPERTIES:
       return Group.setProperties( state, action.groupID, action.properties ).updatedState;
 
+    case GROUP_ACTIONS.SET_GROUP_BARYCENTER:
+      return Group.setBarycenter( state, action.groupID, action.barycenter.get('x'), action.barycenter.get('y') ).updatedState;
+
     case GROUP_ACTIONS.REMOVE_GROUP:
       return Group.remove( state, action.groupID ).updatedState;
 
     case GROUP_ACTIONS.REMOVE_GROUP_AND_DELETE_ELEMENTS:
       return Group.removeAndDeleteElements( state, action.groupID ).updatedState;
+    
+    case GROUP_ACTIONS.GROUP_TRANSLATE:
+      return Group.translate( state, action.groupID, action.x, action.y ).updatedState;
+    
+    case GROUP_ACTIONS.GROUP_ROTATE:
+      return Group.rotate( state, action.groupID, action.alpha ).updatedState;
 
     default:
       return state;

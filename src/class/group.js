@@ -131,11 +131,18 @@ class Group{
     let medianX = ( groupX + elCxT ) / 2;
     let medianY = ( groupY + elCyT ) / 2;
 
-    state = Group.setAttributes( state, groupID, { x: medianX, y: medianY } ).updatedState;
+    state = this.setBarycenter( state, groupID, medianX, medianY ).updatedState;
 
     state = state.merge({
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )
     });
+
+    return { updatedState: state };
+  }
+
+  static setBarycenter( state, groupID, x, y ) {
+    if (typeof x !== 'undefined') state = state.setIn(['scene', 'groups', groupID, 'x'], x);
+    if (typeof y !== 'undefined') state = state.setIn(['scene', 'groups', groupID, 'y'], y);
 
     return { updatedState: state };
   }
@@ -217,6 +224,19 @@ class Group{
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )
     });
 
+    return { updatedState: state };
+  }
+
+  static translate( state, groupID, x, y ) {
+    console.log('translate', state.toJS(), groupID, x, y );
+
+    state = this.setBarycenter( state, groupID, x, y ).updatedState;
+
+    return { updatedState: state };
+  }
+
+  static rotate( state, groupID, alpha ) {
+    console.log('rotate', state.toJS(), groupID, toJS );
     return { updatedState: state };
   }
 
