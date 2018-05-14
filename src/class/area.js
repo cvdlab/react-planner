@@ -72,7 +72,7 @@ class Area{
   }
 
   static setProperties( state, layerID, areaID, properties ) {
-    state = state.setIn(['scene', 'layers', layerID, 'areas', areaID], properties);
+    state = state.setIn(['scene', 'layers', layerID, 'areas', areaID, 'properties'], properties);
 
     return { updatedState: state };
   }

@@ -517,7 +517,7 @@ class Line{
   }
 
   static setProperties( state, layerID, lineID, properties ) {
-    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], properties);
+    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'properties'], properties);
 
     return { updatedState: state };
   }
@@ -540,6 +540,7 @@ class Line{
   }
 
   static setAttributes( state, layerID, lineID, lineAttributes ) {
+
     let lAttr = lineAttributes.toJS();
     let {vertexOne, vertexTwo, lineLength} = lAttr;
 
@@ -547,18 +548,21 @@ class Line{
     delete lAttr['vertexTwo'];
     delete lAttr['lineLength'];
 
+    console.log('WAAAAAAAAAT', lineID);
+
     state = state
       .mergeIn(['scene', 'layers', layerID, 'lines', lineID], fromJS(lAttr))
       .mergeIn(['scene', 'layers', layerID, 'vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
       .mergeIn(['scene', 'layers', layerID, 'vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y})
       .mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'misc'], new Map({'_unitLength': lineLength._unit}));
 
-    state = Layer.mergeEqualsVertices( state, layerID, vertexOne.id );
+    state = Layer.mergeEqualsVertices( state, layerID, vertexOne.id ).updatedState;
 
-    if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y)
-      state = Layer.mergeEqualsVertices( state, layerID, vertexTwo.id );
+    if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) {
+      state = Layer.mergeEqualsVertices( state, layerID, vertexTwo.id ).updatedState;
+    }
 
-    state = Layer.detectAndUpdateAreas( state, layerID );
+    state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
 
     return { updatedState: state };
   }

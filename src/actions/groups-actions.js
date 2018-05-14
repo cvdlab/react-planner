@@ -46,6 +46,14 @@ export function removeFromGroup( groupID, layerID, elementPrototype, elementID )
   };
 }
 
+export function setGroupAttributes( groupID, attributes ) {
+  return {
+    type: GROUP_ACTIONS.SET_GROUP_ATTRIBUTES,
+    groupID,
+    attributes
+  };
+}
+
 export function setGroupProperties( groupID, properties ) {
   return {
     type: GROUP_ACTIONS.SET_GROUP_PROPERTIES,

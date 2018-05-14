@@ -357,7 +357,7 @@ class Hole{
   }
 
   static setProperties( state, layerID, holeID, properties ) {
-    state = state.setIn(['scene', 'layers', layerID, 'holes', holeID], properties);
+    state = state.setIn(['scene', 'layers', layerID, 'holes', holeID, 'properties'], properties);
 
     return { updatedState: state };
   }

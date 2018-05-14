@@ -131,7 +131,7 @@ class Group{
     let medianX = ( groupX + elCxT ) / 2;
     let medianY = ( groupY + elCyT ) / 2;
 
-    state = Group.setProperties( state, groupID, { x: medianX, y: medianY } ).updatedState;
+    state = Group.setAttributes( state, groupID, { x: medianX, y: medianY } ).updatedState;
 
     state = state.merge({
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )
@@ -157,8 +157,18 @@ class Group{
     return { updatedState : state };
   }
 
+  static setAttributes( state, groupID, attributes ){
+    state = state.mergeIn(['scene', 'groups', groupID], attributes);
+
+    state = state.merge({
+      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
+    });
+
+    return { updatedState : state };
+  }
+
   static setProperties( state, groupID, properties ){
-    state = state.mergeIn(['scene', 'groups', groupID], properties);
+    state = state.mergeIn(['scene', 'groups', groupID, 'properties'], properties);
 
     state = state.merge({
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )

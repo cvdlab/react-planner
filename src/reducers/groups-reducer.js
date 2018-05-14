@@ -21,6 +21,9 @@ export default function (state, action) {
     case GROUP_ACTIONS.REMOVE_FROM_GROUP:
       return Group.removeElement( state, action.groupID, action.layerID, action.elementPrototype, action.elementID ).updatedState;
 
+    case GROUP_ACTIONS.SET_GROUP_ATTRIBUTES:
+      return Group.setAttributes( state, action.groupID, action.attributes ).updatedState;
+
     case GROUP_ACTIONS.SET_GROUP_PROPERTIES:
       return Group.setProperties( state, action.groupID, action.properties ).updatedState;
 

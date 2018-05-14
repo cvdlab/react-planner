@@ -74,7 +74,7 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormTextInput
                     value={group.get('name')}
-                    onChange={e => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'name': e.target.value }) ) }
+                    onChange={e => this.context.groupsActions.setGroupAttributes( this.props.groupID, new Map({ 'name': e.target.value }) ) }
                     style={inputStyle}
                   />
                 </td>
@@ -84,7 +84,7 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('x')}
-                    onChange={e => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'x': e.target.value }) ) }
+                    onChange={e => this.context.groupsActions.setGroupAttributes( this.props.groupID, new Map({ 'x': e.target.value }) ) }
                     style={inputStyle}
                     state={this.props.state}
                     precision={2}
@@ -96,7 +96,7 @@ export default class PanelGroupEditor extends Component {
                 <td>
                   <FormNumberInput
                     value={group.get('y')}
-                    onChange={e => this.context.groupsActions.setGroupProperties( this.props.groupID, new Map({ 'y': e.target.value }) ) }
+                    onChange={e => this.context.groupsActions.setGroupAttributes( this.props.groupID, new Map({ 'y': e.target.value }) ) }
                     style={inputStyle}
                     state={this.props.state}
                     precision={2}

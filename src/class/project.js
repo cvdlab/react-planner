@@ -55,7 +55,7 @@ class Project{
 
   static setItemsAttributes(state, attributes) {
     //TODO apply only to items
-    state.getIn(['scene', 'layers']).forEach( layerID => { state = Layer.setAttributesOnSelected( state, layerID, attributes ).updatedState; } );
+    state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
 
     state = state.merge({
       sceneHistory: history.historyPush(state.sceneHistory, state.scene)
@@ -66,7 +66,10 @@ class Project{
 
   static setLinesAttributes(state, attributes) {
     //TODO apply only to lines
-    state.getIn(['scene', 'layers']).forEach( layerID => { state = Layer.setAttributesOnSelected( state, layerID, attributes ).updatedState; } );
+    console.log('attributes', state, attributes.toJS());
+    state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
+
+    console.log('XXXXXXXXXX', state);
 
     state = state.merge({
       sceneHistory: history.historyPush(state.sceneHistory, state.scene)
@@ -77,7 +80,7 @@ class Project{
 
   static setHolesAttributes(state, attributes) {
     //TODO apply only to holes
-    state.getIn(['scene', 'layers']).forEach( layerID => { state = Layer.setAttributesOnSelected( state, layerID, attributes ).updatedState; } );
+    state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
 
     state = state.merge({
       sceneHistory: history.historyPush(state.sceneHistory, state.scene)

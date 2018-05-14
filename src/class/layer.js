@@ -272,28 +272,34 @@ class Layer{
   static setPropertiesOnSelected( state, layerID, properties ) {
     let selected = state.getIn(['scene', 'layers', layerID, 'selected']);
 
-    selected.lines.forEach(lineID => state = Line.setProperties(state, layerID, 'lines', lineID, properties).updatedState);
-    selected.holes.forEach(holeID => state = Hole.setProperties(state, layerID, 'holes', holeID, properties).updatedState);
-    selected.areas.forEach(areaID => state = Area.setProperties(state, layerID, 'areas', areaID, properties).updatedState);
-    selected.items.forEach(itemID => state = Item.setProperties(state, layerID, 'items', itemID, properties).updatedState);
+    selected.lines.forEach(lineID => state = Line.setProperties(state, layerID, lineID, properties).updatedState);
+    selected.holes.forEach(holeID => state = Hole.setProperties(state, layerID, holeID, properties).updatedState);
+    selected.areas.forEach(areaID => state = Area.setProperties(state, layerID, areaID, properties).updatedState);
+    selected.items.forEach(itemID => state = Item.setProperties(state, layerID, itemID, properties).updatedState);
+
+    return { updatedState: state };
   }
 
   static updatePropertiesOnSelected( state, layerID, properties ) {
     let selected = state.getIn(['scene', 'layers', layerID, 'selected']);
 
-    selected.lines.forEach(lineID => state = Line.updateProperties(state, layerID, 'lines', lineID, properties).updatedState);
-    selected.holes.forEach(holeID => state = Hole.updateProperties(state, layerID, 'holes', holeID, properties).updatedState);
-    selected.areas.forEach(areaID => state = Area.updateProperties(state, layerID, 'areas', areaID, properties).updatedState);
-    selected.items.forEach(itemID => state = Item.updateProperties(state, layerID, 'items', itemID, properties).updatedState);
+    selected.lines.forEach(lineID => state = Line.updateProperties(state, layerID, lineID, properties).updatedState);
+    selected.holes.forEach(holeID => state = Hole.updateProperties(state, layerID, holeID, properties).updatedState);
+    selected.areas.forEach(areaID => state = Area.updateProperties(state, layerID, areaID, properties).updatedState);
+    selected.items.forEach(itemID => state = Item.updateProperties(state, layerID, itemID, properties).updatedState);
+
+    return { updatedState: state };
   }
 
   static setAttributesOnSelected( state, layerID, attributes ) {
     let selected = state.getIn(['scene', 'layers', layerID, 'selected']);
 
-    selected.lines.forEach(lineID => Line.setAttributes( state, layerID, 'lines', lineID, attributes ));
-    selected.holes.forEach(holeID => Hole.setAttributes( state, layerID, 'holes', holeID, attributes ));
-    selected.items.forEach(itemID => Item.setAttributes( state, layerID, 'items', itemID, attributes ));
-    //selected.areas.forEach(areaID => Area.setAttributes( state, layerID, 'areas', areaID, attributes ));
+    selected.lines.forEach(lineID => state = Line.setAttributes( state, layerID, lineID, attributes ).updatedState);
+    selected.holes.forEach(holeID => state = Hole.setAttributes( state, layerID, holeID, attributes ).updatedState);
+    selected.items.forEach(itemID => state = Item.setAttributes( state, layerID, itemID, attributes ).updatedState);
+    //selected.areas.forEach(areaID => state = Area.setAttributes( state, layerID, areaID, attributes ).updatedState);
+
+    return { updatedState: state };
   }
 
 }

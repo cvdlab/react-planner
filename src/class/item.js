@@ -206,7 +206,7 @@ class Item{
   }
 
   static setProperties( state, layerID, itemID, properties ) {
-    state = state.setIn(['scene', 'layers', layerID, 'items', itemID], properties);
+    state = state.setIn(['scene', 'layers', layerID, 'items', itemID, 'properties'], properties);
 
     return { updatedState: state };
   }
