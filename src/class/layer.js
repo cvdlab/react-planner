@@ -20,7 +20,7 @@ class Layer{
     let layer = new LayerModel({ id: layerID, name, altitude });
 
     state = state.setIn(['scene', 'selectedLayer'], layerID );
-    state = state.updateIn(['scene', 'layers'], layers => layers.set(layerID, layer) );
+    state = state.setIn(['scene', 'layers', layerID], layer);
 
     state = state.merge({
       sceneHistory: history.historyPush(state.sceneHistory, state.scene)
