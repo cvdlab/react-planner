@@ -35,12 +35,10 @@ class Item{
   }
 
   static select( state, layerID, itemID ){
-    state = Layer.unselectAll( state, layerID ).updatedState;
-    state = state.mergeIn(['scene', 'selectedLayer'], layerID);
-
+    state = Layer.select( state, layerID ).updatedState;
     state = Layer.selectElement( state, layerID, 'items', itemID ).updatedState;
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static remove( state, layerID, itemID ) {
