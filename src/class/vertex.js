@@ -36,6 +36,12 @@ class Vertex{
     return { updatedState: state, vertex };
   }
 
+  static setAttributes(state, layerID, vertexID, vertexAttributes) {
+    state = state.mergeIn(['scene', 'layers', layerID, 'vertices', vertexID ], vertexAttributes)
+    
+    return { updatedState: state };
+  }
+
   static addElement( state, layerID, vertexID, elementPrototype, elementID ) {
     state = state.updateIn(['scene', 'layers', layerID, 'vertices', vertexID, elementPrototype], list => list.push( elementID ) );
     return { updatedState: state };
