@@ -103,19 +103,13 @@ class Group{
     let elementDom = document.querySelector(`[data-id="${elementID}"]`);
     let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
 
-    console.log( 'elementDom dimensions', elX, elY, elW, elH );
-
     let paper = document.getElementById('svg-drawing-paper');
     let { x: pX, y: pY } = paper.getBoundingClientRect();
-
-    console.log( 'elementDom dimensions', pX, pY );
 
     let elCx = elX - pX + ( elW / 2 );
     let elCy = elY - pY + ( elH / 2 );
 
     let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
-
-    console.log( 'elC dimensions', elCx, elCy, SVGHeight - elCy );
 
     let m1 = [
       [ a, b, c ],
@@ -134,17 +128,11 @@ class Group{
     let elCxT = transformResult[0][0];
     let elCyT = transformResult[0][1];
 
-    console.log( 'elCT dimensions', elCxT, elCyT );
-
     let groupX = state.getIn(['scene', 'groups', groupID, 'x']);
     let groupY = state.getIn(['scene', 'groups', groupID, 'y']);
 
-    console.log('actual group', groupX, groupY );
-
     let medianX = ( ( groupX * actualGroupDimension ) + elCxT ) / ( actualGroupDimension + 1 );
     let medianY = ( ( groupY * actualGroupDimension ) + elCyT ) / ( actualGroupDimension + 1 );
-
-    console.log('median', medianX, medianY );
 
     state = this.setBarycenter( state, groupID, medianX, medianY ).updatedState;
 
@@ -259,7 +247,7 @@ class Group{
         .reduce( ( newState, line ) => {
           let { x: x1, y: y1 } = newState.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(0)]);
           let { x: x2, y: y2 } = newState.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(1)]);
-
+          
           return Line.setVerticesCoords( newState, groupLayerID, line.id, x1 + deltaX, y1 + deltaY, x2 + deltaX, y2 + deltaY ).updatedState;
         }, state );
 
@@ -268,10 +256,10 @@ class Group{
         .reduce( ( newState, item ) => {
           let { x: xI, y: yI } = item;
 
-          console.log( xI, yI );
-
           return Item.setAttributes( newState, groupLayerID, item.id, new Map({ x: xI + deltaX, y: yI + deltaY }) ).updatedState;
         }, state );
+
+      //translation of holes and areas should not take any effect
       //if( holes ) holes.forEach( holeID => { state = Hole.select( state, groupLayerID, holeID ).updatedState; });
       //if( areas ) areas.forEach( areaID => { state = Area.select( state, groupLayerID, areaID ).updatedState; });
 
