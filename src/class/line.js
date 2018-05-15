@@ -548,8 +548,6 @@ class Line{
     delete lAttr['vertexTwo'];
     delete lAttr['lineLength'];
 
-    console.log('WAAAAAAAAAT', lineID);
-
     state = state
       .mergeIn(['scene', 'layers', layerID, 'lines', lineID], fromJS(lAttr))
       .mergeIn(['scene', 'layers', layerID, 'vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
@@ -563,6 +561,20 @@ class Line{
     }
 
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+
+    return { updatedState: state };
+  }
+
+  static setVerticesCoords( state, layerID, lineID, x1, y1, x2, y2 ) {
+
+    let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
+
+    console.log( 'setVerticesCoords 1', state.toJS() );
+
+    state = Vertex.setAttributes( state, layerID, line.vertices.get(0), new Map({ x: x1, y: y1 }) ).updatedState;
+    state = Vertex.setAttributes( state, layerID, line.vertices.get(1), new Map({ x: x2, y: y2 }) ).updatedState;
+
+    console.log( 'setVerticesCoords 2', state.toJS() );
 
     return { updatedState: state };
   }
