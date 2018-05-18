@@ -43,7 +43,6 @@ class Hole{
   }
 
   static select( state, layerID, holeID ){
-    state = Layer.unselectAll( state, layerID ).updatedState;
     state = state.setIn(['scene', 'selectedLayer'], layerID);
     state = Layer.selectElement( state, layerID, 'holes', holeID ).updatedState;
 
@@ -366,7 +365,7 @@ class Hole{
     return this.setProperties( state, layerID, holeID, fromJS(properties) );
   }
 
-  static updateProperties( state, layerID, holeID, properties) {
+  static updateProperties( state, layerID, holeID, properties ) {
     properties.forEach( ( v, k ) => {
       if( state.hasIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k]) )
         state = state.mergeIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k], v);
@@ -375,7 +374,7 @@ class Hole{
     return { updatedState: state };
   }
 
-  static updateJsProperties( state, layerID, holeID, properties) {
+  static updateJsProperties( state, layerID, holeID, properties ) {
     return this.updateProperties( state, layerID, holeID, fromJS(properties) );
   }
 
