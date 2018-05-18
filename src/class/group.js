@@ -4,7 +4,8 @@ import {
   Hole,
   Item,
   Area,
-  Layer
+  Layer,
+  Vertex
 } from './export';
 import { Map, List } from 'immutable';
 import { Group as GroupModel } from '../models';
@@ -242,14 +243,20 @@ class Group{
       let items = groupLayerElements.get('items');
       let areas = groupLayerElements.get('areas');
 
-      if( lines ) state = lines
-        .map( lineID => state.getIn(['scene', 'layers', groupLayerID, 'lines', lineID]) )
-        .reduce( ( newState, line ) => {
-          let { x: x1, y: y1 } = newState.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(0)]);
-          let { x: x2, y: y2 } = newState.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(1)]);
-          
-          return Line.setVerticesCoords( newState, groupLayerID, line.id, x1 + deltaX, y1 + deltaY, x2 + deltaX, y2 + deltaY ).updatedState;
-        }, state );
+      //move vertices instead lines avoiding multiple vertex translation
+      if( lines ) {
+        let vertices = {};
+        lines.forEach( lineID => {
+          let line = state.getIn(['scene', 'layers', groupLayerID, 'lines', lineID]);
+          if( !vertices[ line.vertices.get(0) ] ) vertices[ line.vertices.get(0) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(0)])
+          if( !vertices[ line.vertices.get(1) ] ) vertices[ line.vertices.get(1) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(1)])
+        });
+        
+        for( let vertexID in vertices ) {
+          let { x: xV, y: yV } = vertices[ vertexID ];
+          state = Vertex.setAttributes( state, groupLayerID, vertexID, new Map({ x: xV + deltaX, y: yV + deltaY }) ).updatedState;
+        }
+      }
 
       if( items ) state = items
         .map( itemID => state.getIn(['scene', 'layers', groupLayerID, 'items', itemID]) )
