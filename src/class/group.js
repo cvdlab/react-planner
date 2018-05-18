@@ -90,53 +90,11 @@ class Group{
 
   static addElement( state, groupID, layerID, elementPrototype, elementID ){
     let actualList = state.getIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype]) || new List();
-    let actualGroupDimension = state.getIn(['scene', 'groups', groupID, 'elements']).reduce( ( sum, layer ) => {
-      return sum + layer.reduce( ( lSum, elProt ) => lSum + elProt.size, 0 );
-    }, 0);
 
-    if( actualList.contains(elementID) )
-    {
-      return {updatedState: state};
-    }
+    if( !actualList.contains(elementID) ) {
+      state = state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.push(elementID));
 
-    state = state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.push(elementID));
-
-    let elementDom = document.querySelector(`[data-id="${elementID}"]`);
-    if( elementDom ) {
-      let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
-
-      let paper = document.getElementById('svg-drawing-paper');
-      let { x: pX, y: pY } = paper.getBoundingClientRect();
-
-      let elCx = elX - pX + ( elW / 2 );
-      let elCy = elY - pY + ( elH / 2 );
-
-      let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
-
-      let m1 = [
-        [ a, b, c ],
-        [ d, e, f ],
-        [ 0, 0, 1 ]
-      ];
-
-      let m2 = [
-        [ elCx, SVGHeight - elCy, 0 ],
-        [ 0   , 1   , 0 ],
-        [ 0   , 0   , 1 ]
-      ];
-
-      let transformResult = MathUtils.multiplyMatrices( m1, m2 );
-
-      let elCxT = transformResult[0][0];
-      let elCyT = transformResult[0][1];
-
-      let groupX = state.getIn(['scene', 'groups', groupID, 'x']);
-      let groupY = state.getIn(['scene', 'groups', groupID, 'y']);
-
-      let medianX = ( ( groupX * actualGroupDimension ) + elCxT ) / ( actualGroupDimension + 1 );
-      let medianY = ( ( groupY * actualGroupDimension ) + elCyT ) / ( actualGroupDimension + 1 );
-
-      state = this.setBarycenter( state, groupID, medianX, medianY ).updatedState;
+      state = this.reloadBaricenter( state, groupID ).updatedState;
 
       state = state.merge({
         sceneHistory: history.historyPush( state.sceneHistory, state.scene )
@@ -149,6 +107,67 @@ class Group{
   static setBarycenter( state, groupID, x, y ) {
     if (typeof x !== 'undefined') state = state.setIn(['scene', 'groups', groupID, 'x'], x);
     if (typeof y !== 'undefined') state = state.setIn(['scene', 'groups', groupID, 'y'], y);
+
+    return { updatedState: state };
+  }
+
+  static reloadBaricenter( state, groupID ) {
+    let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
+
+    let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
+
+    let m1 = [
+      [ a, b, c ],
+      [ d, e, f ],
+      [ 0, 0, 1 ]
+    ];
+
+    let paper = document.getElementById('svg-drawing-paper');
+    let { x: pX, y: pY } = paper.getBoundingClientRect();
+
+    let xBar = 0;
+    let yBar = 0;
+    let elementCount = 0;
+
+    layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
+      state = Layer.unselectAll( state, groupLayerID ).updatedState;
+
+      let lines = groupLayerElements.get('lines');
+      let holes = groupLayerElements.get('holes');
+      let items = groupLayerElements.get('items');
+      let areas = groupLayerElements.get('areas');
+
+      let cb = elementID => {
+        let elementDom = document.querySelector(`[data-id="${elementID}"]`);
+        if( elementDom ) {
+          let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
+
+          let elCx = elX - pX + ( elW / 2 );
+          let elCy = elY - pY + ( elH / 2 );
+
+          let m2 = [
+            [ elCx, SVGHeight - elCy, 0 ],
+            [ 0   , 1   , 0 ],
+            [ 0   , 0   , 1 ]
+          ];
+
+          let transformResult = MathUtils.multiplyMatrices( m1, m2 );
+
+          xBar += transformResult[0][0];
+          yBar += transformResult[0][1];
+        }
+        elementCount++;
+      };
+
+      if( lines ) lines.forEach( cb );
+      if( holes ) holes.forEach( cb );
+      if( items ) items.forEach( cb );
+      if( areas ) areas.forEach( cb );
+    });
+
+    if( elementCount ) {
+      state = this.setBarycenter( state, groupID, xBar / elementCount, yBar / elementCount ).updatedState;
+    }
 
     return { updatedState: state };
   }
