@@ -125,6 +125,15 @@ class Line{
       }
     });
 
+    //add splitted lines to the original line's group
+    let lineGroupsID = state.getIn(['scene', 'groups'])
+      .filter( group => group.getIn( 'elements', layerID, 'lines', lineID ) );
+    
+    lineGroupsID.forEach( ( group, groupID ) => {
+      state = Group.addElement( state, groupID, layerID, 'lines', line0.id ).updatedState;
+      state = Group.addElement( state, groupID, layerID, 'lines', line1.id ).updatedState;
+    });
+
     state = Line.remove( state, layerID, lineID ).updatedState;
 
     return { updatedState: state, lines: new List([line0, line1]) };
