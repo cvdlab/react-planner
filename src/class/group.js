@@ -102,44 +102,46 @@ class Group{
     state = state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.push(elementID));
 
     let elementDom = document.querySelector(`[data-id="${elementID}"]`);
-    let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
+    if( elementDom ) {
+      let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
 
-    let paper = document.getElementById('svg-drawing-paper');
-    let { x: pX, y: pY } = paper.getBoundingClientRect();
+      let paper = document.getElementById('svg-drawing-paper');
+      let { x: pX, y: pY } = paper.getBoundingClientRect();
 
-    let elCx = elX - pX + ( elW / 2 );
-    let elCy = elY - pY + ( elH / 2 );
+      let elCx = elX - pX + ( elW / 2 );
+      let elCy = elY - pY + ( elH / 2 );
 
-    let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
+      let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
 
-    let m1 = [
-      [ a, b, c ],
-      [ d, e, f ],
-      [ 0, 0, 1 ]
-    ];
+      let m1 = [
+        [ a, b, c ],
+        [ d, e, f ],
+        [ 0, 0, 1 ]
+      ];
 
-    let m2 = [
-      [ elCx, SVGHeight - elCy, 0 ],
-      [ 0   , 1   , 0 ],
-      [ 0   , 0   , 1 ]
-    ];
+      let m2 = [
+        [ elCx, SVGHeight - elCy, 0 ],
+        [ 0   , 1   , 0 ],
+        [ 0   , 0   , 1 ]
+      ];
 
-    let transformResult = MathUtils.multiplyMatrices( m1, m2 );
+      let transformResult = MathUtils.multiplyMatrices( m1, m2 );
 
-    let elCxT = transformResult[0][0];
-    let elCyT = transformResult[0][1];
+      let elCxT = transformResult[0][0];
+      let elCyT = transformResult[0][1];
 
-    let groupX = state.getIn(['scene', 'groups', groupID, 'x']);
-    let groupY = state.getIn(['scene', 'groups', groupID, 'y']);
+      let groupX = state.getIn(['scene', 'groups', groupID, 'x']);
+      let groupY = state.getIn(['scene', 'groups', groupID, 'y']);
 
-    let medianX = ( ( groupX * actualGroupDimension ) + elCxT ) / ( actualGroupDimension + 1 );
-    let medianY = ( ( groupY * actualGroupDimension ) + elCyT ) / ( actualGroupDimension + 1 );
+      let medianX = ( ( groupX * actualGroupDimension ) + elCxT ) / ( actualGroupDimension + 1 );
+      let medianY = ( ( groupY * actualGroupDimension ) + elCyT ) / ( actualGroupDimension + 1 );
 
-    state = this.setBarycenter( state, groupID, medianX, medianY ).updatedState;
+      state = this.setBarycenter( state, groupID, medianX, medianY ).updatedState;
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+      state = state.merge({
+        sceneHistory: history.historyPush( state.sceneHistory, state.scene )
+      });
+    }
 
     return { updatedState: state };
   }
