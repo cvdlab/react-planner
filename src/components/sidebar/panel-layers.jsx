@@ -1,15 +1,16 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
+import { Map } from 'immutable';
 import Panel from './panel';
-import IconVisible from 'react-icons/lib/fa/eye';
 import {TiPlus, TiDelete} from 'react-icons/lib/ti';
-import {FaPencil, FaTrash} from 'react-icons/lib/fa';
-import FormTextInput from '../style/form-text-input';
-import FormNumberInput from '../style/form-number-input';
-import FormSubmitButton from '../style/form-submit-button';
-import FormSlider from '../style/form-slider';
-import CancelButton from '../style/cancel-button';
-import diff from 'immutablediff';
+import {FaPencil, FaTrash, FaEye} from 'react-icons/lib/fa';
+import {
+  FormTextInput,
+  FormNumberInput,
+  FormSubmitButton,
+  FormSlider,
+  CancelButton
+} from '../style/export';
 
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -66,15 +67,17 @@ export default class PanelLayers extends Component {
     this.state = {
       headHovered: false,
       layerAddUIVisible: false,
-      editingLayer: null
+      editingLayer: new Map()
     };
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    if( this.props.state.scene.layers.size !== nextProps.state.scene.layers.size ) return true;
-    if( nextState.layerAddUIVisible != this.state.layerAddUIVisible ) return true;
-    if( diff( this.state.editingLayer, nextState.editingLayer ).size ) return true;
-    if( diff( this.props.state.sceneHistory, nextProps.state.sceneHistory ).size ) return true;
+    if(
+      this.props.state.scene.layers.size !== nextProps.state.scene.layers.size ||
+      nextState.layerAddUIVisible != this.state.layerAddUIVisible ||
+      this.state.editingLayer.hashCode() !== nextState.editingLayer.hashCode() ||
+      this.props.state.sceneHistory.hashCode() !== nextProps.state.sceneHistory.hashCode()
+    ) return true;
 
     return false;
   }
@@ -90,7 +93,7 @@ export default class PanelLayers extends Component {
 
   resetLayerMod(e) {
     e.stopPropagation();
-    this.setState({layerAddUIVisible: false, editingLayer: null});
+    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
   }
 
   updateLayer(e, layerData) {
@@ -100,13 +103,13 @@ export default class PanelLayers extends Component {
     altitude = parseInt(altitude);
 
     this.context.sceneActions.setLayerProperties(id, {name, opacity, altitude, order});
-    this.setState({layerAddUIVisible: false, editingLayer: null});
+    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
   }
 
   delLayer(e, layerID) {
     e.stopPropagation();
     this.context.sceneActions.removeLayer(layerID);
-    this.setState({layerAddUIVisible: false, editingLayer: null});
+    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
   }
 
   render() {
@@ -149,7 +152,7 @@ export default class PanelLayers extends Component {
                     <td style={iconColStyle}>
                       {
                         !isCurrentLayer ?
-                          <IconVisible
+                          <FaEye
                             onClick={swapVisibility}
                             style={!layer.visible ? styleEyeHidden : styleEyeVisible}
                           />
