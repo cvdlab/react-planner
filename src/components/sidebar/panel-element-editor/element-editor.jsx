@@ -2,12 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Map, fromJS} from 'immutable';
 import AttributesEditor from './attributes-editor/attributes-editor';
-import * as geometry from '../../../utils/geometry.js';
-import * as math from '../../../utils/math.js';
+import { GeometryUtils, MathUtils } from '../../../utils/export';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import {MdContentCopy, MdContentPaste} from 'react-icons/lib/md';
-import diff from 'immutablediff';
 
 const PRECISION = 2;
 
@@ -47,13 +45,11 @@ export default class ElementEditor extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    let { attributesFormData : oldAttribute, propertiesFormData : oldProperties } = this.state;
-    let { attributesFormData : newAttribute, propertiesFormData : newProperties } = nextState;
-
-    if( diff( oldAttribute, newAttribute ).size ) return true;
-    if( diff( oldProperties, newProperties ).size ) return true;
-
-    if( diff( this.props.state.clipboardProperties, nextProps.state.clipboardProperties ).size ) return true;
+    if(
+      this.state.attributesFormData.hashCode() !== nextState.attributesFormData.hashCode() ||
+      this.state.propertiesFormData.hashCode() !== nextState.propertiesFormData.hashCode() ||
+      this.props.state.clipboardProperties.hashCode() !== nextProps.state.clipboardProperties.hashCode()
+    ) return true;
 
     return false;
   }
@@ -64,7 +60,7 @@ export default class ElementEditor extends Component {
     let selectedLayer = scene.getIn(['layers', scene.get('selectedLayer')]);
     let selected = selectedLayer.getIn([prototype, id]);
 
-    if( diff( selectedLayer, layer ).size ) this.setState({
+    if( selectedLayer.hashCode() !== layer.hashCode() ) this.setState({
       attributesFormData: this.initAttrData(element, layer, state),
       propertiesFormData: this.initPropData(element, layer, state)
     });
@@ -82,7 +78,7 @@ export default class ElementEditor extends Component {
         let v_a = layer.vertices.get(element.vertices.get(0));
         let v_b = layer.vertices.get(element.vertices.get(1));
 
-        let distance = geometry.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
+        let distance = GeometryUtils.pointsDistance(v_a.x, v_a.y, v_b.x, v_b.y);
         let _unit = element.misc.get('_unitLength') || this.context.catalog.unit;
         let _length = convert(distance).from(this.context.catalog.unit).to(_unit);
 
@@ -96,7 +92,7 @@ export default class ElementEditor extends Component {
         let line = layer.lines.get(element.line);
         let {x: x0, y: y0} = layer.vertices.get(line.vertices.get(0));
         let {x: x1, y: y1} = layer.vertices.get(line.vertices.get(1));
-        let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+        let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
         let startAt = lineLength * element.offset - element.properties.get('width').get('length') / 2;
 
         let _unitA = element.misc.get('_unitA') || this.context.catalog.unit;
@@ -109,13 +105,13 @@ export default class ElementEditor extends Component {
         return new Map({
           offset: element.offset,
           offsetA: new Map({
-            length: math.toFixedFloat(startAt, PRECISION),
-            _length: math.toFixedFloat(_lengthA, PRECISION),
+            length: MathUtils.toFixedFloat(startAt, PRECISION),
+            _length: MathUtils.toFixedFloat(_lengthA, PRECISION),
             _unit: _unitA
           }),
           offsetB: new Map({
-            length: math.toFixedFloat(endAt, PRECISION),
-            _length: math.toFixedFloat(_lengthB, PRECISION),
+            length: MathUtils.toFixedFloat(endAt, PRECISION),
+            _length: MathUtils.toFixedFloat(_lengthB, PRECISION),
             _unit: _unitB
           })
         });
@@ -162,9 +158,9 @@ export default class ElementEditor extends Component {
             let v_0 = attributesFormData.get('vertexOne');
             let v_1 = attributesFormData.get('vertexTwo');
 
-            let [v_a, v_b] = geometry.orderVertices([v_0, v_1]);
+            let [v_a, v_b] = GeometryUtils.orderVertices([v_0, v_1]);
 
-            let v_b_new = geometry.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), PRECISION);
+            let v_b_new = GeometryUtils.extendLine(v_a.x, v_a.y, v_b.x, v_b.y, value.get('length'), PRECISION);
 
             attributesFormData = attributesFormData.withMutations(attr => {
               attr.set(v_0 === v_a ? 'vertexTwo' : 'vertexOne', v_b.merge(v_b_new));
@@ -178,7 +174,7 @@ export default class ElementEditor extends Component {
             attributesFormData = attributesFormData.withMutations(attr => {
               attr.set(attributeName, attr.get(attributeName).merge(value));
 
-              let newDistance = geometry.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
+              let newDistance = GeometryUtils.verticesDistance(attr.get('vertexOne'), attr.get('vertexTwo'));
 
               attr.mergeIn(['lineLength'], attr.get('lineLength').merge({
                 'length': newDistance,
@@ -202,15 +198,15 @@ export default class ElementEditor extends Component {
           {
             let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = geometry.orderVertices([
+            let orderedVertices = GeometryUtils.orderVertices([
               this.props.layer.vertices.get(line.vertices.get(0)),
               this.props.layer.vertices.get(line.vertices.get(1))
             ]);
 
             let [ {x: x0, y: y0}, {x: x1, y: y1} ] = orderedVertices;
 
-            let alpha = geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
-            let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
+            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
             let widthLength = this.props.element.properties.get('width').get('length');
             let halfWidthLength = widthLength / 2;
 
@@ -221,9 +217,9 @@ export default class ElementEditor extends Component {
             let xp = (lengthValue + halfWidthLength) * Math.cos(alpha) + x0;
             let yp = (lengthValue + halfWidthLength) * Math.sin(alpha) + y0;
 
-            let offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let offset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-            let endAt = math.toFixedFloat(lineLength - (lineLength * offset) - halfWidthLength, PRECISION);
+            let endAt = MathUtils.toFixedFloat(lineLength - (lineLength * offset) - halfWidthLength, PRECISION);
             let offsetUnit = attributesFormData.getIn(['offsetB', '_unit']);
 
             let offsetB = new Map({
@@ -235,9 +231,9 @@ export default class ElementEditor extends Component {
             attributesFormData = attributesFormData.set('offsetB', offsetB).set('offset', offset);
 
             let offsetAttribute = new Map({
-              length: math.toFixedFloat(lengthValue, PRECISION),
+              length: MathUtils.toFixedFloat(lengthValue, PRECISION),
               _unit: value.get('_unit'),
-              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
+              _length: MathUtils.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
             });
 
             attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -248,15 +244,15 @@ export default class ElementEditor extends Component {
           {
             let line = this.props.layer.lines.get(this.props.element.line);
 
-            let orderedVertices = geometry.orderVertices([
+            let orderedVertices = GeometryUtils.orderVertices([
               this.props.layer.vertices.get(line.vertices.get(0)),
               this.props.layer.vertices.get(line.vertices.get(1))
             ]);
 
             let [ {x: x0, y: y0}, {x: x1, y: y1} ] = orderedVertices;
 
-            let alpha = geometry.angleBetweenTwoPoints(x0, y0, x1, y1);
-            let lineLength = geometry.pointsDistance(x0, y0, x1, y1);
+            let alpha = GeometryUtils.angleBetweenTwoPoints(x0, y0, x1, y1);
+            let lineLength = GeometryUtils.pointsDistance(x0, y0, x1, y1);
             let widthLength = this.props.element.properties.get('width').get('length');
             let halfWidthLength = widthLength / 2;
 
@@ -267,9 +263,9 @@ export default class ElementEditor extends Component {
             let xp = x1 - (lengthValue + halfWidthLength) * Math.cos(alpha);
             let yp = y1 - (lengthValue + halfWidthLength) * Math.sin(alpha);
 
-            let offset = geometry.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
+            let offset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, xp, yp);
 
-            let startAt = math.toFixedFloat((lineLength * offset) - halfWidthLength, PRECISION);
+            let startAt = MathUtils.toFixedFloat((lineLength * offset) - halfWidthLength, PRECISION);
             let offsetUnit = attributesFormData.getIn(['offsetA', '_unit']);
 
             let offsetA = new Map({
@@ -281,9 +277,9 @@ export default class ElementEditor extends Component {
             attributesFormData = attributesFormData.set('offsetA', offsetA).set('offset', offset);
 
             let offsetAttribute = new Map({
-              length: math.toFixedFloat(lengthValue, PRECISION),
+              length: MathUtils.toFixedFloat(lengthValue, PRECISION),
               _unit: value.get('_unit'),
-              _length: math.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
+              _length: MathUtils.toFixedFloat(convert(lengthValue).from(this.context.catalog.unit).to(value.get('_unit')), PRECISION)
             });
 
             attributesFormData = attributesFormData.set(attributeName, offsetAttribute);
@@ -373,7 +369,10 @@ export default class ElementEditor extends Component {
         <div style={attrPorpSeparatorStyle}>
           <div style={headActionStyle}>
             <div title={translator.t('Copy')} style={iconHeadStyle} onClick={ e => this.copyProperties(element.properties) }><MdContentCopy /></div>
-            { appState.get('clipboardProperties') ? <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ e => this.pasteProperties() }><MdContentPaste /></div> : null }
+            {
+              appState.get('clipboardProperties') && appState.get('clipboardProperties').size ?
+                <div title={translator.t('Paste')} style={iconHeadStyle} onClick={ e => this.pasteProperties() }><MdContentPaste /></div> : null
+            }
           </div>
         </div>
 

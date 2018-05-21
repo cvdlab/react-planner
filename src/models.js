@@ -310,7 +310,7 @@ export class State extends Record({
   rotatingSupport: new Map(),
   errors: new List(),
   warnings: new List(),
-  clipboardProperties: null,
+  clipboardProperties: new Map(),
   selectedElementsHistory: new List(),
   misc: new Map(),   //additional info
   alterate: false

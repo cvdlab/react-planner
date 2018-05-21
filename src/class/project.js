@@ -218,7 +218,7 @@ class Project{
   }
 
   static copyProperties(state, properties){
-    state = state.set('clipboardProperties', properties.toJS());
+    state = state.set('clipboardProperties', properties);
 
     return { updatedState: state };
   }
