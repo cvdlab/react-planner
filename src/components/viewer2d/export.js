@@ -8,6 +8,7 @@ import Line from './line';
 import Layer from './layer';
 import Item from './item';
 import Area from './area';
+import Guides from './guides/guides';
 
 export {
   Viewer2D,
@@ -19,7 +20,8 @@ export {
   Line,
   Layer,
   Item,
-  Area
+  Area,
+  Guides
 };
 
 export default {
@@ -32,5 +34,6 @@ export default {
   Line,
   Layer,
   Item,
-  Area
+  Area,
+  Guides
 };

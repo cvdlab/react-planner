@@ -1,25 +1,35 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import Layer from './layer';
-import Guides from './guides/guides';
-export default function Scene({scene, catalog}) {
+import { Layer, Guides } from './export';
 
-  let {height, layers} = scene;
-  let selectedLayer = scene.layers.get(scene.selectedLayer);
+export default class Scene extends Component {
 
-  return (
-    <g>
-      <Guides scene={scene}/>
+  shouldComponentUpdate(nextProps, nextState) {
+    return this.props.scene.hashCode() !== nextProps.scene.hashCode();
+  }
 
-      <g style={{pointerEvents: "none"}}>
-        {layers.entrySeq()
-          .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
-          .map(([layerID, layer]) => <Layer key={layerID} layer={layer} scene={scene} catalog={catalog}/>)}
+  render() {
+    let {scene, catalog} = this.props;
+    let {height, layers} = scene;
+    let selectedLayer = layers.get(scene.selectedLayer);
+
+    return (
+      <g>
+        <Guides scene={scene}/>
+
+        <g style={{pointerEvents: 'none'}}>
+          {
+            layers
+            .entrySeq()
+            .filter(([layerID, layer]) => layerID !== scene.selectedLayer && layer.visible)
+            .map(([layerID, layer]) => <Layer key={layerID} layer={layer} scene={scene} catalog={catalog}/>)
+          }
+        </g>
+
+        <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} catalog={catalog}/>
       </g>
-
-      <Layer key={selectedLayer.id} layer={selectedLayer} scene={scene} catalog={catalog}/>
-    </g>
-  );
+    );
+  }
 }
 
 
