@@ -231,7 +231,7 @@ export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
  *  @return {object}
  */
 export function extendLine(x1, y1, x2, y2, newDistance, precision = 6) {
-  let rad = Math.atan2(y2 - y1, x2 - x1);
+  let rad = angleBetweenTwoPoints( x1, y1, x2, y2 );
 
   return {
     x: toFixedFloat(x1 + (Math.cos(rad) * newDistance), precision),
@@ -299,4 +299,13 @@ export function cosWithThreshold(alpha, threshold) {
 export function sinWithThreshold(alpha, threshold) {
   let sin = Math.sin(alpha);
   return sin < threshold ? 0 : sin;
+}
+
+export function midPoint( x1, y1, x2, y2 ) {
+  return { x: (x1+x2)/2, y: (y1+y2)/2 };
+}
+
+export function verticesMidPoint( verticesArray ) {
+  let res = verticesArray.reduce( ( incr, vertex ) => { return { x: incr.x + vertex.x, y: incr.y + vertex.y } }, { x: 0, y: 0 });
+  return { x: res.x / verticesArray.length, y: res.y / verticesArray.length };
 }
