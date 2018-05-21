@@ -9,7 +9,7 @@ import {
 } from './export';
 import { Map, List } from 'immutable';
 import { Group as GroupModel } from '../models';
-import { history, IDBroker, MathUtils } from '../utils/export';
+import { history, IDBroker, MathUtils, GeometryUtils } from '../utils/export';
 
 class Group{
 
@@ -137,32 +137,49 @@ class Group{
       let items = groupLayerElements.get('items');
       let areas = groupLayerElements.get('areas');
 
-      let cb = elementID => {
-        let elementDom = document.querySelector(`[data-id="${elementID}"]`);
-        if( elementDom ) {
-          let { x: elX, y: elY, width: elW, height: elH } = elementDom.getBoundingClientRect();
+      if( lines ) lines.forEach( ( lineID ) => {
+        let vertices = state.getIn(['scene', 'layers', groupLayerID, 'lines', lineID, 'vertices'])
+          .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) );
 
-          let elCx = elX - pX + ( elW / 2 );
-          let elCy = elY - pY + ( elH / 2 );
+        let { x: x1, y: y1 } = vertices.get(0);
+        let { x: x2, y: y2 } = vertices.get(1);
+        let { x: xM, y: yM } = GeometryUtils.midPoint( x1, y1, x2, y2 );
 
-          let m2 = [
-            [ elCx, SVGHeight - elCy, 0 ],
-            [ 0   , 1   , 0 ],
-            [ 0   , 0   , 1 ]
-          ];
-
-          let transformResult = MathUtils.multiplyMatrices( m1, m2 );
-
-          xBar += transformResult[0][0];
-          yBar += transformResult[0][1];
-        }
+        xBar += xM;
+        yBar += yM;
         elementCount++;
-      };
+      });
 
-      if( lines ) lines.forEach( cb );
-      if( holes ) holes.forEach( cb );
-      if( items ) items.forEach( cb );
-      if( areas ) areas.forEach( cb );
+      if( holes ) holes.forEach( holeID => {
+        let hole = state.getIn(['scene', 'layers', groupLayerID, 'holes', holeID]);
+        let lineVertices = state.getIn(['scene', 'layers', groupLayerID, 'lines', hole.line, 'vertices'])
+          .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) );
+        let { x: x1, y: y1 } = lineVertices.get(0);
+        let { x: x2, y: y2 } = lineVertices.get(1);
+        let { x, y } = GeometryUtils.extendLine( x1, y1, x2, y2, hole.offset * GeometryUtils.pointsDistance( x1, y1, x2, y2 ) );
+
+        xBar += x;
+        yBar += y;
+        elementCount++;
+      });
+
+      if( items ) items.forEach( itemID => {
+        let { x, y } = state.getIn(['scene', 'layers', groupLayerID, 'items', itemID]);
+
+        xBar += x;
+        yBar += y;
+        elementCount++;
+      });
+
+      if( areas ) areas.forEach( areaID => {
+        let areaVertices = state.getIn(['scene', 'layers', groupLayerID, 'areas', areaID, 'vertices'])
+          .map( vID => state.getIn(['scene', 'layers', groupLayerID, 'vertices', vID]) ).toJS();
+        let { x, y } = GeometryUtils.verticesMidPoint( areaVertices );
+
+        xBar += x;
+        yBar += y;
+        elementCount++;
+      });
     });
 
     if( elementCount ) {
