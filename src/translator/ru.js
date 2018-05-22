@@ -18,6 +18,7 @@ export default {
   "Elements":"элементы",
   "Get Screenshot": "Сделать снимок экрана",
   "Group [{0}]":"группа [{0}]",
+  "Group's Barycenter":"Барицентр группы",
   "Group's Elements":"Элементы группы",
   "Groups":"группы",
   "height": "высота",

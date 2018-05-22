@@ -18,6 +18,7 @@ export default {
   "Elements":"Elements",
   "Get Screenshot" : "Get Screenshot",
   "Group [{0}]":"Group [{0}]",
+  "Group's Barycenter":"Group's Barycenter",
   "Group's Elements":"Group's Elements",
   "Groups":"Groups",
   "height": "height",

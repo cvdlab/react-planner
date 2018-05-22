@@ -9,6 +9,7 @@ import Layer from './layer';
 import Item from './item';
 import Area from './area';
 import Guides from './guides/guides';
+import Group from './group';
 
 export {
   Viewer2D,
@@ -21,7 +22,8 @@ export {
   Layer,
   Item,
   Area,
-  Guides
+  Guides,
+  Group
 };
 
 export default {
@@ -35,5 +37,6 @@ export default {
   Layer,
   Item,
   Area,
-  Guides
+  Guides,
+  Group
 };
