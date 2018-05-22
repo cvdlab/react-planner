@@ -176,7 +176,6 @@ export class Layer extends Record({
   }
 }
 
-//Map{ layer_id : { lines, items, holes, areas }}
 export class Group extends Record({
   ...sharedAttributes,
   prototype: 'groups',
@@ -189,7 +188,7 @@ export class Group extends Record({
     super({
       ...json,
       properties: fromJS(json.properties || {}),
-      elements: new Map()
+      elements: fromJS(json.elements || {})
     });
   }
 }
@@ -217,7 +216,7 @@ export class Scene extends Record({
       guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
       layers,
       selectedLayer: layers.first().id,
-      groups: fromJS(json.groups || {}),
+      groups: safeLoadMapList(json.groups || {}, Group),
       meta: json.meta ? fromJS(json.meta) : new Map()
     });
   }
