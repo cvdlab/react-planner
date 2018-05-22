@@ -87,7 +87,6 @@ class Line{
   }
 
   static split( state, layerID, lineID, x, y ) {
-
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
     let v0 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(0)]);
     let v1 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(1)]);
@@ -126,12 +125,13 @@ class Line{
     });
 
     //add splitted lines to the original line's group
-    let lineGroupsID = state.getIn(['scene', 'groups'])
-      .filter( group => group.getIn( 'elements', layerID, 'lines', lineID ) );
+    let lineGroups = state
+      .getIn(['scene', 'groups'])
+      .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
     
-    lineGroupsID.forEach( ( group, groupID ) => {
-      state = Group.addElement( state, groupID, layerID, 'lines', line0.id ).updatedState;
-      state = Group.addElement( state, groupID, layerID, 'lines', line1.id ).updatedState;
+    lineGroups.forEach( group => {
+      state = Group.addElement( state, group.id, layerID, 'lines', line0.id ).updatedState;
+      state = Group.addElement( state, group.id, layerID, 'lines', line1.id ).updatedState;
     });
 
     state = Line.remove( state, layerID, lineID ).updatedState;
@@ -174,11 +174,10 @@ class Line{
   }
 
   static createAvoidingIntersections( state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles ) {
-
     let points = [{x: x0, y: y0}, {x: x1, y: y1}];
 
-    state.getIn(['scene', 'layers', layerID, 'lines']).forEach( line => {
-      let [v0, v1] = line.vertices.map(vertexID => state.getIn(['scene', 'layers', layerID, 'vertices']).get(vertexID)).toArray();
+    state = state.getIn(['scene', 'layers', layerID, 'lines']).reduce( ( reducedState, line ) => {
+      let [v0, v1] = line.vertices.map(vertexID => reducedState.getIn(['scene', 'layers', layerID, 'vertices']).get(vertexID)).toArray();
 
       let hasCommonEndpoint = (
         GeometryUtils.samePoints(v0, points[0]) ||
@@ -194,36 +193,32 @@ class Line{
 
         let orderedVertices = GeometryUtils.orderVertices(points);
 
-        state.getIn(['scene', 'layers', layerID, 'lines', line.id, 'holes']).forEach(holeID => {
-          let hole = state.getIn(['scene', 'layers', layerID, 'holes', holeID]);
+        reducedState.getIn(['scene', 'layers', layerID, 'lines', line.id, 'holes']).forEach(holeID => {
+          let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
           let oldLineLength = GeometryUtils.pointsDistance(v0.x, v0.y, v1.x, v1.y);
-
-          let alpha = Math.atan2(orderedVertices[1].y - orderedVertices[0].y,
-            orderedVertices[1].x - orderedVertices[0].x);
-
           let offset = GeometryUtils.samePoints( orderedVertices[1], line.vertices.get(1) ) ? ( 1 - hole.offset ) : hole.offset;
+          let offsetPosition = GeometryUtils.extendLine( v0.x, v0.y, v1.x, v1.y, oldLineLength * offset );
 
-          let xp = oldLineLength * offset * Math.cos(alpha) + v0.x;
-          let yp = oldLineLength * offset * Math.sin(alpha) + v0.y;
-
-          oldHoles.push({hole, offsetPosition: {x: xp, y: yp}});
+          oldHoles.push({hole, offsetPosition});
         });
 
-        state = this.remove( state, layerID, line.id ).updatedState;
+        reducedState = this.remove( reducedState, layerID, line.id ).updatedState;
 
         points.push(v0, v1);
       }
 
       if (intersection.type === 'intersecting' && (!hasCommonEndpoint)) {
-        state = this.split( state, layerID, line.id, intersection.point.x, intersection.point.y ).updatedState;
+        reducedState = this.split( reducedState, layerID, line.id, intersection.point.x, intersection.point.y ).updatedState;
         points.push(intersection.point);
       }
 
-    });
+      return reducedState;
 
-    state = Line.addFromPoints( state, layerID, type, points, oldProperties, oldHoles ).updatedState;
+    }, state );
 
-    return { updatedState: state };
+    let { updatedState, lines } = Line.addFromPoints( state, layerID, type, points, oldProperties, oldHoles );
+
+    return { updatedState, lines };
   }
 
   static replaceVertex ( state, layerID, lineID, vertexIndex, x, y ) {
@@ -493,13 +488,17 @@ class Line{
       newVertex1Y += deltaY;
     }
 
+    let lineGroups = state   //get groups membership if present
+      .getIn(['scene', 'groups'])
+      .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
+
     state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(0) ).updatedState;
     state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(1) ).updatedState;
 
     state = Line.remove( state, layerID, lineID ).updatedState;
 
     if(!GeometryUtils.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
-      state = Line.createAvoidingIntersections(
+      let ret = Line.createAvoidingIntersections(
         state,
         layerID,
         line.type,
@@ -509,7 +508,16 @@ class Line{
         newVertex1Y,
         line.properties,
         holesWithOffsetPosition
-      ).updatedState;
+      );
+
+      state = ret.updatedState;
+
+      //re-add to old line's groups if present
+      ret.lines.forEach( addedLine => {
+        lineGroups.forEach( oldLineGroup => {
+          state = Group.addElement( state, oldLineGroup.id, layerID, 'lines', addedLine.id ).updatedState;
+        });
+      });
     }
 
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;

@@ -11,7 +11,7 @@ import {
   MODE_DRAGGING_VERTEX,
   MODE_IDLE
 } from '../constants';
-import { Layer, Line } from '../class/export';
+import { Layer, Line, Group } from '../class/export';
 
 class Vertex{
 
@@ -147,37 +147,29 @@ class Vertex{
 
         let orderedVertices = GeometryUtils.orderVertices([oldVertex, vertex]);
 
-        let holes = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'holes']);
-        if( holes.size ) holes.forEach(holeID => {
-          let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
-          let oldLineLength = GeometryUtils.pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
+        let holes = reducedState
+          .getIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'])
+          .forEach(holeID => {
+            let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
+            let oldLineLength = GeometryUtils.pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
+            let offset = GeometryUtils.samePoints( orderedVertices[1], reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 1]) ) ? ( 1 - hole.offset ) : hole.offset;
+            let offsetPosition = GeometryUtils.extendLine( oldVertex.x, oldVertex.y, vertex.x, vertex.y, oldLineLength * offset );
 
-          let alpha = GeometryUtils.angleBetweenTwoPoints( orderedVertices[1].x, orderedVertices[1].y, orderedVertices[0].x, orderedVertices[0].y );
-
-          let offset = hole.offset;
-
-          if(GeometryUtils.samePoints(
-            orderedVertices[1],
-            reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 1])
-          )) {
-            offset = 1 - offset;
-          }
-
-          let xp = oldLineLength * offset * Math.cos(alpha) + orderedVertices[0].x;
-          let yp = oldLineLength * offset * Math.sin(alpha) + orderedVertices[0].y;
-
-          oldHoles.push({ hole, offsetPosition: { x: xp, y: yp } });
-        });
+            oldHoles.push({hole, offsetPosition});
+          });
 
         let lineType = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'type']);
         let lineProps = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'properties']);
-
+        let lineGroups = reducedState   //get groups membership if present
+          .getIn(['scene', 'groups'])
+          .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
+        
         reducedState = Layer.removeZeroLengthLines( reducedState, layerID ).updatedState;
         reducedState = Layer.mergeEqualsVertices( reducedState, layerID, vertexID ).updatedState;
         reducedState = Line.remove( reducedState, layerID, lineID ).updatedState;
 
         if (!GeometryUtils.samePoints(oldVertex, vertex)) {
-          reducedState = Line.createAvoidingIntersections(
+          let ret = Line.createAvoidingIntersections(
             reducedState,
             layerID,
             lineType,
@@ -187,7 +179,16 @@ class Vertex{
             vertex.y,
             lineProps,
             oldHoles
-          ).updatedState;
+          );
+
+          reducedState = ret.updatedState;
+
+          //re-add to old line's groups if present
+          ret.lines.forEach( addedLine => {
+            lineGroups.forEach( oldLineGroup => {
+              reducedState = Group.addElement( reducedState, oldLineGroup.id, layerID, 'lines', addedLine.id ).updatedState;
+            });
+          });
         }
 
         return reducedState;
