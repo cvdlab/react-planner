@@ -293,6 +293,8 @@ class Group{
         for( let vertexID in vertices ) {
           let { x: xV, y: yV } = vertices[ vertexID ];
           state = Vertex.setAttributes( state, groupLayerID, vertexID, new Map({ x: xV + deltaX, y: yV + deltaY }) ).updatedState;
+          state = Vertex.beginDraggingVertex( state, groupLayerID, vertexID, xV, yV ).updatedState;
+          state = Vertex.endDraggingVertex( state, xV + deltaX, yV + deltaY ).updatedState;
         }
       }
 
@@ -312,8 +314,6 @@ class Group{
     });
 
     state = this.setBarycenter( state, groupID, x, y ).updatedState;
-
-    
 
     return { updatedState: state };
   }
