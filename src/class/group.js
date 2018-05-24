@@ -258,9 +258,9 @@ class Group{
       if( items ) items.forEach( itemID => { state = Item.remove( state, groupLayerID, itemID ).updatedState; });
       //( actually ) no effect by area's destruction
       if( false && areas ) areas.forEach( areaID => { state = Area.remove( state, groupLayerID, areaID ).updatedState; });
-
-      state = state.deleteIn([ 'scene', 'groups', groupID ]);
     });
+
+    state = state.deleteIn([ 'scene', 'groups', groupID ]);
 
     state = state.merge({
       sceneHistory: history.historyPush( state.sceneHistory, state.scene )
