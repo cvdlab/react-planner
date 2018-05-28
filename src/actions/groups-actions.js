@@ -93,10 +93,10 @@ export function groupTranslate( groupID, x, y ) {
   };
 }
 
-export function groupRotate( groupID, alpha ) {
+export function groupRotate( groupID, rotation ) {
   return {
-    type: GROUP_ACTIONS.GROUP_TRANSLATE,
+    type: GROUP_ACTIONS.GROUP_ROTATE,
     groupID,
-    alpha
+    rotation
   };
 }

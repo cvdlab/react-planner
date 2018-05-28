@@ -103,6 +103,18 @@ export default class PanelGroupEditor extends Component {
                   />
                 </td>
               </tr>
+              <tr>
+                <td style={firstTdStyle}>{this.context.translator.t('Rotation')}</td>
+                <td>
+                  <FormNumberInput
+                    value={group.get('rotation')}
+                    onChange={e => this.context.groupsActions.groupRotate( this.props.groupID, e.target.value ) }
+                    style={inputStyle}
+                    state={this.props.state}
+                    precision={2}
+                  />
+                </td>
+              </tr>
             </tbody>
           </table>
           {

@@ -289,12 +289,16 @@ class Group{
           if( !vertices[ line.vertices.get(0) ] ) vertices[ line.vertices.get(0) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(0)])
           if( !vertices[ line.vertices.get(1) ] ) vertices[ line.vertices.get(1) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(1)])
         });
-        
+
         for( let vertexID in vertices ) {
           let { x: xV, y: yV } = vertices[ vertexID ];
           state = Vertex.setAttributes( state, groupLayerID, vertexID, new Map({ x: xV + deltaX, y: yV + deltaY }) ).updatedState;
-          state = Vertex.beginDraggingVertex( state, groupLayerID, vertexID, xV, yV ).updatedState;
-          state = Vertex.endDraggingVertex( state, xV + deltaX, yV + deltaY ).updatedState;
+        }
+        //need to be separated from setAttributes cycle
+        for( let vertexID in vertices ) {
+          let { x: xV, y: yV } = vertices[ vertexID ];
+          state = Vertex.beginDraggingVertex( state, groupLayerID, vertexID ).updatedState;
+          state = Vertex.endDraggingVertex( state ).updatedState;
         }
       }
 
@@ -315,11 +319,69 @@ class Group{
 
     state = this.setBarycenter( state, groupID, x, y ).updatedState;
 
+    state = Group.select( state, groupID ).updatedState;
+
     return { updatedState: state };
   }
 
-  static rotate( state, groupID, alpha ) {
-    console.log('rotate', state.toJS(), groupID, toJS );
+  static rotate( state, groupID, newAlpha ) {
+    
+
+    let { x: barX, y: barY, rotation } = state.getIn(['scene', 'groups', groupID]);
+
+    let alpha = newAlpha - rotation;
+
+    state = Group.setAttributes( state, groupID, new Map({ rotation: newAlpha }) ).updatedState;
+
+    let layerList = state.getIn([ 'scene', 'groups', groupID, 'elements' ]);
+
+    layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
+      let lines = groupLayerElements.get('lines');
+      let holes = groupLayerElements.get('holes');
+      let items = groupLayerElements.get('items');
+      let areas = groupLayerElements.get('areas');
+
+      //move vertices instead lines avoiding multiple vertex translation
+      if( lines ) {
+        let vertices = {};
+        lines.forEach( lineID => {
+          let line = state.getIn(['scene', 'layers', groupLayerID, 'lines', lineID]);
+          if( !vertices[ line.vertices.get(0) ] ) vertices[ line.vertices.get(0) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(0)])
+          if( !vertices[ line.vertices.get(1) ] ) vertices[ line.vertices.get(1) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(1)])
+        });
+        
+        for( let vertexID in vertices ) {
+          let { x: xV, y: yV } = vertices[ vertexID ];
+          let { x: newX, y: newY } = GeometryUtils.rotatePointAroundPoint( xV, yV, barX, barY, alpha );
+          state = Vertex.setAttributes( state, groupLayerID, vertexID, new Map({ x: newX, y: newY }) ).updatedState;
+        }
+        //need to be separated from setAttributes cycle
+        for( let vertexID in vertices ) {
+          let { x: xV, y: yV } = vertices[ vertexID ];
+          state = Vertex.beginDraggingVertex( state, groupLayerID, vertexID ).updatedState;
+          state = Vertex.endDraggingVertex( state ).updatedState;
+        }
+      }
+
+      if( items ) state = items
+        .map( itemID => state.getIn(['scene', 'layers', groupLayerID, 'items', itemID]) )
+        .reduce( ( newState, item ) => {
+          let { x: xI, y: yI, rotation: rI } = item;
+
+          let { x: newX, y: newY } = GeometryUtils.rotatePointAroundPoint( xI, yI, barX, barY, alpha );
+
+          return Item.setAttributes( newState, groupLayerID, item.id, new Map({ x: newX, y: newY, rotation: rI + alpha }) ).updatedState;
+        }, state );
+
+      //rotation of holes and areas should not take any effect
+      //if( holes ) holes.forEach( holeID => { state = Hole.select( state, groupLayerID, holeID ).updatedState; });
+      //if( areas ) areas.forEach( areaID => { state = Area.select( state, groupLayerID, areaID ).updatedState; });
+
+      state = Layer.detectAndUpdateAreas( state, groupLayerID ).updatedState;
+    });
+
+    state = Group.select( state, groupID ).updatedState;
+
     return { updatedState: state };
   }
 

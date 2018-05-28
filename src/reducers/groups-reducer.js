@@ -40,7 +40,7 @@ export default function (state, action) {
       return Group.translate( state, action.groupID, action.x, action.y ).updatedState;
     
     case GROUP_ACTIONS.GROUP_ROTATE:
-      return Group.rotate( state, action.groupID, action.alpha ).updatedState;
+      return Group.rotate( state, action.groupID, action.rotation ).updatedState;
 
     default:
       return state;
