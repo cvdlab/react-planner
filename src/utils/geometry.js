@@ -309,3 +309,20 @@ export function verticesMidPoint( verticesArray ) {
   let res = verticesArray.reduce( ( incr, vertex ) => { return { x: incr.x + vertex.x, y: incr.y + vertex.y } }, { x: 0, y: 0 });
   return { x: res.x / verticesArray.length, y: res.y / verticesArray.length };
 }
+
+export function rotatePointAroundPoint( px, py, ox, oy, theta ) {
+
+  let thetaRad = theta * Math.PI / 180;
+
+  let cos = Math.cos( thetaRad );
+  let sin = Math.sin( thetaRad );
+
+  let deltaX = px - ox;
+  let deltaY = py - oy;
+
+  return {
+    x: cos * deltaX - sin * deltaY + ox,
+    y: sin * deltaX + cos * deltaY + oy
+  };
+
+}
