@@ -10,6 +10,7 @@ export default {
   "Chain selected Elements to Group":"Цепочка выбранных элементов в группу",
   "Configure layer": "Настроить слой",
   "Configure project": "Настроить проект",
+  "Confirm": "подтвердить",
   "Copy": "Копировать",
   "Delete group and all Elements":"Удалить группу и все элементы",
   "Delete layer": "Удалить слой",

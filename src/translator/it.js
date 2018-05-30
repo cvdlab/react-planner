@@ -10,6 +10,7 @@ export default {
   "Chain selected Elements to Group":"Collega l'Elemento selzionato al Gruppo",
   "Configure layer": "Configura livello",
   "Configure project": "Configura progetto",
+  "Confirm": "Conferma",
   "Copy":"Copia",
   "Delete group and all Elements":"Elimina Gruppo e tutti i suoi Elementi",
   "Delete layer": "Elimina livello",
