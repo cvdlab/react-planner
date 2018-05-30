@@ -283,3 +283,16 @@ export const UNITS_LENGTH = [
 ];
 
 export const EPSILON = 1e-6;
+
+export const KEYBOARD_BUTTON_CODE = {
+  DELETE: 46,
+  BACKSPACE: 8,
+  ESC: 27,
+  Z: 90,
+  ALT: 18,
+  C: 67,
+  V: 86,
+  CTRL: 17,
+  ENTER: 13,
+  TAB: 9
+};

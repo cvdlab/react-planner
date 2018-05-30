@@ -6,7 +6,8 @@ import {
   SELECT_HOLE,
   SELECT_AREA,
   SELECT_ITEM,
-  SELECT_LINE
+  SELECT_LINE,
+  KEYBOARD_BUTTON_CODE
 } from '../constants';
 
 import {
@@ -21,15 +22,6 @@ import {
 
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../utils/snap';
 
-const KEY_DELETE = 46;
-const KEY_BACKSPACE = 8;
-const KEY_ESC = 27;
-const KEY_Z = 90;
-const KEY_ALT = 18;
-const KEY_C = 67;
-const KEY_V = 86;
-const KEY_CTRL = 17;
-
 export default function keyboard() {
 
   return (store, stateExtractor) => {
@@ -40,31 +32,31 @@ export default function keyboard() {
       let mode = state.get('mode');
 
       switch (event.keyCode) {
-        case KEY_BACKSPACE:
-        case KEY_DELETE:
+        case KEYBOARD_BUTTON_CODE.BACKSPACE:
+        case KEYBOARD_BUTTON_CODE.DELETE:
         {
           if ([MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode))
             store.dispatch(remove());
           break;
         }
-        case KEY_ESC:
+        case KEYBOARD_BUTTON_CODE.ESC:
         {
           store.dispatch(rollback());
           break;
         }
-        case KEY_Z:
+        case KEYBOARD_BUTTON_CODE.Z:
         {
           if (event.getModifierState('Control') || event.getModifierState('Meta'))
             store.dispatch(undo());
           break;
         }
-        case KEY_ALT:
+        case KEYBOARD_BUTTON_CODE.ALT:
         {
           if (MODE_SNAPPING.includes(mode))
             store.dispatch(toggleSnap(state.snapMask.merge({ SNAP_POINT: false, SNAP_LINE: false, SNAP_SEGMENT: false, tempSnapConfiguartion: state.snapMask.toJS() })));
           break;
         }
-        case KEY_C:
+        case KEYBOARD_BUTTON_CODE.C:
         {
           let selectedLayer = state.getIn(['scene', 'selectedLayer']);
           let selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
@@ -89,12 +81,12 @@ export default function keyboard() {
           }
           break;
         }
-        case KEY_V:
+        case KEYBOARD_BUTTON_CODE.V:
         {
           store.dispatch(pasteProperties());
           break;
         }
-        case KEY_CTRL:
+        case KEYBOARD_BUTTON_CODE.CTRL:
         {
           store.dispatch(setAlterateState());
           break;
@@ -109,13 +101,13 @@ export default function keyboard() {
       let mode = state.get('mode');
 
       switch (event.keyCode) {
-        case KEY_ALT:
+        case KEYBOARD_BUTTON_CODE.ALT:
         {
           if (MODE_SNAPPING.includes(mode))
             store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
           break;
         }
-        case KEY_CTRL:
+        case KEYBOARD_BUTTON_CODE.CTRL:
         {
           store.dispatch(setAlterateState());
           break;
