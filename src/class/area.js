@@ -1,7 +1,6 @@
 import { fromJS } from 'immutable';
 import { Layer, Vertex, Group } from './export';
 import {
-  history,
   IDBroker,
   NameGenerator
 } from '../utils/export';
@@ -32,10 +31,6 @@ class Area{
 
     state = state.setIn(['scene', 'layers', layerID], layer);
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState: state, area };
   }
 
@@ -57,10 +52,6 @@ class Area{
     state = state.deleteIn(['scene', 'layers', layerID, 'areas', areaID]);
 
     state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'areas', areaID).updatedState );
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return {updatedState: state};
   }

@@ -3,7 +3,6 @@ import { Project, Area, Line, Hole, Item, Vertex } from './export';
 import {
   GraphInnerCycles,
   GeometryUtils,
-  history,
   IDBroker
 } from '../utils/export';
 import { Layer as LayerModel } from '../models';
@@ -21,10 +20,6 @@ class Layer{
 
     state = state.setIn(['scene', 'selectedLayer'], layerID );
     state = state.setIn(['scene', 'layers', layerID], layer);
-
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
 
     return { updatedState: state };
   }
@@ -63,9 +58,6 @@ class Layer{
   static setProperties( state, layerID, properties ) {
     state = state.mergeIn(['scene', 'layers', layerID], properties);
     state = state.updateIn(['scene', 'layers'], layers => layers.sort( ( a, b ) => a.altitude !== b.altitude ? a.altitude - b.altitude : a.order - b.order ));
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
 
     return { updatedState: state };
   }
@@ -78,19 +70,11 @@ class Layer{
       state.scene.selectedLayer !== layerID ? state.scene.selectedLayer : state.scene.layers.first().id
     );
 
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
-
     return { updatedState: state };
   }
 
   static removeElement( state, layerID, elementPrototype, elementID ) {
     state = state.deleteIn(['scene', 'layers', layerID, elementPrototype, elementID]);
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState: state };
   }

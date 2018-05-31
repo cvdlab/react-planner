@@ -1,3 +1,4 @@
+import { history } from '../utils/export';
 import {
   LOAD_PROJECT,
   NEW_PROJECT,
@@ -55,18 +56,23 @@ export default function (state, action) {
       return Project.unselectAll(state).updatedState;
 
     case SET_PROPERTIES:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.setProperties(state, state.getIn(['scene', 'selectedLayer']), action.properties).updatedState;
 
     case SET_ITEMS_ATTRIBUTES:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.setItemsAttributes(state, action.itemsAttributes).updatedState;
 
     case SET_LINES_ATTRIBUTES:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.setLinesAttributes(state, action.linesAttributes).updatedState;
 
     case SET_HOLES_ATTRIBUTES:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.setHolesAttributes(state, action.holesAttributes).updatedState;
 
     case REMOVE:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.remove(state).updatedState;
 
     case UNDO:
@@ -76,9 +82,11 @@ export default function (state, action) {
       return Project.rollback(state).updatedState;
 
     case SET_PROJECT_PROPERTIES:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.setProjectProperties(state, action.properties).updatedState;
 
     case OPEN_PROJECT_CONFIGURATOR:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.openProjectConfigurator(state).updatedState;
 
     case INIT_CATALOG:

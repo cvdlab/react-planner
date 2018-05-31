@@ -2,7 +2,6 @@ import { Map, List, fromJS } from 'immutable';
 import { Layer, Group } from './export';
 
 import {
-  history,
   IDBroker,
   NameGenerator
 } from '../utils/export';
@@ -60,10 +59,6 @@ class Hole{
     });
 
     state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'holes', holeID).updatedState );
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState: state };
   }
@@ -206,10 +201,6 @@ class Hole{
     state = this.updateDrawingHole(state, layerID, x, y).updatedState;
     state = Layer.unselectAll( state, layerID ).updatedState;
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState: state };
   }
 
@@ -347,10 +338,7 @@ class Hole{
 
   static endDraggingHole(state, x, y) {
     state = this.updateDraggingHole(state, x, y).updatedState;
-    state = state.merge({
-      mode: MODE_IDLE,
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = state.merge({ mode: MODE_IDLE });
 
     return { updatedState: state };
   }

@@ -4,8 +4,7 @@ import {
   IDBroker,
   GeometryUtils,
   SnapSceneUtils,
-  SnapUtils,
-  history
+  SnapUtils
 } from '../utils/export';
 import {
   MODE_DRAGGING_VERTEX,
@@ -205,8 +204,7 @@ class Vertex{
       mode: MODE_IDLE,
       draggingSupport: null,
       activeSnapElement: null,
-      snapElements: new List(),
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
+      snapElements: new List()
     });
 
     return { updatedState: state };

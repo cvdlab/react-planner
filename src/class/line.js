@@ -6,7 +6,6 @@ import {
   Vertex
 } from './export';
 import {
-  history,
   IDBroker,
   NameGenerator,
   GeometryUtils,
@@ -65,10 +64,6 @@ class Line{
       line.vertices.forEach(vertexID => state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState);
 
       state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'lines', lineID).updatedState );
-
-      state = state.merge({
-        sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-      });
     }
 
     return {updatedState: state};
@@ -323,8 +318,7 @@ class Line{
     state = state.merge({
       mode: MODE_WAITING_DRAWING_LINE,
       snapElements: new List(),
-      activeSnapElement: null,
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
+      activeSnapElement: null
     });
 
     return { updatedState: state };
@@ -526,8 +520,7 @@ class Line{
       mode: MODE_IDLE,
       draggingSupport: null,
       activeSnapElement: null,
-      snapElements: new List(),
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
+      snapElements: new List()
     });
 
     return { updatedState: state };

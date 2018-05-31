@@ -35,20 +35,12 @@ class Project{
 
   static setProperties(state, layerID, properties) {
     state = Layer.setPropertiesOnSelected( state, layerID, properties ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
-
+  
     return { updatedState: state };
   }
 
   static updateProperties(state, layerID, properties) {
     state = Layer.updatePropertiesOnSelected( state, layerID, properties ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
 
     return { updatedState: state };
   }
@@ -56,10 +48,6 @@ class Project{
   static setItemsAttributes(state, attributes) {
     //TODO apply only to items
     state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
-
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
 
     return { updatedState: state };
   }
@@ -71,20 +59,12 @@ class Project{
 
     console.log('XXXXXXXXXX', state);
 
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
-
     return { updatedState: state };
   }
 
   static setHolesAttributes(state, attributes) {
     //TODO apply only to holes
     state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
-
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
 
     return { updatedState: state };
   }
@@ -111,10 +91,6 @@ class Project{
     selectedItems.forEach(itemID => { state = Item.remove( state, selectedLayer, itemID ).updatedState; });
 
     state = Layer.detectAndUpdateAreas( state, selectedLayer ).updatedState;
-
-    state = state.merge({
-      sceneHistory: history.historyPush(state.sceneHistory, state.scene)
-    });
 
     return { updatedState: state };
   }
@@ -161,8 +137,7 @@ class Project{
     let scene = state.scene.merge(properties);
     state = state.merge({
       mode: MODE_IDLE,
-      scene,
-      sceneHistory: history.historyPush(state.sceneHistory, scene)
+      scene
     });
 
     return { updatedState: state };

@@ -1,6 +1,5 @@
 import { Layer, Group } from './export';
 import {
-  history,
   IDBroker,
   NameGenerator
 } from '../utils/export';
@@ -47,10 +46,6 @@ class Item{
 
     state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'items', itemID).updatedState );
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState: state };
   }
 
@@ -89,7 +84,6 @@ class Item{
     state = this.updateDrawingItem(state, layerID, x, y, catalog).updatedState;
     state = Layer.unselectAll( state, layerID ).updatedState;
     state =  state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene ),
       drawingSupport: Map({
         type: state.drawingSupport.get('type')
       })
@@ -145,10 +139,7 @@ class Item{
 
   static endDraggingItem(state, x, y) {
     state = this.updateDraggingItem(state, x, y).updatedState;
-    state = state.merge({
-      mode: MODE_IDLE,
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = state.merge({ mode: MODE_IDLE });
 
     return { updatedState: state };
   }
@@ -195,10 +186,7 @@ class Item{
 
   static endRotatingItem(state, x, y) {
     state = this.updateRotatingItem(state, x, y).updatedState;
-    state = state.merge({
-      mode: MODE_IDLE,
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
+    state = state.merge({ mode: MODE_IDLE });
 
     return { updatedState: state };
   }

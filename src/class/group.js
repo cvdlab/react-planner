@@ -9,7 +9,7 @@ import {
 } from './export';
 import { Map, List } from 'immutable';
 import { Group as GroupModel } from '../models';
-import { history, IDBroker, MathUtils, GeometryUtils } from '../utils/export';
+import { IDBroker, MathUtils, GeometryUtils } from '../utils/export';
 
 class Group{
 
@@ -54,10 +54,6 @@ class Group{
 
     state = state.setIn(['scene', 'groups', groupID], new GroupModel({ id: groupID, name: groupID}) );
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState: state };
   }
 
@@ -81,10 +77,6 @@ class Group{
       }
     });
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return {updatedState: state};
   }
 
@@ -95,10 +87,6 @@ class Group{
       state = state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.push(elementID));
 
       state = this.reloadBaricenter( state, groupID ).updatedState;
-
-      state = state.merge({
-        sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-      });
     }
 
     return { updatedState: state };
@@ -199,19 +187,11 @@ class Group{
 
     state = state.setIn(['scene', 'groups', groupID, 'elements', layerID, elementPrototype], actualList.filterNot( el => el === elementID ));
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState : state };
   }
 
   static setAttributes( state, groupID, attributes ){
     state = state.mergeIn(['scene', 'groups', groupID], attributes);
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState : state };
   }
@@ -219,19 +199,11 @@ class Group{
   static setProperties( state, groupID, properties ){
     state = state.mergeIn(['scene', 'groups', groupID, 'properties'], properties);
 
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
-
     return { updatedState : state };
   }
 
   static remove( state, groupID ) {
     state = state.removeIn(['scene', 'groups', groupID]);
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState : state };
   }
@@ -261,10 +233,6 @@ class Group{
     });
 
     state = state.deleteIn([ 'scene', 'groups', groupID ]);
-
-    state = state.merge({
-      sceneHistory: history.historyPush( state.sceneHistory, state.scene )
-    });
 
     return { updatedState: state };
   }

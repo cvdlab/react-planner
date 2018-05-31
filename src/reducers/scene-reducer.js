@@ -1,3 +1,5 @@
+import { Layer } from '../class/export';
+import { history } from '../utils/export';
 import {
   ADD_LAYER,
   SELECT_LAYER,
@@ -5,9 +7,10 @@ import {
   REMOVE_LAYER
 } from '../constants';
 
-import { Layer } from '../class/export';
-
 export default function (state, action) {
+
+  state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+
   switch (action.type) {
     case ADD_LAYER:
       return Layer.create( state, action.name, action.altitude).updatedState;
