@@ -282,15 +282,12 @@ class Line{
     }
 
     let layerID = state.getIn(['drawingSupport', 'layerID']);
+    let lineID = state.getIn(['scene', 'layers', layerID, 'selected', 'lines']).first();
 
-    let layer = state.getIn(['scene', 'layers', layerID]);
-
-    let lineID = layer.getIn(['selected', 'lines']).first();
     let { updatedState: stateLV, vertex } = Line.replaceVertex( state, layerID, lineID, 1, x, y );
     state = stateLV;
 
-    state = Layer.selectElement( state, layerID, 'vertices', vertex.id).updatedState;
-
+    state = this.select( state, layerID, lineID ).updatedState;
     state = state.merge({ activeSnapElement: snap ? snap.snap : null });
 
     return { updatedState: state };
@@ -576,15 +573,9 @@ class Line{
   }
 
   static setVerticesCoords( state, layerID, lineID, x1, y1, x2, y2 ) {
-
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
-
-    console.log( 'setVerticesCoords 1', state.toJS() );
-
     state = Vertex.setAttributes( state, layerID, line.vertices.get(0), new Map({ x: x1, y: y1 }) ).updatedState;
     state = Vertex.setAttributes( state, layerID, line.vertices.get(1), new Map({ x: x2, y: y2 }) ).updatedState;
-
-    console.log( 'setVerticesCoords 2', state.toJS() );
 
     return { updatedState: state };
   }
