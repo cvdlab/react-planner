@@ -58,16 +58,17 @@ export default class PanelGroups extends Component {
   }
 
   shouldComponentUpdate(nextProps, nextState) {
-    return true;
-  }
-
-  componentWillReceiveProps( nextProps, nextContext ) {
+    return ( 
+      this.props.groups.hashCode() !== nextProps.groups.hashCode() ||
+      this.props.layers.hashCode() !== nextProps.layers.hashCode() ||
+      this.props.mode !== nextProps.mode
+    );
   }
 
   render() {
-    if (!VISIBILITY_MODE[this.props.state.mode]) return null;
+    let { mode, groups, layers } = this.props;
 
-    let groups = this.props.state.getIn(['scene', 'groups']);
+    if (!VISIBILITY_MODE[ mode ]) return null;
 
     return (
       <Panel name={this.context.translator.t('Groups')} opened={groups.size > 0}>
@@ -91,7 +92,7 @@ export default class PanelGroups extends Component {
                 };
 
                 let chainToGroup = e => {
-                  this.props.state.getIn(['scene', 'layers']).forEach((layer) => {
+                  layers.forEach((layer) => {
 
                     let layerID = layer.get('id');
                     let layerElements = {
@@ -195,7 +196,9 @@ export default class PanelGroups extends Component {
 }
 
 PanelGroups.propTypes = {
-  state: PropTypes.object.isRequired
+  mode: PropTypes.string.isRequired,
+  groups: PropTypes.object.isRequired,
+  layers: PropTypes.object.isRequired
 };
 
 PanelGroups.contextTypes = {
