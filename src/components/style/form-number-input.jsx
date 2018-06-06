@@ -41,6 +41,12 @@ export default class FormNumberInput extends Component {
     };
   }
 
+  componentWillReceiveProps( nextProps ) {
+    if( this.props.value !== nextProps.value ) {
+      this.setState({ showedValue: nextProps.value });
+    }
+  }
+
   render() {
 
     let { value, min, max, precision, onChange, onValid, onInvalid, style, placeholder } = this.props;
