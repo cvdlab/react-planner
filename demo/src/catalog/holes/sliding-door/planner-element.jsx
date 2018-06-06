@@ -24,7 +24,7 @@ function makeDoor(handleSide) {
 
   let extrudeSettings = {
     steps: 2,
-    amount: 0.05,
+    depth: 0.05,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,
