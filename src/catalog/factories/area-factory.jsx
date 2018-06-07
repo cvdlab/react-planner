@@ -1,5 +1,7 @@
-import { createArea, updatedArea } from './area-factory-3d';
 import React from 'react';
+import { createArea, updatedArea } from './area-factory-3d';
+import * as SharedStyle from '../../shared-style';
+
 
 export default function AreaFactory(name, info, textures) {
 
@@ -17,7 +19,7 @@ export default function AreaFactory(name, info, textures) {
       patternColor: {
         label: 'Color',
         type: 'color',
-        defaultValue: '#f5f4f4'
+        defaultValue: SharedStyle.AREA_MESH_COLOR.unselected
       },
       thickness: {
         label: 'Thickness',
@@ -47,7 +49,7 @@ export default function AreaFactory(name, info, textures) {
 
       });
 
-      let fill = element.selected ? '#99c3fb' : element.properties.get('patternColor');
+      let fill = element.selected ? SharedStyle.AREA_MESH_COLOR.selected : element.properties.get('patternColor');
 
       return (<path d={path} fill={fill}/>);
     },

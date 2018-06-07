@@ -45,9 +45,9 @@ export const SECONDARY_COLOR = {
   border: '1px solid #FFF'
 };
 
-export const MESH_SELECTED = 0x99C3FB;
+export const MESH_SELECTED = '#99C3FB';
 
 export const AREA_MESH_COLOR = {
   selected: MESH_SELECTED,
-  unselected: 0xF5F4F4
+  unselected: '#F5F4F4'
 };
