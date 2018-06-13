@@ -10,6 +10,8 @@ import Item from './item';
 import Area from './area';
 import Guides from './guides/guides';
 import Group from './group';
+import RulerX from './rulerX';
+import RulerY from './rulerY';
 
 export {
   Viewer2D,
@@ -23,7 +25,9 @@ export {
   Item,
   Area,
   Guides,
-  Group
+  Group,
+  RulerX,
+  RulerY
 };
 
 export default {
@@ -38,5 +42,7 @@ export default {
   Item,
   Area,
   Guides,
-  Group
+  Group,
+  RulerX,
+  RulerY
 };

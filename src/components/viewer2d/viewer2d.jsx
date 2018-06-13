@@ -1,11 +1,12 @@
-'use strict';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO} from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
+import * as SharedStyle from '../../shared-style';
+import {RulerX, RulerY} from './export';
+//import {MathUtils} from '../../utils/export';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -294,38 +295,113 @@ export default function Viewer2D({state, width, height},
     }
   };
 
+  let rulerSize = 15; //px
+
+  let ruler = {
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+    display: 'inline-block'
+  };
+  let ruler_li = {
+    margin: 0,
+    padding: 0,
+    listStyle: 'none',
+    display: 'inline-block',
+    paddingLeft:'1cm'
+  };
+
+  let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
+
+  //console.log( a, b, c, d, e, f, SVGHeight );
+ 
+  let m1 = [
+    [ a, b, c ],
+    [ d, e, f ],
+    [ 0, 0, 1 ]
+  ];
+
+  /*let m2 = [
+    [ 1, SVGHeight, 0 ],
+    [ 0   , 1   , 0 ],
+    [ 0   , 0   , 1 ]
+  ];
+
+  let transformResult = MathUtils.multiplyMatrices( m1, m2 );
+
+  console.log( 'transformResult', transformResult, SVGHeight * state.zoom );*/
+
+  let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
+  let rulerFnColor = '#FFF';
+  let rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
+
   return (
-    <ReactSVGPanZoom
-      width={width} height={height}
+    <div style={{
+      margin:0,
+      padding:0,
+      display:'grid',
+      gridRowGap:'0',
+      gridColumnGap:'0',
+      gridTemplateColumns: `${rulerSize}px ${width - rulerSize}px`,
+      gridTemplateRows: `${rulerSize}px ${height - rulerSize}px`,
+      position:'relative'
+    }}>
+      <div style={{gridColumn:1, gridRow:1, backgroundColor:rulerBgColor}}></div>
+      <div style={{gridRow:1, gridColumn:2, position:'relative', overflow:'hidden'}} id="rulerX">
+        <RulerX
+          zoom={state.zoom}
+          mouseX={state.mouse.get('x')}
+          width={width - rulerSize}
+          zeroLeftPosition={ e || 0 }
+          backgroundColor={rulerBgColor}
+          fontColor={rulerFnColor}
+          markerColor={rulerMkColor}
+        />
+      </div>
+      <div style={{gridColumn:1, gridRow:2, position:'relative', overflow:'hidden'}} id="rulerY">
+        <RulerY
+          zoom={state.zoom}
+          mouseY={state.mouse.get('y')}
+          height={width - rulerSize}
+          zeroTopPosition={ ( ( SVGHeight * state.zoom ) + f ) || 0 }
+          backgroundColor={rulerBgColor}
+          fontColor={rulerFnColor}
+          markerColor={rulerMkColor}
+        />
+      </div>
+      <ReactSVGPanZoom
+        style={{gridColumn:2, gridRow:2}}
+        width={width - rulerSize} height={height - rulerSize}
 
-      value={viewer2D.isEmpty() ? null : viewer2D.toJS()}
-      onChangeValue={onChangeValue}
+        value={viewer2D.isEmpty() ? null : viewer2D.toJS()}
+        onChangeValue={onChangeValue}
 
-      tool={mode2Tool(mode)}
-      onChangeTool={onChangeTool}
+        tool={mode2Tool(mode)}
+        onChangeTool={onChangeTool}
 
-      detectAutoPan={mode2DetectAutopan(mode)}
+        detectAutoPan={mode2DetectAutopan(mode)}
 
-      onMouseDown={onMouseDown}
-      onMouseMove={onMouseMove}
-      onMouseUp={onMouseUp}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
 
-      miniaturePosition='none'
-      toolbarPosition='right'>
+        miniaturePosition='none'
+        toolbarPosition='right'>
 
-      <svg width={scene.width} height={scene.height}>
-        <defs>
-          <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
-            <rect x="0" y="0" width="4" height="4" fill="#FFF"/>
-            <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{stroke:'#8E9BA2', strokeWidth:1}} />
-          </pattern>
-        </defs>
-        <g style={Object.assign(mode2Cursor(mode), mode2PointerEvents(mode))}>
-          <State state={state} catalog={catalog}/>
-        </g>
-      </svg>
+        <svg width={scene.width} height={scene.height}>
+          <defs>
+            <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
+              <rect x="0" y="0" width="4" height="4" fill="#FFF"/>
+              <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{stroke:'#8E9BA2', strokeWidth:1}} />
+            </pattern>
+          </defs>
+          <g style={Object.assign(mode2Cursor(mode), mode2PointerEvents(mode))}>
+            <State state={state} catalog={catalog}/>
+          </g>
+        </svg>
 
-    </ReactSVGPanZoom>
+      </ReactSVGPanZoom>
+    </div>
   );
 }
 
