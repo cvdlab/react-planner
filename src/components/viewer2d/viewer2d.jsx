@@ -1,12 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-import {ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO} from 'react-svg-pan-zoom';
+import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
 import * as SharedStyle from '../../shared-style';
-import {RulerX, RulerY} from './export';
-//import {MathUtils} from '../../utils/export';
+import { RulerX, RulerY } from './export';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -32,7 +31,7 @@ function mode2PointerEvents(mode) {
     case constants.MODE_DRAGGING_ITEM:
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
-      return {pointerEvents: 'none'};
+      return { pointerEvents: 'none' };
 
     default:
       return {};
@@ -45,16 +44,16 @@ function mode2Cursor(mode) {
     case constants.MODE_DRAGGING_LINE:
     case constants.MODE_DRAGGING_VERTEX:
     case constants.MODE_DRAGGING_ITEM:
-      return {cursor: 'move'};
+      return { cursor: 'move' };
 
     case constants.MODE_ROTATING_ITEM:
-      return {cursor: 'ew-resize'};
+      return { cursor: 'ew-resize' };
 
     case constants.MODE_WAITING_DRAWING_LINE:
     case constants.MODE_DRAWING_LINE:
-      return {cursor: 'crosshair'};
+      return { cursor: 'crosshair' };
     default:
-      return {cursor: 'default'};
+      return { cursor: 'default' };
   }
 }
 
@@ -89,16 +88,17 @@ function extractElementData(node) {
   }
 }
 
-export default function Viewer2D({state, width, height},
-                                 {viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog}) {
+export default function Viewer2D(
+  { state, width, height },
+  { viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog }) {
 
 
-  let {viewer2D, mode, scene} = state;
+  let { viewer2D, mode, scene } = state;
 
   let layerID = scene.selectedLayer;
 
-  let mapCursorPosition = ({x, y}) => {
-    return {x, y: -y + scene.height}
+  let mapCursorPosition = ({ x, y }) => {
+    return { x, y: -y + scene.height }
   };
 
   let onMouseMove = viewerEvent => {
@@ -108,9 +108,9 @@ export default function Viewer2D({state, width, height},
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    let {x, y} = mapCursorPosition(viewerEvent);
+    let { x, y } = mapCursorPosition(viewerEvent);
 
-    projectActions.updateMouseCoord({x, y});
+    projectActions.updateMouseCoord({ x, y });
 
     switch (mode) {
       case constants.MODE_DRAWING_LINE:
@@ -153,18 +153,17 @@ export default function Viewer2D({state, width, height},
     let event = viewerEvent.originalEvent;
 
     //workaround that allow imageful component to work
-    let evt = new Event('mousedown-planner-event' );
+    let evt = new Event('mousedown-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    let {x, y} = mapCursorPosition(viewerEvent);
+    let { x, y } = mapCursorPosition(viewerEvent);
 
-    if( mode === constants.MODE_IDLE )
-    {
+    if (mode === constants.MODE_IDLE) {
       let elementData = extractElementData(event.target);
-      if ( !elementData || !elementData.selected ) return;
+      if (!elementData || !elementData.selected) return;
 
-      switch ( elementData.prototype ) {
+      switch (elementData.prototype) {
         case 'lines':
           linesActions.beginDraggingLine(elementData.layer, elementData.id, x, y, state.snapMask);
           break;
@@ -193,11 +192,11 @@ export default function Viewer2D({state, width, height},
   let onMouseUp = viewerEvent => {
     let event = viewerEvent.originalEvent;
 
-    let evt = new Event('mouseup-planner-event' );
+    let evt = new Event('mouseup-planner-event');
     evt.viewerEvent = viewerEvent;
     document.dispatchEvent(evt);
 
-    let {x, y} = mapCursorPosition(viewerEvent);
+    let { x, y } = mapCursorPosition(viewerEvent);
 
     switch (mode) {
 
@@ -295,108 +294,80 @@ export default function Viewer2D({state, width, height},
     }
   };
 
+  let { e, f, SVGWidth, SVGHeight } = state.get('viewer2D').toJS();
+
   let rulerSize = 15; //px
-
-  let ruler = {
-    margin: 0,
-    padding: 0,
-    listStyle: 'none',
-    display: 'inline-block'
-  };
-  let ruler_li = {
-    margin: 0,
-    padding: 0,
-    listStyle: 'none',
-    display: 'inline-block',
-    paddingLeft:'1cm'
-  };
-
-  let { a, b, c, d, e, f, SVGHeight } = state.get('viewer2D').toJS();
-
-  //console.log( a, b, c, d, e, f, SVGHeight );
- 
-  let m1 = [
-    [ a, b, c ],
-    [ d, e, f ],
-    [ 0, 0, 1 ]
-  ];
-
-  /*let m2 = [
-    [ 1, SVGHeight, 0 ],
-    [ 0   , 1   , 0 ],
-    [ 0   , 0   , 1 ]
-  ];
-
-  let transformResult = MathUtils.multiplyMatrices( m1, m2 );
-
-  console.log( 'transformResult', transformResult, SVGHeight * state.zoom );*/
-
+  let rulerUnitPixelSize = 100;
   let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
-  let rulerFnColor = '#FFF';
+  let rulerFnColor = SharedStyle.COLORS.white;
   let rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
+  let rulerXElements = Math.ceil( SVGWidth / rulerUnitPixelSize ) + 1;
+  let rulerYElements = Math.ceil( SVGHeight / rulerUnitPixelSize ) + 1;
 
   return (
     <div style={{
-      margin:0,
-      padding:0,
-      display:'grid',
-      gridRowGap:'0',
-      gridColumnGap:'0',
+      margin: 0,
+      padding: 0,
+      display: 'grid',
+      gridRowGap: '0',
+      gridColumnGap: '0',
       gridTemplateColumns: `${rulerSize}px ${width - rulerSize}px`,
       gridTemplateRows: `${rulerSize}px ${height - rulerSize}px`,
-      position:'relative'
+      position: 'relative'
     }}>
-      <div style={{gridColumn:1, gridRow:1, backgroundColor:rulerBgColor}}></div>
-      <div style={{gridRow:1, gridColumn:2, position:'relative', overflow:'hidden'}} id="rulerX">
+      <div style={{ gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor }}></div>
+      <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }} id="rulerX">
         <RulerX
+          unitPixelSize={rulerUnitPixelSize}
           zoom={state.zoom}
           mouseX={state.mouse.get('x')}
           width={width - rulerSize}
-          zeroLeftPosition={ e || 0 }
+          zeroLeftPosition={e || 0}
           backgroundColor={rulerBgColor}
           fontColor={rulerFnColor}
           markerColor={rulerMkColor}
+          positiveUnitsNumber={rulerXElements}
+          negativeUnitsNumber={0}
         />
       </div>
-      <div style={{gridColumn:1, gridRow:2, position:'relative', overflow:'hidden'}} id="rulerY">
+      <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }} id="rulerY">
         <RulerY
+          unitPixelSize={rulerUnitPixelSize}
           zoom={state.zoom}
           mouseY={state.mouse.get('y')}
-          height={width - rulerSize}
-          zeroTopPosition={ ( ( SVGHeight * state.zoom ) + f ) || 0 }
+          height={height - rulerSize}
+          zeroTopPosition={((SVGHeight * state.zoom) + f) || 0}
           backgroundColor={rulerBgColor}
           fontColor={rulerFnColor}
           markerColor={rulerMkColor}
+          positiveUnitsNumber={rulerYElements}
+          negativeUnitsNumber={0}
         />
       </div>
       <ReactSVGPanZoom
-        style={{gridColumn:2, gridRow:2}}
+        style={{ gridColumn: 2, gridRow: 2 }}
         width={width - rulerSize} height={height - rulerSize}
-
         value={viewer2D.isEmpty() ? null : viewer2D.toJS()}
         onChangeValue={onChangeValue}
-
         tool={mode2Tool(mode)}
         onChangeTool={onChangeTool}
-
         detectAutoPan={mode2DetectAutopan(mode)}
-
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
-
         miniaturePosition='none'
-        toolbarPosition='right'>
+        toolbarPosition='right'
+      >
 
         <svg width={scene.width} height={scene.height}>
           <defs>
             <pattern id="diagonalFill" patternUnits="userSpaceOnUse" width="4" height="4" fill="#FFF">
-              <rect x="0" y="0" width="4" height="4" fill="#FFF"/>
-              <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{stroke:'#8E9BA2', strokeWidth:1}} />
+              <rect x="0" y="0" width="4" height="4" fill="#FFF" />
+              <path d="M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2" style={{ stroke: '#8E9BA2', strokeWidth: 1 }} />
             </pattern>
           </defs>
           <g style={Object.assign(mode2Cursor(mode), mode2PointerEvents(mode))}>
-            <State state={state} catalog={catalog}/>
+            <State state={state} catalog={catalog} />
           </g>
         </svg>
 
