@@ -26,7 +26,8 @@ import {
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
   PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
-  ALTERATE_STATE
+  ALTERATE_STATE,
+  SET_MODE
 } from '../constants';
 
 import { Project } from '../class/export';
@@ -111,6 +112,7 @@ export default function (state, action) {
       return Project.copyProperties(state, action.properties).updatedState;
 
     case PASTE_PROPERTIES:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.pasteProperties(state).updatedState;
 
     case PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY:
@@ -118,6 +120,10 @@ export default function (state, action) {
 
     case ALTERATE_STATE:
       return Project.setAlterate( state ).updatedState;
+    
+    case SET_MODE:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.setMode(state, action.mode).updatedState;
 
     default:
       return state;

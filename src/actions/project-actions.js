@@ -25,7 +25,8 @@ import {
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
   PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
-  ALTERATE_STATE
+  ALTERATE_STATE,
+  SET_MODE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -219,5 +220,12 @@ export function pushLastSelectedCatalogElementToHistory( element ) {
 export function setAlterateState() {
   return {
     type: ALTERATE_STATE
+  };
+}
+
+export function setMode( mode ) {
+  return {
+    type: SET_MODE,
+    mode
   };
 }
