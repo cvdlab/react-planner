@@ -18,7 +18,6 @@ class Project{
   }
 
   static openCatalog( state ) {
-    state = this.rollback( state ).updatedState;
     state = this.setMode( state, MODE_VIEWING_CATALOG ).updatedState;
 
     return { updatedState: state };
@@ -30,6 +29,7 @@ class Project{
 
   static loadProject(state, sceneJSON) {
     state = new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
+
     return { updatedState: state };
   }
 
@@ -54,10 +54,7 @@ class Project{
 
   static setLinesAttributes(state, attributes) {
     //TODO apply only to lines
-    console.log('attributes', state, attributes.toJS());
     state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
-
-    console.log('XXXXXXXXXX', state);
 
     return { updatedState: state };
   }
