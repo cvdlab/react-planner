@@ -317,7 +317,7 @@ export default function Viewer2D(
     }}>
       <div style={{ gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor }}></div>
       <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }} id="rulerX">
-        <RulerX
+        { SVGWidth ? <RulerX
           unitPixelSize={rulerUnitPixelSize}
           zoom={state.zoom}
           mouseX={state.mouse.get('x')}
@@ -328,10 +328,10 @@ export default function Viewer2D(
           markerColor={rulerMkColor}
           positiveUnitsNumber={rulerXElements}
           negativeUnitsNumber={0}
-        />
+        /> : null }
       </div>
       <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }} id="rulerY">
-        <RulerY
+        { SVGHeight ? <RulerY
           unitPixelSize={rulerUnitPixelSize}
           zoom={state.zoom}
           mouseY={state.mouse.get('y')}
@@ -342,7 +342,7 @@ export default function Viewer2D(
           markerColor={rulerMkColor}
           positiveUnitsNumber={rulerYElements}
           negativeUnitsNumber={0}
-        />
+        /> : null }
       </div>
       <ReactSVGPanZoom
         style={{ gridColumn: 2, gridRow: 2 }}
