@@ -9,7 +9,7 @@ import { State, Catalog } from '../models';
 
 import { history } from '../utils/export';
 
-import { Layer, Group, Line, Hole, Item } from '../class/export';
+import { Layer, Group, Line, Hole, Item, HorizontalGuide } from '../class/export';
 
 class Project{
 
@@ -231,6 +231,26 @@ class Project{
 
   static setMode( state, mode ){
     state = state.set('mode', mode);
+    return { updatedState: state };
+  }
+
+  static addHorizontalGuide( state, coordinate ){
+    console.log('adding horizontal guide at', coordinate);
+
+    state = HorizontalGuide.create( state, coordinate ).updatedState;
+
+    return { updatedState: state };
+  }
+
+  static addVerticalGuide( state, coordinate ){
+    console.log('adding vertical guide at', coordinate);
+
+    return { updatedState: state };
+  }
+
+  static addCircularGuide( state, x, y, radius ){
+    console.log('adding horizontal guide at', x, y, radius);
+
     return { updatedState: state };
   }
 

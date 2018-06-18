@@ -4,9 +4,14 @@ import Scene from './scene';
 import Snap from './snap';
 import * as SharedStyle from '../../shared-style';
 
+const guideStyle = {
+  stroke: SharedStyle.SECONDARY_COLOR.main,
+  strokewidth:'2.5px'
+};
+
 export default function State({state, catalog}) {
 
-  let {viewer2D, mode, activeSnapElement, snapElements, scene} = state;
+  let {activeSnapElement, snapElements, scene} = state;
   let {width, height} = scene;
 
   activeSnapElement = activeSnapElement ?
@@ -22,6 +27,12 @@ export default function State({state, catalog}) {
         {activeSnapElement}
         {snapElements}
       </g>
+      {
+        scene.getIn(['guides','horizontal']).entrySeq().map( ([ hgKey, hgVal ]) => <line key={hgKey} x1={0} y1={hgVal} x2={width} y2={hgVal} style={guideStyle}/> )
+      }
+      {
+        scene.getIn(['guides','vertical']).entrySeq().map( ([ vgKey, vgVal ]) => <line key={vgKey} x1={vgVal} y1={0} x2={vgVal} y2={height} style={guideStyle}/> )
+      }
     </g>
   )
 }

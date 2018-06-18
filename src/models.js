@@ -9,11 +9,11 @@ let safeLoadMapList = (mapList, Model, defaultMap) => {
 };
 
 
-export class Guide extends Record({
+export class Grid extends Record({
   id: '',
   type: '',
   properties: Map()
-}, 'Guide') {
+}, 'Grid') {
   constructor(json = {}) {
     super({
       ...json,
@@ -22,8 +22,8 @@ export class Guide extends Record({
   }
 }
 
-export const DefaultGuides = new Map({
-  'h1': new Guide({
+export const DefaultGrids = new Map({
+  'h1': new Grid({
     id: 'h1',
     type: 'horizontal-streak',
     properties: {
@@ -31,7 +31,7 @@ export const DefaultGuides = new Map({
       colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
     }
   }),
-  'v1': new Guide({
+  'v1': new Grid({
     id: 'v1',
     type: 'vertical-streak',
     properties: {
@@ -202,22 +202,24 @@ export const DefaultLayers = new Map({
 export class Scene extends Record({
   unit: 'cm',
   layers: new Map(),
-  guides: new Map(),
+  grids: new Map(),
   selectedLayer: null,
   groups: new Map(),
   width: 3000,
   height: 2000,
-  meta: new Map()   //additional info
+  meta: new Map(),   //additional info
+  guides: new Map()
 }, 'Scene') {
   constructor(json = {}) {
     let layers = safeLoadMapList(json.layers, Layer, DefaultLayers);
     super({
       ...json,
-      guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
+      grids: safeLoadMapList(json.grids, Grid, DefaultGrids),
       layers,
       selectedLayer: layers.first().id,
       groups: safeLoadMapList(json.groups || {}, Group),
-      meta: json.meta ? fromJS(json.meta) : new Map()
+      meta: json.meta ? fromJS(json.meta) : new Map(),
+      guides: json.guides ? fromJS(json.guides) : new Map({ horizontal: new Map(), vertical: new Map(), circular: new Map() })
     });
   }
 }

@@ -26,7 +26,10 @@ import {
   PASTE_PROPERTIES,
   PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
   ALTERATE_STATE,
-  SET_MODE
+  SET_MODE,
+  ADD_HORIZONTAL_GUIDE,
+  ADD_VERTICAL_GUIDE,
+  ADD_CIRCULAR_GUIDE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -227,5 +230,28 @@ export function setMode( mode ) {
   return {
     type: SET_MODE,
     mode
+  };
+}
+
+export function addHorizontalGuide( coordinate ) {
+  return {
+    type: ADD_HORIZONTAL_GUIDE,
+    coordinate
+  };
+}
+
+export function addVerticalGuide( coordinate ) {
+  return {
+    type: ADD_VERTICAL_GUIDE,
+    coordinate
+  };
+}
+
+export function addCircularGuide( x, y, radius ) {
+  return {
+    type: ADD_CIRCULAR_GUIDE,
+    x,
+    y,
+    radius
   };
 }

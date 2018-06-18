@@ -1,51 +1,106 @@
-import React from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
-import IconAdd from 'react-icons/lib/ti/plus';
 import * as SharedStyle from '../../shared-style';
+import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
+import {FaPencil, FaTrash, FaClose} from 'react-icons/lib/fa';
+import { FormNumberInput } from '../../components/style/export';
 
-
-const STYLE_ADD_WRAPPER = {
-  display: "block",
-  color: SharedStyle.COLORS.white,
-  textDecoration: "none",
-  fontSize: "15px",
-  padding: "0px 15px",
-  borderTop: "1px solid black"
+const iconStyle = {
+  fontSize:'14px',
+  margin:'2px',
+  cursor:'pointer'
 };
 
-const STYLE_ADD_LABEL = {
-  fontSize: "10px",
-  marginLeft: "5px"
-};
+export default class PanelGuides extends Component {
 
-export default function PanelGuides({state: {scene, mode}}) {
-  return (
-    <Panel name="Guides">
-      <div key={1} style={{background: "#3a3a3e", padding: "5px 15px 5px 15px"}}>
-        {scene.guides.entrySeq().map(([guideID, guide]) => {
-          return (
-            <div key={guideID}>
-              <input type="checkbox" checked="true" readOnly/>
-              {guide.type}
-              {guide.properties.entrySeq().map(([key, value]) => <span key={key}> [{key}:{value}] </span>)}
-            </div>
-          )
-        })}
-      </div>
+  constructor(props, context) {
+    super(props, context);
 
-      <a href="javascript:;" style={STYLE_ADD_WRAPPER} key="add"
-         onClick={() => alert('Sorry, but this feature is not supported yet')}>
-        <IconAdd />
-        <span style={STYLE_ADD_LABEL}>New Guide</span>
-      </a>
-    </Panel>
-  )
+    this.state = {
+      addVisibile: true
+    };
+  }
+
+  render() {
+    let { guides } = this.props.state.scene;
+
+    return (
+      <Panel name="Guides">
+        <Tabs id="guidesTabs" style={{margin:'1em'}}>
+          <TabList>
+            <Tab>Horizontal</Tab>
+            <Tab>Vertical</Tab>
+            <Tab>Circular</Tab>
+          </TabList>
+
+          <TabPanel>
+            <table style={{width:'100%'}}>
+              <tbody>
+                {
+                  guides.get('horizontal').entrySeq().map( ([ hgKey, hgVal ], ind) => {
+                    return (
+                      <tr key={hgKey}>
+                        <td>{ind + 1}</td>
+                        <td  style={{width:'19em', textAlign:'center'}}>{hgVal}</td>
+                        <td>
+                          <FaPencil style={iconStyle} />
+                          <FaTrash style={iconStyle} />
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+                {
+                  this.state.addVisibile ? 
+                    <tr style={{height:'2em'}}>
+                      <td
+                        colSpan="3"
+                        style={{textAlign:'center', cursor:'pointer'}}
+                        onClick={ ( e ) => { console.log('clicked'); return this.setState({'addVisibile': false}) } }
+                      >
+                        + Add Horizontal Giude
+                      </td>
+                    </tr> :
+                    <tr>
+                      <td colSpan="2">
+                      <FormNumberInput
+                        value={0}
+                        onChange={( e ) => {
+                          console.log(e.target.value);
+                          this.context.projectActions.addHorizontalGuide( e.target.value );
+                          return this.setState({'addVisibile': true});
+                        }}
+                        onValid={ () => console.log('valid') }
+                        min={0}
+                        max={100000}/>
+                      </td>
+                      <td style={{textAlign:'center'}}>
+                        <FaClose style={iconStyle} onClick={ ( e ) => { console.log('clicked'); return this.setState({'addVisibile': true}) } } />
+                      </td>
+                    </tr>
+                }
+              </tbody>
+            </table>
+          </TabPanel>
+          <TabPanel>
+            <b>Vertical Giudes</b>
+          </TabPanel>
+          <TabPanel>
+            <b>Circular Giudes</b>
+          </TabPanel>
+        </Tabs>
+      </Panel>
+    );
+  }
+  
 
 }
 
 PanelGuides.propTypes = {
-  state: PropTypes.object.isRequired,
+  state: PropTypes.object.isRequired
 };
 
-PanelGuides.contextTypes = {};
+PanelGuides.contextTypes = {
+  projectActions: PropTypes.object.isRequired
+};
