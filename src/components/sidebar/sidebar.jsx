@@ -55,7 +55,7 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
     { index: 3, condition: !multiselected, dom: <PanelElementEditor state={state} /> },
     //{ index: 4, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
     { index: 5, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> },
-    //{ index: 999999, condition: true, dom: <PanelGuides state={state}/> },
+    { index: 6, condition: true, dom: <PanelGuides state={state}/> },
   ];
 
   sorter = sorter.concat(sidebarComponents.map((Component, key) => {
