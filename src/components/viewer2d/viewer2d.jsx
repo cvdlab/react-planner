@@ -346,7 +346,8 @@ export default function Viewer2D(
       </div>
       <ReactSVGPanZoom
         style={{ gridColumn: 2, gridRow: 2 }}
-        width={width - rulerSize} height={height - rulerSize}
+        width={width - rulerSize}
+        height={height - rulerSize}
         value={viewer2D.isEmpty() ? null : viewer2D.toJS()}
         onChangeValue={onChangeValue}
         tool={mode2Tool(mode)}
@@ -355,8 +356,8 @@ export default function Viewer2D(
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
         onMouseUp={onMouseUp}
-        miniaturePosition='none'
-        toolbarPosition='right'
+        miniaturePosition="none"
+        toolbarPosition="none"
       >
 
         <svg width={scene.width} height={scene.height}>
