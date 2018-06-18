@@ -1,7 +1,7 @@
 import * as Three from 'three';
 import { HELVETIKER } from './libs/helvetiker_regular.typeface.js';
-import guideHorizontalStreak from './guides/guide-horizontal-streak';
-import guideVerticalStreak from './guides/guide-vertical-streak';
+import gridHorizontalStreak from './grids/grid-horizontal-streak';
+import gridVerticalStreak from './grids/grid-vertical-streak';
 
 export default function createGrid(scene) {
 
@@ -9,15 +9,15 @@ export default function createGrid(scene) {
   grid.name = 'grid';
   let fontLoader = new Three.FontLoader();
   let font = fontLoader.parse(HELVETIKER); // For measures
-  let { guides, width, height } = scene;
+  let { grids, width, height } = scene;
 
-  guides.forEach(guide => {
-    switch (guide.type) {
+  grids.forEach(grid => {
+    switch (grid.type) {
       case 'horizontal-streak':
-        grid.add(guideHorizontalStreak(width, height, guide, font));
+        grid.add(gridHorizontalStreak(width, height, grid, font));
         break;
       case 'vertical-streak':
-        grid.add(guideVerticalStreak(width, height, guide, font));
+        grid.add(gridVerticalStreak(width, height, grid, font));
         break;
     }
   });

@@ -2,14 +2,14 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {List} from 'immutable';
 
-export default function GuideHorizontalStreak({width, height, guide}) {
-  let step = guide.properties.get('step');
+export default function GridHorizontalStreak({width, height, grid}) {
+  let step = grid.properties.get('step');
   let colors;
 
-  if (guide.properties.has('color')) {
-    colors = new List([guide.properties.get('color')]);
+  if (grid.properties.has('color')) {
+    colors = new List([grid.properties.get('color')]);
   } else {
-    colors = guide.properties.get('colors');
+    colors = grid.properties.get('colors');
   }
 
   let rendered = [];
@@ -23,8 +23,8 @@ export default function GuideHorizontalStreak({width, height, guide}) {
   return (<g>{rendered}</g>);
 }
 
-GuideHorizontalStreak.propTypes = {
+GridHorizontalStreak.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-  guide: PropTypes.object.isRequired
+  grid: PropTypes.object.isRequired
 };
