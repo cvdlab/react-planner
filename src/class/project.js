@@ -4,12 +4,17 @@ import {
   MODE_CONFIGURING_PROJECT,
   MODE_IDLE
 } from '../constants';
-
 import { State, Catalog } from '../models';
-
 import { history } from '../utils/export';
-
-import { Layer, Group, Line, Hole, Item, HorizontalGuide } from '../class/export';
+import {
+  Layer,
+  Group,
+  Line,
+  Hole,
+  Item,
+  HorizontalGuide,
+  VerticalGuide
+} from '../class/export';
 
 class Project{
 
@@ -235,21 +240,37 @@ class Project{
   }
 
   static addHorizontalGuide( state, coordinate ){
-    console.log('adding horizontal guide at', coordinate);
-
     state = HorizontalGuide.create( state, coordinate ).updatedState;
 
     return { updatedState: state };
   }
 
   static addVerticalGuide( state, coordinate ){
-    console.log('adding vertical guide at', coordinate);
+    state = VerticalGuide.create( state, coordinate ).updatedState;
 
     return { updatedState: state };
   }
 
   static addCircularGuide( state, x, y, radius ){
     console.log('adding horizontal guide at', x, y, radius);
+
+    return { updatedState: state };
+  }
+
+  static removeHorizontalGuide( state, guideID ){
+    state = HorizontalGuide.remove( state, guideID ).updatedState;
+
+    return { updatedState: state };
+  }
+
+  static removeVerticalGuide( state, guideID ){
+    state = VerticalGuide.remove( state, guideID ).updatedState;
+
+    return { updatedState: state };
+  }
+
+  static removeCircularGuide( state, guideID ){
+    console.log('removeing horizontal guide ', guideID);
 
     return { updatedState: state };
   }

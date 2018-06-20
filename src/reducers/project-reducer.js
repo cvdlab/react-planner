@@ -30,7 +30,10 @@ import {
   SET_MODE,
   ADD_HORIZONTAL_GUIDE,
   ADD_VERTICAL_GUIDE,
-  ADD_CIRCULAR_GUIDE
+  ADD_CIRCULAR_GUIDE,
+  REMOVE_HORIZONTAL_GUIDE,
+  REMOVE_VERTICAL_GUIDE,
+  REMOVE_CIRCULAR_GUIDE
 } from '../constants';
 
 import { Project } from '../class/export';
@@ -136,6 +139,15 @@ export default function (state, action) {
     
     case ADD_CIRCULAR_GUIDE:
       return Project.addCircularGuide(state, action.x, action.y, action.radius).updatedState;
+
+    case REMOVE_HORIZONTAL_GUIDE:
+      return Project.removeHorizontalGuide(state, action.guideID).updatedState;
+
+    case REMOVE_VERTICAL_GUIDE:
+      return Project.removeVerticalGuide(state, action.guideID).updatedState;
+
+    case REMOVE_CIRCULAR_GUIDE:
+      return Project.removeCircularGuide(state, action.guideID).updatedState;
 
     default:
       return state;

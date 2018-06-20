@@ -1,15 +1,27 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import {FaPencil, FaTrash, FaClose} from 'react-icons/lib/fa';
+import { FaPencil, FaTrash, FaClose } from 'react-icons/lib/fa';
 import { FormNumberInput } from '../../components/style/export';
 
+const tabStyle = { margin: '1em' };
+
 const iconStyle = {
-  fontSize:'14px',
-  margin:'2px',
-  cursor:'pointer'
+  fontSize: '14px',
+  margin: '2px',
+  cursor: 'pointer'
+};
+
+const addGuideStyle = {
+  cursor: 'pointer',
+  height: '2em'
+};
+
+const tableTabStyle = {
+  width: '100%',
+  textAlign: 'center'
 };
 
 export default class PanelGuides extends Component {
@@ -18,82 +30,121 @@ export default class PanelGuides extends Component {
     super(props, context);
 
     this.state = {
-      addVisibile: true
+      addHGVisible: true,
+      addVGVisible: true,
+      addCGVisible: true,
     };
   }
 
+  shouldComponentUpdate( nextProps, nextState ) {
+    return (
+      this.state.addHGVisible !== nextState.addHGVisible ||
+      this.state.addVGVisible !== nextState.addVGVisible ||
+      this.state.addCGVisible !== nextState.addCGVisible ||
+      this.props.state.getIn(['scene', 'guides']).hashCode() !== nextProps.state.getIn(['scene', 'guides']).hashCode()
+    );
+  }
+
   render() {
-    let { guides } = this.props.state.scene;
+    let { state } = this.props;
+    let { projectActions, translator } = this.context;
+    let { guides } = state.scene;
 
     return (
       <Panel name="Guides">
-        <Tabs id="guidesTabs" style={{margin:'1em'}}>
+        <Tabs id="guidesTabs" style={tabStyle}>
           <TabList>
-            <Tab>Horizontal</Tab>
-            <Tab>Vertical</Tab>
-            <Tab>Circular</Tab>
+            <Tab>{translator.t('Horizontal')}</Tab>
+            <Tab>{translator.t('Vertical')}</Tab>
+            <Tab>{translator.t('Circular')}</Tab>
           </TabList>
 
           <TabPanel>
-            <table style={{width:'100%'}}>
+            <table style={tableTabStyle}>
               <tbody>
                 {
-                  guides.get('horizontal').entrySeq().map( ([ hgKey, hgVal ], ind) => {
+                  guides.get('horizontal').entrySeq().map(([hgKey, hgVal], ind) => {
                     return (
                       <tr key={hgKey}>
                         <td>{ind + 1}</td>
-                        <td  style={{width:'19em', textAlign:'center'}}>{hgVal}</td>
+                        <td style={{ width: '19em' }}>{hgVal}</td>
                         <td>
                           <FaPencil style={iconStyle} />
-                          <FaTrash style={iconStyle} />
+                          <FaTrash style={iconStyle} onClick={e => projectActions.removeHorizontalGuide(hgKey)} />
                         </td>
                       </tr>
                     );
                   })
                 }
                 {
-                  this.state.addVisibile ? 
-                    <tr style={{height:'2em'}}>
-                      <td
-                        colSpan="3"
-                        style={{textAlign:'center', cursor:'pointer'}}
-                        onClick={ ( e ) => { console.log('clicked'); return this.setState({'addVisibile': false}) } }
-                      >
-                        + Add Horizontal Giude
-                      </td>
+                  this.state.addHGVisible ?
+                    <tr>
+                      <td colSpan="3" style={addGuideStyle} onClick={e => this.setState({ 'addHGVisible': false }) }>{translator.t('+ Add Horizontal Giude')}</td>
                     </tr> :
                     <tr>
                       <td colSpan="2">
-                      <FormNumberInput
-                        value={0}
-                        onChange={( e ) => {
-                          console.log(e.target.value);
-                          this.context.projectActions.addHorizontalGuide( e.target.value );
-                          return this.setState({'addVisibile': true});
-                        }}
-                        onValid={ () => console.log('valid') }
-                        min={0}
-                        max={100000}/>
+                        <FormNumberInput
+                          value={0}
+                          onChange={e => {
+                            projectActions.addHorizontalGuide(e.target.value);
+                            return this.setState({ 'addHGVisible': true });
+                          }}
+                          min={0}
+                          max={this.props.state.getIn(['scene', 'height'])} />
                       </td>
-                      <td style={{textAlign:'center'}}>
-                        <FaClose style={iconStyle} onClick={ ( e ) => { console.log('clicked'); return this.setState({'addVisibile': true}) } } />
-                      </td>
+                      <td><FaClose style={iconStyle} onClick={e => this.setState({ 'addHGVisible': true }) } /></td>
                     </tr>
                 }
               </tbody>
             </table>
           </TabPanel>
           <TabPanel>
-            <b>Vertical Giudes</b>
+          <table style={tableTabStyle}>
+              <tbody>
+                {
+                  guides.get('vertical').entrySeq().map(([hgKey, hgVal], ind) => {
+                    return (
+                      <tr key={hgKey}>
+                        <td>{ind + 1}</td>
+                        <td style={{ width: '19em' }}>{hgVal}</td>
+                        <td>
+                          <FaPencil style={iconStyle} />
+                          <FaTrash style={iconStyle} onClick={e => projectActions.removeVerticalGuide(hgKey)} />
+                        </td>
+                      </tr>
+                    );
+                  })
+                }
+                {
+                  this.state.addVGVisible ?
+                    <tr>
+                      <td colSpan="3" style={addGuideStyle} onClick={e => this.setState({ 'addVGVisible': false }) }>{translator.t('+ Add Vertical Giude')}</td>
+                    </tr> :
+                    <tr>
+                      <td colSpan="2">
+                        <FormNumberInput
+                          value={0}
+                          onChange={e => {
+                            projectActions.addVerticalGuide(e.target.value);
+                            return this.setState({ 'addVGVisible': true });
+                          }}
+                          min={0}
+                          max={this.props.state.getIn(['scene', 'height'])} />
+                      </td>
+                      <td><FaClose style={iconStyle} onClick={e => this.setState({ 'addVGVisible': true }) } /></td>
+                    </tr>
+                }
+              </tbody>
+            </table>
           </TabPanel>
           <TabPanel>
-            <b>Circular Giudes</b>
+            <b>TODO Circular Giudes</b>
           </TabPanel>
         </Tabs>
       </Panel>
     );
   }
-  
+
 
 }
 
@@ -102,5 +153,6 @@ PanelGuides.propTypes = {
 };
 
 PanelGuides.contextTypes = {
+  translator: PropTypes.object.isRequired,
   projectActions: PropTypes.object.isRequired
 };

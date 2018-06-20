@@ -29,7 +29,10 @@ import {
   SET_MODE,
   ADD_HORIZONTAL_GUIDE,
   ADD_VERTICAL_GUIDE,
-  ADD_CIRCULAR_GUIDE
+  ADD_CIRCULAR_GUIDE,
+  REMOVE_HORIZONTAL_GUIDE,
+  REMOVE_VERTICAL_GUIDE,
+  REMOVE_CIRCULAR_GUIDE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -253,5 +256,25 @@ export function addCircularGuide( x, y, radius ) {
     x,
     y,
     radius
+  };
+}
+export function removeHorizontalGuide( guideID ) {
+  return {
+    type: REMOVE_HORIZONTAL_GUIDE,
+    guideID
+  };
+}
+
+export function removeVerticalGuide( guideID ) {
+  return {
+    type: REMOVE_VERTICAL_GUIDE,
+    guideID
+  };
+}
+
+export function removeCircularGuide( guideID ) {
+  return {
+    type: REMOVE_CIRCULAR_GUIDE,
+    guideID
   };
 }
