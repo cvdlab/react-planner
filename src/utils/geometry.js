@@ -73,17 +73,26 @@ export function closestPointFromLine(a, b, c, x, y) {
   }
 }
 
-export function intersectionFromTwoLines(a, b, c, j, k, l) {
-  let det = (b * j - a * k);
+/** @description Get point of intersection between two lines using ax+by+c line's equation
+ *  @param {number} a x coefficent of first line
+ *  @param {number} b y coefficent of first line
+ *  @param {number} c costant of first line
+ *  @param {number} j x coefficent of second line
+ *  @param {number} k y coefficent of second line
+ *  @param {number} l costant of second line
+ *  @return {object} {x,y} point's coordinates
+ */
+export function twoLinesIntersection(a, b, c, j, k, l) {
+  let angularCoefficientsDiff = (b * j - a * k);
 
-  if (det === 0) return undefined; //no intersection
+  if (angularCoefficientsDiff === 0) return undefined; //no intersection
 
-  let y = (a * l - c * j) / det;
-  let x = (c * k - b * l) / det;
+  let y = (a * l - c * j) / angularCoefficientsDiff;
+  let x = (c * k - b * l) / angularCoefficientsDiff;
   return {x, y};
 }
 
-export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
+export function twoLineSegmentsIntersection(p1, p2, p3, p4) {
   //https://github.com/psalaets/line-intersect/blob/master/lib/check-intersection.js
 
   let {x: x1, y: y1} = p1;

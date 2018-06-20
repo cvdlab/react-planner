@@ -181,7 +181,7 @@ class Line{
         GeometryUtils.samePoints(v1, points[1])
       );
 
-      let intersection = GeometryUtils.intersectionFromTwoLineSegment( points[0], points[1], v0, v1 );
+      let intersection = GeometryUtils.twoLineSegmentsIntersection( points[0], points[1], v0, v1 );
 
       if (intersection.type === 'colinear') {
         if (!oldHoles) { oldHoles = []; }

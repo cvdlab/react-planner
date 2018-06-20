@@ -19,13 +19,13 @@ export default function ActiveDrawingHelper({snap, width, height}) {
     case 'line':
       let h0 = Geometry.horizontalLine(0);
       let h1 = Geometry.horizontalLine(height);
-      let pointH0 = Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, h0.a, h0.b, h0.c);
-      let pointH1 = Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, h1.a, h1.b, h1.c);
+      let pointH0 = Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, h0.a, h0.b, h0.c);
+      let pointH1 = Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, h1.a, h1.b, h1.c);
 
       let v0 = Geometry.verticalLine(0);
       let v1 = Geometry.verticalLine(width);
-      let pointV0 = Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, v0.a, v0.b, v0.c);
-      let pointV1 = Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, v1.a, v1.b, v1.c);
+      let pointV0 = Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, v0.a, v0.b, v0.c);
+      let pointV1 = Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, v1.a, v1.b, v1.c);
 
       if (pointH0 && pointH1)
         return <line x1={pointH0.x} y1={pointH0.y} x2={pointH1.x} y2={pointH1.y} style={STYLE}/>;

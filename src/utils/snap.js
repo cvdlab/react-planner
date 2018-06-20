@@ -117,7 +117,7 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
     let intersections = snapElements
       .valueSeq()
       .filter(snap => snap.type === 'line')
-      .map(snap => Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, a, b, c))
+      .map(snap => Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, a, b, c))
       .filter(intersection => intersection !== undefined)
       .forEach(({x, y}) => addPointSnap(snapElements, x, y, 20, 40));
 
