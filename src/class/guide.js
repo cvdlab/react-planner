@@ -1,10 +1,4 @@
-//import { Map, List, fromJS } from 'immutable';
 import { IDBroker } from '../utils/export';
-/*import {
-  nearestSnap,
-  addLineSegmentSnap,
-} from '../utils/snap';*/
-
 
 class HorizontalGuide {
   static create(state, coordinate) {

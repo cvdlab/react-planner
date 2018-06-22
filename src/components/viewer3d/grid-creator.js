@@ -12,7 +12,6 @@ export default function createGrid(scene) {
   let { grids, width, height } = scene;
 
   grids.forEach(grid => {
-    console.log( grid );
     switch (grid.type) {
       case 'horizontal-streak':
         gridMesh.add(gridHorizontalStreak(width, height, grid, font));
