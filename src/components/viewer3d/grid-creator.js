@@ -5,23 +5,24 @@ import gridVerticalStreak from './grids/grid-vertical-streak';
 
 export default function createGrid(scene) {
 
-  let grid = new Three.Object3D();
-  grid.name = 'grid';
+  let gridMesh = new Three.Object3D();
+  gridMesh.name = 'grid';
   let fontLoader = new Three.FontLoader();
   let font = fontLoader.parse(HELVETIKER); // For measures
   let { grids, width, height } = scene;
 
   grids.forEach(grid => {
+    console.log( grid );
     switch (grid.type) {
       case 'horizontal-streak':
-        grid.add(gridHorizontalStreak(width, height, grid, font));
+        gridMesh.add(gridHorizontalStreak(width, height, grid, font));
         break;
       case 'vertical-streak':
-        grid.add(gridVerticalStreak(width, height, grid, font));
+        gridMesh.add(gridVerticalStreak(width, height, grid, font));
         break;
     }
   });
 
-  grid.position.y = -1;
-  return grid;
+  gridMesh.position.y = -1;
+  return gridMesh;
 }
