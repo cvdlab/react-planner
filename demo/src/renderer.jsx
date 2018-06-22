@@ -1,7 +1,8 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import ContainerDimensions from 'react-container-dimensions';
-import {Map} from 'immutable';
+import Immutable, {Map} from 'immutable';
+import immutableDevtools from 'immutable-devtools';
 import {createStore} from 'redux';
 import {Provider} from 'react-redux';
 
@@ -34,7 +35,11 @@ let blackList = isProduction === true ? [] : [
   'UPDATE_2D_CAMERA'
 ];
 
-if( !isProduction ) console.info('Environment is in development and these actions will be blacklisted', blackList);
+if( !isProduction ) {
+  console.info('Environment is in development and these actions will be blacklisted', blackList);
+  console.info('Enable Chrome custom formatter for Immutable pretty print');
+  immutableDevtools( Immutable );
+}
 
 //init store
 let store = createStore(
