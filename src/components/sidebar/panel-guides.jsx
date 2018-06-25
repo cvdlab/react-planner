@@ -36,7 +36,7 @@ export default class PanelGuides extends Component {
     };
   }
 
-  shouldComponentUpdate( nextProps, nextState ) {
+  shouldComponentUpdate(nextProps, nextState) {
     return (
       this.state.addHGVisible !== nextState.addHGVisible ||
       this.state.addVGVisible !== nextState.addVGVisible ||
@@ -66,10 +66,10 @@ export default class PanelGuides extends Component {
                   guides.get('horizontal').entrySeq().map(([hgKey, hgVal], ind) => {
                     return (
                       <tr key={hgKey}>
-                        <td>{ind + 1}</td>
-                        <td style={{ width: '19em' }}>{hgVal}</td>
-                        <td>
-                          <FaPencil style={iconStyle} />
+                        <td style={{ width: '2em' }}>{ind + 1}</td>
+                        <td>{hgVal}</td>
+                        <td style={{ width: '5em' }}>
+                          {/*<FaPencil style={iconStyle} />*/}
                           <FaTrash style={iconStyle} onClick={e => projectActions.removeHorizontalGuide(hgKey)} />
                         </td>
                       </tr>
@@ -79,7 +79,7 @@ export default class PanelGuides extends Component {
                 {
                   this.state.addHGVisible ?
                     <tr>
-                      <td colSpan="3" style={addGuideStyle} onClick={e => this.setState({ 'addHGVisible': false }) }>{translator.t('+ Add Horizontal Giude')}</td>
+                      <td colSpan="3" style={addGuideStyle} onClick={e => this.setState({ 'addHGVisible': false })}>{translator.t('+ Add Horizontal Giude')}</td>
                     </tr> :
                     <tr>
                       <td colSpan="2">
@@ -92,23 +92,23 @@ export default class PanelGuides extends Component {
                           min={0}
                           max={this.props.state.getIn(['scene', 'height'])} />
                       </td>
-                      <td><FaClose style={iconStyle} onClick={e => this.setState({ 'addHGVisible': true }) } /></td>
+                      <td><FaClose style={iconStyle} onClick={e => this.setState({ 'addHGVisible': true })} /></td>
                     </tr>
                 }
               </tbody>
             </table>
           </TabPanel>
           <TabPanel>
-          <table style={tableTabStyle}>
+            <table style={tableTabStyle}>
               <tbody>
                 {
                   guides.get('vertical').entrySeq().map(([hgKey, hgVal], ind) => {
                     return (
                       <tr key={hgKey}>
-                        <td>{ind + 1}</td>
-                        <td style={{ width: '19em' }}>{hgVal}</td>
-                        <td>
-                          <FaPencil style={iconStyle} />
+                        <td style={{ width: '2em' }}>{ind + 1}</td>
+                        <td>{hgVal}</td>
+                        <td style={{ width: '5em' }}>
+                          {/*<FaPencil style={iconStyle} />*/}
                           <FaTrash style={iconStyle} onClick={e => projectActions.removeVerticalGuide(hgKey)} />
                         </td>
                       </tr>
@@ -118,7 +118,7 @@ export default class PanelGuides extends Component {
                 {
                   this.state.addVGVisible ?
                     <tr>
-                      <td colSpan="3" style={addGuideStyle} onClick={e => this.setState({ 'addVGVisible': false }) }>{translator.t('+ Add Vertical Giude')}</td>
+                      <td colSpan="3" style={addGuideStyle} onClick={e => this.setState({ 'addVGVisible': false })}>{translator.t('+ Add Vertical Giude')}</td>
                     </tr> :
                     <tr>
                       <td colSpan="2">
@@ -131,7 +131,7 @@ export default class PanelGuides extends Component {
                           min={0}
                           max={this.props.state.getIn(['scene', 'height'])} />
                       </td>
-                      <td><FaClose style={iconStyle} onClick={e => this.setState({ 'addVGVisible': true }) } /></td>
+                      <td><FaClose style={iconStyle} onClick={e => this.setState({ 'addVGVisible': true })} /></td>
                     </tr>
                 }
               </tbody>
