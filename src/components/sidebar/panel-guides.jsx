@@ -51,12 +51,12 @@ export default class PanelGuides extends Component {
     let { guides } = state.scene;
 
     return (
-      <Panel name="Guides">
+      <Panel name={translator.t('Guides')}>
         <Tabs id="guidesTabs" style={tabStyle}>
           <TabList>
             <Tab>{translator.t('Horizontal')}</Tab>
             <Tab>{translator.t('Vertical')}</Tab>
-            <Tab>{translator.t('Circular')}</Tab>
+            {/*<Tab>{translator.t('Circular')}</Tab>*/}
           </TabList>
 
           <TabPanel>
@@ -137,9 +137,9 @@ export default class PanelGuides extends Component {
               </tbody>
             </table>
           </TabPanel>
-          <TabPanel>
+          {/*<TabPanel>
             <b>TODO Circular Giudes</b>
-          </TabPanel>
+          </TabPanel>*/}
         </Tabs>
       </Panel>
     );
