@@ -49,13 +49,13 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
   let selectedGroup = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
 
   let sorter = [
-    { index: 0, condition: true, dom: <PanelLayers state={state} /> },
-    { index: 1, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
-    { index: 2, condition: true, dom: <PanelGroups mode={state.mode} groups={state.scene.groups} layers={state.scene.layers} /> },
-    { index: 3, condition: !multiselected, dom: <PanelElementEditor state={state} /> },
-    //{ index: 4, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
-    { index: 5, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> },
-    { index: 6, condition: true, dom: <PanelGuides state={state}/> },
+    { index: 0, condition: true, dom: <PanelGuides state={state}/> },
+    { index: 1, condition: true, dom: <PanelLayers state={state} /> },
+    { index: 2, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
+    { index: 3, condition: true, dom: <PanelGroups mode={state.mode} groups={state.scene.groups} layers={state.scene.layers} /> },
+    { index: 4, condition: !multiselected, dom: <PanelElementEditor state={state} /> },
+    //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
+    { index: 6, condition: !!selectedGroup, dom: <PanelGroupEditor state={state} groupID={selectedGroup ? selectedGroup[0] : null} /> }
   ];
 
   sorter = sorter.concat(sidebarComponents.map((Component, key) => {
