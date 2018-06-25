@@ -20,7 +20,7 @@ export default function (width, height, grid, font) {
     let material = new Three.LineBasicMaterial({ color });
 
     if (counter % 5 == 0) {
-      let shape = new Three.TextGeometry(counter * step, {
+      let shape = new Three.TextGeometry(('' + (counter * step)), {
         size: 16,
         height: 1,
         font: font
