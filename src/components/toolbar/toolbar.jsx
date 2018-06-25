@@ -23,8 +23,8 @@ const iconTextStyle = {
   userSelect: 'none'
 };
 
-const Icon2D = () => <p style={iconTextStyle}>2D</p>;
-const Icon3D = () => <p style={iconTextStyle}>3D</p>;
+const Icon2D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>2D</p>;
+const Icon3D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>3D</p>;
 
 const ASIDE_STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
@@ -65,7 +65,8 @@ export default class Toolbar extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     return this.props.state.mode !== nextProps.state.mode ||
       this.props.height !== nextProps.height ||
-      this.props.width !== nextProps.width;
+      this.props.width !== nextProps.width ||
+      this.props.state.alterate !== nextProps.state.alterate;
   }
 
   render() {
@@ -76,6 +77,8 @@ export default class Toolbar extends Component {
     } = this;
 
     let mode = state.get('mode');
+    let alterate = state.get('alterate');
+    let alterateColor = alterate ? SharedStyle.MATERIAL_COLORS[500].orange : '';
 
     let sorter = [
       {
@@ -115,8 +118,8 @@ export default class Toolbar extends Component {
         index: 5, condition: true, dom: <ToolbarButton
           active={[MODE_IDLE].includes(mode)}
           tooltip={translator.t('2D View')}
-          onClick={event => projectActions.rollback()}>
-          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D /> : <FaMousePointer />}
+          onClick={event => projectActions.setMode( MODE_IDLE )}>
+          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D style={{color: alterateColor}} /> : <FaMousePointer style={{color: alterateColor}} />}
         </ToolbarButton>
       },
       {

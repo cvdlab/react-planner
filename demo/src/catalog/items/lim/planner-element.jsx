@@ -82,7 +82,7 @@ export default {
 
     let extrudeSettings = {
       steps: 1,
-      amount: 0.003125,
+      depth: 0.003125,
       bevelEnabled: false,
       bevelThickness: .4,
       bevelSize: .4,
@@ -119,7 +119,7 @@ export default {
 
     let extrudeSettings2 = {
       steps: 1,
-      amount: 0.003125,
+      depth: 0.003125,
       bevelEnabled: false,
       bevelThickness: .4,
       bevelSize: .4,
@@ -161,7 +161,7 @@ export default {
 
     let extrudeSettings3 = {
       steps: 1,
-      amount: 0.0125,
+      depth: 0.0125,
       bevelEnabled: false,
       bevelThickness: .4,
       bevelSize: .4,
@@ -193,7 +193,7 @@ export default {
 
     let extrudeSettings4 = {
       steps: 1,
-      amount: 0.0125,
+      depth: 0.0125,
       bevelEnabled: false,
       bevelThickness: .4,
       bevelSize: .4,
@@ -228,7 +228,7 @@ export default {
 
     let extrudeSettings5 = {
       steps: 1,
-      amount: 0.01,
+      depth: 0.01,
       bevelEnabled: false,
       bevelThickness: .4,
       bevelSize: .4,

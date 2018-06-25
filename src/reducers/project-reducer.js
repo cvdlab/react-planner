@@ -1,10 +1,8 @@
-import { Map, List } from 'immutable';
+import { history } from '../utils/export';
 import {
   LOAD_PROJECT,
   NEW_PROJECT,
   OPEN_CATALOG,
-  MODE_VIEWING_CATALOG,
-  MODE_CONFIGURING_PROJECT,
   SELECT_TOOL_EDIT,
   MODE_IDLE,
   UNSELECT_ALL,
@@ -27,285 +25,132 @@ import {
   THROW_WARNING,
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
-  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY
+  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
+  ALTERATE_STATE,
+  SET_MODE,
+  ADD_HORIZONTAL_GUIDE,
+  ADD_VERTICAL_GUIDE,
+  ADD_CIRCULAR_GUIDE,
+  REMOVE_HORIZONTAL_GUIDE,
+  REMOVE_VERTICAL_GUIDE,
+  REMOVE_CIRCULAR_GUIDE
 } from '../constants';
 
-import { State, Scene, Guide, Catalog } from '../models';
-
-import {
-  LayerOperations,
-  history
-} from '../utils/export';
+import { Project } from '../class/export';
 
 export default function (state, action) {
 
   switch (action.type) {
     case NEW_PROJECT:
-      return newProject(state);
+      return Project.newProject(state).updatedState;
 
     case LOAD_PROJECT:
-      return loadProject(state, action.sceneJSON);
+      return Project.loadProject(state, action.sceneJSON).updatedState;
 
     case OPEN_CATALOG:
-      return openCatalog(state);
+      return Project.openCatalog(state).updatedState;
 
     case CHANGE_CATALOG_PAGE:
-      return state.setIn(['catalog', 'page'], action.newPage)
-        .updateIn(['catalog', 'path'], path => path.push(action.oldPage));
+      return Project.changeCatalogPage( state, action.oldPage, action.newPage ).updatedState;
 
     case GO_BACK_TO_CATALOG_PAGE:
-      let path = state.catalog.path;
-      let pageIndex = state.catalog.path.findIndex(page => page === action.newPage);
-      return state.setIn(['catalog', 'page'], action.newPage)
-        .updateIn(['catalog', 'path'], path => path.take(pageIndex));
+      return Project.goBackToCatalogPage( state, action.newPage ).updatedState;
 
     case SELECT_TOOL_EDIT:
-      return state.set('mode', MODE_IDLE);
+      return Project.setMode(state, MODE_IDLE).updatedState;
 
     case UNSELECT_ALL:
-      return unselectAll(state);
+      return Project.unselectAll(state).updatedState;
 
     case SET_PROPERTIES:
-      return setProperties(state, action.properties);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.setProperties(state, state.getIn(['scene', 'selectedLayer']), action.properties).updatedState;
 
     case SET_ITEMS_ATTRIBUTES:
-      return setItemsAttributes(state, action.itemsAttributes);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.setItemsAttributes(state, action.itemsAttributes).updatedState;
 
     case SET_LINES_ATTRIBUTES:
-      return setLinesAttributes(state, action.linesAttributes);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.setLinesAttributes(state, action.linesAttributes).updatedState;
 
     case SET_HOLES_ATTRIBUTES:
-      return setHolesAttributes(state, action.holesAttributes);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.setHolesAttributes(state, action.holesAttributes).updatedState;
 
     case REMOVE:
-      return remove(state);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.remove(state).updatedState;
 
     case UNDO:
-      return undo(state);
+      return Project.undo(state).updatedState;
 
     case ROLLBACK:
-      return rollback(state);
+      return Project.rollback(state).updatedState;
 
     case SET_PROJECT_PROPERTIES:
-      return setProjectProperties(state, action.properties);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.setProjectProperties(state, action.properties).updatedState;
 
     case OPEN_PROJECT_CONFIGURATOR:
-      return openProjectConfigurator(state);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.openProjectConfigurator(state).updatedState;
 
     case INIT_CATALOG:
-      return initCatalog(state, action.catalog);
+      return Project.initCatalog(state, action.catalog).updatedState;
 
     case UPDATE_MOUSE_COORDS:
-      return updateMouseCoord(state, action.coords);
+      return Project.updateMouseCoord(state, action.coords).updatedState;
 
     case UPDATE_ZOOM_SCALE:
-      return updateZoomScale(state, action.scale);
+      return Project.updateZoomScale(state, action.scale).updatedState;
 
     case TOGGLE_SNAP:
-      return toggleSnap(state, action.mask);
+      return Project.toggleSnap(state, action.mask).updatedState;
 
     case THROW_ERROR:
-      return throwError(state, action.error);
+      return Project.throwError(state, action.error).updatedState;
 
     case THROW_WARNING:
-      return throwWarning(state, action.warning);
+      return Project.throwWarning(state, action.warning).updatedState;
 
     case COPY_PROPERTIES:
-      return copyProperties(state, action.properties);
+      return Project.copyProperties(state, action.properties).updatedState;
 
     case PASTE_PROPERTIES:
-      return pasteProperties(state);
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.pasteProperties(state).updatedState;
 
     case PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY:
-      return pushLastSelectedCatalogElementToHistory(state, action.element);
+      return Project.pushLastSelectedCatalogElementToHistory(state, action.element).updatedState;
+
+    case ALTERATE_STATE:
+      return Project.setAlterate( state ).updatedState;
+    
+    case SET_MODE:
+      return Project.setMode(state, action.mode).updatedState;
+    
+    case ADD_HORIZONTAL_GUIDE:
+      state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
+      return Project.addHorizontalGuide(state, action.coordinate).updatedState;
+    
+    case ADD_VERTICAL_GUIDE:
+      return Project.addVerticalGuide(state, action.coordinate).updatedState;
+    
+    case ADD_CIRCULAR_GUIDE:
+      return Project.addCircularGuide(state, action.x, action.y, action.radius).updatedState;
+
+    case REMOVE_HORIZONTAL_GUIDE:
+      return Project.removeHorizontalGuide(state, action.guideID).updatedState;
+
+    case REMOVE_VERTICAL_GUIDE:
+      return Project.removeVerticalGuide(state, action.guideID).updatedState;
+
+    case REMOVE_CIRCULAR_GUIDE:
+      return Project.removeCircularGuide(state, action.guideID).updatedState;
 
     default:
       return state;
 
   }
 }
-
-function openCatalog(state) {
-  return rollback(state)
-    .set('mode', MODE_VIEWING_CATALOG);
-}
-
-function newProject(state) {
-  return new State();
-}
-
-function loadProject(state, sceneJSON) {
-  return new State({ scene: sceneJSON, catalog: state.catalog.toJS() });
-}
-
-function setProperties(state, properties) {
-  let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setPropertiesOnSelected(layer, properties)));
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function updateProperties(state, properties) {
-  let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.updatePropertiesOnSelected(layer, properties)));
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function setItemsAttributes(state, attributes) {
-  let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog)));
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function setLinesAttributes(state, attributes) {
-  let scene = state.scene;
-
-  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog)));
-
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function setHolesAttributes(state, attributes) {
-  let scene = state.scene;
-  scene = scene.set('layers', scene.layers.map(layer => LayerOperations.setAttributesOnSelected(layer, attributes, state.catalog)));
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function unselectAll(state) {
-  let scene = state.scene;
-
-  scene = scene.update('layers', layer => layer.map(LayerOperations.unselectAll));
-
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function remove(state) {
-  let scene = state.scene;
-  let catalog = state.catalog;
-
-  scene = scene.updateIn(['layers', scene.selectedLayer], layer => layer.withMutations(layer => {
-    let { lines: selectedLines, holes: selectedHoles, items: selectedItems } = layer.selected;
-    LayerOperations.unselectAll(layer);
-    selectedLines.forEach(lineID => LayerOperations.removeLine(layer, lineID));
-    selectedHoles.forEach(holeID => LayerOperations.removeHole(layer, holeID));
-    selectedItems.forEach(itemID => LayerOperations.removeItem(layer, itemID));
-    LayerOperations.detectAndUpdateAreas(layer, catalog);
-  }));
-
-  return state.merge({
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function undo(state) {
-  let sceneHistory = state.sceneHistory;
-  if (state.scene === sceneHistory.last && sceneHistory.list.size > 1) {
-    sceneHistory = history.historyPop(sceneHistory);
-  }
-
-  return state.merge({
-    mode: MODE_IDLE,
-    scene: sceneHistory.last,
-    sceneHistory: history.historyPop(sceneHistory)
-  });
-}
-
-export function rollback(state) {
-  let sceneHistory = state.sceneHistory;
-
-  if (!sceneHistory.last && sceneHistory.list.isEmpty()) {
-    return state;
-  }
-
-  let scene = sceneHistory
-    .last
-    .update('layers', layer => layer.map(LayerOperations.unselectAll));
-
-  return state.merge({
-    mode: MODE_IDLE,
-    scene,
-    sceneHistory: history.historyPush(sceneHistory, scene),
-    snapElements: new List(),
-    activeSnapElement: null,
-    drawingSupport: new Map(),
-    draggingSupport: new Map(),
-    rotatingSupport: new Map(),
-  });
-}
-
-function setProjectProperties(state, properties) {
-  let scene = state.scene.merge(properties);
-  return state.merge({
-    mode: MODE_IDLE,
-    scene,
-    sceneHistory: history.historyPush(state.sceneHistory, scene)
-  });
-}
-
-function openProjectConfigurator(state) {
-  return state.merge({
-    mode: MODE_CONFIGURING_PROJECT,
-  });
-}
-
-function initCatalog(state, catalog) {
-  return state.set('catalog', new Catalog(catalog));
-}
-
-function updateMouseCoord(state, coords) {
-  return state.set('mouse', new Map(coords));
-}
-
-function updateZoomScale(state, scale) {
-  return state.set('zoom', scale);
-}
-
-function toggleSnap(state, mask) {
-  return state.set('snapMask', mask);
-}
-
-function throwError(state, error) {
-  return state.set('errors', state.get('errors').push({
-    date: Date.now(),
-    error
-  }));
-}
-
-const throwWarning = (state, warning) => state.set('warnings', state.get('warnings').push({
-  date: Date.now(),
-  warning
-}));
-
-const copyProperties = (state, properties) => state.set('clipboardProperties', properties.toJS());
-
-const pasteProperties = (state) => updateProperties(state, state.get('clipboardProperties'));
-
-const pushLastSelectedCatalogElementToHistory = (state, element) => {
-  let currHistory = state.selectedElementsHistory;
-
-  let previousPosition = currHistory.findIndex(el => el.name === element.name);
-  if (previousPosition !== -1) {
-    currHistory = currHistory.splice(previousPosition, 1);
-  }
-  currHistory = currHistory.splice(0, 0, element);
-
-  return state.set('selectedElementsHistory', currHistory);
-};

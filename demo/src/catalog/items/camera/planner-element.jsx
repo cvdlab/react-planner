@@ -87,7 +87,7 @@ function makeObjectMaxLOD(){
 
   let extrudeSettings = {
     steps: 2,
-    amount: 0.1,
+    depth: 0.1,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,
@@ -139,7 +139,7 @@ function makeObjectMaxLOD(){
   joint.lineTo(0.1, 0.1);
   joint.bezierCurveTo(0.05,0.05,0.05,0.05,0.1,0);
 
-  let extrudeSettings2 = { amount: 0.1, bevelEnabled: false, bevelSegments: 1, steps: 1, bevelSize: 1, bevelThickness: 1 };
+  let extrudeSettings2 = { depth: 0.1, bevelEnabled: false, bevelSegments: 1, steps: 1, bevelSize: 1, bevelThickness: 1 };
 
   let geometry4 = new Three.ExtrudeGeometry( joint, extrudeSettings2 );
 
@@ -244,7 +244,7 @@ function makeObjectMinLOD(){
 
   let extrudeSettings = {
     steps: 2,
-    amount: 0.1,
+    depth: 0.1,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,
@@ -296,7 +296,7 @@ function makeObjectMinLOD(){
   joint.lineTo(0.1, 0.1);
   joint.bezierCurveTo(0.05,0.05,0.05,0.05,0.1,0);
 
-  let extrudeSettings2 = { amount: 0.1, bevelEnabled: false, bevelSegments: 1, steps: 1, bevelSize: 1, bevelThickness: 1 };
+  let extrudeSettings2 = { depth: 0.1, bevelEnabled: false, bevelSegments: 1, steps: 1, bevelSize: 1, bevelThickness: 1 };
 
   let geometry4 = new Three.ExtrudeGeometry( joint, extrudeSettings2 );
 

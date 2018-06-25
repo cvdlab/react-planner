@@ -1,16 +1,13 @@
-import { Map, List, Record, Seq } from 'immutable';
+import { Map } from 'immutable';
 import diff from 'immutablediff';
 import patch from 'immutablepatch';
 
-const isImmutable = obj => obj instanceof Seq;
-
 export const historyPush = (historyStructure, item) => {
   if (historyStructure.last) {
-    let differences = diff(historyStructure.last, item);
-    if (differences.size) {
+    if (historyStructure.last.hashCode() !== item.hashCode()) {
       let toPush = new Map({
         time: Date.now(),
-        diff: differences
+        diff: diff(historyStructure.last, item)
       });
 
       historyStructure = historyStructure

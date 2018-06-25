@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_MASK } from '../../utils/snap';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
-import {MdAddCircle, MdWarning} from 'react-icons/lib/md';
+import { MdAddCircle, MdWarning } from 'react-icons/lib/md';
 import { VERSION } from '../../version';
 
 const footerBarStyle = {
@@ -119,6 +119,14 @@ export default class FooterBar extends Component {
               text="Snap GRD"
               toggleState={this.props.state.snapMask.get(SNAP_GRID)}
               title={this.context.translator.t('Snap to Grid')}
+            />
+            <FooterToggleButton
+              state={this.state}
+              toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
+              toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
+              text="Snap GDE"
+              toggleState={this.props.state.snapMask.get(SNAP_GUIDE)}
+              title={this.context.translator.t('Snap to Guide')}
             />
           </div>
         </If>

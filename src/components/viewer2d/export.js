@@ -8,6 +8,10 @@ import Line from './line';
 import Layer from './layer';
 import Item from './item';
 import Area from './area';
+import Grids from './grids/grids';
+import Group from './group';
+import RulerX from './rulerX';
+import RulerY from './rulerY';
 
 export {
   Viewer2D,
@@ -19,7 +23,11 @@ export {
   Line,
   Layer,
   Item,
-  Area
+  Area,
+  Grids,
+  Group,
+  RulerX,
+  RulerY
 };
 
 export default {
@@ -32,5 +40,9 @@ export default {
   Line,
   Layer,
   Item,
-  Area
+  Area,
+  Grids,
+  Group,
+  RulerX,
+  RulerY
 };

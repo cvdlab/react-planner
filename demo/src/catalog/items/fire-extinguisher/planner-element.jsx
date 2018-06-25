@@ -121,7 +121,7 @@ function makeObjectMaxLOD() {
 
   const extrudeSettings = {
     steps: 2,
-    amount: 0.02,
+    depth: 0.02,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,
@@ -145,7 +145,7 @@ function makeObjectMaxLOD() {
 
   const extrudeSettings2 = {
     steps: 2,
-    amount: 0.016,
+    depth: 0.016,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,

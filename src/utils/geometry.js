@@ -73,17 +73,26 @@ export function closestPointFromLine(a, b, c, x, y) {
   }
 }
 
-export function intersectionFromTwoLines(a, b, c, j, k, l) {
-  let det = (b * j - a * k);
+/** @description Get point of intersection between two lines using ax+by+c line's equation
+ *  @param {number} a x coefficent of first line
+ *  @param {number} b y coefficent of first line
+ *  @param {number} c costant of first line
+ *  @param {number} j x coefficent of second line
+ *  @param {number} k y coefficent of second line
+ *  @param {number} l costant of second line
+ *  @return {object} {x,y} point's coordinates
+ */
+export function twoLinesIntersection(a, b, c, j, k, l) {
+  let angularCoefficientsDiff = (b * j - a * k);
 
-  if (det === 0) return undefined; //no intersection
+  if (angularCoefficientsDiff === 0) return undefined; //no intersection
 
-  let y = (a * l - c * j) / det;
-  let x = (c * k - b * l) / det;
+  let y = (a * l - c * j) / angularCoefficientsDiff;
+  let x = (c * k - b * l) / angularCoefficientsDiff;
   return {x, y};
 }
 
-export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
+export function twoLineSegmentsIntersection(p1, p2, p3, p4) {
   //https://github.com/psalaets/line-intersect/blob/master/lib/check-intersection.js
 
   let {x: x1, y: y1} = p1;
@@ -214,6 +223,10 @@ export function angleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(y2 - y1, x2 - x1);
 }
 
+export function absAngleBetweenTwoPoints(x1, y1, x2, y2) {
+  return Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
+}
+
 export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
   return fAbs(x1 - x2) <= EPSILON && fAbs(y1 - y2) <= EPSILON;
 }
@@ -227,12 +240,12 @@ export function samePoints({x: x1, y: y1}, {x: x2, y: y2}) {
  *  @return {object}
  */
 export function extendLine(x1, y1, x2, y2, newDistance, precision = 6) {
-  let rad = Math.atan2(y2 - y1, x2 - x1);
+  let rad = angleBetweenTwoPoints( x1, y1, x2, y2 );
 
   return {
     x: toFixedFloat(x1 + (Math.cos(rad) * newDistance), precision),
     y: toFixedFloat(y1 + (Math.sin(rad) * newDistance), precision),
-  }
+  };
 }
 
 export function roundVertex(vertex, precision = 6) {
@@ -240,4 +253,85 @@ export function roundVertex(vertex, precision = 6) {
   vertex.set('y', toFixedFloat(vertex.get('y'), precision));
 
   return vertex;
+}
+
+//https://github.com/MartyWallace/PolyK
+export function ContainsPoint(polygon, pointX, pointY) {
+  let n = polygon.length >> 1;
+
+  let ax, lup;
+  let ay = polygon[2 * n - 3] - pointY;
+  let bx = polygon[2 * n - 2] - pointX;
+  let by = polygon[2 * n - 1] - pointY;
+
+  if (bx === 0 && by === 0) return false; // point on edge
+
+  // let lup = by > ay;
+  for (let ii = 0; ii < n; ii++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * ii] - pointX;
+    by = polygon[2 * ii + 1] - pointY;
+    if (bx === 0 && by === 0) return false; // point on edge
+    if (ay === by) continue;
+    lup = by > ay;
+  }
+
+  let depth = 0;
+  for (let i = 0; i < n; i++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * i] - pointX;
+    by = polygon[2 * i + 1] - pointY;
+    if (ay < 0 && by < 0) continue;  // both 'up' or both 'down'
+    if (ay > 0 && by > 0) continue;  // both 'up' or both 'down'
+    if (ax < 0 && bx < 0) continue;   // both points on the left
+
+    if (ay === by && Math.min(ax, bx) < 0) return true;
+    if (ay === by) continue;
+
+    let lx = ax + (bx - ax) * (-ay) / (by - ay);
+    if (lx === 0) return false;      // point on edge
+    if (lx > 0) depth++;
+    if (ay === 0 && lup && by > ay) depth--;  // hit vertex, both up
+    if (ay === 0 && !lup && by < ay) depth--; // hit vertex, both down
+    lup = by > ay;
+  }
+  return (depth & 1) === 1;
+}
+
+export function cosWithThreshold(alpha, threshold) {
+  let cos = Math.cos(alpha);
+  return cos < threshold ? 0 : cos;
+}
+
+export function sinWithThreshold(alpha, threshold) {
+  let sin = Math.sin(alpha);
+  return sin < threshold ? 0 : sin;
+}
+
+export function midPoint( x1, y1, x2, y2 ) {
+  return { x: (x1+x2)/2, y: (y1+y2)/2 };
+}
+
+export function verticesMidPoint( verticesArray ) {
+  let res = verticesArray.reduce( ( incr, vertex ) => { return { x: incr.x + vertex.x, y: incr.y + vertex.y } }, { x: 0, y: 0 });
+  return { x: res.x / verticesArray.length, y: res.y / verticesArray.length };
+}
+
+export function rotatePointAroundPoint( px, py, ox, oy, theta ) {
+
+  let thetaRad = theta * Math.PI / 180;
+
+  let cos = Math.cos( thetaRad );
+  let sin = Math.sin( thetaRad );
+
+  let deltaX = px - ox;
+  let deltaY = py - oy;
+
+  return {
+    x: cos * deltaX - sin * deltaY + ox,
+    y: sin * deltaX + cos * deltaY + oy
+  };
+
 }

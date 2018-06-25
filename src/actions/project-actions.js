@@ -24,7 +24,15 @@ import {
   THROW_WARNING,
   COPY_PROPERTIES,
   PASTE_PROPERTIES,
-  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY
+  PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
+  ALTERATE_STATE,
+  SET_MODE,
+  ADD_HORIZONTAL_GUIDE,
+  ADD_VERTICAL_GUIDE,
+  ADD_CIRCULAR_GUIDE,
+  REMOVE_HORIZONTAL_GUIDE,
+  REMOVE_VERTICAL_GUIDE,
+  REMOVE_CIRCULAR_GUIDE
 } from '../constants';
 
 export function loadProject(sceneJSON) {
@@ -212,5 +220,61 @@ export function pushLastSelectedCatalogElementToHistory( element ) {
   return {
     type: PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
     element
+  };
+}
+
+export function setAlterateState() {
+  return {
+    type: ALTERATE_STATE
+  };
+}
+
+export function setMode( mode ) {
+  return {
+    type: SET_MODE,
+    mode
+  };
+}
+
+export function addHorizontalGuide( coordinate ) {
+  return {
+    type: ADD_HORIZONTAL_GUIDE,
+    coordinate
+  };
+}
+
+export function addVerticalGuide( coordinate ) {
+  return {
+    type: ADD_VERTICAL_GUIDE,
+    coordinate
+  };
+}
+
+export function addCircularGuide( x, y, radius ) {
+  return {
+    type: ADD_CIRCULAR_GUIDE,
+    x,
+    y,
+    radius
+  };
+}
+export function removeHorizontalGuide( guideID ) {
+  return {
+    type: REMOVE_HORIZONTAL_GUIDE,
+    guideID
+  };
+}
+
+export function removeVerticalGuide( guideID ) {
+  return {
+    type: REMOVE_VERTICAL_GUIDE,
+    guideID
+  };
+}
+
+export function removeCircularGuide( guideID ) {
+  return {
+    type: REMOVE_CIRCULAR_GUIDE,
+    guideID
   };
 }

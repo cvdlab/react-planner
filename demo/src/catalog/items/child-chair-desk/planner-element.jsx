@@ -81,7 +81,7 @@ export default {
 
     let extrudeSettingsTable = {
       steps: 2,
-      amount: 0.1,
+      depth: 0.1,
       bevelEnabled: false,
       bevelThickness: 1,
       bevelSize: 1,
@@ -201,7 +201,7 @@ export default {
 
     let extrudeSettingsStairPiece1 = {
       steps: 2,
-      amount: 0.1,
+      depth: 0.1,
       bevelEnabled: false,
       bevelThickness: 1,
       bevelSize: 1,

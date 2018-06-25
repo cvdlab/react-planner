@@ -88,7 +88,7 @@ export default {
 
     var extrudeSettings = {
       steps: 1,
-      amount: 0.2,
+      depth: 0.2,
       bevelEnabled: false,
       bevelThickness: .4,
       bevelSize: .4,

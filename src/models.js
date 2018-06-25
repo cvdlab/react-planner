@@ -1,7 +1,6 @@
 import {Record, List, Map, fromJS} from 'immutable';
 import {MODE_IDLE} from './constants';
 import {SNAP_MASK} from './utils/snap';
-import {history} from './utils/export';
 
 let safeLoadMapList = (mapList, Model, defaultMap) => {
   return mapList
@@ -10,11 +9,11 @@ let safeLoadMapList = (mapList, Model, defaultMap) => {
 };
 
 
-export class Guide extends Record({
+export class Grid extends Record({
   id: '',
   type: '',
   properties: Map()
-}, 'Guide') {
+}, 'Grid') {
   constructor(json = {}) {
     super({
       ...json,
@@ -23,8 +22,8 @@ export class Guide extends Record({
   }
 }
 
-export const DefaultGuides = new Map({
-  'h1': new Guide({
+export const DefaultGrids = new Map({
+  'h1': new Grid({
     id: 'h1',
     type: 'horizontal-streak',
     properties: {
@@ -32,7 +31,7 @@ export const DefaultGuides = new Map({
       colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
     }
   }),
-  'v1': new Guide({
+  'v1': new Grid({
     id: 'v1',
     type: 'vertical-streak',
     properties: {
@@ -57,7 +56,7 @@ export class ElementsSet extends Record({
       holes: new List(json.holes || []),
       areas: new List(json.areas || []),
       items: new List(json.items || [])
-    })
+    });
   }
 }
 
@@ -69,8 +68,9 @@ const sharedAttributes =
   name: '',
   misc: new Map(),
   selected: false,
-  properties: new Map()
-}
+  properties: new Map(),
+  visible: true
+};
 
 export class Vertex extends Record({
   ...sharedAttributes,
@@ -85,7 +85,7 @@ export class Vertex extends Record({
       ...json,
       lines: new List(json.lines || []),
       areas: new List(json.areas || [])
-    })
+    });
   }
 }
 
@@ -101,7 +101,7 @@ export class Line extends Record({
       properties: fromJS(json.properties || {}),
       vertices: new List(json.vertices || []),
       holes: new List(json.holes || []),
-    })
+    });
   }
 }
 
@@ -115,7 +115,7 @@ export class Hole extends Record({
     super({
       ...json,
       properties: fromJS(json.properties || {})
-    })
+    });
   }
 }
 
@@ -130,7 +130,7 @@ export class Area extends Record({
       ...json,
       properties: fromJS(json.properties || {}),
       vertices: new List(json.vertices || [])
-    })
+    });
   }
 }
 
@@ -145,7 +145,7 @@ export class Item extends Record({
     super({
       ...json,
       properties: fromJS(json.properties || {})
-    })
+    });
   }
 }
 
@@ -176,6 +176,23 @@ export class Layer extends Record({
   }
 }
 
+export class Group extends Record({
+  ...sharedAttributes,
+  prototype: 'groups',
+  x: 0,
+  y: 0,
+  rotation: 0,
+  elements: new Map()
+}, 'Group') {
+  constructor(json = {}) {
+    super({
+      ...json,
+      properties: fromJS(json.properties || {}),
+      elements: fromJS(json.elements || {})
+    });
+  }
+}
+
 
 export const DefaultLayers = new Map({
   'layer-1': new Layer({id: 'layer-1', name: 'default'})
@@ -185,21 +202,25 @@ export const DefaultLayers = new Map({
 export class Scene extends Record({
   unit: 'cm',
   layers: new Map(),
-  guides: new Map(),
+  grids: new Map(),
   selectedLayer: null,
+  groups: new Map(),
   width: 3000,
   height: 2000,
-  meta: new Map()   //additional info
+  meta: new Map(),   //additional info
+  guides: new Map()
 }, 'Scene') {
   constructor(json = {}) {
     let layers = safeLoadMapList(json.layers, Layer, DefaultLayers);
     super({
       ...json,
-      guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
+      grids: safeLoadMapList(json.grids, Grid, DefaultGrids),
       layers,
       selectedLayer: layers.first().id,
-      meta: json.meta ? fromJS(json.meta) : new Map()
-    })
+      groups: safeLoadMapList(json.groups || {}, Group),
+      meta: json.meta ? fromJS(json.meta) : new Map(),
+      guides: json.guides ? fromJS(json.guides) : new Map({ horizontal: new Map(), vertical: new Map(), circular: new Map() })
+    });
   }
 }
 
@@ -220,7 +241,7 @@ export class CatalogElement extends Record({
 
 export class Catalog extends Record({
   ready: false,
-  page: "root",
+  page: 'root',
   path: new List(),
   elements: new Map(),
 }, 'Catalog') {
@@ -229,7 +250,7 @@ export class Catalog extends Record({
     super({
       elements,
       ready: !elements.isEmpty()
-    })
+    });
   }
 
   factoryElement(type, options, initialProperties) {
@@ -272,7 +293,7 @@ export class HistoryStructure extends Record({
       last: new Scene( json.last || json.scene )
     });
   }
-};
+}
 
 export class State extends Record({
   mode: MODE_IDLE,
@@ -290,9 +311,10 @@ export class State extends Record({
   rotatingSupport: new Map(),
   errors: new List(),
   warnings: new List(),
-  clipboardProperties: null,
+  clipboardProperties: new Map(),
   selectedElementsHistory: new List(),
-  misc: new Map()   //additional info
+  misc: new Map(),   //additional info
+  alterate: false
 }, 'State') {
   constructor(json = {}) {
     super({
@@ -305,7 +327,7 @@ export class State extends Record({
       draggingSupport: new Map(json.draggingSupport || {}),
       rotatingSupport: new Map(json.rotatingSupport || {}),
       misc: json.misc ? fromJS(json.misc) : new Map()
-    })
+    });
   }
 }
 

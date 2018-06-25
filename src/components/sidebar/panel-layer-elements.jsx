@@ -9,7 +9,6 @@ import {
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import MdSearch from 'react-icons/lib/md/search';
-import diff from 'immutablediff';
 
 const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -57,7 +56,7 @@ const searchInputStyle = {fontSize: '1em', width: '100%', height: '1em', padding
 export default class PanelLayerElement extends Component {
 
   constructor(props, context) {
-    super(props);
+    super(props, context);
 
     let layer = props.layers.get(props.selectedLayer);
     let elements = {
@@ -79,9 +78,11 @@ export default class PanelLayerElement extends Component {
     let oldElements = this.state.elements;
     let newElements = nextState.elements;
 
-    if (diff(oldElements.lines, newElements.lines).size) return true;
-    if (diff(oldElements.holes, newElements.holes).size) return true;
-    if (diff(oldElements.items, newElements.items).size) return true;
+    if(
+      oldElements.lines.hashCode() !== newElements.lines.hashCode() ||
+      oldElements.holes.hashCode() !== newElements.holes.hashCode() ||
+      oldElements.items.hashCode() !== newElements.items.hashCode()
+    ) return true;
 
     return false;
   }
@@ -89,7 +90,7 @@ export default class PanelLayerElement extends Component {
   componentWillReceiveProps(nextProps) {
     let layer = nextProps.layers.get(nextProps.selectedLayer);
 
-    if (diff(this.props.layers, nextProps.layers).size === 0) return;
+    if ( this.props.layers.hashCode() === nextProps.layers.hashCode() ) return;
 
     let elements = {
       lines: layer.lines,
@@ -134,7 +135,7 @@ export default class PanelLayerElement extends Component {
         items: this.state.elements.items.filter(filterCb)
       }
     });
-  };
+  }
 
   render() {
     if (!VISIBILITY_MODE[this.props.mode]) return null;
@@ -221,7 +222,7 @@ export default class PanelLayerElement extends Component {
 
         </div>
       </Panel>
-    )
+    );
   }
 
 }

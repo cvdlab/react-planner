@@ -1,9 +1,20 @@
-import { addPointSnap, addLineSnap, addLineSegmentSnap, addGridSnap } from './snap';
-import * as Geometry from './geometry';
+import {
+  SNAP_POINT,
+  SNAP_LINE,
+  SNAP_SEGMENT,
+  SNAP_GRID,
+  SNAP_GUIDE,
+  addPointSnap,
+  addLineSnap,
+  addLineSegmentSnap,
+  addGridSnap
+} from './snap';
+import { GeometryUtils } from './export';
 import { Map, List } from 'immutable';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID } from './snap';
 
 export function sceneSnapElements(scene, snapElements = new List(), snapMask = new Map()) {
+
+  let { width, height } = scene;
 
   let a, b, c;
   return snapElements.withMutations(snapElements => {
@@ -18,9 +29,9 @@ export function sceneSnapElements(scene, snapElements = new List(), snapMask = n
         }
 
         if (snapMask.get(SNAP_LINE)) {
-          ({ a, b, c } = Geometry.horizontalLine(y));
+          ({ a, b, c } = GeometryUtils.horizontalLine(y));
           addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
-          ({ a, b, c } = Geometry.verticalLine(x));
+          ({ a, b, c } = GeometryUtils.verticalLine(x));
           addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
         }
 
@@ -40,8 +51,8 @@ export function sceneSnapElements(scene, snapElements = new List(), snapMask = n
     if (snapMask.get(SNAP_GRID)) {
       let divider = 5;
       let gridCellSize = 100 / divider;
-      let xCycle = scene.get('width') / gridCellSize;
-      let yCycle = scene.get('height') / gridCellSize;
+      let xCycle = width / gridCellSize;
+      let yCycle = height / gridCellSize;
 
       for (let x = 0; x < xCycle; x++) {
         let xMul = x * gridCellSize;
@@ -55,6 +66,25 @@ export function sceneSnapElements(scene, snapElements = new List(), snapMask = n
           addGridSnap(snapElements, xMul, yMul, 10, onXCross && onYCross ? 15 : 10, null);
         }
       }
+    }
+
+    if (snapMask.get(SNAP_GUIDE)) {
+
+      let horizontal = scene.getIn(['guides', 'horizontal']);
+      let vertical = scene.getIn(['guides', 'vertical']);
+
+      let hValues = horizontal.valueSeq();
+      let vValues = vertical.valueSeq();
+
+      hValues.forEach(hVal => {
+        vValues.forEach(vVal => {
+          addPointSnap(snapElements, vVal, hVal, 10, 10);
+        });
+      });
+
+      hValues.forEach(hVal => addLineSegmentSnap(snapElements, 0, hVal, width, hVal, 20, 1));
+      vValues.forEach(vVal => addLineSegmentSnap(snapElements, vVal, 0, vVal, height, 20, 1));
+
     }
 
   })

@@ -5,12 +5,14 @@ export const SNAP_POINT = 'SNAP_POINT';
 export const SNAP_LINE = 'SNAP_LINE';
 export const SNAP_SEGMENT = 'SNAP_SEGMENT';
 export const SNAP_GRID = 'SNAP_GRID';
+export const SNAP_GUIDE = 'SNAP_GUIDE';
 
 export const SNAP_MASK = new Map({
   SNAP_POINT : true,
   SNAP_LINE : true,
   SNAP_SEGMENT : true,
-  SNAP_GRID : false
+  SNAP_GRID : false,
+  SNAP_GUIDE : true
 });
 
 class PointSnap extends Record({
@@ -117,7 +119,7 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
     let intersections = snapElements
       .valueSeq()
       .filter(snap => snap.type === 'line')
-      .map(snap => Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, a, b, c))
+      .map(snap => Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, a, b, c))
       .filter(intersection => intersection !== undefined)
       .forEach(({x, y}) => addPointSnap(snapElements, x, y, 20, 40));
 

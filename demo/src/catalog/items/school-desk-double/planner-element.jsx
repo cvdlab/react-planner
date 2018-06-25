@@ -132,7 +132,7 @@ export default {
 
       let extrudeSettings = {
         steps: 2,
-        amount: 0.03,
+        depth: 0.03,
         bevelEnabled: false,
         bevelThickness: 1,
         bevelSize: 1,
@@ -167,7 +167,7 @@ export default {
 
       let extrudeSettings2 = {
         steps: 2,
-        amount: 0.03,
+        depth: 0.03,
         bevelEnabled: false,
         bevelThickness: 1,
         bevelSize: 1,

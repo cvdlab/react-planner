@@ -32,7 +32,7 @@ function makeArmchairMaxLOD()
   let seat = new Three.Mesh();
 
   let extrusionSettings = {
-    amount: 0.65,
+    depth: 0.65,
     bevelEnabled: false,
     bevelSegments: 2,
     steps: 10,
@@ -99,7 +99,7 @@ function makeArmchairMaxLOD()
 
   let extrudeSettings = {
     steps: 2,
-    amount: .07,
+    depth: .07,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,
@@ -143,7 +143,7 @@ function makeArmchairMinLOD()
   let seat = new Three.Mesh();
 
   let extrusionSettings = {
-    amount: 0.65,
+    depth: 0.65,
     bevelEnabled: false,
     bevelSegments: 2,
     steps: 10,
@@ -210,7 +210,7 @@ function makeArmchairMinLOD()
 
   let extrudeSettings = {
     steps: 2,
-    amount: .07,
+    depth: .07,
     bevelEnabled: false,
     bevelThickness: 1,
     bevelSize: 1,

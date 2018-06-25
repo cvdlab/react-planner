@@ -29,7 +29,7 @@ function makeObjectMaxLOD(newWidth,newHeight,newDepth){
 
   let extrudeSettings = {
     steps: 1,
-    amount: 2.5,
+    depth: 2.5,
     bevelEnabled: false,
     bevelThickness: .4,
     bevelSize: .4,
@@ -136,7 +136,7 @@ function makeObjectMinLOD(newWidth,newHeight,newDepth){
 
   let extrudeSettings = {
     steps: 1,
-    amount: 2.5,
+    depth: 2.5,
     bevelEnabled: false,
     bevelThickness: .4,
     bevelSize: .4,

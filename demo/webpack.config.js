@@ -65,6 +65,12 @@ module.exports = (env, self) => {
             context: 'demo/src'
           }
         }]
+      }, {
+        test: /\.css$/,
+        use: [
+          { loader: 'style-loader/url' },
+          { loader: 'file-loader' }
+        ]
       }]
     },
     plugins: [
