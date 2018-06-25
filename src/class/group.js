@@ -110,9 +110,6 @@ class Group{
       [ 0, 0, 1 ]
     ];
 
-    let paper = document.getElementById('svg-drawing-paper');
-    let { x: pX, y: pY } = paper.getBoundingClientRect();
-
     let xBar = 0;
     let yBar = 0;
     let elementCount = 0;
@@ -293,7 +290,7 @@ class Group{
   }
 
   static rotate( state, groupID, newAlpha ) {
-    
+
 
     let { x: barX, y: barY, rotation } = state.getIn(['scene', 'groups', groupID]);
 
@@ -317,7 +314,7 @@ class Group{
           if( !vertices[ line.vertices.get(0) ] ) vertices[ line.vertices.get(0) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(0)])
           if( !vertices[ line.vertices.get(1) ] ) vertices[ line.vertices.get(1) ] = state.getIn(['scene', 'layers', groupLayerID, 'vertices', line.vertices.get(1)])
         });
-        
+
         for( let vertexID in vertices ) {
           let { x: xV, y: yV } = vertices[ vertexID ];
           let { x: newX, y: newY } = GeometryUtils.rotatePointAroundPoint( xV, yV, barX, barY, alpha );
