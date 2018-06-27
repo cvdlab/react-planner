@@ -37,7 +37,7 @@ class Vertex{
 
   static setAttributes(state, layerID, vertexID, vertexAttributes) {
     state = state.mergeIn(['scene', 'layers', layerID, 'vertices', vertexID ], vertexAttributes)
-    
+
     return { updatedState: state };
   }
 
@@ -99,7 +99,9 @@ class Vertex{
       mode: MODE_DRAGGING_VERTEX,
       snapElements,
       draggingSupport: Map({
-        layerID, vertexID
+        layerID,
+        vertexID,
+        previousMode: state.get('mode')
       })
     });
 
@@ -164,7 +166,7 @@ class Vertex{
           let lineGroups = reducedState   //get groups membership if present
             .getIn(['scene', 'groups'])
             .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
-          
+
           reducedState = Layer.removeZeroLengthLines( reducedState, layerID ).updatedState;
           reducedState = Layer.mergeEqualsVertices( reducedState, layerID, vertexID ).updatedState;
           reducedState = Line.remove( reducedState, layerID, lineID ).updatedState;
@@ -201,7 +203,7 @@ class Vertex{
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
 
     state = state.merge({
-      mode: MODE_IDLE,
+      mode: draggingSupport.get('previousMode'),
       draggingSupport: null,
       activeSnapElement: null,
       snapElements: new List()
