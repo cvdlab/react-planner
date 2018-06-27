@@ -242,9 +242,9 @@ class Group{
 
     layerList.entrySeq().forEach( ([groupLayerID, groupLayerElements]) => {
       let lines = groupLayerElements.get('lines');
-      let holes = groupLayerElements.get('holes');
+      //let holes = groupLayerElements.get('holes');
       let items = groupLayerElements.get('items');
-      let areas = groupLayerElements.get('areas');
+      //let areas = groupLayerElements.get('areas');
 
       //move vertices instead lines avoiding multiple vertex translation
       if( lines ) {
@@ -259,9 +259,9 @@ class Group{
           let { x: xV, y: yV } = vertices[ vertexID ];
           state = Vertex.setAttributes( state, groupLayerID, vertexID, new Map({ x: xV + deltaX, y: yV + deltaY }) ).updatedState;
         }
+
         //need to be separated from setAttributes cycle
         for( let vertexID in vertices ) {
-          let { x: xV, y: yV } = vertices[ vertexID ];
           state = Vertex.beginDraggingVertex( state, groupLayerID, vertexID ).updatedState;
           state = Vertex.endDraggingVertex( state ).updatedState;
         }
@@ -271,7 +271,6 @@ class Group{
         .map( itemID => state.getIn(['scene', 'layers', groupLayerID, 'items', itemID]) )
         .reduce( ( newState, item ) => {
           let { x: xI, y: yI } = item;
-
           return Item.setAttributes( newState, groupLayerID, item.id, new Map({ x: xI + deltaX, y: yI + deltaY }) ).updatedState;
         }, state );
 
@@ -322,7 +321,6 @@ class Group{
         }
         //need to be separated from setAttributes cycle
         for( let vertexID in vertices ) {
-          let { x: xV, y: yV } = vertices[ vertexID ];
           state = Vertex.beginDraggingVertex( state, groupLayerID, vertexID ).updatedState;
           state = Vertex.endDraggingVertex( state ).updatedState;
         }
