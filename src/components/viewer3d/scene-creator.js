@@ -90,7 +90,7 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
 
     if (modifiedPath[1] === 'layers') {
 
-      let layer = sceneData[modifiedPath[1]].get(modifiedPath[2]);
+      let layer = sceneData.getIn(['layers', modifiedPath[2]]);
 
       if (modifiedPath.length === 3) {
         switch (diff.op) {
@@ -117,10 +117,11 @@ export function updateScene(planData, sceneData, oldSceneData, diffArray, action
       }
     } else if (modifiedPath[1] === 'selectedLayer') {
       let layerSelectedID = diff.value;
+      let layerSelected = sceneData.getIn(['layers', layerSelectedID]);
       // First of all I check if the new selected layer is not visible
-      if (!sceneData.layers.get(layerSelectedID).visible) {
+      if (!layerSelected.visible) {
         // I need to create the objects for this layer
-        let promises = createLayerObjects(sceneData.layers.get(layerSelectedID), planData, sceneData, actions, catalog);
+        let promises = createLayerObjects(layerSelected, planData, sceneData, actions, catalog);
         Promise.all(promises).then(values => updateBoundingBox(planData));
       }
 
@@ -147,25 +148,25 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
   switch (modifiedPath[3]) {
     case 'vertices':
       if (modifiedPath[5] !== 'selected') {
-        let vertex = layer.vertices.get(modifiedPath[4]);
+        let vertex = layer.getIn(['vertices', modifiedPath[4]]);
 
         if (modifiedPath[5] === 'x' || modifiedPath[5] === 'y') {
           vertex.lines.forEach(lineID => {
-            let lineHoles = oldSceneData.layers.get(layer.id).lines.get(lineID).holes;
-            lineHoles.forEach(holeID => { replaceObject([0, 0, 0, 'holes', holeID, 'selected'], layer, planData, actions, sceneData, oldSceneData, catalog); });
+            let lineHoles = oldSceneData.getIn(['layers',layer.id, 'lines', lineID, 'holes' ]);
+            if( lineHoles ) lineHoles.forEach(holeID => { replaceObject([0, 0, 0, 'holes', holeID, 'selected'], layer, planData, actions, sceneData, oldSceneData, catalog); });
             return replaceObject([0, 0, 0, 'lines', lineID], layer, planData, actions, sceneData, oldSceneData, catalog);
           });
           vertex.areas.forEach(areaID => replaceObject([0, 0, 0, 'areas', areaID], layer, planData, actions, sceneData, oldSceneData, catalog));
         }
 
         if (modifiedPath[5] === 'areas') {
-          let areaID = vertex.areas.get(~~modifiedPath[6]);
+          let areaID = vertex.getIn(['areas', ~~modifiedPath[6]]);
           replaceObject([0, 0, 0, 'areas', areaID], layer, planData, actions, sceneData, oldSceneData, catalog);
         }
       }
       break;
     case 'holes':
-      let newHoleData = layer.holes.get(modifiedPath[4]);
+      let newHoleData = layer.getIn(['holes', modifiedPath[4]]);
 
       if (catalog.getElement(newHoleData.type).updateRender3D) {
         promises.push(
@@ -191,19 +192,19 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
           promises.push(addHole(sceneData, planData, layer, newHoleData.id, catalog, actions.holesActions));
         }
         else {
-          layer.lines.get(lineID).holes.forEach(holeID => {
+          layer.getIn(['lines', lineID, 'holes']).forEach(holeID => {
             removeHole(planData, layer.id, holeID);
           });
           removeLine(planData, layer.id, lineID);
           promises.push(addLine(sceneData, planData, layer, lineID, catalog, actions.linesActions));
-          layer.lines.get(lineID).holes.forEach(holeID => {
+          layer.getIn(['lines', lineID, 'holes']).forEach(holeID => {
             promises.push(addHole(sceneData, planData, layer, holeID, catalog, actions.holesActions));
           });
         }
       }
       break;
     case 'lines':
-      let line = layer.lines.get(modifiedPath[4]);
+      let line = layer.getIn(['lines', modifiedPath[4]]);
 
       if (catalog.getElement(line.type).updateRender3D) {
         promises.push(
@@ -227,7 +228,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       }
       break;
     case 'areas':
-      let area = layer.areas.get(modifiedPath[4]);
+      let area = layer.getIn(['areas', modifiedPath[4]]);
 
       if (catalog.getElement(area.type).updateRender3D) {
         promises.push(
@@ -253,7 +254,7 @@ function replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSce
       }
       break;
     case 'items':
-      let item = layer.items.get(modifiedPath[4]);
+      let item = layer.getIn(['items', modifiedPath[4]]);
 
       if (catalog.getElement(item.type).updateRender3D) {
         promises.push(
@@ -313,15 +314,14 @@ function removeObject(modifiedPath, layer, planData, actions, sceneData, oldScen
     case 'lines':
       // Here I remove the line with all its holes
       let lineID = modifiedPath[4];
-      let oldLayer = oldSceneData.layers.get(layer.id);
-      oldLayer.lines.get(lineID).holes.forEach(holeID => {
+      oldSceneData.getIn(['layers', layer.id, 'lines', lineID, 'holes']).forEach(holeID => {
         removeHole(planData, layer.id, holeID);
       });
       removeLine(planData, layer.id, lineID);
       if (modifiedPath.length > 5) {
         // I removed an hole, so I should add the new line
         promises.push(addLine(sceneData, planData, layer, lineID, catalog, actions.linesActions));
-        layer.lines.get(lineID).holes.forEach(holeID => {
+        layer.getIn(['lines', lineID, 'holes']).forEach(holeID => {
           promises.push(addHole(sceneData, planData, layer, holeID, catalog, actions.holesActions));
         });
       }
@@ -474,7 +474,7 @@ function addObject(modifiedPath, layer, planData, actions, sceneData, oldSceneDa
 }
 
 function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
-  let holeData = layer.holes.get(holeID);
+  let holeData = layer.getIn(['holes', holeID]);
 
   // Create the hole object
   return catalog.getElement(holeData.type).render3D(holeData, layer, sceneData).then(object => {
@@ -487,7 +487,7 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
     pivot.name = 'pivot';
     pivot.add(object);
 
-    let line = layer.lines.get(holeData.line);
+    let line = layer.getIn(['lines', holeData.line]);
 
     // First of all I need to find the vertices of this line
     let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -510,8 +510,8 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
       (boundingBox.max.y - boundingBox.min.y) / 2 + boundingBox.min.y,
       (boundingBox.max.z - boundingBox.min.z) / 2 + boundingBox.min.z];
 
-    let holeAltitude = holeData.properties.get('altitude').get('length');
-    let holeHeight = holeData.properties.get('height').get('length');
+    let holeAltitude = holeData.properties.getIn(['altitude', 'length']);
+    let holeHeight = holeData.properties.getIn(['height', 'length']);
 
     pivot.rotation.y = alpha;
     pivot.position.x = vertex0.x + distance * offset * Math.cos(alpha) - center[2] * Math.sin(alpha);
@@ -534,10 +534,11 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
   });
 }
 
-function updateHole(sceneData, oldSceneData, planData, layer, holeID, differences, catalog, holesActions, selfDestroy, selfBuild) {
+//TODO CLEAN AL GET AND MOVE INTO GETIN
 
-  let hole = layer.holes.get(holeID);
-  let oldHole = oldSceneData.layers.get(layer.id).holes.get(holeID);
+function updateHole(sceneData, oldSceneData, planData, layer, holeID, differences, catalog, holesActions, selfDestroy, selfBuild) {
+  let hole = layer.getIn(['holes', holeID]);
+  let oldHole = oldSceneData.getIn(['layers', layer.id, 'holes', holeID]);
   let mesh = planData.sceneGraph.layers[layer.id].holes[holeID];
 
   if (!mesh) return null;
@@ -554,7 +555,7 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
 
   planData.sceneGraph.busyResources.layers[layer.id].lines[lineID] = true;
 
-  let line = layer.lines.get(lineID);
+  let line = layer.getIn(['lines', lineID]);
 
   // First of all I need to find the vertices of this line
   let vertex0 = layer.vertices.get(line.vertices.get(0));
@@ -597,9 +598,8 @@ function addLine(sceneData, planData, layer, lineID, catalog, linesActions) {
 }
 
 function updateLine(sceneData, oldSceneData, planData, layer, lineID, differences, catalog, linesActions, selfDestroy, selfBuild) {
-
-  let line = layer.lines.get(lineID);
-  let oldLine = oldSceneData.layers.get(layer.id).lines.get(lineID);
+  let line = layer.getIn(['lines', lineID]);
+  let oldLine = oldSceneData.getIn(['layers', layer.id, 'lines', lineID]);
   let mesh = planData.sceneGraph.layers[layer.id].lines[lineID];
 
   if (!mesh) return null;
@@ -616,7 +616,7 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 
   planData.sceneGraph.busyResources.layers[layer.id].areas[areaID] = true;
 
-  let area = layer.areas.get(areaID);
+  let area = layer.getIn(['areas', areaID]);
   let interactFunction = () => areaActions.selectArea(layer.id, areaID);
 
   return catalog.getElement(area.type).render3D(area, layer, sceneData).then(area3D => {
@@ -645,9 +645,8 @@ function addArea(sceneData, planData, layer, areaID, catalog, areaActions) {
 }
 
 function updateArea(sceneData, oldSceneData, planData, layer, areaID, differences, catalog, areaActions, selfDestroy, selfBuild) {
-
-  let area = layer.areas.get(areaID);
-  let oldArea = oldSceneData.layers.get(layer.id).areas.get(areaID);
+  let area = layer.getIn(['areas', areaID]);
+  let oldArea = oldSceneData.getIn(['layers', layer.id, 'areas', areaID]);
   let mesh = planData.sceneGraph.layers[layer.id].areas[areaID];
 
   if (!mesh) return null;
@@ -657,7 +656,7 @@ function updateArea(sceneData, oldSceneData, planData, layer, areaID, difference
 
 function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
 
-  let item = layer.items.get(itemID);
+  let item = layer.getIn(['items', itemID]);
 
   return catalog.getElement(item.type).render3D(item, layer, sceneData).then(item3D => {
 
@@ -693,9 +692,8 @@ function addItem(sceneData, planData, layer, itemID, catalog, itemsActions) {
 }
 
 function updateItem(sceneData, oldSceneData, planData, layer, itemID, differences, catalog, itemsActions, selfDestroy, selfBuild) {
-
-  let item = layer.items.get(itemID);
-  let oldItem = oldSceneData.layers.get(layer.id).items.get(itemID);
+  let item = layer.getIn(['items', itemID]);
+  let oldItem = oldSceneData.getIn(['layers', layer.id, 'items', itemID]);
   let mesh = planData.sceneGraph.layers[layer.id].items[itemID];
 
   if (!mesh) return null;
@@ -808,7 +806,7 @@ function minimizeRemoveDiffsWhenSwitchingLayers(diffArray, sceneData, oldSceneDa
   }
 
   if (foundDiff) {
-    if (!sceneData.layers.get(oldSceneData.selectedLayer).visible) {
+    if (!sceneData.getIn(['layers', oldSceneData.selectedLayer, 'visible'])) {
       return diffArray.filter(diff => {
 
         return !(diff.path.endsWith('/selected') && diff.path.startsWith('/layers/' + oldSceneData.selectedLayer)) &&
