@@ -84,45 +84,43 @@ function createLayerObjects(layer, planData, sceneData, actions, catalog) {
 
 export function updateScene(planData, sceneData, oldSceneData, diffArray, actions, catalog) {
 
-  filterDiffs(diffArray, sceneData, oldSceneData).forEach(diff => {
+  let splitted = diffArray.map( el => { return { op: el.op, path: el.path.split('/'), value: el.value }; } );
+  let filteredDiffs = filterDiffs(splitted, sceneData, oldSceneData);
+
+  //***testing additional filter***
+  filteredDiffs = filteredDiffs.filter( ({path}) => path[3] !== 'selected' );
+  filteredDiffs = filteredDiffs.filter( ({path}) => path[1] !== 'groups' );
+  //*******************************
+
+  filteredDiffs.forEach(({op, path, value}) => {
     /* First of all I need to find the object I need to update */
-    let modifiedPath = diff.path.split('/');
+    if (path[1] === 'layers') {
 
-    if (modifiedPath[1] === 'layers') {
+      let layer = sceneData.getIn(['layers', path[2]]);
 
-      let layer = sceneData.getIn(['layers', modifiedPath[2]]);
-
-      if (modifiedPath.length === 3) {
-        switch (diff.op) {
+      if (path.length === 3 && op === 'remove') {
+        removeLayer(path[2], planData);
+      } else if (path.length > 3) {
+        switch (op) {
           case 'replace':
-            break;  //TODO?
-          case 'add':
-            break;      //TODO?
-          case 'remove':
-            removeLayer(modifiedPath[2], planData);
-            break;
-        }
-      } else if (modifiedPath.length > 3) {
-        switch (diff.op) {
-          case 'replace':
-            replaceObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
+            replaceObject(path, layer, planData, actions, sceneData, oldSceneData, catalog);
             break;
           case 'add':
-            addObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
+            addObject(path, layer, planData, actions, sceneData, oldSceneData, catalog);
             break;
           case 'remove':
-            removeObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog);
+            removeObject(path, layer, planData, actions, sceneData, oldSceneData, catalog);
             break;
         }
       }
-    } else if (modifiedPath[1] === 'selectedLayer') {
-      let layerSelectedID = diff.value;
+    } else if (path[1] === 'selectedLayer') {
+      let layerSelectedID = value;
       let layerSelected = sceneData.getIn(['layers', layerSelectedID]);
       // First of all I check if the new selected layer is not visible
       if (!layerSelected.visible) {
         // I need to create the objects for this layer
         let promises = createLayerObjects(layerSelected, planData, sceneData, actions, catalog);
-        Promise.all(promises).then(values => updateBoundingBox(planData));
+        Promise.all(promises).then(() => updateBoundingBox(planData));
       }
 
       let layerGraph = planData.sceneGraph.layers[oldSceneData.selectedLayer];
@@ -446,31 +444,20 @@ function removeItem(planData, layerId, itemID) {
   planData.sceneGraph.busyResources.layers[layerId].items[itemID] = false;
 }
 
+//TODO generate an area's replace if vertex has been changed
 function addObject(modifiedPath, layer, planData, actions, sceneData, oldSceneData, catalog) {
+  if (modifiedPath.length === 5) {
+    let addPromise = null, addAction = null;
 
-  let promises = [];
-  switch (modifiedPath[3]) {
-    case 'lines':
-      if (modifiedPath.length === 5) {
-        // I have to add a line
-        promises.push(addLine(sceneData, planData, layer, modifiedPath[4], catalog, actions.linesActions));
-      }
-      break;
-    case 'areas':
-      if (modifiedPath.length === 5) {
-        // I have to add an area
-        promises.push(addArea(sceneData, planData, layer, modifiedPath[4], catalog, actions.areaActions));
-      }
-      break;
-    case 'items':
-      if (modifiedPath.length === 5) {
-        // I have to add an area
-        promises.push(addItem(sceneData, planData, layer, modifiedPath[4], catalog, actions.itemsActions));
-      }
-      break;
+    switch (modifiedPath[3]) {
+      case 'lines': addPromise = addLine; addAction = actions.linesActions; break;
+      case 'areas': addPromise = addArea; addAction = actions.areaActions;  break;
+      case 'items': addPromise = addItem; addAction = actions.itemsActions; break;
+      case 'holes': addPromise = addHole; addAction = actions.holesActions; break;
+    }
+
+    if( addPromise ) addPromise( sceneData, planData, layer, modifiedPath[4], catalog, addAction ).then(() => updateBoundingBox(planData));
   }
-
-  Promise.all(promises).then(values => updateBoundingBox(planData));
 }
 
 function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
@@ -533,8 +520,6 @@ function addHole(sceneData, planData, layer, holeID, catalog, holesActions) {
 
   });
 }
-
-//TODO CLEAN AL GET AND MOVE INTO GETIN
 
 function updateHole(sceneData, oldSceneData, planData, layer, holeID, differences, catalog, holesActions, selfDestroy, selfBuild) {
   let hole = layer.getIn(['holes', holeID]);
@@ -800,17 +785,19 @@ function minimizeRemoveDiffsWhenSwitchingLayers(diffArray, sceneData, oldSceneDa
   let foundDiff;
   let i;
   for (i = 0; i < diffArray.length && !foundDiff; i++) {
-    if (diffArray[i].path === '/selectedLayer') {
+    if (diffArray[i].path[1] === 'selectedLayer') {
       foundDiff = diffArray[i];
     }
   }
 
   if (foundDiff) {
     if (!sceneData.getIn(['layers', oldSceneData.selectedLayer, 'visible'])) {
-      return diffArray.filter(diff => {
+      return diffArray.filter(({op, path}) => {
 
-        return !(diff.path.endsWith('/selected') && diff.path.startsWith('/layers/' + oldSceneData.selectedLayer)) &&
-          !(diff.op === 'remove' && diff.path.includes(oldSceneData.selectedLayer));
+        return (
+          !( path[ path.length - 1] === 'selected' && ( path[1] === 'layers' && path[2] === oldSceneData.selectedLayer )) &&
+          !(op === 'remove' && path.indexOf(oldSceneData.selectedLayer) !== -1)
+        );
 
       });
     }
@@ -828,17 +815,15 @@ function minimizeRemoveDiffsWhenSwitchingLayers(diffArray, sceneData, oldSceneDa
  */
 function minimizeChangePropertiesAfterSelectionsDiffs(diffArray, sceneData, oldSceneData) {
   let idsFound = {};
-  diffArray.forEach(diff => {
-    let split = diff.path.split('/');
-    if (split[5] === 'selected') {
-      idsFound[split[4]] = split[4];
+  diffArray.forEach( ({path}) => {
+    if (path[5] === 'selected') {
+      idsFound[path[4]] = path[4];
     }
   });
 
-  return diffArray.filter(diff => {
-    let split = diff.path.split('/');
-    if (split[5] === 'properties') {
-      return idsFound[split[4]] ? false : true;
+  return diffArray.filter( ({path}) => {
+    if (path[5] === 'properties') {
+      return idsFound[path[4]] ? false : true;
     }
     return true;
   });
@@ -853,11 +838,10 @@ function minimizeChangePropertiesAfterSelectionsDiffs(diffArray, sceneData, oldS
  */
 function minimizeChangePropertiesDiffs(diffArray, sceneData, oldSceneData) {
   let idsFound = {};
-  return diffArray.filter(diff => {
-    let split = diff.path.split('/');
-    if (split[5] === 'properties') {
-      return idsFound[split[4]] ? false : (idsFound[split[4]] = true);
-    } else if (split[5] === 'misc') {
+  return diffArray.filter( ({path}) => {
+    if (path[5] === 'properties') {
+      return idsFound[path[4]] ? false : (idsFound[path[4]] = true);
+    } else if (path[5] === 'misc') {
       // Remove misc changes
       return false;
     }
