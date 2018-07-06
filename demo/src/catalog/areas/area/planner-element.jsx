@@ -1,10 +1,10 @@
 import {ElementsFactories} from 'react-planner';
 
 let info = {
-  title: "area",
+  title: 'area',
   tag: ['area'],
-  description: "Generic Room",
-  image: ""
+  description: 'Generic Room',
+  image: ''
 };
 
 let textures = {
@@ -20,6 +20,12 @@ let textures = {
     lengthRepeatScale: 0.01,
     heightRepeatScale: 0.01,
   },
+  ceramic: {
+    name:'Ceramic Tile',
+    uri: require('./textures/ceramic-tile.jpg'),
+    lengthRepeatScale: 0.02,
+    heightRepeatScale: 0.02
+  }
 };
 
-export default ElementsFactories.AreaFactory("area", info, textures);
+export default ElementsFactories.AreaFactory('area', info, textures);
