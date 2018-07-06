@@ -1,13 +1,14 @@
 var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
-import { addPointSnap, addLineSnap, addLineSegmentSnap, addGridSnap } from './snap';
-import * as Geometry from './geometry';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE, addPointSnap, addLineSnap, addLineSegmentSnap, addGridSnap } from './snap';
+import { GeometryUtils } from './export';
 import { Map, List } from 'immutable';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID } from './snap';
 
 export function sceneSnapElements(scene) {
   var snapElements = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : new List();
   var snapMask = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : new Map();
+  var width = scene.width,
+      height = scene.height;
 
 
   var a = void 0,
@@ -30,19 +31,19 @@ export function sceneSnapElements(scene) {
         }
 
         if (snapMask.get(SNAP_LINE)) {
-          var _Geometry$horizontalL = Geometry.horizontalLine(y);
+          var _GeometryUtils$horizo = GeometryUtils.horizontalLine(y);
 
-          a = _Geometry$horizontalL.a;
-          b = _Geometry$horizontalL.b;
-          c = _Geometry$horizontalL.c;
+          a = _GeometryUtils$horizo.a;
+          b = _GeometryUtils$horizo.b;
+          c = _GeometryUtils$horizo.c;
 
           addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
 
-          var _Geometry$verticalLin = Geometry.verticalLine(x);
+          var _GeometryUtils$vertic = GeometryUtils.verticalLine(x);
 
-          a = _Geometry$verticalLin.a;
-          b = _Geometry$verticalLin.b;
-          c = _Geometry$verticalLin.c;
+          a = _GeometryUtils$vertic.a;
+          b = _GeometryUtils$vertic.b;
+          c = _GeometryUtils$vertic.c;
 
           addLineSnap(snapElements, a, b, c, 10, 1, vertexID);
         }
@@ -71,8 +72,8 @@ export function sceneSnapElements(scene) {
     if (snapMask.get(SNAP_GRID)) {
       var divider = 5;
       var gridCellSize = 100 / divider;
-      var xCycle = scene.get('width') / gridCellSize;
-      var yCycle = scene.get('height') / gridCellSize;
+      var xCycle = width / gridCellSize;
+      var yCycle = height / gridCellSize;
 
       for (var x = 0; x < xCycle; x++) {
         var xMul = x * gridCellSize;
@@ -86,6 +87,28 @@ export function sceneSnapElements(scene) {
           addGridSnap(snapElements, xMul, yMul, 10, onXCross && onYCross ? 15 : 10, null);
         }
       }
+    }
+
+    if (snapMask.get(SNAP_GUIDE)) {
+
+      var horizontal = scene.getIn(['guides', 'horizontal']);
+      var vertical = scene.getIn(['guides', 'vertical']);
+
+      var hValues = horizontal.valueSeq();
+      var vValues = vertical.valueSeq();
+
+      hValues.forEach(function (hVal) {
+        vValues.forEach(function (vVal) {
+          addPointSnap(snapElements, vVal, hVal, 10, 10);
+        });
+      });
+
+      hValues.forEach(function (hVal) {
+        return addLineSegmentSnap(snapElements, 0, hVal, width, hVal, 20, 1);
+      });
+      vValues.forEach(function (vVal) {
+        return addLineSegmentSnap(snapElements, vVal, 0, vVal, height, 20, 1);
+      });
     }
   });
 }

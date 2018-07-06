@@ -18,10 +18,10 @@ export default function PanelElementEditor(_ref, _ref2) {
   var componentRenderer = function componentRenderer(element, layer) {
     return React.createElement(
       Panel,
-      { key: element.id, name: translator.t("Properties: [{0}] {1}", element.type, element.id), opened: true },
+      { key: element.id, name: translator.t('Properties: [{0}] {1}', element.type, element.id), opened: true },
       React.createElement(
         'div',
-        { style: { padding: "5px 15px" } },
+        { style: { padding: '5px 15px' } },
         React.createElement(ElementEditor, { element: element, layer: layer, state: state })
       )
     );

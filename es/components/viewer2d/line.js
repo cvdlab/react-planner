@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { pointsDistance, angleBetweenTwoPointsAndOrigin } from '../../utils/geometry';
+import { GeometryUtils } from '../../utils/export';
 import Ruler from './ruler';
 
 export default function Line(_ref) {
@@ -13,8 +13,7 @@ export default function Line(_ref) {
   var vertex0 = layer.vertices.get(line.vertices.get(0));
   var vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  if (vertex0.id === vertex1.id) return null; //avoid 0-length lines
-  if (vertex0.x === vertex1.x && vertex0.y === vertex1.y) return null;
+  if (vertex0.id === vertex1.id || GeometryUtils.samePoints(vertex0, vertex1)) return null; //avoid 0-length lines
 
   var x1 = vertex0.x,
       y1 = vertex0.y;
@@ -29,8 +28,8 @@ export default function Line(_ref) {
     y2 = vertex0.y;
   }
 
-  var length = pointsDistance(x1, y1, x2, y2);
-  var angle = angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
+  var length = GeometryUtils.pointsDistance(x1, y1, x2, y2);
+  var angle = GeometryUtils.angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2);
 
   var renderedHoles = line.holes.map(function (holeID) {
     var hole = layer.holes.get(holeID);
@@ -48,17 +47,15 @@ export default function Line(_ref) {
         'data-selected': hole.selected,
         'data-layer': layer.id
       },
-      ' ',
-      renderedHole,
-      ' '
+      renderedHole
     );
   });
 
-  var unit = scene.unit;
-
+  var thickness = line.getIn(['properties', 'thickness', 'length']);
+  var half_thickness = thickness / 2;
 
   var renderedLine = catalog.getElement(line.type).render2D(line, layer);
-  var renderedRuler = line.selected ? React.createElement(Ruler, { unit: unit, length: length, transform: 'translate(0, 15)' }) : null;
+  var renderedRuler = line.selected ? React.createElement(Ruler, { unit: scene.unit, length: length, transform: 'translate(0, ' + (half_thickness + 10) + ' )' }) : null;
 
   return React.createElement(
     'g',
@@ -69,7 +66,7 @@ export default function Line(_ref) {
       'data-id': line.id,
       'data-selected': line.selected,
       'data-layer': layer.id,
-      style: line.selected ? { cursor: "move" } : {}
+      style: line.selected ? { cursor: 'move' } : {}
     },
     renderedRuler,
     renderedLine,

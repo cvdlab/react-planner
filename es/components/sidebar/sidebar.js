@@ -3,8 +3,11 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 import React from 'react';
 import PropTypes from 'prop-types';
 import PanelElementEditor from './panel-element-editor/panel-element-editor';
+import PanelGroupEditor from './panel-group-editor';
+import PanelMultiElementsEditor from './panel-element-editor/panel-multi-elements-editor';
 import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
+import PanelGroups from './panel-groups';
 import PanelLayerElements from './panel-layer-elements';
 import * as SharedStyle from '../../shared-style';
 import If from '../../utils/react-if';
@@ -44,7 +47,20 @@ export default function Sidebar(_ref) {
       sidebarComponents = _ref.sidebarComponents;
 
 
-  var sorter = [{ index: 0, condition: true, dom: React.createElement(PanelLayers, { state: state }) }, { index: 1, condition: true, dom: React.createElement(PanelLayerElements, { mode: state.mode, layers: state.scene.layers, selectedLayer: state.scene.selectedLayer }) }, { index: 2, condition: true, dom: React.createElement(PanelElementEditor, { state: state }) }];
+  var selectedLayer = state.getIn(['scene', 'selectedLayer']);
+
+  //TODO change in multi-layer check
+  var selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
+
+  var multiselected = selected.lines.size > 1 || selected.items.size > 1 || selected.holes.size > 1 || selected.areas.size > 1 || selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
+
+  var selectedGroup = state.getIn(['scene', 'groups']).findEntry(function (g) {
+    return g.get('selected');
+  });
+
+  var sorter = [{ index: 0, condition: true, dom: React.createElement(PanelGuides, { state: state }) }, { index: 1, condition: true, dom: React.createElement(PanelLayers, { state: state }) }, { index: 2, condition: true, dom: React.createElement(PanelLayerElements, { mode: state.mode, layers: state.scene.layers, selectedLayer: state.scene.selectedLayer }) }, { index: 3, condition: true, dom: React.createElement(PanelGroups, { mode: state.mode, groups: state.scene.groups, layers: state.scene.layers }) }, { index: 4, condition: !multiselected, dom: React.createElement(PanelElementEditor, { state: state }) },
+  //{ index: 5, condition: multiselected, dom: <PanelMultiElementsEditor state={state} /> },
+  { index: 6, condition: !!selectedGroup, dom: React.createElement(PanelGroupEditor, { state: state, groupID: selectedGroup ? selectedGroup[0] : null }) }];
 
   sorter = sorter.concat(sidebarComponents.map(function (Component, key) {
     return Component.prototype ? //if is a react component

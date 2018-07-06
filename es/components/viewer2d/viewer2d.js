@@ -1,11 +1,11 @@
-'use strict';
-
 import React from 'react';
 import PropTypes from 'prop-types';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
+import * as SharedStyle from '../../shared-style';
+import { RulerX, RulerY } from './export';
 
 function mode2Tool(mode) {
   switch (mode) {
@@ -311,32 +311,100 @@ export default function Viewer2D(_ref, _ref2) {
     }
   };
 
+  var _state$get$toJS = state.get('viewer2D').toJS(),
+      e = _state$get$toJS.e,
+      f = _state$get$toJS.f,
+      SVGWidth = _state$get$toJS.SVGWidth,
+      SVGHeight = _state$get$toJS.SVGHeight;
+
+  var rulerSize = 15; //px
+  var rulerUnitPixelSize = 100;
+  var rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
+  var rulerFnColor = SharedStyle.COLORS.white;
+  var rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
+  var rulerXElements = Math.ceil(SVGWidth / rulerUnitPixelSize) + 1;
+  var rulerYElements = Math.ceil(SVGHeight / rulerUnitPixelSize) + 1;
+
   return React.createElement(
-    ReactSVGPanZoom,
-    {
-      width: width, height: height,
-
-      value: viewer2D.isEmpty() ? null : viewer2D.toJS(),
-      onChangeValue: onChangeValue,
-
-      tool: mode2Tool(mode),
-      onChangeTool: onChangeTool,
-
-      detectAutoPan: mode2DetectAutopan(mode),
-
-      onMouseDown: onMouseDown,
-      onMouseMove: onMouseMove,
-      onMouseUp: onMouseUp,
-
-      miniaturePosition: 'none',
-      toolbarPosition: 'right' },
+    'div',
+    { style: {
+        margin: 0,
+        padding: 0,
+        display: 'grid',
+        gridRowGap: '0',
+        gridColumnGap: '0',
+        gridTemplateColumns: rulerSize + 'px ' + (width - rulerSize) + 'px',
+        gridTemplateRows: rulerSize + 'px ' + (height - rulerSize) + 'px',
+        position: 'relative'
+      } },
+    React.createElement('div', { style: { gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor } }),
     React.createElement(
-      'svg',
-      { width: scene.width, height: scene.height },
+      'div',
+      { style: { gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerX' },
+      SVGWidth ? React.createElement(RulerX, {
+        unitPixelSize: rulerUnitPixelSize,
+        zoom: state.zoom,
+        mouseX: state.mouse.get('x'),
+        width: width - rulerSize,
+        zeroLeftPosition: e || 0,
+        backgroundColor: rulerBgColor,
+        fontColor: rulerFnColor,
+        markerColor: rulerMkColor,
+        positiveUnitsNumber: rulerXElements,
+        negativeUnitsNumber: 0
+      }) : null
+    ),
+    React.createElement(
+      'div',
+      { style: { gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerY' },
+      SVGHeight ? React.createElement(RulerY, {
+        unitPixelSize: rulerUnitPixelSize,
+        zoom: state.zoom,
+        mouseY: state.mouse.get('y'),
+        height: height - rulerSize,
+        zeroTopPosition: SVGHeight * state.zoom + f || 0,
+        backgroundColor: rulerBgColor,
+        fontColor: rulerFnColor,
+        markerColor: rulerMkColor,
+        positiveUnitsNumber: rulerYElements,
+        negativeUnitsNumber: 0
+      }) : null
+    ),
+    React.createElement(
+      ReactSVGPanZoom,
+      {
+        style: { gridColumn: 2, gridRow: 2 },
+        width: width - rulerSize,
+        height: height - rulerSize,
+        value: viewer2D.isEmpty() ? null : viewer2D.toJS(),
+        onChangeValue: onChangeValue,
+        tool: mode2Tool(mode),
+        onChangeTool: onChangeTool,
+        detectAutoPan: mode2DetectAutopan(mode),
+        onMouseDown: onMouseDown,
+        onMouseMove: onMouseMove,
+        onMouseUp: onMouseUp,
+        miniaturePosition: 'none',
+        toolbarPosition: 'none'
+      },
       React.createElement(
-        'g',
-        { style: Object.assign(mode2Cursor(mode), mode2PointerEvents(mode)) },
-        React.createElement(State, { state: state, catalog: catalog })
+        'svg',
+        { width: scene.width, height: scene.height },
+        React.createElement(
+          'defs',
+          null,
+          React.createElement(
+            'pattern',
+            { id: 'diagonalFill', patternUnits: 'userSpaceOnUse', width: '4', height: '4', fill: '#FFF' },
+            React.createElement('rect', { x: '0', y: '0', width: '4', height: '4', fill: '#FFF' }),
+            React.createElement('path', { d: 'M-1,1 l2,-2 M0,4 l4,-4 M3,5 l2,-2', style: { stroke: '#8E9BA2', strokeWidth: 1 } })
+          )
+        ),
+        React.createElement(
+          'g',
+          { style: Object.assign(mode2Cursor(mode), mode2PointerEvents(mode)) },
+          React.createElement(State, { state: state, catalog: catalog })
+        )
       )
     )
   );

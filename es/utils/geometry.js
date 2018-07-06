@@ -77,17 +77,26 @@ export function closestPointFromLine(a, b, c, x, y) {
   };
 }
 
-export function intersectionFromTwoLines(a, b, c, j, k, l) {
-  var det = b * j - a * k;
+/** @description Get point of intersection between two lines using ax+by+c line's equation
+ *  @param {number} a x coefficent of first line
+ *  @param {number} b y coefficent of first line
+ *  @param {number} c costant of first line
+ *  @param {number} j x coefficent of second line
+ *  @param {number} k y coefficent of second line
+ *  @param {number} l costant of second line
+ *  @return {object} {x,y} point's coordinates
+ */
+export function twoLinesIntersection(a, b, c, j, k, l) {
+  var angularCoefficientsDiff = b * j - a * k;
 
-  if (det === 0) return undefined; //no intersection
+  if (angularCoefficientsDiff === 0) return undefined; //no intersection
 
-  var y = (a * l - c * j) / det;
-  var x = (c * k - b * l) / det;
+  var y = (a * l - c * j) / angularCoefficientsDiff;
+  var x = (c * k - b * l) / angularCoefficientsDiff;
   return { x: x, y: y };
 }
 
-export function intersectionFromTwoLineSegment(p1, p2, p3, p4) {
+export function twoLineSegmentsIntersection(p1, p2, p3, p4) {
   //https://github.com/psalaets/line-intersect/blob/master/lib/check-intersection.js
 
   var x1 = p1.x,
@@ -231,6 +240,10 @@ export function angleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(y2 - y1, x2 - x1);
 }
 
+export function absAngleBetweenTwoPoints(x1, y1, x2, y2) {
+  return Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
+}
+
 export function samePoints(_ref, _ref2) {
   var x1 = _ref.x,
       y1 = _ref.y;
@@ -251,7 +264,7 @@ export function samePoints(_ref, _ref2) {
 export function extendLine(x1, y1, x2, y2, newDistance) {
   var precision = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : 6;
 
-  var rad = Math.atan2(y2 - y1, x2 - x1);
+  var rad = angleBetweenTwoPoints(x1, y1, x2, y2);
 
   return {
     x: toFixedFloat(x1 + Math.cos(rad) * newDistance, precision),
@@ -266,4 +279,87 @@ export function roundVertex(vertex) {
   vertex.set('y', toFixedFloat(vertex.get('y'), precision));
 
   return vertex;
+}
+
+//https://github.com/MartyWallace/PolyK
+export function ContainsPoint(polygon, pointX, pointY) {
+  var n = polygon.length >> 1;
+
+  var ax = void 0,
+      lup = void 0;
+  var ay = polygon[2 * n - 3] - pointY;
+  var bx = polygon[2 * n - 2] - pointX;
+  var by = polygon[2 * n - 1] - pointY;
+
+  if (bx === 0 && by === 0) return false; // point on edge
+
+  // let lup = by > ay;
+  for (var ii = 0; ii < n; ii++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * ii] - pointX;
+    by = polygon[2 * ii + 1] - pointY;
+    if (bx === 0 && by === 0) return false; // point on edge
+    if (ay === by) continue;
+    lup = by > ay;
+  }
+
+  var depth = 0;
+  for (var i = 0; i < n; i++) {
+    ax = bx;
+    ay = by;
+    bx = polygon[2 * i] - pointX;
+    by = polygon[2 * i + 1] - pointY;
+    if (ay < 0 && by < 0) continue; // both 'up' or both 'down'
+    if (ay > 0 && by > 0) continue; // both 'up' or both 'down'
+    if (ax < 0 && bx < 0) continue; // both points on the left
+
+    if (ay === by && Math.min(ax, bx) < 0) return true;
+    if (ay === by) continue;
+
+    var lx = ax + (bx - ax) * -ay / (by - ay);
+    if (lx === 0) return false; // point on edge
+    if (lx > 0) depth++;
+    if (ay === 0 && lup && by > ay) depth--; // hit vertex, both up
+    if (ay === 0 && !lup && by < ay) depth--; // hit vertex, both down
+    lup = by > ay;
+  }
+  return (depth & 1) === 1;
+}
+
+export function cosWithThreshold(alpha, threshold) {
+  var cos = Math.cos(alpha);
+  return cos < threshold ? 0 : cos;
+}
+
+export function sinWithThreshold(alpha, threshold) {
+  var sin = Math.sin(alpha);
+  return sin < threshold ? 0 : sin;
+}
+
+export function midPoint(x1, y1, x2, y2) {
+  return { x: (x1 + x2) / 2, y: (y1 + y2) / 2 };
+}
+
+export function verticesMidPoint(verticesArray) {
+  var res = verticesArray.reduce(function (incr, vertex) {
+    return { x: incr.x + vertex.x, y: incr.y + vertex.y };
+  }, { x: 0, y: 0 });
+  return { x: res.x / verticesArray.length, y: res.y / verticesArray.length };
+}
+
+export function rotatePointAroundPoint(px, py, ox, oy, theta) {
+
+  var thetaRad = theta * Math.PI / 180;
+
+  var cos = Math.cos(thetaRad);
+  var sin = Math.sin(thetaRad);
+
+  var deltaX = px - ox;
+  var deltaY = py - oy;
+
+  return {
+    x: cos * deltaX - sin * deltaY + ox,
+    y: sin * deltaX + cos * deltaY + oy
+  };
 }

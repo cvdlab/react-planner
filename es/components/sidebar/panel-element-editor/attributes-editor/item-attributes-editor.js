@@ -7,15 +7,9 @@ import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
 import FormTextInput from '../../../style/form-text-input';
 
-var tableStyle = {
-  width: '100%'
-};
-var firstTdStyle = {
-  width: '6em'
-};
-var inputStyle = {
-  textAlign: 'left'
-};
+var tableStyle = { width: '100%' };
+var firstTdStyle = { width: '6em' };
+var inputStyle = { textAlign: 'left' };
 
 export default function ItemAttributesEditor(_ref, _ref2) {
   var element = _ref.element,

@@ -12,16 +12,11 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Map } from 'immutable';
 import Panel from './panel';
-import IconVisible from 'react-icons/lib/fa/eye';
 import { TiPlus, TiDelete } from 'react-icons/lib/ti';
-import { FaPencil, FaTrash } from 'react-icons/lib/fa';
-import FormTextInput from '../style/form-text-input';
-import FormNumberInput from '../style/form-number-input';
-import FormSubmitButton from '../style/form-submit-button';
-import FormSlider from '../style/form-slider';
-import CancelButton from '../style/cancel-button';
-import diff from 'immutablediff';
+import { FaPencil, FaTrash, FaEye } from 'react-icons/lib/fa';
+import { FormTextInput, FormNumberInput, FormSubmitButton, FormSlider, CancelButton } from '../style/export';
 
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 import * as SharedStyle from '../../shared-style';
@@ -61,7 +56,6 @@ var styleAddLabel = { fontSize: '10px', marginLeft: '5px' };
 var styleEyeVisible = { fontSize: '1.25em' };
 var styleEyeHidden = _extends({}, styleEyeVisible, { color: '#a5a1a1' });
 var firstTdStyle = { width: '6em' };
-var buttonLayerStyle = { display: 'table-cell' };
 var newLayerLableStyle = { margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center' };
 var newLayerLableHoverStyle = _extends({}, newLayerLableStyle, styleHoverColor);
 var layerInputTableStyle = { width: '100%', borderSpacing: '2px 0', padding: '5px 15px' };
@@ -78,7 +72,7 @@ var PanelLayers = function (_Component) {
     _this.state = {
       headHovered: false,
       layerAddUIVisible: false,
-      editingLayer: null
+      editingLayer: new Map()
     };
     return _this;
   }
@@ -86,10 +80,7 @@ var PanelLayers = function (_Component) {
   _createClass(PanelLayers, [{
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
-      if (this.props.state.scene.layers.size !== nextProps.state.scene.layers.size) return true;
-      if (nextState.layerAddUIVisible != this.state.layerAddUIVisible) return true;
-      if (diff(this.state.editingLayer, nextState.editingLayer).size) return true;
-      if (diff(this.props.state.sceneHistory, nextProps.state.sceneHistory).size) return true;
+      if (this.props.state.scene.layers.size !== nextProps.state.scene.layers.size || nextState.layerAddUIVisible != this.state.layerAddUIVisible || this.state.editingLayer.hashCode() !== nextState.editingLayer.hashCode() || this.props.state.sceneHistory.hashCode() !== nextProps.state.sceneHistory.hashCode()) return true;
 
       return false;
     }
@@ -106,7 +97,7 @@ var PanelLayers = function (_Component) {
     key: 'resetLayerMod',
     value: function resetLayerMod(e) {
       e.stopPropagation();
-      this.setState({ layerAddUIVisible: false, editingLayer: null });
+      this.setState({ layerAddUIVisible: false, editingLayer: new Map() });
     }
   }, {
     key: 'updateLayer',
@@ -123,14 +114,14 @@ var PanelLayers = function (_Component) {
       altitude = parseInt(altitude);
 
       this.context.sceneActions.setLayerProperties(id, { name: name, opacity: opacity, altitude: altitude, order: order });
-      this.setState({ layerAddUIVisible: false, editingLayer: null });
+      this.setState({ layerAddUIVisible: false, editingLayer: new Map() });
     }
   }, {
     key: 'delLayer',
     value: function delLayer(e, layerID) {
       e.stopPropagation();
       this.context.sceneActions.removeLayer(layerID);
-      this.setState({ layerAddUIVisible: false, editingLayer: null });
+      this.setState({ layerAddUIVisible: false, editingLayer: new Map() });
     }
   }, {
     key: 'render',
@@ -191,12 +182,16 @@ var PanelLayers = function (_Component) {
 
               return React.createElement(
                 'tr',
-                { key: layerID, onClick: selectClick, onDoubleClick: configureClick,
-                  style: !isCurrentLayer ? null : styleHoverColor },
+                {
+                  key: layerID,
+                  onClick: selectClick,
+                  onDoubleClick: configureClick,
+                  style: !isCurrentLayer ? null : styleHoverColor
+                },
                 React.createElement(
                   'td',
                   { style: iconColStyle },
-                  !isCurrentLayer ? React.createElement(IconVisible, {
+                  !isCurrentLayer ? React.createElement(FaEye, {
                     onClick: swapVisibility,
                     style: !layer.visible ? styleEyeHidden : styleEyeVisible
                   }) : null
@@ -215,7 +210,7 @@ var PanelLayers = function (_Component) {
                   { style: iconColStyle },
                   !isLastLayer ? React.createElement(FaTrash, {
                     onClick: function onClick(e) {
-                      _this2.delLayer(e, layerID);
+                      return _this2.delLayer(e, layerID);
                     },
                     style: !isCurrentLayer ? styleEditButton : styleEditButtonHover,
                     title: _this2.context.translator.t('Delete layer')

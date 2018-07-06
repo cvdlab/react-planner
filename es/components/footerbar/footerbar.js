@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_MASK } from '../../utils/snap';
+import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import { MdAddCircle, MdWarning } from 'react-icons/lib/md';
@@ -57,13 +57,15 @@ var coordStyle = {
   padding: 0
 };
 
+var appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
+
 var FooterBar = function (_Component) {
   _inherits(FooterBar, _Component);
 
-  function FooterBar(props) {
+  function FooterBar(props, context) {
     _classCallCheck(this, FooterBar);
 
-    var _this = _possibleConstructorReturn(this, (FooterBar.__proto__ || Object.getPrototypeOf(FooterBar)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (FooterBar.__proto__ || Object.getPrototypeOf(FooterBar)).call(this, props, context));
 
     _this.state = {};
     return _this;
@@ -72,20 +74,26 @@ var FooterBar = function (_Component) {
   _createClass(FooterBar, [{
     key: 'render',
     value: function render() {
-      var _this2 = this;
+      var _props = this.props,
+          globalState = _props.state,
+          width = _props.width,
+          height = _props.height;
+      var _context = this.context,
+          translator = _context.translator,
+          projectActions = _context.projectActions;
 
-      var _props$state$get$toJS = this.props.state.get('mouse').toJS(),
-          x = _props$state$get$toJS.x,
-          y = _props$state$get$toJS.y;
+      var _globalState$get$toJS = globalState.get('mouse').toJS(),
+          x = _globalState$get$toJS.x,
+          y = _globalState$get$toJS.y;
 
-      var zoom = this.props.state.get('zoom');
-      var mode = this.props.state.get('mode');
+      var zoom = globalState.get('zoom');
+      var mode = globalState.get('mode');
 
-      var errors = this.props.state.get('errors').toArray();
+      var errors = globalState.get('errors').toArray();
       var errorsJsx = errors.map(function (err, ind) {
         return React.createElement(
           'div',
-          { key: ind, style: { borderBottom: '1px solid #555', lineHeight: '1.5em' } },
+          { key: ind, style: appMessageStyle },
           '[ ',
           new Date(err.date).toLocaleString(),
           ' ] ',
@@ -95,11 +103,11 @@ var FooterBar = function (_Component) {
       var errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
       var errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
 
-      var warnings = this.props.state.get('warnings').toArray();
+      var warnings = globalState.get('warnings').toArray();
       var warningsJsx = warnings.map(function (warn, ind) {
         return React.createElement(
           'div',
-          { key: ind, style: { borderBottom: '1px solid #555', lineHeight: '1.5em' } },
+          { key: ind, style: appMessageStyle },
           '[ ',
           new Date(warn.date).toLocaleString(),
           ' ] ',
@@ -110,12 +118,12 @@ var FooterBar = function (_Component) {
       var warningIconStyle = warningLableStyle;
 
       var updateSnapMask = function updateSnapMask(val) {
-        return _this2.context.projectActions.toggleSnap(_this2.props.state.snapMask.merge(val));
+        return projectActions.toggleSnap(globalState.snapMask.merge(val));
       };
 
       return React.createElement(
         'div',
-        { style: _extends({}, footerBarStyle, { width: this.props.width, height: this.props.height }) },
+        { style: _extends({}, footerBarStyle, { width: width, height: height }) },
         React.createElement(
           If,
           { condition: MODE_SNAPPING.includes(mode) },
@@ -124,20 +132,20 @@ var FooterBar = function (_Component) {
             { style: leftTextStyle },
             React.createElement(
               'div',
-              { title: this.context.translator.t('Mouse X Coordinate'), style: coordStyle },
+              { title: translator.t('Mouse X Coordinate'), style: coordStyle },
               'X : ',
               x.toFixed(3)
             ),
             React.createElement(
               'div',
-              { title: this.context.translator.t('Mouse Y Coordinate'), style: coordStyle },
+              { title: translator.t('Mouse Y Coordinate'), style: coordStyle },
               'Y : ',
               y.toFixed(3)
             )
           ),
           React.createElement(
             'div',
-            { style: leftTextStyle, title: this.context.translator.t('Scene Zoom Level') },
+            { style: leftTextStyle, title: translator.t('Scene Zoom Level') },
             'Zoom: ',
             zoom.toFixed(3),
             'X'
@@ -154,8 +162,8 @@ var FooterBar = function (_Component) {
                 updateSnapMask({ SNAP_POINT: false });
               },
               text: 'Snap PT',
-              toggleState: this.props.state.snapMask.get(SNAP_POINT),
-              title: this.context.translator.t('Snap to Point')
+              toggleState: globalState.snapMask.get(SNAP_POINT),
+              title: translator.t('Snap to Point')
             }),
             React.createElement(FooterToggleButton, {
               state: this.state,
@@ -166,8 +174,8 @@ var FooterBar = function (_Component) {
                 updateSnapMask({ SNAP_LINE: false });
               },
               text: 'Snap LN',
-              toggleState: this.props.state.snapMask.get(SNAP_LINE),
-              title: this.context.translator.t('Snap to Line')
+              toggleState: globalState.snapMask.get(SNAP_LINE),
+              title: translator.t('Snap to Line')
             }),
             React.createElement(FooterToggleButton, {
               state: this.state,
@@ -178,8 +186,8 @@ var FooterBar = function (_Component) {
                 updateSnapMask({ SNAP_SEGMENT: false });
               },
               text: 'Snap SEG',
-              toggleState: this.props.state.snapMask.get(SNAP_SEGMENT),
-              title: this.context.translator.t('Snap to Segment')
+              toggleState: globalState.snapMask.get(SNAP_SEGMENT),
+              title: translator.t('Snap to Segment')
             }),
             React.createElement(FooterToggleButton, {
               state: this.state,
@@ -190,8 +198,20 @@ var FooterBar = function (_Component) {
                 updateSnapMask({ SNAP_GRID: false });
               },
               text: 'Snap GRD',
-              toggleState: this.props.state.snapMask.get(SNAP_GRID),
-              title: this.context.translator.t('Snap to Grid')
+              toggleState: globalState.snapMask.get(SNAP_GRID),
+              title: translator.t('Snap to Grid')
+            }),
+            React.createElement(FooterToggleButton, {
+              state: this.state,
+              toggleOn: function toggleOn() {
+                updateSnapMask({ SNAP_GUIDE: true });
+              },
+              toggleOff: function toggleOff() {
+                updateSnapMask({ SNAP_GUIDE: false });
+              },
+              text: 'Snap GDE',
+              toggleState: globalState.snapMask.get(SNAP_GUIDE),
+              title: translator.t('Snap to Guide')
             })
           )
         ),

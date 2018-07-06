@@ -21,6 +21,7 @@ import actions from './actions/export';
 import { objectsMap } from './utils/objects-utils';
 import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
 import { VERSION } from './version';
+import './styles/export';
 
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;

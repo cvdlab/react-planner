@@ -1,6 +1,6 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -27,17 +27,19 @@ var iconTextStyle = {
   userSelect: 'none'
 };
 
-var Icon2D = function Icon2D() {
+var Icon2D = function Icon2D(_ref) {
+  var style = _ref.style;
   return React.createElement(
     'p',
-    { style: iconTextStyle },
+    { style: _extends({}, iconTextStyle, style) },
     '2D'
   );
 };
-var Icon3D = function Icon3D() {
+var Icon3D = function Icon3D(_ref2) {
+  var style = _ref2.style;
   return React.createElement(
     'p',
-    { style: iconTextStyle },
+    { style: _extends({}, iconTextStyle, style) },
     '3D'
   );
 };
@@ -86,7 +88,7 @@ var Toolbar = function (_Component) {
   _createClass(Toolbar, [{
     key: 'shouldComponentUpdate',
     value: function shouldComponentUpdate(nextProps, nextState) {
-      return this.props.state.mode !== nextProps.state.mode || this.props.height !== nextProps.height || this.props.width !== nextProps.width;
+      return this.props.state.mode !== nextProps.state.mode || this.props.height !== nextProps.height || this.props.width !== nextProps.width || this.props.state.alterate !== nextProps.state.alterate;
     }
   }, {
     key: 'render',
@@ -104,6 +106,8 @@ var Toolbar = function (_Component) {
 
 
       var mode = state.get('mode');
+      var alterate = state.get('alterate');
+      var alterateColor = alterate ? SharedStyle.MATERIAL_COLORS[500].orange : '';
 
       var sorter = [{
         index: 0, condition: allowProjectFileSupport, dom: React.createElement(
@@ -152,9 +156,9 @@ var Toolbar = function (_Component) {
             active: [MODE_IDLE].includes(mode),
             tooltip: translator.t('2D View'),
             onClick: function onClick(event) {
-              return projectActions.rollback();
+              return projectActions.setMode(MODE_IDLE);
             } },
-          [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, null) : React.createElement(FaMousePointer, null)
+          [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, { style: { color: alterateColor } }) : React.createElement(FaMousePointer, { style: { color: alterateColor } })
         )
       }, {
         index: 6, condition: true, dom: React.createElement(

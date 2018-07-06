@@ -1,4 +1,4 @@
-import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING, COPY_PROPERTIES, PASTE_PROPERTIES, PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY } from '../constants';
+import { NEW_PROJECT, LOAD_PROJECT, SAVE_PROJECT, OPEN_CATALOG, SELECT_TOOL_EDIT, UNSELECT_ALL, SET_PROPERTIES, SET_ITEMS_ATTRIBUTES, SET_LINES_ATTRIBUTES, SET_HOLES_ATTRIBUTES, REMOVE, UNDO, ROLLBACK, OPEN_PROJECT_CONFIGURATOR, SET_PROJECT_PROPERTIES, INIT_CATALOG, UPDATE_MOUSE_COORDS, UPDATE_ZOOM_SCALE, TOGGLE_SNAP, CHANGE_CATALOG_PAGE, GO_BACK_TO_CATALOG_PAGE, THROW_ERROR, THROW_WARNING, COPY_PROPERTIES, PASTE_PROPERTIES, PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY, ALTERATE_STATE, SET_MODE, ADD_HORIZONTAL_GUIDE, ADD_VERTICAL_GUIDE, ADD_CIRCULAR_GUIDE, REMOVE_HORIZONTAL_GUIDE, REMOVE_VERTICAL_GUIDE, REMOVE_CIRCULAR_GUIDE } from '../constants';
 
 export function loadProject(sceneJSON) {
   return {
@@ -186,5 +186,61 @@ export function pushLastSelectedCatalogElementToHistory(element) {
   return {
     type: PUSH_LAST_SELECTED_CATALOG_ELEMENT_TO_HISTORY,
     element: element
+  };
+}
+
+export function setAlterateState() {
+  return {
+    type: ALTERATE_STATE
+  };
+}
+
+export function setMode(mode) {
+  return {
+    type: SET_MODE,
+    mode: mode
+  };
+}
+
+export function addHorizontalGuide(coordinate) {
+  return {
+    type: ADD_HORIZONTAL_GUIDE,
+    coordinate: coordinate
+  };
+}
+
+export function addVerticalGuide(coordinate) {
+  return {
+    type: ADD_VERTICAL_GUIDE,
+    coordinate: coordinate
+  };
+}
+
+export function addCircularGuide(x, y, radius) {
+  return {
+    type: ADD_CIRCULAR_GUIDE,
+    x: x,
+    y: y,
+    radius: radius
+  };
+}
+export function removeHorizontalGuide(guideID) {
+  return {
+    type: REMOVE_HORIZONTAL_GUIDE,
+    guideID: guideID
+  };
+}
+
+export function removeVerticalGuide(guideID) {
+  return {
+    type: REMOVE_VERTICAL_GUIDE,
+    guideID: guideID
+  };
+}
+
+export function removeCircularGuide(guideID) {
+  return {
+    type: REMOVE_CIRCULAR_GUIDE,
+    guideID: guideID
   };
 }

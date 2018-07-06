@@ -15,12 +15,14 @@ export var SNAP_POINT = 'SNAP_POINT';
 export var SNAP_LINE = 'SNAP_LINE';
 export var SNAP_SEGMENT = 'SNAP_SEGMENT';
 export var SNAP_GRID = 'SNAP_GRID';
+export var SNAP_GUIDE = 'SNAP_GUIDE';
 
 export var SNAP_MASK = new Map({
   SNAP_POINT: true,
   SNAP_LINE: true,
   SNAP_SEGMENT: true,
-  SNAP_GRID: false
+  SNAP_GRID: false,
+  SNAP_GUIDE: true
 });
 
 var PointSnap = function (_Record) {
@@ -195,7 +197,7 @@ export function addLineSnap(snapElements, a, b, c, radius, priority, related) {
     var intersections = snapElements.valueSeq().filter(function (snap) {
       return snap.type === 'line';
     }).map(function (snap) {
-      return Geometry.intersectionFromTwoLines(snap.a, snap.b, snap.c, a, b, c);
+      return Geometry.twoLinesIntersection(snap.a, snap.b, snap.c, a, b, c);
     }).filter(function (intersection) {
       return intersection !== undefined;
     }).forEach(function (_ref4) {

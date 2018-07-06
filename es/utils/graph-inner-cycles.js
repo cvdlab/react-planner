@@ -3,7 +3,7 @@ import getEdgesOfSubgraphs from './get-edges-of-subgraphs';
 import graphCycles from './graph-cycles';
 import { List } from 'immutable';
 
-export default function calculateInnerCycles(verticesArray, edgesArray) {
+export function calculateInnerCycles(verticesArray, edgesArray) {
   var innerCycles = new List();
 
   var graph = new Graph(verticesArray.length);

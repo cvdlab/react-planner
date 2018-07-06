@@ -16,7 +16,6 @@ import Panel from './panel';
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import MdSearch from 'react-icons/lib/md/search';
-import diff from 'immutablediff';
 
 var VISIBILITY_MODE = {
   MODE_IDLE: MODE_IDLE, MODE_2D_ZOOM_IN: MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT: MODE_2D_ZOOM_OUT, MODE_2D_PAN: MODE_2D_PAN, MODE_3D_VIEW: MODE_3D_VIEW, MODE_3D_FIRST_PERSON: MODE_3D_FIRST_PERSON,
@@ -66,7 +65,7 @@ var PanelLayerElement = function (_Component) {
   function PanelLayerElement(props, context) {
     _classCallCheck(this, PanelLayerElement);
 
-    var _this = _possibleConstructorReturn(this, (PanelLayerElement.__proto__ || Object.getPrototypeOf(PanelLayerElement)).call(this, props));
+    var _this = _possibleConstructorReturn(this, (PanelLayerElement.__proto__ || Object.getPrototypeOf(PanelLayerElement)).call(this, props, context));
 
     var layer = props.layers.get(props.selectedLayer);
     var elements = {
@@ -91,9 +90,7 @@ var PanelLayerElement = function (_Component) {
       var oldElements = this.state.elements;
       var newElements = nextState.elements;
 
-      if (diff(oldElements.lines, newElements.lines).size) return true;
-      if (diff(oldElements.holes, newElements.holes).size) return true;
-      if (diff(oldElements.items, newElements.items).size) return true;
+      if (oldElements.lines.hashCode() !== newElements.lines.hashCode() || oldElements.holes.hashCode() !== newElements.holes.hashCode() || oldElements.items.hashCode() !== newElements.items.hashCode()) return true;
 
       return false;
     }
@@ -102,7 +99,7 @@ var PanelLayerElement = function (_Component) {
     value: function componentWillReceiveProps(nextProps) {
       var layer = nextProps.layers.get(nextProps.selectedLayer);
 
-      if (diff(this.props.layers, nextProps.layers).size === 0) return;
+      if (this.props.layers.hashCode() === nextProps.layers.hashCode()) return;
 
       var elements = {
         lines: layer.lines,

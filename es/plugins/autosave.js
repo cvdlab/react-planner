@@ -1,6 +1,5 @@
 var localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
 import { loadProject } from '../actions/project-actions';
-import { history } from '../utils//export';
 
 var TIMEOUT_DELAY = 500;
 
@@ -27,11 +26,12 @@ export default function autosave(autosaveKey, delay) {
       if (timeout) clearTimeout(timeout);
       timeout = setTimeout(function () {
         var state = stateExtractor(store.getState());
-        var scene = state.sceneHistory.last;
+        localStorage.setItem(autosaveKey, JSON.stringify(state.scene.toJS()));
+        /*let scene = state.sceneHistory.last;
         if (scene) {
-          var _json = JSON.stringify(scene.toJS());
-          localStorage.setItem(autosaveKey, _json);
-        }
+          let json = JSON.stringify(scene.toJS());
+          localStorage.setItem(autosaveKey, json);
+        }*/
       }, delay);
     });
   };

@@ -11,7 +11,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import { Record, List, Map, fromJS } from 'immutable';
 import { MODE_IDLE } from './constants';
 import { SNAP_MASK } from './utils/snap';
-import { history } from './utils/export';
 
 var safeLoadMapList = function safeLoadMapList(mapList, Model, defaultMap) {
   return mapList ? new Map(mapList).map(function (m) {
@@ -19,28 +18,28 @@ var safeLoadMapList = function safeLoadMapList(mapList, Model, defaultMap) {
   }).toMap() : defaultMap || new Map();
 };
 
-export var Guide = function (_Record) {
-  _inherits(Guide, _Record);
+export var Grid = function (_Record) {
+  _inherits(Grid, _Record);
 
-  function Guide() {
+  function Grid() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-    _classCallCheck(this, Guide);
+    _classCallCheck(this, Grid);
 
-    return _possibleConstructorReturn(this, (Guide.__proto__ || Object.getPrototypeOf(Guide)).call(this, _extends({}, json, {
+    return _possibleConstructorReturn(this, (Grid.__proto__ || Object.getPrototypeOf(Grid)).call(this, _extends({}, json, {
       properties: fromJS(json.properties || {})
     })));
   }
 
-  return Guide;
+  return Grid;
 }(Record({
   id: '',
   type: '',
   properties: Map()
-}, 'Guide'));
+}, 'Grid'));
 
-export var DefaultGuides = new Map({
-  'h1': new Guide({
+export var DefaultGrids = new Map({
+  'h1': new Grid({
     id: 'h1',
     type: 'horizontal-streak',
     properties: {
@@ -48,7 +47,7 @@ export var DefaultGuides = new Map({
       colors: ['#808080', '#ddd', '#ddd', '#ddd', '#ddd']
     }
   }),
-  'v1': new Guide({
+  'v1': new Grid({
     id: 'v1',
     type: 'vertical-streak',
     properties: {
@@ -91,7 +90,8 @@ var sharedAttributes = {
   name: '',
   misc: new Map(),
   selected: false,
-  properties: new Map()
+  properties: new Map(),
+  visible: true
 };
 
 export var Vertex = function (_Record3) {
@@ -235,12 +235,35 @@ export var Layer = function (_Record8) {
   selected: new ElementsSet()
 }, 'Layer'));
 
+export var Group = function (_Record9) {
+  _inherits(Group, _Record9);
+
+  function Group() {
+    var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+    _classCallCheck(this, Group);
+
+    return _possibleConstructorReturn(this, (Group.__proto__ || Object.getPrototypeOf(Group)).call(this, _extends({}, json, {
+      properties: fromJS(json.properties || {}),
+      elements: fromJS(json.elements || {})
+    })));
+  }
+
+  return Group;
+}(Record(_extends({}, sharedAttributes, {
+  prototype: 'groups',
+  x: 0,
+  y: 0,
+  rotation: 0,
+  elements: new Map()
+}), 'Group'));
+
 export var DefaultLayers = new Map({
   'layer-1': new Layer({ id: 'layer-1', name: 'default' })
 });
 
-export var Scene = function (_Record9) {
-  _inherits(Scene, _Record9);
+export var Scene = function (_Record10) {
+  _inherits(Scene, _Record10);
 
   function Scene() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -249,10 +272,12 @@ export var Scene = function (_Record9) {
 
     var layers = safeLoadMapList(json.layers, Layer, DefaultLayers);
     return _possibleConstructorReturn(this, (Scene.__proto__ || Object.getPrototypeOf(Scene)).call(this, _extends({}, json, {
-      guides: safeLoadMapList(json.guides, Guide, DefaultGuides),
+      grids: safeLoadMapList(json.grids, Grid, DefaultGrids),
       layers: layers,
       selectedLayer: layers.first().id,
-      meta: json.meta ? fromJS(json.meta) : new Map()
+      groups: safeLoadMapList(json.groups || {}, Group),
+      meta: json.meta ? fromJS(json.meta) : new Map(),
+      guides: json.guides ? fromJS(json.guides) : new Map({ horizontal: new Map(), vertical: new Map(), circular: new Map() })
     })));
   }
 
@@ -260,15 +285,17 @@ export var Scene = function (_Record9) {
 }(Record({
   unit: 'cm',
   layers: new Map(),
-  guides: new Map(),
+  grids: new Map(),
   selectedLayer: null,
+  groups: new Map(),
   width: 3000,
   height: 2000,
-  meta: new Map() //additional info
+  meta: new Map(), //additional info
+  guides: new Map()
 }, 'Scene'));
 
-export var CatalogElement = function (_Record10) {
-  _inherits(CatalogElement, _Record10);
+export var CatalogElement = function (_Record11) {
+  _inherits(CatalogElement, _Record11);
 
   function CatalogElement() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -289,8 +316,8 @@ export var CatalogElement = function (_Record10) {
   properties: new Map()
 }, 'CatalogElement'));
 
-export var Catalog = function (_Record11) {
-  _inherits(Catalog, _Record11);
+export var Catalog = function (_Record12) {
+  _inherits(Catalog, _Record12);
 
   function Catalog() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -341,13 +368,13 @@ export var Catalog = function (_Record11) {
   return Catalog;
 }(Record({
   ready: false,
-  page: "root",
+  page: 'root',
   path: new List(),
   elements: new Map()
 }, 'Catalog'));
 
-export var HistoryStructure = function (_Record12) {
-  _inherits(HistoryStructure, _Record12);
+export var HistoryStructure = function (_Record13) {
+  _inherits(HistoryStructure, _Record13);
 
   function HistoryStructure() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -366,10 +393,10 @@ export var HistoryStructure = function (_Record12) {
   list: new List(),
   first: null,
   last: null
-}, 'HistoryStructure'));;
+}, 'HistoryStructure'));
 
-export var State = function (_Record13) {
-  _inherits(State, _Record13);
+export var State = function (_Record14) {
+  _inherits(State, _Record14);
 
   function State() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
@@ -405,7 +432,8 @@ export var State = function (_Record13) {
   rotatingSupport: new Map(),
   errors: new List(),
   warnings: new List(),
-  clipboardProperties: null,
+  clipboardProperties: new Map(),
   selectedElementsHistory: new List(),
-  misc: new Map() //additional info
+  misc: new Map(), //additional info
+  alterate: false
 }, 'State'));

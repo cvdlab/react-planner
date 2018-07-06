@@ -11,6 +11,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { MdUpdate } from 'react-icons/lib/md';
+import { KEYBOARD_BUTTON_CODE } from '../../constants';
 
 var STYLE_INPUT = {
   display: 'block',
@@ -26,6 +28,18 @@ var STYLE_INPUT = {
   height: '30px'
 };
 
+var confirmStyle = {
+  position: 'absolute',
+  cursor: 'pointer',
+  width: '2em',
+  height: '2em',
+  right: '0.35em',
+  top: '0.35em',
+  backgroundColor: SharedStyle.SECONDARY_COLOR.main,
+  color: '#FFF',
+  transition: 'all 0.1s linear'
+};
+
 var FormNumberInput = function (_Component) {
   _inherits(FormNumberInput, _Component);
 
@@ -36,12 +50,20 @@ var FormNumberInput = function (_Component) {
 
     _this.state = {
       focus: false,
-      valid: true
+      valid: true,
+      showedValue: props.value
     };
     return _this;
   }
 
   _createClass(FormNumberInput, [{
+    key: 'componentWillReceiveProps',
+    value: function componentWillReceiveProps(nextProps) {
+      if (this.props.value !== nextProps.value) {
+        this.setState({ showedValue: nextProps.value });
+      }
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this2 = this;
@@ -51,7 +73,7 @@ var FormNumberInput = function (_Component) {
           min = _props.min,
           max = _props.max,
           precision = _props.precision,
-          _onChange = _props.onChange,
+          onChange = _props.onChange,
           onValid = _props.onValid,
           onInvalid = _props.onInvalid,
           style = _props.style,
@@ -61,36 +83,71 @@ var FormNumberInput = function (_Component) {
 
       if (this.state.focus) numericInputStyle.border = '1px solid ' + SharedStyle.SECONDARY_COLOR.main;
 
-      var regexp = new RegExp('^-?([0-9]+)\\.?([0-9]{0,' + precision + '})?$');
+      var regexp = new RegExp('^-?([0-9]+)?\\.?([0-9]{0,' + precision + '})?$');
 
-      if (!isNaN(min) && isFinite(min) && value < min) value = min;
-      if (!isNaN(max) && isFinite(max) && value > max) value = max;
+      if (!isNaN(min) && isFinite(min) && this.state.showedValue < min) this.setState({ showedValue: min }); // value = min;
+      if (!isNaN(max) && isFinite(max) && this.state.showedValue > max) this.setState({ showedValue: max }); // value = max;
 
-      value = regexp.test(value) ? value : parseFloat(value).toFixed(precision);
+      var currValue = regexp.test(this.state.showedValue) ? this.state.showedValue : parseFloat(this.state.showedValue).toFixed(precision);
 
-      return React.createElement('input', {
-        type: 'text',
-        value: value,
-        style: numericInputStyle,
-        onChange: function onChange(evt) {
-          var valid = regexp.test(evt.nativeEvent.target.value);
+      var different = parseFloat(this.props.value).toFixed(precision) !== parseFloat(this.state.showedValue).toFixed(precision);
 
-          if (valid) {
-            _onChange({ target: { value: evt.nativeEvent.target.value } });
-            if (onValid) onValid(evt.nativeEvent);
-          } else {
-            if (onInvalid) onInvalid(evt.nativeEvent);
-          }
-          _this2.setState({ valid: valid });
-        },
-        onFocus: function onFocus(e) {
-          return _this2.setState({ focus: true });
-        },
-        onBlur: function onBlur(e) {
-          return _this2.setState({ focus: false });
-        },
-        placeholder: placeholder
-      });
+      var saveFn = function saveFn(e) {
+        e.stopPropagation();
+
+        if (_this2.state.valid) {
+          var savedValue = _this2.state.showedValue !== '' && _this2.state.showedValue !== '-' ? parseFloat(_this2.state.showedValue) : 0;
+
+          _this2.setState({ showedValue: savedValue });
+          onChange({ target: { value: savedValue } });
+        }
+      };
+
+      return React.createElement(
+        'div',
+        { style: { position: 'relative' } },
+        React.createElement('input', {
+          type: 'text',
+          value: currValue,
+          style: numericInputStyle,
+          onChange: function onChange(evt) {
+            var valid = regexp.test(evt.nativeEvent.target.value);
+
+            if (valid) {
+              _this2.setState({ showedValue: evt.nativeEvent.target.value });
+              if (onValid) onValid(evt.nativeEvent);
+            } else {
+              if (onInvalid) onInvalid(evt.nativeEvent);
+            }
+
+            _this2.setState({ valid: valid });
+          },
+          onFocus: function onFocus(e) {
+            return _this2.setState({ focus: true });
+          },
+          onBlur: function onBlur(e) {
+            return _this2.setState({ focus: false });
+          },
+          onKeyDown: function onKeyDown(e) {
+            var keyCode = e.keyCode || e.which;
+            if ((keyCode == KEYBOARD_BUTTON_CODE.ENTER || keyCode == KEYBOARD_BUTTON_CODE.TAB) && different) {
+              saveFn(e);
+            }
+          },
+          placeholder: placeholder
+        }),
+        React.createElement(
+          'div',
+          {
+            onClick: function onClick(e) {
+              if (different) saveFn(e);
+            },
+            title: this.context.translator.t('Confirm'),
+            style: _extends({}, confirmStyle, { visibility: different ? 'visible' : 'hidden', opacity: different ? '1' : '0' })
+          },
+          React.createElement(MdUpdate, { style: { width: '100%', height: '100%', padding: '0.2em', color: '#FFF' } })
+        )
+      );
     }
   }]);
 
@@ -110,6 +167,10 @@ FormNumberInput.propTypes = {
   max: PropTypes.number,
   precision: PropTypes.number,
   placeholder: PropTypes.string
+};
+
+FormNumberInput.contextTypes = {
+  translator: PropTypes.object.isRequired
 };
 
 FormNumberInput.defaultProps = {

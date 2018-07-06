@@ -1,7 +1,11 @@
 var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-import { createArea, updatedArea } from './area-factory-3d';
 import React from 'react';
+import { createArea, updatedArea } from './area-factory-3d';
+import * as SharedStyle from '../../shared-style';
+import Translator from '../../translator/translator';
+
+var translator = new Translator();
 
 export default function AreaFactory(name, info, textures) {
 
@@ -16,12 +20,12 @@ export default function AreaFactory(name, info, textures) {
     }),
     properties: {
       patternColor: {
-        label: 'Color',
+        label: translator.t('color'),
         type: 'color',
-        defaultValue: '#f5f4f4'
+        defaultValue: SharedStyle.AREA_MESH_COLOR.unselected
       },
       thickness: {
-        label: 'Thickness',
+        label: translator.t('thickness'),
         type: 'length-measure',
         defaultValue: {
           length: 0
@@ -47,7 +51,7 @@ export default function AreaFactory(name, info, textures) {
         });
       });
 
-      var fill = element.selected ? '#99c3fb' : element.properties.get('patternColor');
+      var fill = element.selected ? SharedStyle.AREA_MESH_COLOR.selected : element.properties.get('patternColor');
 
       return React.createElement('path', { d: path, fill: fill });
     },
@@ -64,16 +68,14 @@ export default function AreaFactory(name, info, textures) {
 
   if (textures && textures !== {}) {
 
-    var textureValues = {
-      'none': 'None'
-    };
+    var textureValues = { 'none': 'None' };
 
     for (var textureName in textures) {
       textureValues[textureName] = textures[textureName].name;
     }
 
     areaElement.properties.texture = {
-      label: 'Floor',
+      label: translator.t('texture'),
       type: 'enum',
       defaultValue: 'none',
       values: textureValues
