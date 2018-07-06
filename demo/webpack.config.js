@@ -48,7 +48,7 @@ module.exports = (env, self) => {
               'transform-object-rest-spread'
             ],
             'presets': [
-              'es2015-webpack2',
+              'env',
               'react'
             ]
           }

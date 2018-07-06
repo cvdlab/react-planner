@@ -5,10 +5,10 @@
   ],
   "env": {
     "commonjs": {
-      "presets": ["es2015", "react"]
+      "presets": ["env", "react"]
     },
     "es": {
-      "presets": [["es2015", { "modules": false }], "react"]
+      "presets": [["env", { "modules": false }], "react"]
     }
   }
 }
