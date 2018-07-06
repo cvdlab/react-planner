@@ -84,7 +84,7 @@
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-core": "6.26.3",
-    "babel-loader": "7.1.4",
+    "babel-loader": "7.1.5",
     "babel-plugin-import-glob": "2.0.0",
     "babel-plugin-transform-object-rest-spread": "6.26.0",
     "babel-preset-es2015": "6.24.1",
@@ -101,8 +101,8 @@
     "react-dom": "16.4.1",
     "rimraf": "2.6.2",
     "style-loader": "0.21.0",
-    "three": "0.93.0",
-    "webpack": "4.12.1",
+    "three": "0.94.0",
+    "webpack": "4.15.1",
     "webpack-cli": "3.0.8",
     "webpack-dev-server": "3.1.4"
   },
