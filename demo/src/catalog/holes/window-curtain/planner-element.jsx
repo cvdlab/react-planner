@@ -1,77 +1,74 @@
 import React from 'react';
 import * as Three from 'three';
-import {loadObjWithMaterial} from '../../utils/load-obj';
+import { loadObjWithMaterial } from '../../utils/load-obj';
 import path from 'path';
 
 let cached3DWindow = null;
 
+const STYLE_HOLE_BASE = { stroke: '#000', strokeWidth: '3px', fill: '#000' };
+const STYLE_HOLE_SELECTED = { stroke: '#0096fd', strokeWidth: '3px', fill: '#0096fd', cursor: 'move' };
+const EPSILON = 3;
+
 export default {
-  name: "window-curtain",
-  prototype: "holes",
+  name: 'window-curtain',
+  prototype: 'holes',
 
   info: {
     tag: ['Finestre'],
-    title: "Curtain window",
-    description: "Curtain window",
-    image: require('./window-curtain.png')
+    title: 'Curtain window',
+    description: 'Curtain window',
+    image: require('./window-curtain.jpg')
   },
 
   properties: {
     width: {
-      label: "width",
-      type: "length-measure",
+      label: 'width',
+      type: 'length-measure',
       defaultValue: {
         length: 90
       }
     },
     height: {
-      label: "height",
-      type: "length-measure",
+      label: 'height',
+      type: 'length-measure',
       defaultValue: {
         length: 100
       }
     },
     altitude: {
-      label: "altitudine",
-      type: "length-measure",
+      label: 'altitudine',
+      type: 'length-measure',
       defaultValue: {
         length: 90
       }
     },
     thickness: {
-      label: "spessore",
-      type: "length-measure",
+      label: 'spessore',
+      type: 'length-measure',
       defaultValue: {
         length: 10
       }
     },
     flip: {
-      label: "flip",
-      type: "checkbox",
+      label: 'flip',
+      type: 'checkbox',
       defaultValue: 'none',
       values: {
-        'none': "none",
-        'yes':  "yes"
+        'none': 'none',
+        'yes': 'yes'
       }
     },
   },
 
   render2D: function (element, layer, scene) {
-    const STYLE_HOLE_BASE = {stroke: "#000", strokeWidth: "3px", fill: "#000"};
-    const STYLE_HOLE_SELECTED = {stroke: "#0096fd", strokeWidth: "3px", fill: "#0096fd", cursor: "move"};
-    //let line = layer.lines.get(hole.line);
-    //let epsilon = line.properties.get('thickness') / 2;
-
-    let epsilon = 3;
-
     let holeWidth = element.properties.get('width').get('length');
-    let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
+    let holePath = `M${0} ${-EPSILON}  L${holeWidth} ${-EPSILON}  L${holeWidth} ${EPSILON}  L${0} ${EPSILON}  z`;
     let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
     let length = element.properties.get('width').get('length');
     return (
       <g transform={`translate(${-length / 2}, 0)`}>
-        <path key="1" d={holePath} style={holeStyle}/>
-        <line key="2" x1={holeWidth / 2} y1={-10 - epsilon} x2={holeWidth / 2} y2={10 + epsilon} style={holeStyle}/>
+        <path key='1' d={holePath} style={holeStyle} />
+        <line key='2' x1={holeWidth / 2} y1={-10 - EPSILON} x2={holeWidth / 2} y2={10 + EPSILON} style={holeStyle} />
       </g>
     );
   },
@@ -106,19 +103,18 @@ export default {
       let thickness = element.properties.get('thickness').get('length');
 
       object.scale.set(width / initialWidth, height / initialHeight,
-         thickness/2 / initialThickness);
+        thickness / 2 / initialThickness);
 
       window.add(object);
       window.add(createTenda());
 
-      if(flip === true)
+      if (flip === true)
         window.rotation.y += Math.PI;
-
 
       return window;
     };
 
-    if(cached3DWindow) {
+    if (cached3DWindow) {
       return Promise.resolve(onLoadItem(cached3DWindow.clone()));
     }
 
@@ -132,8 +128,6 @@ export default {
         return onLoadItem(cached3DWindow.clone());
       });
 
-
-
     function createTenda() {
 
       let radialWave = function (u, v) {
@@ -146,7 +140,7 @@ export default {
       };
 
       //color
-      let white = new Three.MeshLambertMaterial({color: 0xeae6ca});
+      let white = new Three.MeshLambertMaterial({ color: 0xeae6ca });
 
       let Tenda = new Three.Object3D();
 
@@ -164,9 +158,7 @@ export default {
       Tenda.add(mesh);
       Tenda.add(mesh2);
 
-
       for (let i = -.7; i > -3.4; i -= .45) {
-
         let geometry = new Three.TorusGeometry(.08, .016, 32, 32, 2 * Math.PI);
         let torus = new Three.Mesh(geometry, white);
 
@@ -178,9 +170,7 @@ export default {
           torus.position.set(i, 3.14, .04);
         torus.rotation.y += Math.PI / 2;
         Tenda.add(torus);
-
       }
-
 
       let geometryAsta = new Three.CylinderGeometry(0.02, 0.02, 1.25, 32);
       let asta = new Three.Mesh(geometryAsta, white);
@@ -211,28 +201,23 @@ export default {
       sphere4.position.x += -2.6;
       Tenda.add(sphere4);
 
-
       let valueObject = new Three.Box3().setFromObject(Tenda);
 
       let deltaX = Math.abs(valueObject.max.x - valueObject.min.x);
       let deltaY = Math.abs(valueObject.max.y - valueObject.min.y);
       let deltaZ = Math.abs(valueObject.max.z - valueObject.min.z);
 
-
-
-      Tenda.position.x+=width/1.48;
-      Tenda.position.y+=-height/2.1;
-      Tenda.position.z+=thickness/1024;
+      Tenda.position.x += width / 1.48;
+      Tenda.position.y += -height / 2.1;
+      Tenda.position.z += thickness / 1024;
       Tenda.scale.set(width / deltaX, height / deltaY, thickness / deltaZ);
 
-
       return Tenda;
-
     }
 
     function createMesh(geom) {
       geom.applyMatrix(new Three.Matrix4().makeTranslation(-25, 0, -25));
-      let meshMaterial = new Three.MeshLambertMaterial({ color: 0xffffff, opacity: 0.9, transparent:true });
+      let meshMaterial = new Three.MeshLambertMaterial({ color: 0xffffff, opacity: 0.9, transparent: true });
       meshMaterial.side = Three.DoubleSide;
 
       let plane = new Three.Mesh(geom, meshMaterial);
