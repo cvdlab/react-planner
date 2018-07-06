@@ -2,29 +2,30 @@ import * as Three from 'three';
 import React from 'react';
 
 let textureLoader = new Three.TextureLoader();
-let mat=textureLoader.load(require('./rame.jpg'));
+let mat=textureLoader.load(require('./copper.jpg'));
 let frameMaterial = new Three.MeshLambertMaterial({map:mat});
-let material = new Three.MeshLambertMaterial({color: 0xf5f4f4});
 
 function makeObjectMaxLOD(RADIUS,HEIGHT) {
 
-  let column = new Three.Mesh();
+  let RADIUS_10 = RADIUS/10;
+  let RADIUS_2_5 = RADIUS/2.5;
 
+  let column = new Three.Mesh();
   let object = new Three.Mesh(new Three.CylinderGeometry(RADIUS, RADIUS, HEIGHT, 32), frameMaterial);
 
-  let frame1 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), frameMaterial);
-  let frame2 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), frameMaterial);
-  let frame3 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), frameMaterial);
-  let frame4 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), frameMaterial);
+  let frame1 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 32), frameMaterial);
+  let frame2 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 32), frameMaterial);
+  let frame3 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 32), frameMaterial);
+  let frame4 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 32), frameMaterial);
 
-  frame1.position.x+=RADIUS/2.5;
-  frame1.position.z+=RADIUS/2.5;
-  frame2.position.x-=RADIUS/2.5;
-  frame2.position.z-=RADIUS/2.5;
-  frame3.position.x-=RADIUS/2.5;
-  frame3.position.z+=RADIUS/2.5;
-  frame4.position.x+=RADIUS/2.5;
-  frame4.position.z-=RADIUS/2.5;
+  frame1.position.x+=RADIUS_2_5;
+  frame1.position.z+=RADIUS_2_5;
+  frame2.position.x-=RADIUS_2_5;
+  frame2.position.z-=RADIUS_2_5;
+  frame3.position.x-=RADIUS_2_5;
+  frame3.position.z+=RADIUS_2_5;
+  frame4.position.x+=RADIUS_2_5;
+  frame4.position.z-=RADIUS_2_5;
   column.add(frame1);
   column.add(frame2);
   column.add(frame3);
@@ -36,22 +37,25 @@ function makeObjectMaxLOD(RADIUS,HEIGHT) {
 
 function makeObjectMinLOD(RADIUS,HEIGHT) {
 
+  let RADIUS_10 = RADIUS/10;
+  let RADIUS_2_5 = RADIUS/2.5;
+
   let column = new Three.Mesh();
   let object = new Three.Mesh(new Three.CylinderGeometry(RADIUS, RADIUS, HEIGHT, 6, 6), frameMaterial);
 
-  let frame1 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 6), frameMaterial);
-  let frame2 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 6), frameMaterial);
-  let frame3 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 6), frameMaterial);
-  let frame4 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 6), frameMaterial);
+  let frame1 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 6), frameMaterial);
+  let frame2 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 6), frameMaterial);
+  let frame3 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 6), frameMaterial);
+  let frame4 = new Three.Mesh(new Three.CylinderGeometry(RADIUS_10, RADIUS_10, HEIGHT+HEIGHT/10, 6), frameMaterial);
 
-  frame1.position.x+=RADIUS/2.5;
-  frame1.position.z+=RADIUS/2.5;
-  frame2.position.x-=RADIUS/2.5;
-  frame2.position.z-=RADIUS/2.5;
-  frame3.position.x-=RADIUS/2.5;
-  frame3.position.z+=RADIUS/2.5;
-  frame4.position.x+=RADIUS/2.5;
-  frame4.position.z-=RADIUS/2.5;
+  frame1.position.x+=RADIUS_2_5;
+  frame1.position.z+=RADIUS_2_5;
+  frame2.position.x-=RADIUS_2_5;
+  frame2.position.z-=RADIUS_2_5;
+  frame3.position.x-=RADIUS_2_5;
+  frame3.position.z+=RADIUS_2_5;
+  frame4.position.x+=RADIUS_2_5;
+  frame4.position.z-=RADIUS_2_5;
   column.add(frame1);
   column.add(frame2);
   column.add(frame3);
