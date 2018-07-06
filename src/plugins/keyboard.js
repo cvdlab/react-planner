@@ -3,10 +3,6 @@ import {
   MODE_3D_FIRST_PERSON,
   MODE_3D_VIEW,
   MODE_SNAPPING,
-  SELECT_HOLE,
-  SELECT_AREA,
-  SELECT_ITEM,
-  SELECT_LINE,
   KEYBOARD_BUTTON_CODE
 } from '../constants';
 
@@ -19,8 +15,6 @@ import {
   pasteProperties,
   setAlterateState
 } from '../actions/project-actions';
-
-import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_MASK } from '../utils/snap';
 
 export default function keyboard() {
 
@@ -53,7 +47,14 @@ export default function keyboard() {
         case KEYBOARD_BUTTON_CODE.ALT:
         {
           if (MODE_SNAPPING.includes(mode))
-            store.dispatch(toggleSnap(state.snapMask.merge({ SNAP_POINT: false, SNAP_LINE: false, SNAP_SEGMENT: false, tempSnapConfiguartion: state.snapMask.toJS() })));
+            store.dispatch(toggleSnap(state.snapMask.merge({
+              SNAP_POINT: false,
+              SNAP_LINE: false,
+              SNAP_SEGMENT: false,
+              SNAP_GRID : false,
+              SNAP_GUIDE : false,
+              tempSnapConfiguartion: state.snapMask.toJS()
+            })));
           break;
         }
         case KEYBOARD_BUTTON_CODE.C:
