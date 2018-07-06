@@ -25,6 +25,12 @@ let textures = {
     uri: require('./textures/ceramic-tile.jpg'),
     lengthRepeatScale: 0.02,
     heightRepeatScale: 0.02
+  },
+  strand_porcelain: {
+    name:'Strand Porcelain Tile',
+    uri: require('./textures/strand-porcelain.jpg'),
+    lengthRepeatScale: 0.02,
+    heightRepeatScale: 0.02
   }
 };
 
