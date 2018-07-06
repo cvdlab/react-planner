@@ -13,7 +13,7 @@ export default {
     tag: ['Window'],
     title: 'Venetian Blind Window',
     description: 'Venetian Blind Window',
-    image: require('./veneziana.png')
+    image: require('./venetian.jpg')
   },
 
   properties: {
@@ -80,7 +80,7 @@ export default {
 
     let onLoadItem = (object) => {
 
-      let window = new Three.Object3D();
+      let venetian = new Three.Object3D();
 
       let boundingBox = new Three.Box3().setFromObject(object);
 
@@ -103,22 +103,21 @@ export default {
       object.scale.set(width / initialWidth, height / initialHeight,
          thickness/2 / initialThickness);
 
-      window.add(object);
-      window.add(createTenda());
+      venetian.add(object);
+      venetian.add(createTenda());
 
       if(flip === true)
-        window.rotation.y += Math.PI;
+        venetian.rotation.y += Math.PI;
 
-
-      return window;
+      return venetian;
     };
 
     if(cached3DWindow) {
       return Promise.resolve(onLoadItem(cached3DWindow.clone()));;
     }
 
-    let mtl = require('./window.mtl');
-    let obj = require('./window.obj');
+    let mtl = require('./venetian.mtl');
+    let obj = require('./venetian.obj');
     let img = require('./texture.png');
 
     return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
@@ -127,11 +126,9 @@ export default {
         return onLoadItem(cached3DWindow.clone());
       });
 
-
-
     function createTenda() {
 
-      var veneziana = new Three.Object3D();
+      var venetian = new Three.Object3D();
 
       //colors
       var white = new Three.MeshLambertMaterial( {color: 0xffffff, opacity:0.5, transparent:true} );
@@ -201,7 +198,7 @@ export default {
         mesh.position.set(0,i,0.86);
         mesh.rotation.z+=Math.PI/2;
         mesh.rotation.x+=-Math.PI/2;
-        veneziana.add(mesh);
+        venetian.add(mesh);
 
       }
 
@@ -210,7 +207,7 @@ export default {
         var geometry1 = new Three.CylinderGeometry( 0.105, 0.105, 26, 32 );
         var tubo = new Three.Mesh(geometry1,white);
         tubo.position.set(j,12.5,.35);
-        veneziana.add(tubo);
+        venetian.add(tubo);
 
       }
 
@@ -248,34 +245,23 @@ export default {
         mesh2.position.set(0,k,1);
         mesh2.rotation.z+=Math.PI/2;
         mesh2.rotation.x+=-Math.PI/2;
-        veneziana.add(mesh2);
+        venetian.add(mesh2);
       }
 
 
-      let valueObject = new Three.Box3().setFromObject(veneziana);
+      let valueObject = new Three.Box3().setFromObject(venetian);
 
       let deltaX = Math.abs(valueObject.max.x - valueObject.min.x);
       let deltaY = Math.abs(valueObject.max.y - valueObject.min.y);
       let deltaZ = Math.abs(valueObject.max.z - valueObject.min.z);
 
-       veneziana.position.x+=width1/.025;
-       veneziana.position.y+=-height1/.4;
-       veneziana.scale.set(5.2*width1 / deltaZ, 5.45*height1 / deltaY, 2.5*thickness / deltaX);
+       venetian.position.x+=width1/.025;
+       venetian.position.y+=-height1/.4;
+       venetian.scale.set(5.2*width1 / deltaZ, 5.45*height1 / deltaY, 2.5*thickness / deltaX);
 
 
-      return veneziana;
-
+      return venetian;
     }
-
-    function createMesh(geom) {
-      geom.applyMatrix(new Three.Matrix4().makeTranslation(-25, 0, -25));
-      let meshMaterial = new Three.MeshLambertMaterial({ color: 0xffffff, opacity: 0.9, transparent:true });
-      meshMaterial.side = Three.DoubleSide;
-
-      let plane = new Three.Mesh(geom, meshMaterial);
-      return plane;
-    }
-
   }
 
 };
