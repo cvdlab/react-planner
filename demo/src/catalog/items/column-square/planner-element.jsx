@@ -1,9 +1,6 @@
 import * as Three from 'three';
 import React from 'react';
 
-const textureLoader = new Three.TextureLoader();
-const mat=textureLoader.load(require('./copper.jpg'));
-const ferroMaterial = new Three.MeshLambertMaterial({map:mat});
 const material = new Three.MeshLambertMaterial({color: 0xf5f4f4});
 
 export default {
@@ -88,24 +85,6 @@ export default {
     let column = new Three.Object3D();
 
     let object = new Three.Mesh(new Three.BoxGeometry(width,HEIGHT,depth, 32), material);
-
-    // let ferro1 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), ferroMaterial);
-    // let ferro2 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), ferroMaterial);
-    // let ferro3 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), ferroMaterial);
-    // let ferro4 = new Three.Mesh(new Three.CylinderGeometry(RADIUS/10, RADIUS/10, HEIGHT+HEIGHT/10, 32), ferroMaterial);
-    //
-    // ferro1.position.x+=RADIUS/2.5;
-    // ferro1.position.z+=RADIUS/2.5;
-    // ferro2.position.x-=RADIUS/2.5;
-    // ferro2.position.z-=RADIUS/2.5;
-    // ferro3.position.x-=RADIUS/2.5;
-    // ferro3.position.z+=RADIUS/2.5;
-    // ferro4.position.x+=RADIUS/2.5;
-    // ferro4.position.z-=RADIUS/2.5;
-    // column.add(ferro1);
-    // column.add(ferro2);
-    // column.add(ferro3);
-    // column.add(ferro4);
 
     column.add(object);
 
