@@ -47,45 +47,47 @@ const coordStyle = {
   padding: 0
 };
 
-export default class FooterBar extends Component {
-  constructor(props) {
-    super(props);
+const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
 
+export default class FooterBar extends Component {
+  constructor(props, context) {
+    super(props, context);
     this.state = {};
   }
 
   render() {
+    let { state: globalState, width, height } = this.props;
+    let { translator, projectActions } = this.context;
+    let { x, y } = globalState.get('mouse').toJS();
+    let zoom = globalState.get('zoom');
+    let mode = globalState.get('mode');
 
-    let { x, y } = this.props.state.get('mouse').toJS();
-    let zoom = this.props.state.get('zoom');
-    let mode = this.props.state.get('mode');
-
-    let errors = this.props.state.get('errors').toArray();
+    let errors = globalState.get('errors').toArray();
     let errorsJsx = errors.map((err, ind) =>
-      <div key={ind} style={{ borderBottom: '1px solid #555', lineHeight: '1.5em' }}>[ {(new Date(err.date)).toLocaleString()} ] {err.error}</div>
+      <div key={ind} style={appMessageStyle}>[ {(new Date(err.date)).toLocaleString()} ] {err.error}</div>
     );
     let errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
     let errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
 
-    let warnings = this.props.state.get('warnings').toArray();
+    let warnings = globalState.get('warnings').toArray();
     let warningsJsx = warnings.map((warn, ind) =>
-      <div key={ind} style={{ borderBottom: '1px solid #555', lineHeight: '1.5em' }}>[ {(new Date(warn.date)).toLocaleString()} ] {warn.warning}</div>
+      <div key={ind} style={appMessageStyle}>[ {(new Date(warn.date)).toLocaleString()} ] {warn.warning}</div>
     );
     let warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
     let warningIconStyle = warningLableStyle;
 
-    let updateSnapMask = (val) => this.context.projectActions.toggleSnap(this.props.state.snapMask.merge(val));
+    let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
 
     return (
-      <div style={{ ...footerBarStyle, width: this.props.width, height: this.props.height }}>
+      <div style={{ ...footerBarStyle, width, height }}>
 
         <If condition={MODE_SNAPPING.includes(mode)}>
           <div style={leftTextStyle}>
-            <div title={this.context.translator.t('Mouse X Coordinate')} style={coordStyle}>X : {x.toFixed(3)}</div>
-            <div title={this.context.translator.t('Mouse Y Coordinate')} style={coordStyle}>Y : {y.toFixed(3)}</div>
+            <div title={translator.t('Mouse X Coordinate')} style={coordStyle}>X : {x.toFixed(3)}</div>
+            <div title={translator.t('Mouse Y Coordinate')} style={coordStyle}>Y : {y.toFixed(3)}</div>
           </div>
 
-          <div style={leftTextStyle} title={this.context.translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
+          <div style={leftTextStyle} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
 
           <div style={leftTextStyle}>
             <FooterToggleButton
@@ -93,40 +95,40 @@ export default class FooterBar extends Component {
               toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
               toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
               text="Snap PT"
-              toggleState={this.props.state.snapMask.get(SNAP_POINT)}
-              title={this.context.translator.t('Snap to Point')}
+              toggleState={globalState.snapMask.get(SNAP_POINT)}
+              title={translator.t('Snap to Point')}
             />
             <FooterToggleButton
               state={this.state}
               toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
               toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
               text="Snap LN"
-              toggleState={this.props.state.snapMask.get(SNAP_LINE)}
-              title={this.context.translator.t('Snap to Line')}
+              toggleState={globalState.snapMask.get(SNAP_LINE)}
+              title={translator.t('Snap to Line')}
             />
             <FooterToggleButton
               state={this.state}
               toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
               toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
               text="Snap SEG"
-              toggleState={this.props.state.snapMask.get(SNAP_SEGMENT)}
-              title={this.context.translator.t('Snap to Segment')}
+              toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
+              title={translator.t('Snap to Segment')}
             />
             <FooterToggleButton
               state={this.state}
               toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
               toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
               text="Snap GRD"
-              toggleState={this.props.state.snapMask.get(SNAP_GRID)}
-              title={this.context.translator.t('Snap to Grid')}
+              toggleState={globalState.snapMask.get(SNAP_GRID)}
+              title={translator.t('Snap to Grid')}
             />
             <FooterToggleButton
               state={this.state}
               toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
               toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
               text="Snap GDE"
-              toggleState={this.props.state.snapMask.get(SNAP_GUIDE)}
-              title={this.context.translator.t('Snap to Guide')}
+              toggleState={globalState.snapMask.get(SNAP_GUIDE)}
+              title={translator.t('Snap to Guide')}
             />
           </div>
         </If>
@@ -151,7 +153,7 @@ export default class FooterBar extends Component {
             iconStyle={errorIconStyle}
             text={errors.length.toString()}
             textStyle={errorLableStyle}
-            title={'Errors [ ' + errors.length + ' ]'}
+            title={`Errors [ ${errors.length} ]`}
             titleStyle={errorLableStyle}
             content={[errorsJsx]}
           />
@@ -161,7 +163,7 @@ export default class FooterBar extends Component {
             iconStyle={warningIconStyle}
             text={warnings.length.toString()}
             textStyle={warningLableStyle}
-            title={'Warnings [ ' + warnings.length + ' ]'}
+            title={`Warnings [ ${warnings.length} ]`}
             titleStyle={warningLableStyle}
             content={[warningsJsx]}
           />
