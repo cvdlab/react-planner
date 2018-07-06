@@ -31,7 +31,7 @@ const textures = {
     lengthRepeatScale: 0.01,
     heightRepeatScale: 0.01,
     normal: {
-      uri: require('./textures/painted-normal.png'),
+      uri: require('./textures/painted-normal.jpg'),
       lengthRepeatScale: 0.01,
       heightRepeatScale: 0.01,
       normalScaleX: 0.4,
