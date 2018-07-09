@@ -9,6 +9,7 @@ import * as ReactPlannerSharedStyle from './shared-style';
 import ReactPlannerComponents from './components/export';
 import ReactPlannerActions from './actions/export';
 import ReactPlannerReducers from './reducers/export';
+import ReactPlannerClasses from './class/export';
 import ElementsFactories from './catalog/factories/export';
 import ReactPlannerUtils from './utils/export';
 
@@ -19,11 +20,12 @@ export {
   reducer,
   ReactPlanner,
   Plugins,
-  ElementsFactories,
   ReactPlannerConstants,
-  ReactPlannerReducers,
-  ReactPlannerActions,
-  ReactPlannerComponents,
   ReactPlannerSharedStyle,
+  ReactPlannerComponents,
+  ReactPlannerActions,
+  ReactPlannerReducers,
+  ReactPlannerClasses,
+  ElementsFactories,
   ReactPlannerUtils
 };
