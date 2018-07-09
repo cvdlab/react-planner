@@ -31,6 +31,12 @@ let textures = {
     uri: require('./textures/strand-porcelain.jpg'),
     lengthRepeatScale: 0.02,
     heightRepeatScale: 0.02
+  },
+  grass: {
+    name: 'Grass',
+    uri: require('./textures/grass.jpg'),
+    lengthRepeatScale: 0.01,
+    heightRepeatScale: 0.01,
   }
 };
 
