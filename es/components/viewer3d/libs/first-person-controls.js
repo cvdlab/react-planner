@@ -1,4 +1,4 @@
-export function firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight) {
+export function firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight, canJump, velocity) {
 
   switch (event.keyCode) {
 
@@ -26,17 +26,17 @@ export function firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward,
       moveRight = true;
       break;
 
-    /*case 32: // space
-     if (canJump === true) velocity.y += 350;
-     canJump = false;
-     break;*/
-
+    case 32:
+      // space
+      if (canJump === true) velocity.y += 225;
+      canJump = false;
+      break;
   }
 
-  return { moveForward: moveForward, moveLeft: moveLeft, moveBackward: moveBackward, moveRight: moveRight };
+  return { moveForward: moveForward, moveLeft: moveLeft, moveBackward: moveBackward, moveRight: moveRight, canJump: canJump };
 }
 
-export function firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight) {
+export function firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight, canJump) {
 
   switch (event.keyCode) {
     case 38: // up
@@ -62,7 +62,6 @@ export function firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, m
       // d
       moveRight = false;
       break;
-
   }
-  return { moveForward: moveForward, moveLeft: moveLeft, moveBackward: moveBackward, moveRight: moveRight };
+  return { moveForward: moveForward, moveLeft: moveLeft, moveBackward: moveBackward, moveRight: moveRight, canJump: canJump };
 }

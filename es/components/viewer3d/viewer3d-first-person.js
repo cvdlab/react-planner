@@ -43,10 +43,12 @@ var Viewer3DFirstPerson = function (_React$Component) {
       /** Variables for movement control **/
       var prevTime = performance.now();
       var velocity = new Three.Vector3();
+      var direction = new Three.Vector3();
       var moveForward = false;
       var moveBackward = false;
       var moveLeft = false;
       var moveRight = false;
+      var canJump = false;
 
       var catalog = this.context.catalog;
 
@@ -125,19 +127,21 @@ var Viewer3DFirstPerson = function (_React$Component) {
 
       // Add move controls on the page
       this.keyDownEvent = function (event) {
-        var moveResult = firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight);
+        var moveResult = firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight, canJump, velocity);
         moveForward = moveResult.moveForward;
         moveLeft = moveResult.moveLeft;
         moveBackward = moveResult.moveBackward;
         moveRight = moveResult.moveRight;
+        canJump = moveResult.canJump;
       };
 
       this.keyUpEvent = function (event) {
-        var moveResult = firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight);
+        var moveResult = firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight, canJump);
         moveForward = moveResult.moveForward;
         moveLeft = moveResult.moveLeft;
         moveBackward = moveResult.moveBackward;
         moveRight = moveResult.moveRight;
+        canJump = moveResult.canJump;
       };
 
       document.addEventListener('keydown', this.keyDownEvent);
@@ -222,22 +226,31 @@ var Viewer3DFirstPerson = function (_React$Component) {
         if (!_this2.stopRendering) {
           yInitialPosition = _this2.planData.boundingBox.min.y + humanHeight;
 
-          _this2.controls.getObject().position.y = yInitialPosition;
+          var multiplier = 5;
 
           var time = performance.now();
-          var delta = (time - prevTime) / 200;
+          var delta = (time - prevTime) / 1000 * multiplier;
 
           velocity.x -= velocity.x * 10.0 * delta;
           velocity.z -= velocity.z * 10.0 * delta;
+          velocity.y -= 9.8 * 100.0 * delta / multiplier; // 100.0 = mass
 
-          if (moveForward) velocity.z -= 400.0 * delta;
-          if (moveBackward) velocity.z += 400.0 * delta;
+          direction.z = Number(moveForward) - Number(moveBackward);
+          direction.x = Number(moveLeft) - Number(moveRight);
+          direction.normalize(); // this ensures consistent movements in all directions
 
-          if (moveLeft) velocity.x -= 400.0 * delta;
-          if (moveRight) velocity.x += 400.0 * delta;
+          if (moveForward || moveBackward) velocity.z -= direction.z * 400.0 * delta;
+          if (moveLeft || moveRight) velocity.x -= direction.x * 400.0 * delta;
 
           _this2.controls.getObject().translateX(velocity.x * delta);
+          _this2.controls.getObject().translateY(velocity.y * delta);
           _this2.controls.getObject().translateZ(velocity.z * delta);
+
+          if (_this2.controls.getObject().position.y < yInitialPosition) {
+            velocity.y = 0;
+            _this2.controls.getObject().position.y = yInitialPosition;
+            canJump = true;
+          }
 
           prevTime = time;
 
@@ -253,7 +266,6 @@ var Viewer3DFirstPerson = function (_React$Component) {
           _this2.renderer.render(scene3D, camera); // render scene 1
           _this2.renderer.clearDepth(); // clear depth buffer
           _this2.renderer.render(sceneOnTop, camera); // render scene 2
-
 
           requestAnimationFrame(render);
         }

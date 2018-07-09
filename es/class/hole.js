@@ -42,7 +42,7 @@ var Hole = function () {
   }, {
     key: 'select',
     value: function select(state, layerID, holeID) {
-      state = state.setIn(['scene', 'selectedLayer'], layerID);
+      state = Layer.select(state, layerID).updatedState;
       state = Layer.selectElement(state, layerID, 'holes', holeID).updatedState;
 
       return { updatedState: state };
