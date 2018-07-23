@@ -123,7 +123,7 @@ class Line{
     let lineGroups = state
       .getIn(['scene', 'groups'])
       .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
-    
+
     lineGroups.forEach( group => {
       state = Group.addElement( state, group.id, layerID, 'lines', line0.id ).updatedState;
       state = Group.addElement( state, group.id, layerID, 'lines', line1.id ).updatedState;
@@ -524,7 +524,7 @@ class Line{
   }
 
   static setProperties( state, layerID, lineID, properties ) {
-    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'properties'], properties);
+    state = state.mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'properties'], properties);
 
     return { updatedState: state };
   }

@@ -35,7 +35,7 @@ class Hole{
       line: lineID
     }, properties);
 
-    state = state.setIn(['scene', 'layers', layerID, 'holes', holeID], hole);
+    state = state.mergeIn(['scene', 'layers', layerID, 'holes', holeID], hole);
     state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], holes => holes.push(holeID));
 
     return { updatedState: state, hole };
