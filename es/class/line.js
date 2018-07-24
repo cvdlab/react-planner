@@ -628,7 +628,7 @@ var Line = function () {
   }, {
     key: 'setProperties',
     value: function setProperties(state, layerID, lineID, properties) {
-      state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'properties'], properties);
+      state = state.mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'properties'], properties);
 
       return { updatedState: state };
     }
