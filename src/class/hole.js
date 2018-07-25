@@ -1,5 +1,5 @@
-import { Map, List, fromJS } from 'immutable';
-import { Layer, Group } from './export';
+import {Map, List, fromJS} from 'immutable';
+import {Layer, Group} from './export';
 
 import {
   IDBroker,
@@ -21,9 +21,9 @@ import {
   GeometryUtils
 } from '../utils/export';
 
-class Hole{
+class Hole {
 
-  static create( state, layerID, type, lineID, offset, properties ) {
+  static create(state, layerID, type, lineID, offset, properties) {
 
     let holeID = IDBroker.acquireID();
 
@@ -35,38 +35,39 @@ class Hole{
       line: lineID
     }, properties);
 
-    state = state.mergeIn(['scene', 'layers', layerID, 'holes', holeID], hole);
-    state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], holes => holes.push(holeID));
+    state = state.setIn(['scene', 'layers', layerID, 'holes', holeID], hole);
+    state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'],
+      holes => holes.push(holeID));
 
-    return { updatedState: state, hole };
+    return {updatedState: state, hole};
   }
 
-  static select( state, layerID, holeID ){
-    state = Layer.select( state, layerID ).updatedState;
-    state = Layer.selectElement( state, layerID, 'holes', holeID ).updatedState;
+  static select(state, layerID, holeID) {
+    state = Layer.select(state, layerID).updatedState;
+    state = Layer.selectElement(state, layerID, 'holes', holeID).updatedState;
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
-  static remove( state, layerID, holeID ) {
+  static remove(state, layerID, holeID) {
     let hole = state.getIn(['scene', 'layers', layerID, 'holes', holeID]);
-    state = this.unselect( state, layerID, holeID ).updatedState;
-    state = Layer.removeElement( state, layerID, 'holes', holeID ).updatedState;
+    state = this.unselect(state, layerID, holeID).updatedState;
+    state = Layer.removeElement(state, layerID, 'holes', holeID).updatedState;
 
     state = state.updateIn(['scene', 'layers', layerID, 'lines', hole.line, 'holes'], holes => {
       let index = holes.findIndex(ID => holeID === ID);
       return index !== -1 ? holes.remove(index) : holes;
     });
 
-    state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'holes', holeID).updatedState );
+    state.getIn(['scene', 'groups']).forEach(group => state = Group.removeElement(state, group.id, layerID, 'holes', holeID).updatedState);
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
-  static unselect( state, layerID, holeID ) {
-    state = Layer.unselect( state, layerID, 'holes', holeID ).updatedState;
+  static unselect(state, layerID, holeID) {
+    state = Layer.unselect(state, layerID, 'holes', holeID).updatedState;
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static selectToolDrawingHole(state, sceneComponentType) {
@@ -90,7 +91,7 @@ class Hole{
       })
     });
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static updateDrawingHole(state, layerID, x, y) {
@@ -113,7 +114,7 @@ class Hole{
       // I need min and max vertices on this line segment
       let minVertex = GeometryUtils.minVertex({x: x1, y: y1}, {x: x2, y: y2});
       let maxVertex = GeometryUtils.maxVertex({x: x1, y: y1}, {x: x2, y: y2});
-      let width = catalog.factoryElement(state.drawingSupport.get('type')).properties.getIn(['width','length']);
+      let width = catalog.factoryElement(state.drawingSupport.get('type')).properties.getIn(['width', 'length']);
 
       // Now I need min and max possible coordinates for the hole on the line. They depend on the width of the hole
       let lineLength = GeometryUtils.pointsDistance(x1, y1, x2, y2);
@@ -163,45 +164,44 @@ class Hole{
       }
 
       //if hole does exist, update
-      if( selectedHole && snap ) {
-        state = state.mergeIn(['scene', 'layers', layerID, 'holes', selectedHole], { offset, line: lineID });
+      if (selectedHole && snap) {
+        state = state.mergeIn(['scene', 'layers', layerID, 'holes', selectedHole], {offset, line: lineID});
 
         //remove from old line ( if present )
-        let index = state.getIn(['scene', 'layers', layerID, 'lines']).findEntry( line => {
-          return line.id !== lineID && line.get('holes').contains( selectedHole );
-        } );
+        let index = state.getIn(['scene', 'layers', layerID, 'lines']).findEntry(line => {
+          return line.id !== lineID && line.get('holes').contains(selectedHole);
+        });
 
-        if( index ) {
-          let removed = index[1].get('holes').filter( hl => hl !== selectedHole );
+        if (index) {
+          let removed = index[1].get('holes').filter(hl => hl !== selectedHole);
           state = state.setIn(['scene', 'layers', layerID, 'lines', index[0], 'holes'], removed);
         }
 
         //add to line
         let line_holes = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'holes']);
-        if( !line_holes.contains( selectedHole ) ) {
-          state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], line_holes.push( selectedHole ));
+        if (!line_holes.contains(selectedHole)) {
+          state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], line_holes.push(selectedHole));
         }
-      }
-      //if hole does not exist, create
-      else if( !selectedHole && snap ){
-        let { updatedState: stateH, hole } = this.create( state, layerID, state.drawingSupport.get('type'), lineID, offset );
-        state = Hole.select( stateH, layerID, hole.id ).updatedState;
+      } else if (!selectedHole && snap) {
+        //if hole does not exist, create
+        let {updatedState: stateH, hole} = this.create(state, layerID, state.drawingSupport.get('type'), lineID, offset);
+        state = Hole.select(stateH, layerID, hole.id).updatedState;
       }
     }
     //i've lost the snap while trying to drop the hole
-    else if( false && selectedHole )  //think if enable
+    else if (false && selectedHole)  //think if enable
     {
-      state = Hole.remove( state, layerID, selectedHole ).updatedState;
+      state = Hole.remove(state, layerID, selectedHole).updatedState;
     }
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static endDrawingHole(state, layerID, x, y) {
     state = this.updateDrawingHole(state, layerID, x, y).updatedState;
-    state = Layer.unselectAll( state, layerID ).updatedState;
+    state = Layer.unselectAll(state, layerID).updatedState;
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static beginDraggingHole(state, layerID, holeID, x, y) {
@@ -224,7 +224,7 @@ class Hole{
       })
     });
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static updateDraggingHole(state, x, y) {
@@ -333,37 +333,37 @@ class Hole{
       scene: scene.mergeIn(['layers', layerID, 'holes', holeID], hole)
     });
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
   static endDraggingHole(state, x, y) {
     state = this.updateDraggingHole(state, x, y).updatedState;
-    state = state.merge({ mode: MODE_IDLE });
+    state = state.merge({mode: MODE_IDLE});
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
-  static setProperties( state, layerID, holeID, properties ) {
+  static setProperties(state, layerID, holeID, properties) {
     state = state.setIn(['scene', 'layers', layerID, 'holes', holeID, 'properties'], properties);
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
-  static setJsProperties( state, layerID, holeID, properties ) {
-    return this.setProperties( state, layerID, holeID, fromJS(properties) );
+  static setJsProperties(state, layerID, holeID, properties) {
+    return this.setProperties(state, layerID, holeID, fromJS(properties));
   }
 
-  static updateProperties( state, layerID, holeID, properties ) {
-    properties.forEach( ( v, k ) => {
-      if( state.hasIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k]) )
+  static updateProperties(state, layerID, holeID, properties) {
+    properties.forEach((v, k) => {
+      if (state.hasIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k]))
         state = state.mergeIn(['scene', 'layers', layerID, 'holes', holeID, 'properties', k], v);
     });
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
-  static updateJsProperties( state, layerID, holeID, properties ) {
-    return this.updateProperties( state, layerID, holeID, fromJS(properties) );
+  static updateJsProperties(state, layerID, holeID, properties) {
+    return this.updateProperties(state, layerID, holeID, fromJS(properties));
   }
 
   static setAttributes(state, layerID, holeID, holesAttributes) {
@@ -381,9 +381,9 @@ class Hole{
       .mergeIn(['scene', 'layers', layerID, 'holes', holeID], fromJS(hAttr))
       .mergeDeepIn(['scene', 'layers', layerID, 'holes', holeID], new Map({offset, misc}));
 
-    return { updatedState: state };
+    return {updatedState: state};
   }
 
 }
 
-export { Hole as default };
+export {Hole as default};

@@ -8,7 +8,7 @@ export default function Line({line, layer, scene, catalog}) {
   let vertex0 = layer.vertices.get(line.vertices.get(0));
   let vertex1 = layer.vertices.get(line.vertices.get(1));
 
-  if (vertex0.id === vertex1.id || GeometryUtils.samePoints( vertex0, vertex1 ) ) return null; //avoid 0-length lines
+  if (vertex0.id === vertex1.id || GeometryUtils.samePoints(vertex0, vertex1)) return null; //avoid 0-length lines
 
   let {x: x1, y: y1} = vertex0;
   let {x: x2, y: y2} = vertex1;
@@ -45,7 +45,8 @@ export default function Line({line, layer, scene, catalog}) {
   let half_thickness = thickness / 2;
 
   let renderedLine = catalog.getElement(line.type).render2D(line, layer);
-  let renderedRuler = line.selected ? <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> : null;
+  let renderedRuler = line.selected ?
+    <Ruler unit={scene.unit} length={length} transform={`translate(0, ${half_thickness + 10} )`}/> : null;
 
   return (
     <g
