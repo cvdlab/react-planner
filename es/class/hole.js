@@ -32,7 +32,7 @@ var Hole = function () {
         line: lineID
       }, properties);
 
-      state = state.mergeIn(['scene', 'layers', layerID, 'holes', holeID], hole);
+      state = state.setIn(['scene', 'layers', layerID, 'holes', holeID], hole);
       state = state.updateIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], function (holes) {
         return holes.push(holeID);
       });
@@ -202,15 +202,14 @@ var Hole = function () {
           if (!line_holes.contains(selectedHole)) {
             state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'holes'], line_holes.push(selectedHole));
           }
-        }
-        //if hole does not exist, create
-        else if (!selectedHole && snap) {
-            var _create = this.create(state, layerID, state.drawingSupport.get('type'), lineID, offset),
-                stateH = _create.updatedState,
-                hole = _create.hole;
+        } else if (!selectedHole && snap) {
+          //if hole does not exist, create
+          var _create = this.create(state, layerID, state.drawingSupport.get('type'), lineID, offset),
+              stateH = _create.updatedState,
+              hole = _create.hole;
 
-            state = Hole.select(stateH, layerID, hole.id).updatedState;
-          }
+          state = Hole.select(stateH, layerID, hole.id).updatedState;
+        }
       }
       //i've lost the snap while trying to drop the hole
       else if (false && selectedHole) //think if enable
