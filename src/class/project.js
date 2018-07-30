@@ -28,8 +28,10 @@ class Project{
     return { updatedState: state };
   }
 
-  static newProject() {
-    return { updatedState: new State() };
+  static newProject(state) {
+    state = new State({'viewer2D': state.get('viewer2D')});
+
+    return { updatedState: state };
   }
 
   static loadProject(state, sceneJSON) {
@@ -40,7 +42,7 @@ class Project{
 
   static setProperties(state, layerID, properties) {
     state = Layer.setPropertiesOnSelected( state, layerID, properties ).updatedState;
-  
+
     return { updatedState: state };
   }
 
