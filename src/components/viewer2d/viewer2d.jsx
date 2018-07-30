@@ -301,8 +301,11 @@ export default function Viewer2D(
   let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
   let rulerFnColor = SharedStyle.COLORS.white;
   let rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
-  let rulerXElements = Math.ceil( SVGWidth / rulerUnitPixelSize ) + 1;
-  let rulerYElements = Math.ceil( SVGHeight / rulerUnitPixelSize ) + 1;
+  let sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
+  let sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
+  let sceneZoom = state.zoom || 1;
+  let rulerXElements = Math.ceil( sceneWidth / rulerUnitPixelSize ) + 1;
+  let rulerYElements = Math.ceil( sceneHeight / rulerUnitPixelSize ) + 1;
 
   return (
     <div style={{
@@ -317,9 +320,9 @@ export default function Viewer2D(
     }}>
       <div style={{ gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor }}></div>
       <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }} id="rulerX">
-        { SVGWidth ? <RulerX
+      { sceneWidth ? <RulerX
           unitPixelSize={rulerUnitPixelSize}
-          zoom={state.zoom}
+          zoom={sceneZoom}
           mouseX={state.mouse.get('x')}
           width={width - rulerSize}
           zeroLeftPosition={e || 0}
@@ -331,12 +334,12 @@ export default function Viewer2D(
         /> : null }
       </div>
       <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }} id="rulerY">
-        { SVGHeight ? <RulerY
+        { sceneHeight ? <RulerY
           unitPixelSize={rulerUnitPixelSize}
-          zoom={state.zoom}
+          zoom={sceneZoom}
           mouseY={state.mouse.get('y')}
           height={height - rulerSize}
-          zeroTopPosition={((SVGHeight * state.zoom) + f) || 0}
+          zeroTopPosition={((sceneHeight * sceneZoom) + f) || 0}
           backgroundColor={rulerBgColor}
           fontColor={rulerFnColor}
           markerColor={rulerMkColor}
