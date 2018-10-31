@@ -165,7 +165,10 @@ class Vertex{
           let lineProps = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'properties']);
           let lineGroups = reducedState   //get groups membership if present
             .getIn(['scene', 'groups'])
-            .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
+            .filter( group => {
+              const lines = group.getIn(['elements', layerID, 'lines']);
+              return lines && lines.contains(lineID);
+            });
 
           reducedState = Layer.removeZeroLengthLines( reducedState, layerID ).updatedState;
           reducedState = Layer.mergeEqualsVertices( reducedState, layerID, vertexID ).updatedState;
