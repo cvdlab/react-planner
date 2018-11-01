@@ -140,7 +140,8 @@ var Line = function () {
 
       //add splitted lines to the original line's group
       var lineGroups = state.getIn(['scene', 'groups']).filter(function (group) {
-        return group.getIn(['elements', layerID, 'lines']).contains(lineID);
+        var lines = group.getIn(['elements', layerID, 'lines']);
+        return lines && lines.contains(lineID);
       });
 
       lineGroups.forEach(function (group) {
@@ -593,7 +594,8 @@ var Line = function () {
 
       var lineGroups = state //get groups membership if present
       .getIn(['scene', 'groups']).filter(function (group) {
-        return group.getIn(['elements', layerID, 'lines']).contains(lineID);
+        var lines = group.getIn(['elements', layerID, 'lines']);
+        return lines && lines.contains(lineID);
       });
 
       state = Layer.mergeEqualsVertices(state, layerID, line.vertices.get(0)).updatedState;
