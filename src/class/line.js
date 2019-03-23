@@ -122,7 +122,10 @@ class Line{
     //add splitted lines to the original line's group
     let lineGroups = state
       .getIn(['scene', 'groups'])
-      .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
+      .filter( group => {
+        const lines = group.getIn(['elements', layerID, 'lines']);
+        return lines && lines.contains(lineID);
+      });
 
     lineGroups.forEach( group => {
       state = Group.addElement( state, group.id, layerID, 'lines', line0.id ).updatedState;
@@ -481,7 +484,10 @@ class Line{
 
     let lineGroups = state   //get groups membership if present
       .getIn(['scene', 'groups'])
-      .filter( group => group.getIn(['elements', layerID, 'lines']).contains(lineID) );
+      .filter( group => {
+        const lines = group.getIn(['elements', layerID, 'lines']);
+        return lines && lines.contains(lineID);
+      });
 
     state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(0) ).updatedState;
     state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(1) ).updatedState;

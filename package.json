@@ -9,7 +9,7 @@
     "start": "webpack-dev-server --inline --config demo/webpack.config.js --port 9000 --mode development",
     "build-demo": "webpack --config demo/webpack.config.js --mode production",
     "build-commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
-    "build-es": "cross-env BABEL_ENV=es babel src --out-dir es",
+    "build-es": "cross-env BABEL_ENV=es babel src --copy-files --out-dir es",
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
     "add-build-to-vcs": "git add -A src/version.js && git add -A es && git add -A lib && git add -A demo/dist",
     "clean": "rimraf lib es demo/dist",
