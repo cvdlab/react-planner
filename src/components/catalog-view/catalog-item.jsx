@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import IconAdd from 'react-icons/lib/fa/plus-circle';
-import {Seq} from 'immutable';
+import {FaPlusCircle as IconAdd} from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE_BOX = {

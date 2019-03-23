@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import IconBefore from 'react-icons/lib/md/navigate-before';
+import {MdNavigateBefore} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE_BOX = {
@@ -69,7 +69,7 @@ export default class CatalogTurnBackPageItem extends Component {
         onMouseLeave={e => this.setState({hover: false})}
       >
         <div style={CONTAINER_DIV}>
-          <IconBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>
+          <MdNavigateBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>
         </div>
 
       </div>

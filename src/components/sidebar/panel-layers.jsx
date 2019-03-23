@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import { Map } from 'immutable';
 import Panel from './panel';
-import {TiPlus, TiDelete} from 'react-icons/lib/ti';
-import {FaPencil, FaTrash, FaEye} from 'react-icons/lib/fa';
+import {TiPlus, TiDelete} from 'react-icons/ti';
+import {FaPencilAlt, FaTrash, FaEye} from 'react-icons/fa';
 import {
   FormTextInput,
   FormNumberInput,
@@ -160,7 +160,7 @@ export default class PanelLayers extends Component {
                       }
                     </td>
                     <td style={iconColStyle}>
-                      <FaPencil
+                      <FaPencilAlt
                         onClick={configureClick}
                         style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
                         title={this.context.translator.t('Configure layer')}

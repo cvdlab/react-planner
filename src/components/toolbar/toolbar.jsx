@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/lib/md';
-import { FaFileO, FaMousePointer, FaPlus } from 'react-icons/lib/fa';
+import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
+import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
@@ -86,7 +86,7 @@ export default class Toolbar extends Component {
           active={false}
           tooltip={translator.t('New project')}
           onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
-          <FaFileO />
+          <FaFile />
         </ToolbarButton>
       },
       {

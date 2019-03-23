@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { FaPencil, FaTrash, FaClose } from 'react-icons/lib/fa';
+import { FaPencil, FaTrash, FaClose } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
 
 const tabStyle = { margin: '1em' };
