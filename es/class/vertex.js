@@ -198,7 +198,8 @@ var Vertex = function () {
           var lineProps = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'properties']);
           var lineGroups = reducedState //get groups membership if present
           .getIn(['scene', 'groups']).filter(function (group) {
-            return group.getIn(['elements', layerID, 'lines']).contains(lineID);
+            var lines = group.getIn(['elements', layerID, 'lines']);
+            return lines && lines.contains(lineID);
           });
 
           reducedState = Layer.removeZeroLengthLines(reducedState, layerID).updatedState;
