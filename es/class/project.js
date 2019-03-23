@@ -27,8 +27,10 @@ var Project = function () {
     }
   }, {
     key: 'newProject',
-    value: function newProject() {
-      return { updatedState: new State() };
+    value: function newProject(state) {
+      state = new State({ 'viewer2D': state.get('viewer2D') });
+
+      return { updatedState: state };
     }
   }, {
     key: 'loadProject',

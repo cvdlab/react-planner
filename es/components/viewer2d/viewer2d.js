@@ -322,8 +322,11 @@ export default function Viewer2D(_ref, _ref2) {
   var rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
   var rulerFnColor = SharedStyle.COLORS.white;
   var rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
-  var rulerXElements = Math.ceil(SVGWidth / rulerUnitPixelSize) + 1;
-  var rulerYElements = Math.ceil(SVGHeight / rulerUnitPixelSize) + 1;
+  var sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
+  var sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
+  var sceneZoom = state.zoom || 1;
+  var rulerXElements = Math.ceil(sceneWidth / rulerUnitPixelSize) + 1;
+  var rulerYElements = Math.ceil(sceneHeight / rulerUnitPixelSize) + 1;
 
   return React.createElement(
     'div',
@@ -341,9 +344,9 @@ export default function Viewer2D(_ref, _ref2) {
     React.createElement(
       'div',
       { style: { gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerX' },
-      SVGWidth ? React.createElement(RulerX, {
+      sceneWidth ? React.createElement(RulerX, {
         unitPixelSize: rulerUnitPixelSize,
-        zoom: state.zoom,
+        zoom: sceneZoom,
         mouseX: state.mouse.get('x'),
         width: width - rulerSize,
         zeroLeftPosition: e || 0,
@@ -357,12 +360,12 @@ export default function Viewer2D(_ref, _ref2) {
     React.createElement(
       'div',
       { style: { gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerY' },
-      SVGHeight ? React.createElement(RulerY, {
+      sceneHeight ? React.createElement(RulerY, {
         unitPixelSize: rulerUnitPixelSize,
-        zoom: state.zoom,
+        zoom: sceneZoom,
         mouseY: state.mouse.get('y'),
         height: height - rulerSize,
-        zeroTopPosition: SVGHeight * state.zoom + f || 0,
+        zeroTopPosition: sceneHeight * sceneZoom + f || 0,
         backgroundColor: rulerBgColor,
         fontColor: rulerFnColor,
         markerColor: rulerMkColor,
