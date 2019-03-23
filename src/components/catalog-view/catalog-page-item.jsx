@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import IconNext from 'react-icons/lib/md/navigate-next';
+import {MdNavigateNext} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE_BOX = {
@@ -86,7 +86,7 @@ export default class CatalogPageItem extends Component {
         {hover ?
           <div style={CONTAINER_DIV}>
             <b style={STYLE_TITLE_HOVERED}>{page.label}</b>
-            <IconNext style={STYLE_NEXT_HOVER}/>
+            <MdNavigateNext style={STYLE_NEXT_HOVER}/>
           </div>
           :
           <div style={CONTAINER_DIV}>

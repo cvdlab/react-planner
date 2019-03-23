@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconSave from 'react-icons/lib/md/camera-alt';
+import { MdCamera } from 'react-icons/md'
 import {ReactPlannerComponents, ReactPlannerConstants} from 'react-planner';
 
 const {
@@ -94,7 +94,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
   if ([MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)) {
     return (
       <ToolbarButton active={false} tooltip={translator.t('Get Screenshot')} onClick={saveScreenshotToFile}>
-        <IconSave/>
+        <MdCamera/>
       </ToolbarButton>
     );
   }
@@ -115,7 +115,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
 
     return (
       <ToolbarButton active={false} tooltip={translator.t('Get Screenshot')} onClick={saveSVGScreenshotToFile}>
-        <IconSave/>
+        <MdCamera/>
       </ToolbarButton>
     );
   }

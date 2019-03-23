@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
-import IconClose from 'react-icons/lib/fa/close';
+import {FaWindowClose as IconClose} from 'react-icons/fa';
 
 const labelContainerStyle = {
   width: 'auto',

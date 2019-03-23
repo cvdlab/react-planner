@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
-import { FaAngleDown, FaAngleUp } from 'react-icons/lib/fa';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 const STYLE = {
   borderTop: '1px solid #222',

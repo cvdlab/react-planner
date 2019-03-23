@@ -8,7 +8,7 @@ import {
   MODE_ROTATING_ITEM
 } from '../../constants';
 import * as SharedStyle from '../../shared-style';
-import MdSearch from 'react-icons/lib/md/search';
+import {MdSearch} from 'react-icons/md';
 
 const VISIBILITY_MODE = {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
