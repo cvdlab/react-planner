@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconLoad from 'react-icons/lib/fa/folder-open-o';
+import { FaFolderOpen as IconLoad } from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import { browserUpload } from '../../utils/browser';
 

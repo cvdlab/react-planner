@@ -11,7 +11,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
-import { MdUpdate } from 'react-icons/lib/md';
+import { MdUpdate } from 'react-icons/md';
 import { KEYBOARD_BUTTON_CODE } from '../../constants';
 
 var STYLE_INPUT = {

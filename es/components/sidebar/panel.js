@@ -11,7 +11,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
-import { FaAngleDown, FaAngleUp } from 'react-icons/lib/fa';
+import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
 var STYLE = {
   borderTop: '1px solid #222',

@@ -14,8 +14,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
-import { TiPlus, TiDelete } from 'react-icons/lib/ti';
-import { FaPencil, FaTrash, FaEye, FaChain, FaChainBroken } from 'react-icons/lib/fa';
+import { TiPlus, TiDelete } from 'react-icons/ti';
+import { FaTrash, FaEye, FaLink, FaUnlink } from 'react-icons/fa';
 import { Map } from 'immutable';
 
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
@@ -183,7 +183,7 @@ var PanelGroups = function (_Component) {
                 React.createElement(
                   'td',
                   { style: iconColStyle, title: _this2.context.translator.t('Chain selected Elements to Group') },
-                  React.createElement(FaChain, {
+                  React.createElement(FaLink, {
                     onClick: chainToGroup,
                     style: !shouldHighlight ? styleEditButton : styleEditButtonHover
                   })
@@ -191,7 +191,7 @@ var PanelGroups = function (_Component) {
                 React.createElement(
                   'td',
                   { style: iconColStyle, title: _this2.context.translator.t('Un-chain all Group\'s Elements and remove Group') },
-                  React.createElement(FaChainBroken, {
+                  React.createElement(FaUnlink, {
                     onClick: function onClick(e) {
                       return _this2.context.groupsActions.removeGroup(groupID);
                     },

@@ -10,7 +10,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import IconBefore from 'react-icons/lib/md/navigate-before';
+import { MdNavigateBefore } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 
 var STYLE_BOX = {
@@ -96,7 +96,7 @@ var CatalogTurnBackPageItem = function (_Component) {
         React.createElement(
           'div',
           { style: CONTAINER_DIV },
-          React.createElement(IconBefore, { style: !hover ? STYLE_BACK : STYLE_BACK_HOVER })
+          React.createElement(MdNavigateBefore, { style: !hover ? STYLE_BACK : STYLE_BACK_HOVER })
         )
       );
     }

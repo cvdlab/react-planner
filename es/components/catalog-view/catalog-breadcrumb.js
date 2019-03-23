@@ -2,7 +2,7 @@ var _extends = Object.assign || function (target) { for (var i = 1; i < argument
 
 import React from 'react';
 import PropTypes from 'prop-types';
-import Arrow from 'react-icons/lib/md/keyboard-arrow-right';
+import { MdArrowBack as Arrow } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 
 var breadcrumbStyle = {

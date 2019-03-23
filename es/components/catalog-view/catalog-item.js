@@ -14,8 +14,7 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import IconAdd from 'react-icons/lib/fa/plus-circle';
-import { Seq } from 'immutable';
+import { FaPlusCircle as IconAdd } from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
 
 var STYLE_BOX = {

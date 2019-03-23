@@ -17,7 +17,7 @@ import AttributesEditor from './attributes-editor/attributes-editor';
 import { GeometryUtils, MathUtils } from '../../../utils/export';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
-import { MdContentCopy, MdContentPaste } from 'react-icons/lib/md';
+import { MdContentCopy, MdContentPaste } from 'react-icons/md';
 
 var PRECISION = 2;
 

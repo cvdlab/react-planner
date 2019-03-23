@@ -12,8 +12,6 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
-import { TiPlus, TiDelete } from 'react-icons/lib/ti';
-import { FaPencil, FaChainBroken, FaEye } from 'react-icons/lib/fa';
 import { FormNumberInput, FormTextInput } from '../style/export';
 import { Map } from 'immutable';
 

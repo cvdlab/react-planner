@@ -10,7 +10,7 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import IconNext from 'react-icons/lib/md/navigate-next';
+import { MdNavigateNext } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 
 var STYLE_BOX = {
@@ -116,7 +116,7 @@ var CatalogPageItem = function (_Component) {
             { style: STYLE_TITLE_HOVERED },
             page.label
           ),
-          React.createElement(IconNext, { style: STYLE_NEXT_HOVER })
+          React.createElement(MdNavigateNext, { style: STYLE_NEXT_HOVER })
         ) : React.createElement(
           'div',
           { style: CONTAINER_DIV },

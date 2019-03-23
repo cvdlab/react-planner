@@ -14,8 +14,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Map } from 'immutable';
 import Panel from './panel';
-import { TiPlus, TiDelete } from 'react-icons/lib/ti';
-import { FaPencil, FaTrash, FaEye } from 'react-icons/lib/fa';
+import { TiPlus, TiDelete } from 'react-icons/ti';
+import { FaPencilAlt, FaTrash, FaEye } from 'react-icons/fa';
 import { FormTextInput, FormNumberInput, FormSubmitButton, FormSlider, CancelButton } from '../style/export';
 
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
@@ -199,7 +199,7 @@ var PanelLayers = function (_Component) {
                 React.createElement(
                   'td',
                   { style: iconColStyle },
-                  React.createElement(FaPencil, {
+                  React.createElement(FaPencilAlt, {
                     onClick: configureClick,
                     style: !isCurrentLayer ? styleEditButton : styleEditButtonHover,
                     title: _this2.context.translator.t('Configure layer')

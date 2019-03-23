@@ -10,8 +10,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/lib/md';
-import { FaFileO, FaMousePointer, FaPlus } from 'react-icons/lib/fa';
+import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
+import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
@@ -118,7 +118,7 @@ var Toolbar = function (_Component) {
             onClick: function onClick(event) {
               return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
             } },
-          React.createElement(FaFileO, null)
+          React.createElement(FaFile, null)
         )
       }, {
         index: 1, condition: allowProjectFileSupport,

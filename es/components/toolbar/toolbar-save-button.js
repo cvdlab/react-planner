@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import IconSave from 'react-icons/lib/fa/floppy-o';
+import { FaSave as IconSave } from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import { browserDownload } from '../../utils/browser';
 import { Project } from '../../class/export';
