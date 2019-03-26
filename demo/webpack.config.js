@@ -2,16 +2,27 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
+const ThreeExamples = require('import-three-examples');
 const isWsl = require('is-wsl');
 
 const PAGE_TITLE = 'React Planner';
-const VENDORS_LIBRARIES = ['immutable', 'react', 'react-dom', 'react-redux', 'redux', 'three'];
+const VENDORS_LIBRARIES = [
+  'immutable',
+  'react',
+  'react-dom',
+  'react-redux',
+  'redux',
+  'three'
+];
 
 module.exports = (env, self) => {
-  let isProduction = self.hasOwnProperty('mode') ? ( self.mode === 'production' ) : true;
+  let isProduction = self.hasOwnProperty('mode')
+    ? self.mode === 'production'
+    : true;
   let port = self.hasOwnProperty('port') ? self.port : 8080;
 
-  if (isProduction) console.info('Webpack: Production mode'); else console.info('Webpack: Development mode');
+  if (isProduction) console.info('Webpack: Production mode');
+  else console.info('Webpack: Development mode');
 
   let config = {
     context: path.resolve(__dirname),
@@ -21,7 +32,7 @@ module.exports = (env, self) => {
     },
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: '[chunkhash].[name].js',
+      filename: '[chunkhash].[name].js'
     },
     performance: {
       hints: isProduction ? 'warning' : false
@@ -29,7 +40,7 @@ module.exports = (env, self) => {
     devtool: isProduction ? 'source-map' : 'eval',
     devServer: {
       port: port,
-      contentBase: path.join(__dirname, './dist'),
+      contentBase: path.join(__dirname, './dist')
     },
     resolve: {
       extensions: ['.js', '.jsx'],
@@ -38,41 +49,41 @@ module.exports = (env, self) => {
       }
     },
     module: {
-      rules: [{
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: [{
-          loader: 'babel-loader',
-          options: {
-            'compact': false,
-            'plugins': [
-              'transform-object-rest-spread'
-            ],
-            'presets': [
-              'env',
-              'react'
-            ]
-          }
-
-        }]
-      }, {
-        test: /\.(jpe?g|png|gif|mtl|obj)$/i,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            hash: 'sha512',
-            digest: 'hex',
-            name: '[path][name].[ext]',
-            context: 'demo/src'
-          }
-        }]
-      }, {
-        test: /\.css$/,
-        use: [
-          { loader: 'style-loader/url' },
-          { loader: 'file-loader' }
-        ]
-      }]
+      rules: [
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: [
+            {
+              loader: 'babel-loader',
+              options: {
+                compact: false,
+                plugins: ['transform-object-rest-spread'],
+                presets: ['env', 'react']
+              }
+            }
+          ]
+        },
+        {
+          test: /\.(jpe?g|png|gif|mtl|obj)$/i,
+          use: [
+            {
+              loader: 'file-loader',
+              options: {
+                hash: 'sha512',
+                digest: 'hex',
+                name: '[path][name].[ext]',
+                context: 'demo/src'
+              }
+            }
+          ]
+        },
+        {
+          test: /\.css$/,
+          use: [{ loader: 'style-loader/url' }, { loader: 'file-loader' }]
+        },
+        ...ThreeExamples
+      ]
     },
     plugins: [
       new HtmlWebpackPlugin({
@@ -89,11 +100,11 @@ module.exports = (env, self) => {
         cacheGroups: {
           default: false,
           commons: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendor',
-              chunks: 'all',
-              minSize: 10000,
-              reuseExistingChunk: true
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendor',
+            chunks: 'all',
+            minSize: 10000,
+            reuseExistingChunk: true
           }
         }
       }
@@ -101,24 +112,29 @@ module.exports = (env, self) => {
   };
 
   if (isProduction) {
-    config.plugins.push(new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }));
+    config.plugins.push(
+      new webpack.DefinePlugin({
+        'process.env': {
+          NODE_ENV: JSON.stringify('production')
+        }
+      })
+    );
   }
 
-  config.plugins.push(new webpack.DefinePlugin({
-    isProduction: JSON.stringify(isProduction)
-  }));
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      isProduction: JSON.stringify(isProduction)
+    })
+  );
 
   if (!isProduction) {
     const url = `http://localhost:${port}`;
-    if(!isWsl) {
-      config.plugins.push(new OpenBrowserPlugin({url}));
-    }
-    else {
-      console.warn('Unable to automatically open browser on Windows Subsystem for Linux');
+    if (!isWsl) {
+      config.plugins.push(new OpenBrowserPlugin({ url }));
+    } else {
+      console.warn(
+        'Unable to automatically open browser on Windows Subsystem for Linux'
+      );
       console.warn(`Open your browser and navigate to ${url}`);
     }
   }
