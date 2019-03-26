@@ -5,6 +5,8 @@ import * as SharedStyle from '../../shared-style';
 import { FormNumberInput, FormTextInput } from '../style/export';
 import { Map } from 'immutable';
 
+import {FaUnlink} from 'react-icons/fa';
+
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE,
@@ -141,7 +143,7 @@ export default class PanelGroupEditor extends Component {
                               key={elementID}
                             >
                               <td style={iconColStyle} title={this.context.translator.t('Un-chain Element from Group')}>
-                                <FaChainBroken
+                                <FaUnlink
                                   onClick={ e => this.context.groupsActions.removeFromGroup( this.props.groupID, layerID, elementPrototype, elementID ) }
                                   style={styleEditButton}
                                 />
