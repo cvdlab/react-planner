@@ -82,7 +82,7 @@ export default function ToolbarScreenshotButton({mode}, {translator}) {
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     img.crossOrigin = 'anonymous';
-    img.src = `data:image/svg+xml;utf8,${serializer.serializeToString(maxWidthSVGElement)}`;
+    img.src = `data:image/svg+xml;base64,${window.btoa(serializer.serializeToString(maxWidthSVGElement))}`;
 
     img.onload = () => {
       ctx.drawImage(img, 0, 0, maxWidthSVGElement.width.baseVal.value, maxWidthSVGElement.height.baseVal.value);

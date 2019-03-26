@@ -94,6 +94,7 @@
     "file-loader": "3.0.1",
     "gh-pages": "2.0.1",
     "immutable-devtools": "0.1.4",
+    "is-wsl": "1.1.0",
     "open-browser-webpack-plugin": "0.0.5",
     "react": "16.8.5",
     "react-container-dimensions": "1.4.1",

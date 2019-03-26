@@ -13,7 +13,7 @@ import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
-import { FaPencil, FaTrash, FaClose } from 'react-icons/fa';
+import { FaPencil, FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
 
 var tabStyle = { margin: '1em' };
@@ -117,9 +117,12 @@ var PanelGuides = function (_Component) {
                     React.createElement(
                       'td',
                       { style: { width: '5em' } },
-                      React.createElement(FaTrash, { style: iconStyle, onClick: function onClick(e) {
+                      React.createElement(FaTrash, {
+                        style: iconStyle,
+                        onClick: function onClick(e) {
                           return projectActions.removeHorizontalGuide(hgKey);
-                        } })
+                        }
+                      })
                     )
                   );
                 }),
@@ -128,9 +131,13 @@ var PanelGuides = function (_Component) {
                   null,
                   React.createElement(
                     'td',
-                    { colSpan: '3', style: addGuideStyle, onClick: function onClick(e) {
-                        return _this2.setState({ 'addHGVisible': false });
-                      } },
+                    {
+                      colSpan: '3',
+                      style: addGuideStyle,
+                      onClick: function onClick(e) {
+                        return _this2.setState({ addHGVisible: false });
+                      }
+                    },
                     translator.t('+ Add Horizontal Giude')
                   )
                 ) : React.createElement(
@@ -143,17 +150,21 @@ var PanelGuides = function (_Component) {
                       value: 0,
                       onChange: function onChange(e) {
                         projectActions.addHorizontalGuide(e.target.value);
-                        return _this2.setState({ 'addHGVisible': true });
+                        return _this2.setState({ addHGVisible: true });
                       },
                       min: 0,
-                      max: this.props.state.getIn(['scene', 'height']) })
+                      max: this.props.state.getIn(['scene', 'height'])
+                    })
                   ),
                   React.createElement(
                     'td',
                     null,
-                    React.createElement(FaClose, { style: iconStyle, onClick: function onClick(e) {
-                        return _this2.setState({ 'addHGVisible': true });
-                      } })
+                    React.createElement(FaTimes, {
+                      style: iconStyle,
+                      onClick: function onClick(e) {
+                        return _this2.setState({ addHGVisible: true });
+                      }
+                    })
                   )
                 )
               )
@@ -189,9 +200,12 @@ var PanelGuides = function (_Component) {
                     React.createElement(
                       'td',
                       { style: { width: '5em' } },
-                      React.createElement(FaTrash, { style: iconStyle, onClick: function onClick(e) {
+                      React.createElement(FaTrash, {
+                        style: iconStyle,
+                        onClick: function onClick(e) {
                           return projectActions.removeVerticalGuide(hgKey);
-                        } })
+                        }
+                      })
                     )
                   );
                 }),
@@ -200,9 +214,13 @@ var PanelGuides = function (_Component) {
                   null,
                   React.createElement(
                     'td',
-                    { colSpan: '3', style: addGuideStyle, onClick: function onClick(e) {
-                        return _this2.setState({ 'addVGVisible': false });
-                      } },
+                    {
+                      colSpan: '3',
+                      style: addGuideStyle,
+                      onClick: function onClick(e) {
+                        return _this2.setState({ addVGVisible: false });
+                      }
+                    },
                     translator.t('+ Add Vertical Giude')
                   )
                 ) : React.createElement(
@@ -215,17 +233,21 @@ var PanelGuides = function (_Component) {
                       value: 0,
                       onChange: function onChange(e) {
                         projectActions.addVerticalGuide(e.target.value);
-                        return _this2.setState({ 'addVGVisible': true });
+                        return _this2.setState({ addVGVisible: true });
                       },
                       min: 0,
-                      max: this.props.state.getIn(['scene', 'height']) })
+                      max: this.props.state.getIn(['scene', 'height'])
+                    })
                   ),
                   React.createElement(
                     'td',
                     null,
-                    React.createElement(FaClose, { style: iconStyle, onClick: function onClick(e) {
-                        return _this2.setState({ 'addVGVisible': true });
-                      } })
+                    React.createElement(FaTimes, {
+                      style: iconStyle,
+                      onClick: function onClick(e) {
+                        return _this2.setState({ addVGVisible: true });
+                      }
+                    })
                   )
                 )
               )
