@@ -15,6 +15,8 @@ import * as SharedStyle from '../../shared-style';
 import { FormNumberInput, FormTextInput } from '../style/export';
 import { Map } from 'immutable';
 
+import { FaUnlink } from 'react-icons/fa';
+
 import { MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE, MODE_DRAGGING_VERTEX, MODE_DRAGGING_ITEM, MODE_DRAGGING_HOLE, MODE_FITTING_IMAGE, MODE_UPLOADING_IMAGE, MODE_ROTATING_ITEM } from '../../constants';
 
 var VISIBILITY_MODE = {
@@ -235,7 +237,7 @@ var PanelGroupEditor = function (_Component) {
                         React.createElement(
                           'td',
                           { style: iconColStyle, title: _this2.context.translator.t('Un-chain Element from Group') },
-                          React.createElement(FaChainBroken, {
+                          React.createElement(FaUnlink, {
                             onClick: function onClick(e) {
                               return _this2.context.groupsActions.removeFromGroup(_this2.props.groupID, layerID, elementPrototype, elementID);
                             },
