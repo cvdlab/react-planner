@@ -5,11 +5,12 @@ import {
   Vector2,
   BoxGeometry,
   MeshBasicMaterial,
+  MeshPhongMaterial,
   Group
 } from 'three';
 
 import ThreeBSP from '../../utils/threeCSG.es6';
-import {verticesDistance} from '../../utils/geometry';
+import { verticesDistance } from '../../utils/geometry';
 import * as SharedStyle from '../../shared-style';
 
 const halfPI = Math.PI / 2;
@@ -29,21 +30,33 @@ const applyTexture = (material, texture, length, height) => {
     material.needsUpdate = true;
     material.map.wrapS = RepeatWrapping;
     material.map.wrapT = RepeatWrapping;
-    material.map.repeat.set(length * texture.lengthRepeatScale, height * texture.heightRepeatScale);
+    material.map.repeat.set(
+      length * texture.lengthRepeatScale,
+      height * texture.heightRepeatScale
+    );
 
     if (texture.normal) {
       material.normalMap = loader.load(texture.normal.uri);
-      material.normalScale = new Vector2(texture.normal.normalScaleX, texture.normal.normalScaleY);
+      material.normalScale = new Vector2(
+        texture.normal.normalScaleX,
+        texture.normal.normalScaleY
+      );
       material.normalMap.wrapS = RepeatWrapping;
       material.normalMap.wrapT = RepeatWrapping;
-      material.normalMap.repeat.set(length * texture.normal.lengthRepeatScale, height * texture.normal.heightRepeatScale);
+      material.normalMap.repeat.set(
+        length * texture.normal.lengthRepeatScale,
+        height * texture.normal.heightRepeatScale
+      );
     }
   }
 };
 
-export function buildWall(element, layer, scene, textures)
-{
-  // Get the two vertices of the wall
+/**
+ * Get the two vertices of the wall
+ * @param {*} element
+ * @param {*} layer
+ */
+export const getVerticesOfWall = (element, layer) => {
   let vertex0 = layer.vertices.get(element.vertices.get(0));
   let vertex1 = layer.vertices.get(element.vertices.get(1));
   let inverted = false;
@@ -56,23 +69,56 @@ export function buildWall(element, layer, scene, textures)
     inverted = true;
   }
 
+  return [vertex0, vertex1, inverted];
+};
+export const createSoulMaterials = (element, layer, textures) => {
+  const height = element.properties.getIn(['height', 'length']);
+  const [vertex0, vertex1] = getVerticesOfWall(element, layer);
+  const distance = verticesDistance(vertex0, vertex1);
+
+  const soulMaterials = [0x454545, 0xd3d3d3, 0xd3d3d3].map(
+    color =>
+      new MeshPhongMaterial({
+        color: element.selected ? SharedStyle.MESH_SELECTED : color
+      })
+  );
+
+  applyTexture(
+    soulMaterials[1],
+    textures[element.properties.get('textureB')],
+    distance,
+    height
+  );
+  applyTexture(
+    soulMaterials[2],
+    textures[element.properties.get('textureA')],
+    distance,
+    height
+  );
+
+  return soulMaterials;
+};
+
+export function buildWall(element, layer, scene, textures) {
+  const [vertex0, vertex1, inverted] = getVerticesOfWall(element, layer);
+
   // Get height and thickness of the wall converting them into the current scene units
-  let height = element.properties.getIn(['height', 'length']);
-  let thickness = element.properties.getIn(['thickness', 'length']);
-  let halfThickness = thickness / 2;
-  let faceThickness = 0.2;
-  let faceDistance = 1;
+  const thickness = element.properties.getIn(['thickness', 'length']);
+  const height = element.properties.getIn(['height', 'length']);
 
-  let distance = verticesDistance( vertex0, vertex1 );
-  let halfDistance = distance / 2;
+  const distance = verticesDistance(vertex0, vertex1);
+  const halfDistance = distance / 2;
 
-  let soulMaterial = new MeshBasicMaterial( {color: ( element.selected ? SharedStyle.MESH_SELECTED : 0xD3D3D3 )} );
-  let soul = new Mesh( new BoxGeometry(distance, height, thickness), soulMaterial );
+  const soulMaterials = createSoulMaterials(element, layer, textures);
+  let soul = new Mesh(
+    new BoxGeometry(distance, height, thickness),
+    soulMaterials
+  );
 
-  let alpha = Math.asin((vertex1.y - vertex0.y) / (distance));
+  const alpha = Math.asin((vertex1.y - vertex0.y) / distance);
 
-  let sinAlpha = Math.sin(alpha);
-  let cosAlpha = Math.cos(alpha);
+  const sinAlpha = Math.sin(alpha);
+  const cosAlpha = Math.cos(alpha);
 
   soul.position.y += height / 2;
   soul.position.x += halfDistance * cosAlpha;
@@ -80,17 +126,17 @@ export function buildWall(element, layer, scene, textures)
 
   soul.rotation.y = alpha;
 
-  element.holes.forEach( holeID => {
-    let holeData = layer.holes.get(holeID);
+  element.holes.forEach(holeID => {
+    const holeData = layer.holes.get(holeID);
 
-    let holeWidth = holeData.properties.getIn(['width', 'length']);
-    let holeHeight = holeData.properties.getIn(['height', 'length']);
-    let holeAltitude = holeData.properties.getIn(['altitude', 'length']);
-    let offset = inverted ? 1 - holeData.offset : holeData.offset;
-    let holeDistance = offset * distance;
+    const holeWidth = holeData.properties.getIn(['width', 'length']);
+    const holeHeight = holeData.properties.getIn(['height', 'length']);
+    const holeAltitude = holeData.properties.getIn(['altitude', 'length']);
+    const offset = inverted ? 1 - holeData.offset : holeData.offset;
+    const holeDistance = offset * distance;
 
-    let holeGeometry = new BoxGeometry( holeWidth, holeHeight, thickness );
-    let holeMesh = new Mesh( holeGeometry );
+    const holeGeometry = new BoxGeometry(holeWidth, holeHeight, thickness);
+    const holeMesh = new Mesh(holeGeometry);
 
     holeMesh.position.y += holeHeight / 2 + holeAltitude;
     holeMesh.position.x += holeDistance * cosAlpha;
@@ -98,78 +144,73 @@ export function buildWall(element, layer, scene, textures)
 
     holeMesh.rotation.y = alpha;
 
-    let wallBSP = new ThreeBSP( soul );
-    let holeBSP = new ThreeBSP( holeMesh );
+    const wallBSP = new ThreeBSP(soul);
+    const holeBSP = new ThreeBSP(holeMesh);
 
-    let wallWithHoleBSP = wallBSP.subtract( holeBSP );
-    soul = wallWithHoleBSP.toMesh( soulMaterial );
+    const wallWithHoleBSP = wallBSP.subtract(holeBSP);
+    soul = wallWithHoleBSP.toMesh(soulMaterials);
   });
+  // The facenormals need to be re-calculated have correct UV mapping
+  soul.geometry.computeFaceNormals();
 
   soul.name = 'soul';
 
-  let frontMaterial = new MeshBasicMaterial();
-  let backMaterial = new MeshBasicMaterial();
+  // Split MaterialId's
+  soul.geometry.faces = soul.geometry.faces.map(face => {
+    const {
+      normal: { z }
+    } = face;
 
-  applyTexture(frontMaterial, textures[element.properties.get('textureB')], distance, height);
-  applyTexture(backMaterial, textures[element.properties.get('textureA')], distance, height);
+    if (z > 0) {
+      face.materialIndex = 2;
+    } else if (z < 0) {
+      face.materialIndex = 1;
+    } else {
+      face.materialIndex = 0;
+    }
+    return face;
+  });
 
-  let scaleFactor = faceThickness / thickness;
-  let texturedFaceDistance = halfThickness + faceDistance;
-
-  let frontFace = soul.clone();
-  frontFace.material = frontMaterial;
-  frontFace.scale.set( 1, 1, scaleFactor );
-  frontFace.position.x += texturedFaceDistance * Math.cos(alpha - ( halfPI ) );
-  frontFace.position.z -= texturedFaceDistance * Math.sin(alpha - ( halfPI ) );
-  frontFace.name = 'frontFace';
-
-  let backFace = soul.clone();
-  backFace.material = backMaterial;
-  backFace.scale.set( 1, 1, scaleFactor );
-  backFace.position.x += texturedFaceDistance * Math.cos(alpha + ( halfPI ) );
-  backFace.position.z -= texturedFaceDistance * Math.sin(alpha + ( halfPI ) );
-  backFace.name = 'backFace';
-
-  let merged = new Group();
-  merged.add( soul, frontFace, backFace );
-
-  return Promise.resolve( merged );
+  return Promise.resolve(soul);
 }
 
-export function updatedWall( element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild ) {
-  let noPerf = () => { selfDestroy(); return selfBuild(); };
+export function updatedWall(
+  element,
+  layer,
+  scene,
+  textures,
+  mesh,
+  oldElement,
+  differences,
+  selfDestroy,
+  selfBuild
+) {
+  let noPerf = () => {
+    selfDestroy();
+    return selfBuild();
+  };
 
   let soul = mesh.getObjectByName('soul');
-  let frontFace = mesh.getObjectByName('frontFace');
-  let backFace = mesh.getObjectByName('backFace');
 
-  if( differences[0] == 'selected' ) {
-    soul.material = new MeshBasicMaterial( {color: ( element.selected ? SharedStyle.MESH_SELECTED : 0xD3D3D3 )} );
-  }
-  else if( differences[0] == 'properties' ){
-
-    if( differences[1] == 'thickness' ){
+  if (differences[0] == 'selected') {
+    const soulMaterials = createSoulMaterials(element, layer, textures);
+    setTimeout(() => {
+      soul.material = soulMaterials;
+      soul.material.needsUpdate = true;
+    }, 20);
+  } else if (differences[0] == 'properties') {
+    if (differences[1] == 'thickness') {
       let newThickness = element.getIn(['properties', 'thickness', 'length']);
-      let oldThickness = oldElement.getIn(['properties', 'thickness', 'length']);
-      let halfNewThickness = newThickness / 2;
-      let texturedFaceDistance = halfNewThickness + 1;
+      let oldThickness = oldElement.getIn([
+        'properties',
+        'thickness',
+        'length'
+      ]);
+
       let originalThickness = oldThickness / soul.scale.z;
-      let alpha = soul.rotation.y;
-
-      let xTemp = texturedFaceDistance * Math.cos(alpha - ( halfPI ) );
-      let zTemp = texturedFaceDistance * Math.sin(alpha - ( halfPI ) );
-
-      soul.scale.set( 1, 1, ( newThickness / originalThickness ) );
-
-      frontFace.position.x = soul.position.x + ( xTemp );
-      frontFace.position.z = soul.position.z + ( zTemp );
-
-      backFace.position.x = soul.position.x - ( xTemp );
-      backFace.position.z = soul.position.z - ( zTemp );
-    }
-    else return noPerf();
-  }
-  else return noPerf();
+      soul.scale.set(1, 1, newThickness / originalThickness);
+    } else return noPerf();
+  } else return noPerf();
 
   return Promise.resolve(mesh);
 }

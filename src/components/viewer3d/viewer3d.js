@@ -4,13 +4,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import * as Three from 'three';
-import ColladaExporter from 'three/examples/js/exporters/ColladaExporter';
 import { parseData, updateScene } from './scene-creator';
 import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import * as SharedStyle from '../../shared-style';
-import { browserDownload } from '../../utils/browser';
 
 export default class Scene3DViewer extends React.Component {
   constructor(props) {
@@ -23,7 +21,7 @@ export default class Scene3DViewer extends React.Component {
 
     this.renderer =
       window.__threeRenderer ||
-      new Three.WebGLRenderer({ preserveDrawingBuffer: true });
+      new Three.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
     window.__threeRenderer = this.renderer;
   }
 
@@ -161,9 +159,6 @@ export default class Scene3DViewer extends React.Component {
     this.camera = camera;
     this.scene3D = scene3D;
     this.planData = planData;
-
-    // const exporter = new ColladaExporter();
-    // browserDownload(exporter.parse(scene3D, null, {}));
   }
 
   componentWillUnmount() {
