@@ -15,6 +15,7 @@ import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
+import ToolbarExportButton from './toolbar-export-button';
 import If from '../../utils/react-if';
 import { MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../constants';
 import * as SharedStyle from '../../shared-style';
@@ -64,11 +65,7 @@ var sortButtonsCb = function sortButtonsCb(a, b) {
 var mapButtonsCb = function mapButtonsCb(el, ind) {
   return React.createElement(
     If,
-    {
-      key: ind,
-      condition: el.condition,
-      style: { position: 'relative' }
-    },
+    { key: ind, condition: el.condition, style: { position: 'relative' } },
     el.dom
   );
 };
@@ -99,6 +96,7 @@ var Toolbar = function (_Component) {
           height = _props.height,
           toolbarButtons = _props.toolbarButtons,
           allowProjectFileSupport = _props.allowProjectFileSupport,
+          catalog = _props.catalog,
           _context = this.context,
           projectActions = _context.projectActions,
           viewer3DActions = _context.viewer3DActions,
@@ -110,24 +108,38 @@ var Toolbar = function (_Component) {
       var alterateColor = alterate ? SharedStyle.MATERIAL_COLORS[500].orange : '';
 
       var sorter = [{
-        index: 0, condition: allowProjectFileSupport, dom: React.createElement(
+        index: 0,
+        condition: allowProjectFileSupport,
+        dom: React.createElement(
           ToolbarButton,
           {
             active: false,
             tooltip: translator.t('New project'),
             onClick: function onClick(event) {
               return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
-            } },
+            }
+          },
           React.createElement(FaFile, null)
         )
       }, {
-        index: 1, condition: allowProjectFileSupport,
+        index: 1,
+        condition: allowProjectFileSupport,
         dom: React.createElement(ToolbarSaveButton, { state: state })
       }, {
-        index: 2, condition: allowProjectFileSupport,
+        index: 2,
+        condition: allowProjectFileSupport,
+        dom: React.createElement(ToolbarExportButton, {
+          state: state,
+          context: this.context,
+          catalog: catalog
+        })
+      }, {
+        index: 3,
+        condition: allowProjectFileSupport,
         dom: React.createElement(ToolbarLoadButton, { state: state })
       }, {
-        index: 3, condition: true,
+        index: 4,
+        condition: true,
         dom: React.createElement(
           ToolbarButton,
           {
@@ -135,72 +147,89 @@ var Toolbar = function (_Component) {
             tooltip: translator.t('Open catalog'),
             onClick: function onClick(event) {
               return projectActions.openCatalog();
-            } },
+            }
+          },
           React.createElement(FaPlus, null)
         )
       }, {
-        index: 4, condition: true, dom: React.createElement(
+        index: 5,
+        condition: true,
+        dom: React.createElement(
           ToolbarButton,
           {
             active: [MODE_3D_VIEW].includes(mode),
             tooltip: translator.t('3D View'),
             onClick: function onClick(event) {
               return viewer3DActions.selectTool3DView();
-            } },
+            }
+          },
           React.createElement(Icon3D, null)
         )
       }, {
-        index: 5, condition: true, dom: React.createElement(
+        index: 6,
+        condition: true,
+        dom: React.createElement(
           ToolbarButton,
           {
             active: [MODE_IDLE].includes(mode),
             tooltip: translator.t('2D View'),
             onClick: function onClick(event) {
               return projectActions.setMode(MODE_IDLE);
-            } },
+            }
+          },
           [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, { style: { color: alterateColor } }) : React.createElement(FaMousePointer, { style: { color: alterateColor } })
         )
       }, {
-        index: 6, condition: true, dom: React.createElement(
+        index: 7,
+        condition: true,
+        dom: React.createElement(
           ToolbarButton,
           {
             active: [MODE_3D_FIRST_PERSON].includes(mode),
             tooltip: translator.t('3D First Person'),
             onClick: function onClick(event) {
               return viewer3DActions.selectTool3DFirstPerson();
-            } },
+            }
+          },
           React.createElement(MdDirectionsRun, null)
         )
       }, {
-        index: 7, condition: true, dom: React.createElement(
+        index: 8,
+        condition: true,
+        dom: React.createElement(
           ToolbarButton,
           {
             active: false,
             tooltip: translator.t('Undo (CTRL-Z)'),
             onClick: function onClick(event) {
               return projectActions.undo();
-            } },
+            }
+          },
           React.createElement(MdUndo, null)
         )
       }, {
-        index: 8, condition: true, dom: React.createElement(
+        index: 9,
+        condition: true,
+        dom: React.createElement(
           ToolbarButton,
           {
             active: [MODE_CONFIGURING_PROJECT].includes(mode),
             tooltip: translator.t('Configure project'),
             onClick: function onClick(event) {
               return projectActions.openProjectConfigurator();
-            } },
+            }
+          },
           React.createElement(MdSettings, null)
         )
       }];
 
       sorter = sorter.concat(toolbarButtons.map(function (Component, key) {
-        return Component.prototype ? //if is a react component
-        {
+        return Component.prototype //if is a react component
+        ? {
           condition: true,
           dom: React.createElement(Component, { mode: mode, state: state, key: key })
-        } : { //else is a sortable toolbar button
+        } : {
+          //else is a sortable toolbar button
           index: Component.index,
           condition: Component.condition,
           dom: React.createElement(Component.dom, { mode: mode, state: state, key: key })
@@ -209,7 +238,10 @@ var Toolbar = function (_Component) {
 
       return React.createElement(
         'aside',
-        { style: _extends({}, ASIDE_STYLE, { maxWidth: width, maxHeight: height }), className: 'toolbar' },
+        {
+          style: _extends({}, ASIDE_STYLE, { maxWidth: width, maxHeight: height }),
+          className: 'toolbar'
+        },
         sorter.sort(sortButtonsCb).map(mapButtonsCb)
       );
     }

@@ -44,7 +44,6 @@ var assignUVs = function assignUVs(geometry) {
   var range = new Vector2(max.x - min.x, max.y - min.y);
 
   geometry.faceVertexUvs[0] = geometry.faces.map(function (face) {
-
     var v1 = geometry.vertices[face.a];
     var v2 = geometry.vertices[face.b];
     var v3 = geometry.vertices[face.c];
@@ -77,7 +76,7 @@ export function createArea(element, layer, scene, textures) {
     shape.lineTo(vertices[i].x, vertices[i].y);
   }
 
-  var areaMaterial = new MeshPhongMaterial({ side: DoubleSide, color: color });
+  var areaMaterial = new MeshPhongMaterial({ color: color });
 
   /* Create holes for the area */
   element.holes.forEach(function (holeID) {
@@ -116,7 +115,8 @@ export function createArea(element, layer, scene, textures) {
 
 export function updatedArea(element, layer, scene, textures, mesh, oldElement, differences, selfDestroy, selfBuild) {
   var noPerf = function noPerf() {
-    selfDestroy();return selfBuild();
+    selfDestroy();
+    return selfBuild();
   };
   var floor = mesh.getObjectByName('floor');
 

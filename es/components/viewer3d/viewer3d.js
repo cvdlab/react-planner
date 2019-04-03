@@ -31,7 +31,7 @@ var Scene3DViewer = function (_React$Component) {
     _this.height = props.height;
     _this.renderingID = 0;
 
-    _this.renderer = window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
+    _this.renderer = window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
     window.__threeRenderer = _this.renderer;
     return _this;
   }
@@ -89,7 +89,7 @@ var Scene3DViewer = function (_React$Component) {
 
       // Add another light
 
-      var spotLight1 = new Three.SpotLight(SharedStyle.COLORS.white, 0.30);
+      var spotLight1 = new Three.SpotLight(SharedStyle.COLORS.white, 0.3);
       spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
       scene3D.add(spotLight1);
 
@@ -110,7 +110,6 @@ var Scene3DViewer = function (_React$Component) {
         mouse.y = -(event.offsetY / _this2.height) * 2 + 1;
 
         if (Math.abs(mouse.x - _this2.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - _this2.lastMousePosition.y) <= 0.02) {
-
           raycaster.setFromCamera(mouse, camera);
           var intersects = raycaster.intersectObjects(toIntersect, true);
 
