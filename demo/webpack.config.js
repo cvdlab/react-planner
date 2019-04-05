@@ -2,7 +2,6 @@ const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
-const ThreeExamples = require('import-three-examples');
 const isWsl = require('is-wsl');
 
 const PAGE_TITLE = 'React Planner';
@@ -81,8 +80,7 @@ module.exports = (env, self) => {
         {
           test: /\.css$/,
           use: [{ loader: 'style-loader/url' }, { loader: 'file-loader' }]
-        },
-        ...ThreeExamples
+        }
       ]
     },
     plugins: [

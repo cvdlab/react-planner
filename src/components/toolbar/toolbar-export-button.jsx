@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { FaFileDownload as IconDownload } from 'react-icons/fa';
-import ColladaExporter from 'three/examples/js/exporters/ColladaExporter';
+import { ColladaExporter } from 'three/examples/jsm/exporters/ColladaExporter';
 import { xml2js, js2xml } from 'xml-js';
 
 import { saveAs } from 'file-saver';
