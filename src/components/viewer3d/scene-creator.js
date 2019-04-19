@@ -34,7 +34,12 @@ export function parseData(sceneData, actions, catalog) {
     }
   });
 
-  Promise.all(promises).then(value => updateBoundingBox(planData));
+  Promise.all(promises).then(value => {
+    updateBoundingBox(planData)
+    // Launch scene finished action
+    console.log(actions);
+    actions.viewer3DActions.scene3DHasBeenCreated();
+  });
 
   return planData;
 }

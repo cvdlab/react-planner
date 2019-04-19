@@ -31,7 +31,8 @@ export default class Scene3DViewer extends React.Component {
       holesActions: this.context.holesActions,
       itemsActions: this.context.itemsActions,
       linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
+      projectActions: this.context.projectActions,
+      viewer3DActions: this.context.viewer3DActions,
     };
 
     let { state } = this.props;
@@ -206,5 +207,6 @@ Scene3DViewer.contextTypes = {
   itemsActions: PropTypes.object.isRequired,
   linesActions: PropTypes.object.isRequired,
   projectActions: PropTypes.object.isRequired,
+  viewer3DActions: PropTypes.object.isRequired,
   catalog: PropTypes.object
 };
