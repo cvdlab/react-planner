@@ -1,8 +1,6 @@
-const OpenBrowserPlugin = require('open-browser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const path = require('path');
 const webpack = require('webpack');
-const isWsl = require('is-wsl');
 
 const PAGE_TITLE = 'React Planner';
 const VENDORS_LIBRARIES = ['immutable', 'react', 'react-dom', 'react-redux', 'redux', 'three'];
@@ -28,6 +26,7 @@ module.exports = (env, self) => {
     },
     devtool: isProduction ? 'source-map' : 'eval',
     devServer: {
+      open: true,
       port: port,
       contentBase: path.join(__dirname, './dist'),
     },
@@ -111,17 +110,6 @@ module.exports = (env, self) => {
   config.plugins.push(new webpack.DefinePlugin({
     isProduction: JSON.stringify(isProduction)
   }));
-
-  if (!isProduction) {
-    const url = `http://localhost:${port}`;
-    if(!isWsl) {
-      config.plugins.push(new OpenBrowserPlugin({url}));
-    }
-    else {
-      console.warn('Unable to automatically open browser on Windows Subsystem for Linux');
-      console.warn(`Open your browser and navigate to ${url}`);
-    }
-  }
 
   return config;
 };
