@@ -6,8 +6,8 @@
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
   "scripts": {
-    "start": "webpack-dev-server --inline --config demo/webpack.config.js --port 9000 --mode development",
-    "build-demo": "webpack --config demo/webpack.config.js --mode production",
+    "start": "webpack-dev-server --inline --config demo/webpack.development.js --port 9000",
+    "build-demo": "webpack --config demo/webpack.production.js",
     "build-commonjs": "cross-env BABEL_ENV=commonjs babel src --out-dir lib",
     "build-es": "cross-env BABEL_ENV=es babel src --copy-files --out-dir es",
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
@@ -61,52 +61,36 @@
     {
       "url": "https://github.com/alessiocarrafa",
       "name": "alessiocarrafa"
+    },
+    {
+      "url": "https://github.com/stefanoperrone",
+      "name": "stefanoperrone"
     }
   ],
   "homepage": "https://github.com/cvdlab/react-planner#readme",
-  "dependencies": {
-    "@mapbox/react-range": "0.0.7",
-    "area-polygon": "1.0.1",
-    "convert-units": "2.3.4",
-    "html-webpack-plugin": "3.2.0",
-    "immutable": "3.8.2",
-    "immutablediff": "0.4.4",
-    "immutablepatch": "0.5.0",
-    "polylabel": "1.0.2",
-    "prop-types": "15.7.2",
-    "react-icons": "3.5.0",
-    "react-redux": "5.0.7",
-    "react-svg-pan-zoom": "2.18.0",
-    "react-tabs": "3.0.0",
-    "redux": "4.0.1",
-    "shortid": "2.2.14"
-  },
+  "dependencies": {},
   "devDependencies": {
-    "babel-cli": "6.26.0",
-    "babel-core": "6.26.3",
-    "babel-loader": "7.1.5",
-    "babel-plugin-import-glob": "2.0.0",
-    "babel-plugin-transform-object-rest-spread": "6.26.0",
-    "babel-preset-env": "1.7.0",
-    "babel-preset-react": "6.24.1",
-    "const-version": "2.0.0",
-    "cross-env": "5.2.0",
-    "file-loader": "3.0.1",
-    "gh-pages": "2.0.1",
-    "immutable-devtools": "0.1.4",
-    "react": "16.8.5",
-    "react-container-dimensions": "1.4.1",
-    "react-dom": "16.8.5",
-    "rimraf": "2.6.3",
-    "style-loader": "0.23.1",
-    "three": "0.94.0",
-    "webpack": "4.29.6",
-    "webpack-cli": "3.3.0",
-    "webpack-dev-server": "3.7.1"
+    "@babel/core": "^7.7.7",
+    "@babel/preset-react": "^7.7.4",
+    "babel-loader": "^8.0.6",
+    "html-webpack-plugin": "^3.2.0",
+    "husky": "^3.1.0",
+    "prettier": "^1.19.1",
+    "pretty-quick": "^2.0.1",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "webpack": "^4.41.4",
+    "webpack-cli": "^3.3.10",
+    "webpack-dev-server": "^3.10.1",
+    "webpack-merge": "^4.2.2"
   },
   "peerDependencies": {
-    "react": "16.x",
-    "react-dom": "16.x",
-    "three": "0.94.x"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }

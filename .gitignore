@@ -1,6 +1,6 @@
 .idea
+.vscode
 npm-debug.log
 node_modules
 dist/*
 !dist/index.html
-.vscode
