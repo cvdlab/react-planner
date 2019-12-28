@@ -1,8 +1,38 @@
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const path = require("path");
+const autoprefixer = require("autoprefixer");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 const PAGE_TITLE = "React Planner";
 const VENDORS_LIBRARIES = ["react", "react-dom"];
+
+const CSSExtractPlugin = {
+  loader: MiniCssExtractPlugin.loader
+};
+
+const CSSModuleLoader = {
+  loader: "css-loader",
+  options: {
+    modules: true,
+    importLoaders: 1
+  }
+};
+
+const CSSLoader = {
+  loader: "css-loader",
+  options: {
+    modules: false
+  }
+};
+
+const postCSSLoader = {
+  loader: "postcss-loader",
+  options: {
+    ident: "postcss",
+    sourceMap: true,
+    plugins: () => [autoprefixer()]
+  }
+};
 
 module.exports = {
   context: path.resolve(__dirname),
@@ -52,6 +82,15 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.scss$/,
+        exclude: /\.module\.scss$/,
+        use: [CSSExtractPlugin, CSSLoader, postCSSLoader, "sass-loader"]
+      },
+      {
+        test: /\.module\.scss$/,
+        use: [CSSExtractPlugin, CSSModuleLoader, postCSSLoader, "sass-loader"]
       }
     ]
   },
@@ -61,6 +100,12 @@ module.exports = {
       template: "./src/index.html.ejs",
       filename: "index.html",
       inject: "body"
+    }),
+    new MiniCssExtractPlugin({
+      // Options similar to the same options in webpackOptions.output
+      // both options are optional
+      filename: "[name].[hash].css",
+      chunkFilename: "[id].[hash].css"
     })
   ],
   optimization: {

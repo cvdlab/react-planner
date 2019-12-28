@@ -1,5 +1,17 @@
 import React from "react";
 
+import { Toolbar } from "./components/toolbar";
+import { Sidebar } from "./components/sidebar";
+import { Content } from "./components/Content";
+
+import styles from "./react-planner.module.scss";
+
 export const ReactPlanner = () => {
-  return <div>React Planner rewrite!</div>;
+  return (
+    <div className={styles.container}>
+      <Toolbar />
+      <Content />
+      <Sidebar />
+    </div>
+  );
 };
