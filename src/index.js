@@ -1,3 +1,5 @@
 import { ReactPlanner } from "./react-planner";
+import * as Models from "./models";
+import reducer from "./reducers/reducer";
 
-export { ReactPlanner };
+export { ReactPlanner, Models, reducer };

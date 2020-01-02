@@ -1,0 +1,3 @@
+export const CONTENTS = {
+  VIEWER_2D_CONTENT: "VIEWER_2D_CONTENT"
+};
