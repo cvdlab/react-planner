@@ -17,7 +17,8 @@
     "update-version-file": "const-version ./package.json ./src/version.js",
     "version": "npm run update-version-file && npm run build && npm run add-build-to-vcs",
     "postpublish": "npm run website-update",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "cross-env BABEL_ENV=test jest",
+    "coverage": "cross-env BABEL_ENV=test jest --coverage"
   },
   "repository": {
     "type": "git",
@@ -71,12 +72,16 @@
   "dependencies": {},
   "devDependencies": {
     "@babel/core": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
     "@babel/preset-react": "^7.7.4",
     "autoprefixer": "^9.7.3",
+    "babel-jest": "^24.9.0",
     "babel-loader": "^8.0.6",
+    "cross-env": "^6.0.3",
     "css-loader": "^3.4.0",
     "html-webpack-plugin": "^3.2.0",
     "husky": "^3.1.0",
+    "jest": "^24.9.0",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.13.0",
     "postcss-loader": "^3.0.0",

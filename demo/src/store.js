@@ -7,7 +7,7 @@ import {
 
 //define state
 let AppState = {
-  "react-planner": new PlannerModels.State()
+  "react-planner": null
 };
 
 //define reducer

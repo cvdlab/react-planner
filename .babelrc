@@ -5,6 +5,9 @@
     },
     "es": {
       "presets": [[{ "modules": false }], "@babel/react"]
+    },
+    "test": {
+      "presets": ["@babel/preset-env", "@babel/react"]
     }
   }
 }

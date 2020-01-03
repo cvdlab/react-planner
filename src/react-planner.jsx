@@ -2,7 +2,7 @@ import React from "react";
 
 import { Toolbar } from "./components/toolbar";
 import { Sidebar } from "./components/sidebar";
-import { Content } from "./components/Content";
+import { Content } from "./components/content";
 
 import styles from "./react-planner.module.scss";
 
