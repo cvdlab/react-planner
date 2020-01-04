@@ -1,9 +1,6 @@
 import { createStore } from "redux";
 
-import {
-  Models as PlannerModels,
-  reducer as PlannerReducer
-} from "react-planner";
+import { reducer as PlannerReducer } from "react-planner";
 
 //define state
 let AppState = {
@@ -13,10 +10,7 @@ let AppState = {
 //define reducer
 let reducer = (state, action) => {
   state = state || AppState;
-  state = state["react-planner"] = PlannerReducer(
-    state["react-planner"],
-    action
-  );
+  state["react-planner"] = PlannerReducer(state["react-planner"], action);
   return state;
 };
 

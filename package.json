@@ -69,7 +69,10 @@
     }
   ],
   "homepage": "https://github.com/cvdlab/react-planner#readme",
-  "dependencies": {},
+  "dependencies": {
+    "prop-types": "^15.7.2",
+    "react-svg-pan-zoom": "^3.7.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.7.7",
     "@babel/preset-env": "^7.7.7",

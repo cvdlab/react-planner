@@ -6049,6 +6049,14 @@ react-redux@^7.1.3:
     prop-types "^15.7.2"
     react-is "^16.9.0"
 
+react-svg-pan-zoom@^3.7.1:
+  version "3.7.1"
+  resolved "https://registry.yarnpkg.com/react-svg-pan-zoom/-/react-svg-pan-zoom-3.7.1.tgz#6d0165e623626d6d59acacb0675f52c5e3ea3d2a"
+  integrity sha512-KBIFo2gcFeNrPpFzl5WDV9PNfQLpNjOQLtRksZiP0bHeSQ3xvcpG8CeofVfA5iKnUmb6dqD/8DB25gtKomh6tA==
+  dependencies:
+    prop-types "^15.7.2"
+    transformation-matrix "^2.1.0"
+
 react@^16.12.0:
   version "16.12.0"
   resolved "https://registry.yarnpkg.com/react/-/react-16.12.0.tgz#0c0a9c6a142429e3614834d5a778e18aa78a0b83"
@@ -7214,6 +7222,11 @@ tr46@^1.0.1:
   integrity sha1-qLE/1r/SSJUZZ0zN5VujaTtwbQk=
   dependencies:
     punycode "^2.1.0"
+
+transformation-matrix@^2.1.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/transformation-matrix/-/transformation-matrix-2.2.0.tgz#1b98546a20b5ff882c30d7b3f35b5d08b420253e"
+  integrity sha512-cxs7k1YT05BgY03PZg8P4MJUcLCqYdG+web+rXdTpyCYfyu6u6CS+X0hSMkHHdFrWpe5gsIQwwPAik+K6UnuMw==
 
 trim-newlines@^1.0.0:
   version "1.0.0"
