@@ -3,8 +3,7 @@ const ipcRenderer  = electron.ipcRenderer;
 
 export function browserDownload(json) {
   let output = JSON.stringify(json);
-  let data = new Blob([output], {type: 'text/plain'});
-  ipcRenderer.sendSync('layout-data', data);
+  ipcRenderer.sendSync('layout-data', { output });
 }
 
 export function browserUpload() {
