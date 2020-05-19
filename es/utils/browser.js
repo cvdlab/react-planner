@@ -1,32 +1,23 @@
+const electron = window.require('electron');
+const ipcRenderer  = electron.ipcRenderer;
+
 export function browserDownload(json) {
-  var fileOutputLink = document.createElement('a');
-
-  var filename = 'output' + Date.now() + '.json';
-  filename = window.prompt('Insert output filename', filename);
-  if (!filename) return;
-
-  var output = JSON.stringify(json);
-  var data = new Blob([output], { type: 'text/plain' });
-  var url = window.URL.createObjectURL(data);
-  fileOutputLink.setAttribute('download', filename);
-  fileOutputLink.href = url;
-  fileOutputLink.style.display = 'none';
-  document.body.appendChild(fileOutputLink);
-  fileOutputLink.click();
-  document.body.removeChild(fileOutputLink);
+  let output = JSON.stringify(json);
+  let data = new Blob([output], {type: 'text/plain'});
+  ipcRenderer.sendSync('layout-data', data);
 }
 
 export function browserUpload() {
   return new Promise(function (resolve, reject) {
 
-    var fileInput = document.createElement('input');
+    let fileInput = document.createElement('input');
     fileInput.type = 'file';
 
     fileInput.addEventListener('change', function (event) {
-      var file = event.target.files[0];
-      var reader = new FileReader();
-      reader.addEventListener('load', function (fileEvent) {
-        var loadedData = fileEvent.target.result;
+      let file = event.target.files[0];
+      let reader = new FileReader();
+      reader.addEventListener('load', (fileEvent) => {
+        let loadedData = fileEvent.target.result;
         resolve(loadedData);
       });
       reader.readAsText(file);

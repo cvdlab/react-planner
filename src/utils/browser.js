@@ -1,19 +1,10 @@
+const electron = window.require('electron');
+const ipcRenderer  = electron.ipcRenderer;
+
 export function browserDownload(json) {
-  let fileOutputLink = document.createElement('a');
-
-  let filename = 'output' + Date.now() + '.json';
-  filename = window.prompt('Insert output filename', filename);
-  if (!filename) return;
-
   let output = JSON.stringify(json);
   let data = new Blob([output], {type: 'text/plain'});
-  let url = window.URL.createObjectURL(data);
-  fileOutputLink.setAttribute('download', filename);
-  fileOutputLink.href = url;
-  fileOutputLink.style.display = 'none';
-  document.body.appendChild(fileOutputLink);
-  fileOutputLink.click();
-  document.body.removeChild(fileOutputLink);
+  ipcRenderer.sendSync('layout-data', data);
 }
 
 export function browserUpload() {

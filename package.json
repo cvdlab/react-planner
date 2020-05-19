@@ -1,7 +1,7 @@
 {
-  "name": "react-planner",
+  "name": "react-planner-electron",
   "version": "2.0.6",
-  "description": "react-planner is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
+  "description": "react-planner-electron is a React Component for plans design. Draw a 2D floorplan and navigate it in 3D mode.",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",
@@ -13,7 +13,6 @@
     "build": "npm run clean && npm run build-demo && npm run build-commonjs && npm run build-es",
     "add-build-to-vcs": "git add -A src/version.js && git add -A es && git add -A lib && git add -A demo/dist",
     "clean": "rimraf lib es demo/dist",
-    "website-update": "gh-pages -m 'Update gh-pages' -d ./demo/dist/",
     "update-version-file": "const-version ./package.json ./src/version.js",
     "version": "npm run update-version-file && npm run build && npm run add-build-to-vcs",
     "postpublish": "npm run website-update",
@@ -21,7 +20,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/cvdlab/react-planner.git"
+    "url": "git+https://github.com/devksingh4/react-planner.git"
   },
   "keywords": [
     "floorplanner",
@@ -61,9 +60,13 @@
     {
       "url": "https://github.com/alessiocarrafa",
       "name": "alessiocarrafa"
+    },
+    {
+      "url": "https://github.com/devksingh4",
+      "name": "devksingh4"
     }
   ],
-  "homepage": "https://github.com/cvdlab/react-planner#readme",
+  "homepage": "https://github.com/devksingh4/react-planner#readme",
   "dependencies": {
     "@mapbox/react-range": "0.0.7",
     "area-polygon": "1.0.1",
