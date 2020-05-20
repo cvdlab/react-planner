@@ -25,7 +25,7 @@ var footerBarStyle = {
   lineHeight: '14px',
   fontSize: '12px',
   color: SharedStyle.COLORS.white,
-  backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
+  backgroundColor: SharedStyle.COLORS.blue,
   padding: '3px 1em',
   margin: 0,
   boxSizing: 'border-box',
@@ -222,7 +222,7 @@ var FooterBar = function (_Component) {
           'div',
           {
             style: rightTextStyle,
-            title: this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ' using React-Planner ' + VERSION)
+            title: this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ``)
           },
           this.props.softwareSignature
         ) : null,
