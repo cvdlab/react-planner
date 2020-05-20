@@ -55,7 +55,7 @@ export default {
   "Prototype":"Prototipo",
   "Reset": "Annulla",
   "Rotation" : "Rotazione",
-  "Save project": "Salva progetto",
+  "Generate Model": "Salva progetto",
   "Save" : "Salva",
   "Scene Zoom Level":"Livello di Zoom della Scena",
   "Search Element":"Cerca Elemento",

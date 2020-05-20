@@ -55,7 +55,7 @@ export default {
   "Prototype": "Опытный образец",
   "Reset": "Сброс",
   "Rotation": "Вращение",
-  "Save project": "Сохранить проект",
+  "Generate Model": "Сохранить проект",
   "Save": "Сохранить",
   "Scene Zoom Level": "Уровень приближениия сцены",
   "Search Element": "Поиск",

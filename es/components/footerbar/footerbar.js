@@ -17,7 +17,6 @@ import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../.
 import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import { MdAddCircle, MdWarning } from 'react-icons/md';
-import { VERSION } from '../../version';
 
 var footerBarStyle = {
   position: 'absolute',

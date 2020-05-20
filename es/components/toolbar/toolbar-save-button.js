@@ -18,7 +18,7 @@ export default function ToolbarSaveButton(_ref, _ref2) {
 
   return React.createElement(
     ToolbarButton,
-    { active: false, tooltip: translator.t('Save project'), onClick: saveProjectToFile },
+    { active: false, tooltip: translator.t('Generate Model'), onClick: saveProjectToFile },
     React.createElement(IconSave, null)
   );
 }
