@@ -88,49 +88,6 @@ export default class FooterBar extends Component {
           </div>
 
           <div style={leftTextStyle} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
-
-          <div style={leftTextStyle}>
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
-              text="Snap PT"
-              toggleState={globalState.snapMask.get(SNAP_POINT)}
-              title={translator.t('Snap to Point')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
-              text="Snap LN"
-              toggleState={globalState.snapMask.get(SNAP_LINE)}
-              title={translator.t('Snap to Line')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
-              text="Snap SEG"
-              toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
-              title={translator.t('Snap to Segment')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
-              text="Snap GRD"
-              toggleState={globalState.snapMask.get(SNAP_GRID)}
-              title={translator.t('Snap to Grid')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
-              text="Snap GDE"
-              toggleState={globalState.snapMask.get(SNAP_GUIDE)}
-              title={translator.t('Snap to Guide')}
-            />
-          </div>
         </If>
 
         {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
