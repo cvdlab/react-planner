@@ -84,8 +84,8 @@ export default class Toolbar extends Component {
       {
         index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
           active={false}
-          tooltip={translator.t('New project')}
-          onClick={event => confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null}>
+          tooltip={translator.t('Clear Map')}
+          onClick={event => confirm(translator.t('Would you like to clear the map?')) ? projectActions.newProject() : null}>
           <FaFile />
         </ToolbarButton>
       },

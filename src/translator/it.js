@@ -44,7 +44,7 @@ export default {
   "New Empty Group":"Crea Gruppo Vuoto",
   "New Group from selected":"Crea Gruppo dai selezionati",
   "New layer": "Nuovo livello",
-  "New project": "Nuovo progetto",
+  "Clear Map": "Nuovo progetto",
   "opacity": "Opacità",
   "Open catalog": "Apri catalogo",
   "order":"Ordine",
@@ -73,7 +73,7 @@ export default {
   "Unselect": "Deseleziona",
   "Vertical":"Verticale",
   "width": "Larghezza",
-  "Would you want to start a new Project?": "Vuoi iniziare un nuovo progetto?",
+  "Would you like to clear the map?": "Vuoi iniziare un nuovo progetto?",
   "Zoom in": "Ingrandisci",
   "Zoom out": "Riduci"
 };

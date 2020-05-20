@@ -44,7 +44,7 @@ export default {
   "New Empty Group": "Новая пустая группа",
   "New Group from selected": "Новая группа из выбранных",
   "New layer": "Новый слой",
-  "New project": "Новый проект",
+  "Clear Map": "Новый проект",
   "opacity": "непрозрачность",
   "Open catalog": "Открыть каталог",
   "order": "порядок",
@@ -73,7 +73,7 @@ export default {
   "Unselect": "Снять выделене",
   "Vertical": "вертикальный",
   "width": "ширина",
-  "Would you want to start a new Project?": "Начать новый проект?",
+  "Would you like to clear the map?": "Начать новый проект?",
   "Zoom in": "Приблизить",
   "Zoom out": "Отдалить"
 };

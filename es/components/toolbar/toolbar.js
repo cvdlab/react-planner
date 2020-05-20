@@ -114,9 +114,9 @@ var Toolbar = function (_Component) {
           ToolbarButton,
           {
             active: false,
-            tooltip: translator.t('New project'),
+            tooltip: translator.t('Clear Map'),
             onClick: function onClick(event) {
-              return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
+              return confirm(translator.t('Would you like to clear the map?')) ? projectActions.newProject() : null;
             } },
           React.createElement(FaFile, null)
         )
