@@ -89,7 +89,7 @@ Developed @ [CVDLAB][cvdlab]
 
 ## Contributing
 
-Your contributions (issues and pull request) are very appreciated!
+Your contributions (issues and pull request) are very appreciated!!
 
 ## Contributors
 
