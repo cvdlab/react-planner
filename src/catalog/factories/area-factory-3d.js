@@ -49,25 +49,6 @@ const applyTexture = (material, texture, length, height) => {
 const assignUVs = (geometry) => {
   geometry.computeBoundingBox();
 
-  let {min, max} = geometry.boundingBox;
-
-  let offset = new Vector2(0 - min.x, 0 - min.y);
-  let range = new Vector2(max.x - min.x, max.y - min.y);
-
-  geometry.faceVertexUvs[0] = geometry.faces.map((face) => {
-
-    let v1 = geometry.vertices[face.a];
-    let v2 = geometry.vertices[face.b];
-    let v3 = geometry.vertices[face.c];
-
-    return [
-      new Vector2((v1.x + offset.x) / range.x, (v1.y + offset.y) / range.y),
-      new Vector2((v2.x + offset.x) / range.x, (v2.y + offset.y) / range.y),
-      new Vector2((v3.x + offset.x) / range.x, (v3.y + offset.y) / range.y)
-    ];
-
-  });
-
   geometry.uvsNeedUpdate = true;
 };
 

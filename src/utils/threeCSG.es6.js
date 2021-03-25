@@ -143,7 +143,7 @@ export default  class ThreeBSP {
     toGeometry() {
         var i, j,
             matrix = new THREE.Matrix4().getInverse(this.matrix),
-            geometry = new THREE.Geometry(),
+            geometry = new THREE.BufferGeometry(),
             polygons = this.tree.allPolygons(),
             polygon_count = polygons.length,
             polygon, polygon_vertice_count,
