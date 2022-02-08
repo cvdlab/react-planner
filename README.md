@@ -6,9 +6,17 @@
 ![javascript][js]
 ![react-version][react_version]
 
-## Demo
 
-[Demo][demo]
+## Live
+
+- [![Netlify Status](https://api.netlify.com/api/v1/badges/cdc00b27-1f27-46ed-896f-45e8d83919f7/deploy-status)](https://wizardly-bell-c47f72.netlify.app/)
+
+- Review at live [here](https://wizardly-bell-c47f72.netlify.app/)
+
+
+## Original Demo
+
+- [Demo][demo]
 
 [![react-planner][preview_image]][demo]
 
