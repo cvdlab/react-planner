@@ -1,5 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {Context} from "../../Context/Context"
 import If from '../../utils/react-if';
 
 const STYLE_LINE = {
@@ -21,12 +22,24 @@ const STYLE_CIRCLE2 = {
 
 export default function Item({layer, item, scene, catalog}) {
 
+  const context = React.useContext(Context)
+
   let {x, y, rotation} = item;
 
   let renderedItem = catalog.getElement(item.type).render2D(item, layer, scene);
 
+
+  const lineRef = React.useRef()
+
+  const onContextMenu = (e)=>{
+    context.select.setSelect({id:item.id})
+    context.popup.setOpen(true)
+  }
+
   return (
     <g
+      onContextMenu={onContextMenu}
+      ref={lineRef}
       data-element-root
       data-prototype={item.prototype}
       data-id={item.id}
