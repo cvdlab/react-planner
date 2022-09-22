@@ -2,14 +2,14 @@ import React from 'react';
 import {Render2D, Render3D} from '../helper';
 
 export default {
-  name: '*range',
+  name: '*chair',
   prototype: 'items',
 
   info: {
-    title: 'kitchen range',
-    tag: ['kitchen', 'range'],
-    description: 'kitchen range',
-    image: require('./range.png')
+    title: 'kitchen chair" ',
+    tag: ['kitchen', 'chair'],
+    description: 'kitchen chair',
+    image: require('./chair.png')
   },
 
   properties: {
@@ -17,7 +17,7 @@ export default {
       label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 76,
+        length: 40,
         unit: 'cm'
       }
     },
@@ -25,7 +25,7 @@ export default {
       label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 92,
+        length: 60,
         unit: 'cm'
       }
     },
@@ -40,7 +40,7 @@ export default {
       label: 'Thickness',
       type: 'length-measure',
       defaultValue: {
-        length: 66,
+        length: 40,
         unit: 'cm'
       }
     }
@@ -51,6 +51,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Render3D(element, "range/range");
+    return Render3D(element, "chair/chair");
   }
 };

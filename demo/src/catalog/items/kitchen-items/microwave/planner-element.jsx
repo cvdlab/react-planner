@@ -2,14 +2,14 @@ import React from 'react';
 import {Render2D, Render3D} from '../helper';
 
 export default {
-  name: '*range',
+  name: '*microwave',
   prototype: 'items',
 
   info: {
-    title: 'kitchen range',
-    tag: ['kitchen', 'range'],
-    description: 'kitchen range',
-    image: require('./range.png')
+    title: 'kitchen microwave',
+    tag: ['kitchen', 'microwave'],
+    description: 'kitchen microwave',
+    image: require('./microwave.png')
   },
 
   properties: {
@@ -17,7 +17,7 @@ export default {
       label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 76,
+        length: 62,
         unit: 'cm'
       }
     },
@@ -25,7 +25,7 @@ export default {
       label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 92,
+        length: 38,
         unit: 'cm'
       }
     },
@@ -33,14 +33,14 @@ export default {
       label: 'Altitude',
       type: 'length-measure',
       defaultValue: {
-        length: 0
+        length: 92
       }
     },
     thickness: {
       label: 'Thickness',
       type: 'length-measure',
       defaultValue: {
-        length: 66,
+        length: 48,
         unit: 'cm'
       }
     }
@@ -51,6 +51,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Render3D(element, "range/range");
+    return Render3D(element, "microwave/microwave");
   }
 };

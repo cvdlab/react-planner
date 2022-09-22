@@ -2,14 +2,14 @@ import React from 'react';
 import {Render2D, Render3D} from '../helper';
 
 export default {
-  name: '*range',
+  name: '*dishwasher',
   prototype: 'items',
 
   info: {
-    title: 'kitchen range',
-    tag: ['kitchen', 'range'],
-    description: 'kitchen range',
-    image: require('./range.png')
+    title: 'kitchen dish washer',
+    tag: ['kitchen', 'dish washer'],
+    description: 'kitchen dish washer',
+    image: require('./diskwasher.png')
   },
 
   properties: {
@@ -51,6 +51,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Render3D(element, "range/range");
+    return Render3D(element, "dishwasher/diskwasher");
   }
 };

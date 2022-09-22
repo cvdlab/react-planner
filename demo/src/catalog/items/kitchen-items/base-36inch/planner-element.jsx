@@ -2,13 +2,13 @@ import React from 'react';
 import {Render2D, Render3D} from '../helper';
 
 export default {
-  name: 'base-cabinet',
+  name: '*base-36',
   prototype: 'items',
 
   info: {
-    title: 'base',
+    title: 'kitchen base cabinet 36" ',
     tag: ['kitchen', 'cabinet', 'base'],
-    description: 'base cabinet',
+    description: 'kitchen base cabinet 36 inch',
     image: require('./base.png')
   },
 
@@ -17,7 +17,7 @@ export default {
       label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 88,
+        length: 92,
         unit: 'cm'
       }
     },
@@ -25,7 +25,7 @@ export default {
       label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 60,
+        length: 92,
         unit: 'cm'
       }
     },
@@ -40,7 +40,7 @@ export default {
       label: 'Thickness',
       type: 'length-measure',
       defaultValue: {
-        length: 60,
+        length: 66,
         unit: 'cm'
       }
     }
@@ -51,6 +51,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Render3D(element, "base/base");
+    return Render3D(element, "base-36inch/base");
   }
 };

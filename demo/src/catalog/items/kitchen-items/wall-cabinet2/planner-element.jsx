@@ -2,14 +2,14 @@ import React from 'react';
 import {Render2D, Render3D} from '../helper';
 
 export default {
-  name: '*range',
+  name: '*wall-cabinet2',
   prototype: 'items',
 
   info: {
-    title: 'kitchen range',
-    tag: ['kitchen', 'range'],
-    description: 'kitchen range',
-    image: require('./range.png')
+    title: 'kitchen wall cabinet type 2',
+    tag: ['kitchen', 'wall', 'cabinet'],
+    description: 'kitchen cabinet type 2',
+    image: require('./wall2.png')
   },
 
   properties: {
@@ -33,7 +33,8 @@ export default {
       label: 'Altitude',
       type: 'length-measure',
       defaultValue: {
-        length: 0
+        length: 120,
+        unit: 'cm'
       }
     },
     thickness: {
@@ -51,6 +52,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Render3D(element, "range/range");
+    return Render3D(element, "wall-cabinet2/wall2");
   }
 };

@@ -2,14 +2,14 @@ import React from 'react';
 import {Render2D, Render3D} from '../helper';
 
 export default {
-  name: '*range',
+  name: '*sink',
   prototype: 'items',
 
   info: {
-    title: 'kitchen range',
-    tag: ['kitchen', 'range'],
-    description: 'kitchen range',
-    image: require('./range.png')
+    title: 'kitchen sink',
+    tag: ['kitchen', 'sink'],
+    description: 'kitchen sink',
+    image: require('./sink.png')
   },
 
   properties: {
@@ -17,7 +17,7 @@ export default {
       label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 76,
+        length: 92,
         unit: 'cm'
       }
     },
@@ -51,6 +51,6 @@ export default {
   },
 
   render3D: function (element, layer, scene) {
-    return Render3D(element, "range/range");
+    return Render3D(element, "sink/sink");
   }
 };
