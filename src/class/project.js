@@ -17,6 +17,9 @@ import {
 } from '../class/export';
 
 class Project{
+  static smartKitch( state ) {
+    return { updateState: state};
+  }
 
   static setAlterate( state ){
     return { updatedState: state.set('alterate', !state.alterate ) };

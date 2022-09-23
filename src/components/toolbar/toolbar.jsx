@@ -82,6 +82,14 @@ export default class Toolbar extends Component {
 
     let sorter = [
       {
+        index: 110, condition: allowProjectFileSupport, dom: <ToolbarButton
+          active={false}
+          tooltip={translator.t('Smart Kitchen')}
+          onClick={event => projectActions.smartKitchen() }>
+          <FaFile />
+        </ToolbarButton>
+      },
+      {
         index: 0, condition: allowProjectFileSupport, dom: <ToolbarButton
           active={false}
           tooltip={translator.t('New project')}

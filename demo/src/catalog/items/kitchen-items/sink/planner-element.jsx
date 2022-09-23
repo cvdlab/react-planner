@@ -25,7 +25,7 @@ export default {
       label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 92,
+        length: 115,
         unit: 'cm'
       }
     },

@@ -33,7 +33,8 @@ import {
   ADD_CIRCULAR_GUIDE,
   REMOVE_HORIZONTAL_GUIDE,
   REMOVE_VERTICAL_GUIDE,
-  REMOVE_CIRCULAR_GUIDE
+  REMOVE_CIRCULAR_GUIDE,
+  SMART_KITCHEN
 } from '../constants';
 
 import { Project } from '../class/export';
@@ -41,6 +42,9 @@ import { Project } from '../class/export';
 export default function (state, action) {
 
   switch (action.type) {
+    case SMART_KITCHEN:
+
+
     case NEW_PROJECT:
       return Project.newProject(state).updatedState;
 
@@ -126,17 +130,17 @@ export default function (state, action) {
 
     case ALTERATE_STATE:
       return Project.setAlterate( state ).updatedState;
-    
+
     case SET_MODE:
       return Project.setMode(state, action.mode).updatedState;
-    
+
     case ADD_HORIZONTAL_GUIDE:
       state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.addHorizontalGuide(state, action.coordinate).updatedState;
-    
+
     case ADD_VERTICAL_GUIDE:
       return Project.addVerticalGuide(state, action.coordinate).updatedState;
-    
+
     case ADD_CIRCULAR_GUIDE:
       return Project.addCircularGuide(state, action.x, action.y, action.radius).updatedState;
 

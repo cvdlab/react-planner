@@ -1,4 +1,5 @@
 // ACTIONS project
+export const SMART_KITCHEN = 'SMART_KITCHEN';
 export const NEW_PROJECT = 'NEW_PROJECT';
 export const LOAD_PROJECT = 'LOAD_PROJECT';
 export const SAVE_PROJECT = 'SAVE_PROJECT';

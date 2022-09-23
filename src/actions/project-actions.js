@@ -32,8 +32,15 @@ import {
   ADD_CIRCULAR_GUIDE,
   REMOVE_HORIZONTAL_GUIDE,
   REMOVE_VERTICAL_GUIDE,
-  REMOVE_CIRCULAR_GUIDE
+  REMOVE_CIRCULAR_GUIDE,
+  SMART_KITCHEN
 } from '../constants';
+
+export function smartKitchen() {
+  return {
+    type: SMART_KITCHEN
+  }
+}
 
 export function loadProject(sceneJSON) {
   return {
