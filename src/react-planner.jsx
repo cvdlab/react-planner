@@ -40,7 +40,7 @@ class ReactPlanner extends Component {
   }
 
   componentWillMount() {
-    let {store} = this.context;
+    let {store} = this.props.store;
     let {projectActions, catalog, stateExtractor, plugins} = this.props;
     plugins.forEach(plugin => plugin(store, stateExtractor));
     projectActions.initCatalog(catalog);
@@ -93,9 +93,9 @@ ReactPlanner.propTypes = {
   softwareSignature: PropTypes.string
 };
 
-ReactPlanner.contextTypes = {
-  store: PropTypes.object.isRequired,
-};
+// ReactPlanner.contextTypes = {
+//   store: PropTypes.object.isRequired,
+// };
 
 ReactPlanner.childContextTypes = {
   ...objectsMap(actions, () => PropTypes.object),
