@@ -5,7 +5,7 @@ var TIMEOUT_DELAY = 500;
 
 var timeout = null;
 
-export default function autosave(autosaveKey, delay) {
+export default function autosave(autosaveKey, delay,requestURL,layoutId) {
 
   return function (store, stateExtractor) {
 
@@ -15,11 +15,17 @@ export default function autosave(autosaveKey, delay) {
     if (!localStorage) return;
 
     //revert
-    if (localStorage.getItem(autosaveKey) !== null) {
-      var data = localStorage.getItem(autosaveKey);
-      var json = JSON.parse(data);
-      store.dispatch(loadProject(json));
-    }
+    // if (localStorage.getItem(autosaveKey) !== null) {
+    //   var data = localStorage.getItem(autosaveKey);
+    //   var json = JSON.parse(data);
+    //   store.dispatch(loadProject(json));
+    // }
+    var path=requestURL //have to modify
+    axios.get(path).then((res)=>{
+       data =res.data
+       store.dispatch(loadProject(json));   
+    
+    })
 
     //update
     store.subscribe(function () {

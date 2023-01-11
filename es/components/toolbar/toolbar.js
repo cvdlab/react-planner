@@ -138,19 +138,21 @@ var Toolbar = function (_Component) {
             } },
           React.createElement(FaPlus, null)
         )
-      }, {
+      },
+      //  {
+      //   index: 4, condition: true, dom: React.createElement(
+      //     ToolbarButton,
+      //     {
+      //       active: [MODE_3D_VIEW].includes(mode),
+      //       tooltip: translator.t('3D View'),
+      //       onClick: function onClick(event) {
+      //         return viewer3DActions.selectTool3DView();
+      //       } },
+      //     React.createElement(Icon3D, null)
+      //   )
+      // }, 
+      {
         index: 4, condition: true, dom: React.createElement(
-          ToolbarButton,
-          {
-            active: [MODE_3D_VIEW].includes(mode),
-            tooltip: translator.t('3D View'),
-            onClick: function onClick(event) {
-              return viewer3DActions.selectTool3DView();
-            } },
-          React.createElement(Icon3D, null)
-        )
-      }, {
-        index: 5, condition: true, dom: React.createElement(
           ToolbarButton,
           {
             active: [MODE_IDLE].includes(mode),
@@ -161,18 +163,7 @@ var Toolbar = function (_Component) {
           [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? React.createElement(Icon2D, { style: { color: alterateColor } }) : React.createElement(FaMousePointer, { style: { color: alterateColor } })
         )
       }, {
-        index: 6, condition: true, dom: React.createElement(
-          ToolbarButton,
-          {
-            active: [MODE_3D_FIRST_PERSON].includes(mode),
-            tooltip: translator.t('3D First Person'),
-            onClick: function onClick(event) {
-              return viewer3DActions.selectTool3DFirstPerson();
-            } },
-          React.createElement(MdDirectionsRun, null)
-        )
-      }, {
-        index: 7, condition: true, dom: React.createElement(
+        index: 5, condition: true, dom: React.createElement(
           ToolbarButton,
           {
             active: false,
@@ -181,17 +172,6 @@ var Toolbar = function (_Component) {
               return projectActions.undo();
             } },
           React.createElement(MdUndo, null)
-        )
-      }, {
-        index: 8, condition: true, dom: React.createElement(
-          ToolbarButton,
-          {
-            active: [MODE_CONFIGURING_PROJECT].includes(mode),
-            tooltip: translator.t('Configure project'),
-            onClick: function onClick(event) {
-              return projectActions.openProjectConfigurator();
-            } },
-          React.createElement(MdSettings, null)
         )
       }];
 

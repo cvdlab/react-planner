@@ -13,6 +13,8 @@ export default function ToolbarSaveButton(_ref, _ref2) {
   var saveProjectToFile = function saveProjectToFile(e) {
     e.preventDefault();
     state = Project.unselectAll(state).updatedState;
+    axios.post("https://agro.senzmate.com/dev/",json)
+
     browserDownload(state.get('scene').toJS());
   };
 
