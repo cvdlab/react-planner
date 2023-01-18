@@ -32,6 +32,8 @@ var Scene = function (_Component) {
       var _props = this.props,
           scene = _props.scene,
           catalog = _props.catalog;
+
+      var isAdmin=_props.isAdmin;
       var height = scene.height,
           layers = scene.layers;
 
@@ -40,7 +42,7 @@ var Scene = function (_Component) {
       return React.createElement(
         'g',
         null,
-        React.createElement(Grids, { scene: scene }),
+       isAdmin? React.createElement(Grids, { scene: scene }):null,
         React.createElement(
           'g',
           { style: { pointerEvents: 'none' } },

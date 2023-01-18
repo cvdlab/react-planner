@@ -61,7 +61,7 @@ var ReactPlanner = function (_Component) {
   }, {
     key: 'componentWillMount',
     value: function componentWillMount() {
-      var store = this.context.store;
+      var store = this.props.store;
       var _props = this.props,
           projectActions = _props.projectActions,
           catalog = _props.catalog,
@@ -94,6 +94,7 @@ var ReactPlanner = function (_Component) {
           width = _props2.width,
           height = _props2.height,
           state = _props2.state,
+          isAdmin=_props2.isAdmin,
           stateExtractor = _props2.stateExtractor,
           props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor']);
 
@@ -107,12 +108,12 @@ var ReactPlanner = function (_Component) {
       return React.createElement(
         'div',
         { style: _extends({}, wrapperStyle, { height: height }) },
-        React.createElement(Toolbar, _extends({ width: toolbarW, height: toolbarH, state: extractedState }, props)),
-        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState }, props, { onWheel: function onWheel(event) {
+       this.props.isAdmin? React.createElement(Toolbar, _extends({ width: toolbarW, height: toolbarH, state: extractedState }, props)):null,
+        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState,isAdmin:isAdmin }, props, { onWheel: function onWheel(event) {
             return event.preventDefault();
           } })),
-        React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)),
-        React.createElement(FooterBar, _extends({ width: width, height: footerBarH, state: extractedState }, props))
+       this.props.isAdmin? React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)):null,
+       this.props.isAdmin?  React.createElement(FooterBar, _extends({ width: width, height: footerBarH, state: extractedState }, props)):null
       );
     }
   }]);
@@ -134,12 +135,13 @@ ReactPlanner.propTypes = {
   sidebarComponents: PropTypes.array,
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
-  softwareSignature: PropTypes.string
+  softwareSignature: PropTypes.string,
+  isAdmin:PropTypes.bool
 };
 
-ReactPlanner.contextTypes = {
-  store: PropTypes.object.isRequired
-};
+// ReactPlanner.contextTypes = {
+//   store: PropTypes.object.isRequired
+// };
 
 ReactPlanner.childContextTypes = _extends({}, objectsMap(actions, function () {
   return PropTypes.object;
