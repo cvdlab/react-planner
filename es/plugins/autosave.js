@@ -19,7 +19,7 @@ export default function autosave(autosaveKey, delay,isAdmin) {
     if (!autosaveKey) return;
     if (!localStorage) return;
 
-    //revert
+    //revert//
     if (localStorage.getItem(autosaveKey) !== null) {
       var data = localStorage.getItem(autosaveKey);
       var json = JSON.parse(data);
