@@ -13,7 +13,7 @@ export default function Content(_ref) {
       height = _ref.height,
       state = _ref.state,
       customContents = _ref.customContents;
-
+var isAdmin=_ref.isAdmin;
   var mode = state.get('mode');
 
   switch (mode) {
@@ -39,7 +39,7 @@ export default function Content(_ref) {
     case constants.MODE_DRAWING_ITEM:
     case constants.MODE_DRAGGING_HOLE:
     case constants.MODE_ROTATING_ITEM:
-      return React.createElement(Viewer2D, { state: state, width: width, height: height });
+      return React.createElement(Viewer2D, { state: state, width: width, height: height,isAdmin:isAdmin });
 
     case constants.MODE_CONFIGURING_PROJECT:
       return React.createElement(ProjectConfigurator, { width: width, height: height, state: state });

@@ -92,6 +92,7 @@ export default function Viewer2D(_ref, _ref2) {
   var state = _ref.state,
       width = _ref.width,
       height = _ref.height;
+    var isAdmin=_ref.isAdmin;
   var viewer2DActions = _ref2.viewer2DActions,
       linesActions = _ref2.linesActions,
       holesActions = _ref2.holesActions,
@@ -340,8 +341,8 @@ export default function Viewer2D(_ref, _ref2) {
         gridTemplateRows: rulerSize + 'px ' + (height - rulerSize) + 'px',
         position: 'relative'
       } },
-    React.createElement('div', { style: { gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor } }),
-    React.createElement(
+      isAdmin? React.createElement('div', { style: { gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor } }):null,
+   isAdmin? React.createElement(
       'div',
       { style: { gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerX' },
       sceneWidth ? React.createElement(RulerX, {
@@ -356,8 +357,8 @@ export default function Viewer2D(_ref, _ref2) {
         positiveUnitsNumber: rulerXElements,
         negativeUnitsNumber: 0
       }) : null
-    ),
-    React.createElement(
+    ):null,
+   isAdmin? React.createElement(
       'div',
       { style: { gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerY' },
       sceneHeight ? React.createElement(RulerY, {
@@ -372,7 +373,7 @@ export default function Viewer2D(_ref, _ref2) {
         positiveUnitsNumber: rulerYElements,
         negativeUnitsNumber: 0
       }) : null
-    ),
+    ):null,
     React.createElement(
       ReactSVGPanZoom,
       {
@@ -387,6 +388,8 @@ export default function Viewer2D(_ref, _ref2) {
         onMouseDown: onMouseDown,
         onMouseMove: onMouseMove,
         onMouseUp: onMouseUp,
+        background:'white',
+        miniatureBackground:'white',
         miniaturePosition: 'none',
         toolbarPosition: 'none'
       },
