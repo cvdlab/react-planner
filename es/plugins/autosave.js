@@ -29,7 +29,6 @@ export default function autosave(autosaveKey, delay,isAdmin,json) {
       //  var path='http://127.0.0.1:5000/get'
     // axios.get(path).then((res)=>{
       var count=0
-      console.log("then block")
       // json =res.data
       
 
@@ -38,7 +37,6 @@ export default function autosave(autosaveKey, delay,isAdmin,json) {
         if (count%2==0){
           let tempItems={...items}
           for (var key in tempItems){
-            console.log(tempItems[key])
             if((tempItems[key]["type"]=="panic-button")||tempItems[key]["type"]=="panic-button-orange"){
               delete tempItems[key]
             }
@@ -75,9 +73,6 @@ export default function autosave(autosaveKey, delay,isAdmin,json) {
         var json = JSON.parse(data);
         var items=json["layers"]["layer-1"]["items"]
         var ids=items.keys
-        for (id in ids ){
-          console.log(id)
-        }
         // store.dispatch(loadProject(json));
       }
       // if (timeout) clearTimeout(timeout);
