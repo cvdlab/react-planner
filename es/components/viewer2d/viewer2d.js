@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
@@ -93,6 +93,12 @@ export default function Viewer2D(_ref, _ref2) {
       width = _ref.width,
       height = _ref.height;
     var isAdmin=_ref.isAdmin;
+    var zoom=_ref.zoom;
+
+    var centerX=_ref.centerX;
+
+    var centerY=_ref.centerY;
+
   var viewer2DActions = _ref2.viewer2DActions,
       linesActions = _ref2.linesActions,
       holesActions = _ref2.holesActions,
@@ -107,7 +113,13 @@ export default function Viewer2D(_ref, _ref2) {
 
 
   var layerID = scene.selectedLayer;
+const Viewer=useRef(null)
+  useEffect(()=>{
 
+    console.log(Viewer.current)
+    Viewer.current.zoom(centerX,centerY,zoom);
+
+  },[])
   var mapCursorPosition = function mapCursorPosition(_ref3) {
     var x = _ref3.x,
         y = _ref3.y;
@@ -383,6 +395,7 @@ export default function Viewer2D(_ref, _ref2) {
         value: viewer2D.isEmpty() ? null : viewer2D.toJS(),
         onChangeValue: onChangeValue,
         tool: mode2Tool(mode),
+        scaleFactor	:0.4,
         onChangeTool: onChangeTool,
         detectAutoPan: mode2DetectAutopan(mode),
         onMouseDown: onMouseDown,
@@ -391,7 +404,9 @@ export default function Viewer2D(_ref, _ref2) {
         background:'white',
         miniatureBackground:'white',
         miniaturePosition: 'none',
-        toolbarPosition: 'none'
+        toolbarPosition: 'none',
+        ref: Viewer
+
       },
       React.createElement(
         'svg',

@@ -15,11 +15,10 @@ export default function autosave(autosaveKey, delay,selectPanicButton) {
     if (!localStorage) return;
 
     //revert
-    if (localStorage.getItem(autosaveKey) !== null) {
       var data = localStorage.getItem(autosaveKey);
       var json = JSON.parse(data);
       store.dispatch(loadProject(json));
-    }
+    
 
     //update
     store.subscribe(function () {
@@ -30,15 +29,16 @@ export default function autosave(autosaveKey, delay,selectPanicButton) {
         console.log(state.scene.toJS(),"state")
         localStorage.setItem(autosaveKey, JSON.stringify(state.scene.toJS()));
         let items =json["layers"]["layer-1"]["items"]
-        let panic_id=[]
         for (var key in items) { 
           let item= items[key]
           if (item["selected"]==true){
-            console.log("selected")
-            panic_id.push(item["id"])
+            selectPanicButton(item["id"])
+            
+
+
           }
 
-          selectPanicButton(panic_id)
+          
 
         }
 
