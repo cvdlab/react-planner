@@ -95,6 +95,10 @@ var ReactPlanner = function (_Component) {
           height = _props2.height,
           state = _props2.state,
           isAdmin=_props2.isAdmin,
+          zoom=_props2.zoom,
+          centerX=_props2.centerX,
+          centerY=_props2.centerY,
+
           stateExtractor = _props2.stateExtractor,
           props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor']);
 
@@ -109,10 +113,10 @@ var ReactPlanner = function (_Component) {
         'div',
         { style: _extends({}, wrapperStyle, { height: height }) },
        this.props.isAdmin? React.createElement(Toolbar, _extends({ width: toolbarW, height: toolbarH, state: extractedState }, props)):null,
-        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState,isAdmin:isAdmin }, props, { onWheel: function onWheel(event) {
+        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState,isAdmin:isAdmin ,zoom:zoom,centerX:centerX,centerY:centerY}, props, { onWheel: function onWheel(event) {
             return event.preventDefault();
           } })),
-       this.props.isAdmin? React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)):null,
+          this.props.isAdmin?  React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)):null,
        this.props.isAdmin?  React.createElement(FooterBar, _extends({ width: width, height: footerBarH, state: extractedState }, props)):null
       );
     }
@@ -136,7 +140,10 @@ ReactPlanner.propTypes = {
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
   softwareSignature: PropTypes.string,
-  isAdmin:PropTypes.bool
+  isAdmin:PropTypes.bool,
+  zoom:PropTypes.number,
+  centerX:PropTypes.number,
+  centerY:PropTypes.number
 };
 
 // ReactPlanner.contextTypes = {
