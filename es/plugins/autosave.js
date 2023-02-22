@@ -5,7 +5,7 @@ var TIMEOUT_DELAY = 500;
 
 var timeout = null;
 
-export default function autosave(autosaveKey, delay,selectPanicButton) {
+export default function autosave(autosaveKey, delay,selectPanicButton,plan) {
 
   return function (store, stateExtractor) {
 
@@ -15,9 +15,10 @@ export default function autosave(autosaveKey, delay,selectPanicButton) {
     if (!localStorage) return;
 
     //revert
-      var data = localStorage.getItem(autosaveKey);
-      var json = JSON.parse(data);
-      store.dispatch(loadProject(json));
+      // var data = localStorage.getItem(autosaveKey);
+      // var json = JSON.parse(data);
+      // console.log(plan,"plan")
+      // store.dispatch(loadProject(plan));
     
 
     //update
@@ -33,6 +34,10 @@ export default function autosave(autosaveKey, delay,selectPanicButton) {
           let item= items[key]
           if (item["selected"]==true){
             selectPanicButton(item["id"])
+            
+
+            // store.dispatch(loadProject(json));
+
             
 
 
