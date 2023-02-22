@@ -119,7 +119,7 @@ const Viewer=useRef(null)
     console.log(Viewer.current)
     Viewer.current.zoom(centerX,centerY,zoom);
 
-  },[])
+  },[zoom])
   var mapCursorPosition = function mapCursorPosition(_ref3) {
     var x = _ref3.x,
         y = _ref3.y;
