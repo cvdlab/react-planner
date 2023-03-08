@@ -396,6 +396,7 @@ const Viewer=useRef(null)
         onChangeValue: onChangeValue,
         tool: mode2Tool(mode),
         scaleFactor	:0.4,
+        scaleFactorMin:0.4,
         onChangeTool: onChangeTool,
         detectAutoPan: mode2DetectAutopan(mode),
         onMouseDown: onMouseDown,
