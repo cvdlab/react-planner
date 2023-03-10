@@ -33,7 +33,7 @@ export default function autosave(autosaveKey, delay,selectPanicButton,plan) {
         for (var key in items) { 
           let item= items[key]
           if (item["selected"]==true){
-            selectPanicButton(item["id"])
+            selectPanicButton(item["id"],false)
             
 
             // store.dispatch(loadProject(json));
