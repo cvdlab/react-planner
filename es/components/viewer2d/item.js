@@ -54,8 +54,8 @@ export default function Item(_ref) {
           'data-layer': layer.id,
           'data-part': 'rotation-anchor'
         },
-        React.createElement('circle', { cx: '0', cy: '150', r: '10', style: STYLE_CIRCLE }),
-        React.createElement('circle', { cx: '0', cy: '0', r: '150', style: STYLE_CIRCLE2 })
+       null,
+        null
       )
     )
   );

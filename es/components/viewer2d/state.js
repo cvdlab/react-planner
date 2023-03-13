@@ -19,6 +19,7 @@ export default function State(_ref) {
       scene = state.scene;
   var width = scene.width,
       height = scene.height;
+      var isAdmin=_ref.isAdmin;
 
 
   activeSnapElement = activeSnapElement ? React.createElement(Snap, { snap: activeSnapElement, width: scene.width, height: scene.height }) : null;
@@ -32,7 +33,7 @@ export default function State(_ref) {
     React.createElement(
       'g',
       { transform: 'translate(0, ' + scene.height + ') scale(1, -1)', id: 'svg-drawing-paper' },
-      React.createElement(Scene, { scene: scene, catalog: catalog }),
+      React.createElement(Scene, { scene: scene, catalog: catalog,isAdmin:isAdmin }),
       scene.getIn(['guides', 'horizontal']).entrySeq().map(function (_ref2) {
         var _ref3 = _slicedToArray(_ref2, 2),
             hgKey = _ref3[0],

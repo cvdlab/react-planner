@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
@@ -92,6 +92,13 @@ export default function Viewer2D(_ref, _ref2) {
   var state = _ref.state,
       width = _ref.width,
       height = _ref.height;
+    var isAdmin=_ref.isAdmin;
+    var zoom=_ref.zoom;
+
+    var centerX=_ref.centerX;
+
+    var centerY=_ref.centerY;
+
   var viewer2DActions = _ref2.viewer2DActions,
       linesActions = _ref2.linesActions,
       holesActions = _ref2.holesActions,
@@ -106,7 +113,13 @@ export default function Viewer2D(_ref, _ref2) {
 
 
   var layerID = scene.selectedLayer;
+const Viewer=useRef(null)
+  useEffect(()=>{
 
+    console.log(Viewer.current)
+    Viewer.current.zoom(centerX,centerY,zoom);
+
+  },[zoom])
   var mapCursorPosition = function mapCursorPosition(_ref3) {
     var x = _ref3.x,
         y = _ref3.y;
@@ -175,6 +188,8 @@ export default function Viewer2D(_ref, _ref2) {
     var _mapCursorPosition2 = mapCursorPosition(viewerEvent),
         x = _mapCursorPosition2.x,
         y = _mapCursorPosition2.y;
+        console.log("x=",_mapCursorPosition2.x)
+        console.log("y=",_mapCursorPosition2.y)
 
     if (mode === constants.MODE_IDLE) {
       var elementData = extractElementData(event.target);
@@ -340,8 +355,8 @@ export default function Viewer2D(_ref, _ref2) {
         gridTemplateRows: rulerSize + 'px ' + (height - rulerSize) + 'px',
         position: 'relative'
       } },
-    React.createElement('div', { style: { gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor } }),
-    React.createElement(
+      isAdmin? React.createElement('div', { style: { gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor } }):null,
+   isAdmin? React.createElement(
       'div',
       { style: { gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerX' },
       sceneWidth ? React.createElement(RulerX, {
@@ -356,8 +371,8 @@ export default function Viewer2D(_ref, _ref2) {
         positiveUnitsNumber: rulerXElements,
         negativeUnitsNumber: 0
       }) : null
-    ),
-    React.createElement(
+    ):null,
+   isAdmin? React.createElement(
       'div',
       { style: { gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }, id: 'rulerY' },
       sceneHeight ? React.createElement(RulerY, {
@@ -372,7 +387,7 @@ export default function Viewer2D(_ref, _ref2) {
         positiveUnitsNumber: rulerYElements,
         negativeUnitsNumber: 0
       }) : null
-    ),
+    ):null,
     React.createElement(
       ReactSVGPanZoom,
       {
@@ -382,13 +397,19 @@ export default function Viewer2D(_ref, _ref2) {
         value: viewer2D.isEmpty() ? null : viewer2D.toJS(),
         onChangeValue: onChangeValue,
         tool: mode2Tool(mode),
+        scaleFactor	:0.4,
+        scaleFactorMin:0.4,
         onChangeTool: onChangeTool,
         detectAutoPan: mode2DetectAutopan(mode),
         onMouseDown: onMouseDown,
         onMouseMove: onMouseMove,
         onMouseUp: onMouseUp,
+        background:'white',
+        miniatureBackground:'white',
         miniaturePosition: 'none',
-        toolbarPosition: 'none'
+        toolbarPosition: 'none',
+        ref: Viewer
+
       },
       React.createElement(
         'svg',
