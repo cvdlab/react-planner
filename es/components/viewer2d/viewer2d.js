@@ -188,6 +188,8 @@ const Viewer=useRef(null)
     var _mapCursorPosition2 = mapCursorPosition(viewerEvent),
         x = _mapCursorPosition2.x,
         y = _mapCursorPosition2.y;
+        console.log("x=",_mapCursorPosition2.x)
+        console.log("y=",_mapCursorPosition2.y)
 
     if (mode === constants.MODE_IDLE) {
       var elementData = extractElementData(event.target);

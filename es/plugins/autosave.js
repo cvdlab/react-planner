@@ -67,7 +67,7 @@ export default function autosave(autosaveKey, delay,selectPanicButton,plan) {
 
             })
 
-            console.log("x= ",x/vertices.length,"y= ",y/vertices.length)
+            // console.log("x= ",x/vertices.length,"y= ",y/vertices.length)
 
             
 
