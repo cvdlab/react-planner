@@ -29,11 +29,15 @@ export default function autosave(autosaveKey, delay,selectPanicButton,plan) {
         let json=state.scene.toJS()
         console.log(state.scene.toJS(),"state")
         localStorage.setItem(autosaveKey, JSON.stringify(state.scene.toJS()));
+        
+
         let items =json["layers"]["layer-1"]["items"]
         for (var key in items) { 
           let item= items[key]
+
           if (item["selected"]==true){
-            selectPanicButton(item["id"])
+
+            selectPanicButton(item["id"],false,item["type"])
             
 
             // store.dispatch(loadProject(json));
@@ -42,11 +46,38 @@ export default function autosave(autosaveKey, delay,selectPanicButton,plan) {
 
 
           }
-
-          
+                 
 
         }
 
+
+        let areas=json["layers"]["layer-1"]["areas"]
+
+
+        for (var key in areas) { 
+          let area= areas[key]
+
+          if (area["selected"]==true){
+            let vertices=area["vertices"]
+            let x=0
+            let y=0
+            // console.log("vertices",vertices)
+            vertices.map((vertex)=>{
+              x+=json["layers"]["layer-1"]["vertices"][vertex]["x"]
+              y+=json["layers"]["layer-1"]["vertices"][vertex]["y"]
+
+            })
+
+            console.log("x= ",x/vertices.length,"y= ",y/vertices.length)
+
+            
+
+            // store.dispatch(loadProject(json));
+
+            
+
+          }
+          }
         /*let scene = state.sceneHistory.last;
         if (scene) {
           let json = JSON.stringify(scene.toJS());
