@@ -105,8 +105,8 @@
     "webpack-dev-server": "3.7.1"
   },
   "peerDependencies": {
-    "react": "^16.x",
-    "react-dom": "^16.x",
+    "react": ">=16.0.0 <19.0.0",
+    "react-dom": ">=16.0.0 <19.0.0",
     "three": "0.94.x"
   }
 }
