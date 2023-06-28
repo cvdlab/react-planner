@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import ContainerDimensions from 'react-container-dimensions';
+import { SizeMe } from 'react-sizeme'
 import Immutable, {Map} from 'immutable';
 import immutableDevtools from 'immutable-devtools';
 import {createStore} from 'redux';
@@ -79,18 +79,18 @@ let toolbarButtons = [
 ReactDOM.render(
   (
     <Provider store={store}>
-      <ContainerDimensions>
-        {({width, height}) =>
+      <SizeMe>
+        {({size}) =>
           <ReactPlanner
             catalog={MyCatalog}
-            width={width}
-            height={height}
+            width={size.width}
+            height={size.height}
             plugins={plugins}
             toolbarButtons={toolbarButtons}
             stateExtractor={state => state.get('react-planner')}
           />
         }
-      </ContainerDimensions>
+      </SizeMe>
     </Provider>
   ),
   document.getElementById('app')
