@@ -67,8 +67,6 @@ const PanelLayers = ({ state }) => {
   const [layerAddUIVisible, setLayerAddUIVisible] = useState(false);
   const [editingLayer, setEditingLayer] = useState(new Map());
 
-  console.log('PanelLayers sceneActions', sceneActions);
-
   const addLayer = (e) => {
     e.stopPropagation();
     if (!layerAddUIVisible) {

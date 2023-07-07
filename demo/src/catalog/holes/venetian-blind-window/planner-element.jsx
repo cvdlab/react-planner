@@ -120,7 +120,7 @@ export default {
     let obj = require('./venetian.obj');
     let img = require('./texture.png');
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+    return loadObjWithMaterial(mtl, obj)
       .then(object => {
         cached3DWindow = object;
         return onLoadItem(cached3DWindow.clone());

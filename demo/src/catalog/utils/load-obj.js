@@ -1,9 +1,10 @@
 import MTLLoader from './mtl-loader';
 import OBJLoader from './obj-loader';
 
-export function loadObjWithMaterial(mtlFile, objFile, imgPath) {
+// export function loadObjWithMaterial(mtlFile, objFile, imgPath) {
+export function loadObjWithMaterial(mtlFile, objFile) {
   let mtlLoader = new MTLLoader();
-  mtlLoader.setTexturePath(imgPath);
+  // mtlLoader.setTexturePath(imgPath);
   let url = mtlFile;
   return new Promise((resolve, reject) => {
 
@@ -12,7 +13,6 @@ export function loadObjWithMaterial(mtlFile, objFile, imgPath) {
       let objLoader = new OBJLoader();
       objLoader.setMaterials(materials);
       objLoader.load(objFile, object => resolve(object));
-
     });
   });
 }

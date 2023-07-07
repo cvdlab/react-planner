@@ -103,7 +103,7 @@ export default {
       return Promise.resolve(onLoadItem(object));
     }
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+    return loadObjWithMaterial(mtl, obj)
       .then(object => {
         cachedJSONSofa = object.toJSON();
         let loader = new ObjectLoader();

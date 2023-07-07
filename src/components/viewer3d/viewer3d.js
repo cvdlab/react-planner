@@ -17,7 +17,6 @@ const Scene3DViewer = ({ state, width, height }) => {
   window.__threeRenderer = renderer;
   const [lastMousePosition, setLastMousePosition] = useState({});
   const [renderingID, setRenderingID] = useState(0);
-  window.__threeRenderer = renderer;
   const actions = useContext(ReactPlannerContext);
   const { projectActions, catalog } = actions;
 
@@ -56,7 +55,7 @@ const Scene3DViewer = ({ state, width, height }) => {
   };
 
   useEffect(() => {
-    canvasWrapper = ReactDOM.findDOMNode(canvasWrapper);
+    let canvas = canvasWrapper.current;
 
     //RENDERER
     renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
@@ -97,7 +96,7 @@ const Scene3DViewer = ({ state, width, height }) => {
     renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(renderer.domElement);
+    canvas.appendChild(renderer.domElement);
 
     // create orbit controls
     let spotLightTarget = new Three.Object3D();
@@ -139,17 +138,17 @@ const Scene3DViewer = ({ state, width, height }) => {
     };
   }, [width, height]);
 
+  // TODO(pg): check with old code...
+  // useEffect(() => {
+  //   if (state.scene !== state.scene) {
+  //     let changedValues = diff(state.scene, state.scene);
+  //     updateScene(planData, state.scene, state.scene, changedValues.toJS(), actions, catalog);
+  //   }
 
-  useEffect(() => {
-    if (state.scene !== state.scene) {
-      let changedValues = diff(state.scene, state.scene);
-      updateScene(planData, state.scene, state.scene, changedValues.toJS(), actions, catalog);
-    }
+  //   renderer.setSize(width, height);
+  // }, [state.scene, width, height]);
 
-    renderer.setSize(width, height);
-  }, [state.scene, width, height]);
-
-  return React.createElement('div', { ref: 'canvasWrapper' });
+  return <div ref={canvasWrapper} />;
 }
 
 Scene3DViewer.propTypes = {

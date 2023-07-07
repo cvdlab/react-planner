@@ -108,7 +108,7 @@ export default {
     let mtl = require('./tv.mtl');
     let obj = require('./tv.obj');
 
-    return loadObjWithMaterial(mtl, obj, '')
+    return loadObjWithMaterial(mtl, obj)
       .then(object => {
         cached3DTV = object;
         return onLoadItem(cached3DTV.clone())
