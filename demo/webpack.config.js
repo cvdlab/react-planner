@@ -6,7 +6,7 @@ const PAGE_TITLE = 'React Planner';
 const VENDORS_LIBRARIES = ['immutable', 'react', 'react-dom', 'react-redux', 'redux', 'three'];
 
 module.exports = (env, self) => {
-  let isProduction = self.hasOwnProperty('mode') ? ( self.mode === 'production' ) : true;
+  let isProduction = self.hasOwnProperty('mode') ? (self.mode === 'production') : true;
   let port = self.hasOwnProperty('port') ? self.port : 8080;
 
   if (isProduction) console.info('Webpack: Production mode'); else console.info('Webpack: Development mode');
@@ -19,7 +19,7 @@ module.exports = (env, self) => {
     },
     output: {
       path: path.join(__dirname, 'dist'),
-      filename: '[chunkhash].[name].js',
+      filename: '[contenthash].[name].js',
     },
     performance: {
       hints: isProduction ? 'warning' : false
@@ -28,12 +28,20 @@ module.exports = (env, self) => {
     devServer: {
       open: true,
       port: port,
-      contentBase: path.join(__dirname, './dist'),
+      static: path.join(__dirname, './dist'),
     },
     resolve: {
       extensions: ['.js', '.jsx'],
       alias: {
-        'react-planner': path.join(__dirname, '../src/index')
+        'react-planner': path.join(__dirname, '../src/index'),
+      },
+      // TODO(pg): check the comment below
+      // This section in Webpack 5 was added to manage the removal of automatic Node.js polyfills in Webpack 5. If your code depends on these or other Node.js core modules, you might need to install appropriate polyfills.
+      fallback: {
+        "crypto": false,
+        "path": false,
+        "fs": false,
+        "os": false
       }
     },
     module: {
@@ -44,32 +52,23 @@ module.exports = (env, self) => {
           loader: 'babel-loader',
           options: {
             'compact': false,
-            'plugins': [
-              'transform-object-rest-spread'
-            ],
             'presets': [
-              'env',
-              'react'
+              '@babel/preset-env',
+              '@babel/preset-react'
             ]
           }
-
         }]
       }, {
         test: /\.(jpe?g|png|gif|mtl|obj)$/i,
-        use: [{
-          loader: 'file-loader',
-          options: {
-            hash: 'sha512',
-            digest: 'hex',
-            name: '[path][name].[ext]',
-            context: 'demo/src'
-          }
-        }]
+        type: 'asset/resource',
+        generator: {
+          filename: '[path][name].[ext]'
+        }
       }, {
         test: /\.css$/,
         use: [
-          { loader: 'style-loader/url' },
-          { loader: 'file-loader' }
+          { loader: 'style-loader' },
+          { loader: 'css-loader' }
         ]
       }]
     },
@@ -79,7 +78,10 @@ module.exports = (env, self) => {
         template: './src/index.html.ejs',
         filename: 'index.html',
         inject: 'body',
-        production: isProduction
+      }),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(isProduction ? 'production' : 'development'),
+        isProduction: JSON.stringify(isProduction)
       })
     ],
     optimization: {
@@ -88,28 +90,23 @@ module.exports = (env, self) => {
         cacheGroups: {
           default: false,
           commons: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendor',
-              chunks: 'all',
-              minSize: 10000,
-              reuseExistingChunk: true
+            test: /[\\/]node_modules[\\/]/,
+            name(module, chunks, cacheGroupKey) {
+              const moduleFileName = module
+                .identifier()
+                .split('/')
+                .reduceRight(item => item);
+              const allChunksNames = chunks.map((item) => item.name).join('~');
+              return `${cacheGroupKey}-${allChunksNames}-${moduleFileName}`;
+            },
+            chunks: 'all',
+            minSize: 10000,
+            reuseExistingChunk: true
           }
         }
       }
     }
   };
-
-  if (isProduction) {
-    config.plugins.push(new webpack.DefinePlugin({
-      'process.env': {
-        'NODE_ENV': JSON.stringify('production')
-      }
-    }));
-  }
-
-  config.plugins.push(new webpack.DefinePlugin({
-    isProduction: JSON.stringify(isProduction)
-  }));
 
   return config;
 };

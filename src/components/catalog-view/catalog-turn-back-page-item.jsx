@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import {MdNavigateBefore} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import ReactPlannerContext from '../../react-planner-context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -46,41 +47,30 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default class CatalogTurnBackPageItem extends Component {
+const CatalogTurnBackPageItem = ({ page }) => {
+  const [hover, setHover] = useState(false);
+  const { projectActions } = useContext(ReactPlannerContext);
 
-  constructor(props) {
-    super(props);
-    this.state = {hover: false};
+  const changePage = (newPage) => {
+    projectActions.goBackToCatalogPage(newPage)
   }
 
-  changePage(newPage) {
-    this.context.projectActions.goBackToCatalogPage(newPage)
-  }
-
-  render() {
-    let page = this.props.page;
-    let hover = this.state.hover;
-
-    return (
-      <div
-        style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={e => this.changePage(page.name)}
-        onMouseEnter={e => this.setState({hover: true})}
-        onMouseLeave={e => this.setState({hover: false})}
-      >
-        <div style={CONTAINER_DIV}>
-          <MdNavigateBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>
-        </div>
-
+  return (
+    <div
+      style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
+      onClick={() => changePage(page.name)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div style={CONTAINER_DIV}>
+        <MdNavigateBefore style={ !hover ? STYLE_BACK : STYLE_BACK_HOVER}/>
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 CatalogTurnBackPageItem.propTypes = {
   page: PropTypes.object.isRequired
 };
 
-CatalogTurnBackPageItem.contextTypes = {
-  projectActions: PropTypes.object.isRequired
-};
+export default CatalogTurnBackPageItem;

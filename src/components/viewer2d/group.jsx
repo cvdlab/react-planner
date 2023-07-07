@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import * as sharedStyles from '../../shared-style';
@@ -13,7 +13,9 @@ const STYLE_CIRCLE = {
   cursor: 'default'
 };
 
-export default function Group({ layer, group, scene, catalog }, {translator}) {
+const Group = ({ layer, group, scene, catalog }) => {
+  const { translator } = useContext(ReactPlannerContext);
+
   return (
     <g
       data-element-root
@@ -49,6 +51,4 @@ Group.propTypes = {
   catalog: PropTypes.object.isRequired
 };
 
-Group.contextTypes = {
-  translator: PropTypes.object.isRequired
-};
+export default Group;

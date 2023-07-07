@@ -11,8 +11,7 @@ const internalTableStyle = {borderCollapse: 'collapse'};
 const secondTdStyle = {padding: 0};
 const unitContainerStyle = {width: '5em'};
 
-export default function PropertyLengthMeasure({value, onUpdate, onValid, configs, sourceElement, internalState, state}, {catalog}) {
-
+const PropertyLengthMeasure = ({ value, onUpdate, onValid, configs, sourceElement, internalState, state }) => {
   let length = value.get('length') || 0;
   let _length = value.get('_length') || length;
   let _unit = value.get('_unit') || UNIT_CENTIMETER;
@@ -81,6 +80,4 @@ PropertyLengthMeasure.propTypes = {
   state: PropTypes.object.isRequired
 };
 
-PropertyLengthMeasure.contextTypes = {
-  catalog: PropTypes.object.isRequired
-};
+export default PropertyLengthMeasure;

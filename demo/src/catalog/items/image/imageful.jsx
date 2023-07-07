@@ -1,7 +1,7 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
 import {Map} from 'immutable';
+import { ReactPlannerContext } from 'react-planner';
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;
@@ -36,54 +36,48 @@ const pointsDistance = (x1, y1, x2, y2) => {
   return 0;
 };
 
-export default class ImageFul extends Component {
-  constructor(props) {
-    super(props);
+const ImageFul = (props) => {
+  const { element, x1, y1, x2, y2, distance, width, height, imageUri, layer, scene } = props;
+  const { projectActions, catalog, translator } = useContext(ReactPlannerContext);
 
-    this.state = {
-      handleMouseMove1: false,
-      handleMouseMove2: false,
-      hover1: false,
-      hover2: false,
-      imageLoadError: false
-    };
+  const [state, setState] = useState({
+    handleMouseMove1: false,
+    handleMouseMove2: false,
+    hover1: false,
+    hover2: false,
+    imageLoadError: false
+  });
 
-    this.onMouseDown = this.onMouseDown.bind(this);
-    this.onMouseMove = this.onMouseMove.bind(this);
-    this.toggleHover1 = this.toggleHover1.bind(this);
-    this.toggleHover2 = this.toggleHover2.bind(this);
-  }
-
-  onMouseDown(event) {
+  const onMouseDown = (event) => {
     let target = event.viewerEvent.originalEvent.target;
 
     if (target.nodeName === 'circle') {
       if (target.attributes.name) {
         if (target.attributes.name.nodeValue === 'fst-anchor') {
-          this.setState({handleMouseMove1: !this.state.handleMouseMove1});
+          setState({handleMouseMove1: !state.handleMouseMove1});
         }
         else if (target.attributes.name.nodeValue === 'snd-anchor') {
-          this.setState({handleMouseMove2: !this.state.handleMouseMove2});
+          setState({handleMouseMove2: !state.handleMouseMove2});
         }
       }
     }
-  }
+  };
 
-  onMouseMove(event) {
+  const onMouseMove = (event) => {
     let {x, y} = event.viewerEvent;
 
-    y = this.props.scene.height - y;
+    y = scene.height - y;
 
-    let dist = pointsDistance(this.props.x1, this.props.y1, this.props.x2, this.props.y2);
-    let scale = !isNaN(dist) && dist ? (this.props.distance.length / dist) : 0;
+    let dist = pointsDistance(x1, y1, x2, y2);
+    let scale = !isNaN(dist) && dist ? (distance.length / dist) : 0;
 
     let origin = {
-      x: this.props.element.x - (this.props.width * scale / 2),
-      y: this.props.element.y + (this.props.height * scale / 2)
+      x: element.x - (width * scale / 2),
+      y: element.y + (height * scale / 2)
     };
 
-    let minX = origin.x + (this.props.width * scale);
-    let minY = origin.y - (this.props.height * scale);
+    let minX = origin.x + (width * scale);
+    let minY = origin.y - (height * scale);
 
     if (x < origin.x) {
       x = origin.x;
@@ -102,126 +96,112 @@ export default class ImageFul extends Component {
     let newX = (x - origin.x);
     let newY = (origin.y - y);
 
-    if (this.state.handleMouseMove1) {
-      let dist = pointsDistance(newX, newY, this.props.x2, this.props.y2);
-      this.context.projectActions.setProperties(new Map({x1: newX, y1: newY, distance: new Map({length: dist})}));
+    if (state.handleMouseMove1) {
+      let dist = pointsDistance(newX, newY, x2, y2);
+      projectActions.setProperties(new Map({x1: newX, y1: newY, distance: new Map({length: dist})}));
     }
-    else if (this.state.handleMouseMove2) {
-      let dist = pointsDistance(this.props.x1, this.props.y1, newX, newY);
-      this.context.projectActions.setProperties(new Map({x2: newX, y2: newY, distance: new Map({length: dist})}));
+    else if (state.handleMouseMove2) {
+      let dist = pointsDistance(x1, y1, newX, newY);
+      projectActions.setProperties(new Map({x2: newX, y2: newY, distance: new Map({length: dist})}));
     }
-  }
+  };
 
-  componentDidMount() {
-    document.addEventListener('mousedown-planner-event', this.onMouseDown);
-    document.addEventListener('mousemove-planner-event', this.onMouseMove);
+  const toggleHover1 = (e) => {
+    setState(prevState => ({ ...prevState, hover1: !prevState.hover1 }));
+  };
 
-    if (this.props.imageUri) {
+  const toggleHover2 = (e) => {
+    setState(prevState => ({ ...prevState, hover2: !prevState.hover2 }));
+  };
+  
+
+  useEffect(() => {
+    document.addEventListener('mousedown-planner-event', onMouseDown);
+    document.addEventListener('mousemove-planner-event', onMouseMove);
+
+    if (imageUri) {
       let img = new Image;
-      img.src = this.props.imageUri;
+      img.src = imageUri;
       img.onload = () => {
-        this.setState({imageLoadError: false});
-        this.context.projectActions.setProperties(new Map({width: img.naturalWidth, height: img.naturalHeight}))
+        setState(prevState => ({ ...prevState, imageLoadError: false }));
+        projectActions.setProperties(new Map({width: img.naturalWidth, height: img.naturalHeight}));
       };
       img.onerror = () => {
-        this.setState({imageLoadError: true})
+        setState(prevState => ({ ...prevState, imageLoadError: true }));
       };
     }
-  }
 
-  componentWillUnmount() {
-    document.removeEventListener('mousedown-planner-event', this.onMouseDown);
-    document.removeEventListener('mousemove-planner-event', this.onMouseMove);
-  }
+    return () => {
+      document.removeEventListener('mousedown-planner-event', onMouseDown);
+      document.removeEventListener('mousemove-planner-event', onMouseMove);
+    };
+  }, [imageUri]);
 
-  componentWillReceiveProps(nextProps) {
-    if (this.props.imageUri !== nextProps.imageUri) {
-      let img = new Image;
-      img.src = nextProps.imageUri;
-      img.onload = () => {
-        this.setState({imageLoadError: false});
-        this.context.projectActions.setProperties(new Map({width: img.naturalWidth, height: img.naturalHeight}))
-      };
-      img.onerror = () => {
-        this.setState({imageLoadError: true})
-      };
-    }
-  }
+  let dist = pointsDistance(x1, y1, x2, y2);
+  let scale = !isNaN(dist) && dist ? (distance.length / dist) : 0;
+  let half_w = width / 2;
 
-  toggleHover1(e) {
-    this.setState({hover1: !this.state.hover1})
-  }
+  let ruler = !element.selected ? null : (
+    <g>
+      <line key="1" x1={x1} y1={y1} x2={x2} y2={y2} stroke={rulerColor}
+            strokeWidth="3px"/>
+      <circle
+        onMouseEnter={toggleHover1}
+        onMouseLeave={toggleHover1}
+        key="2"
+        name="fst-anchor"
+        cx={x1}
+        cy={y1}
+        r={state.hover1 || state.handleMouseMove1 ? hoverCircleRadius : grabCircleRadius}
+        style={state.hover1 || state.handleMouseMove1 ? hoverCircleStyle : grabCircleStyle}/>
+      <circle
+        onMouseEnter={toggleHover2}
+        onMouseLeave={toggleHover2}
+        key="3"
+        name="snd-anchor"
+        cx={x2}
+        cy={y2}
+        r={state.hover2 || state.handleMouseMove2 ? hoverCircleRadius : grabCircleRadius}
+        style={state.hover2 || state.handleMouseMove2 ? hoverCircleStyle : grabCircleStyle}/>
+    </g>
+  );
 
-  toggleHover2(e) {
-    this.setState({hover2: !this.state.hover2})
-  }
-
-  render() {
-    let dist = pointsDistance(this.props.x1, this.props.y1, this.props.x2, this.props.y2);
-    let scale = !isNaN(dist) && dist ? (this.props.distance.length / dist) : 0;
-    let half_w = this.props.width / 2;
-
-    let ruler = !this.props.element.selected ? null : (
-      <g>
-        <line key="1" x1={this.props.x1} y1={this.props.y1} x2={this.props.x2} y2={this.props.y2} stroke={rulerColor}
-              strokeWidth="3px"/>
-        <circle
-          onMouseEnter={this.toggleHover1}
-          onMouseLeave={this.toggleHover1}
-          key="2"
-          name="fst-anchor"
-          cx={this.props.x1}
-          cy={this.props.y1}
-          r={this.state.hover1 || this.state.handleMouseMove1 ? hoverCircleRadius : grabCircleRadius}
-          style={this.state.hover1 || this.state.handleMouseMove1 ? hoverCircleStyle : grabCircleStyle}/>
-        <circle
-          onMouseEnter={this.toggleHover2}
-          onMouseLeave={this.toggleHover2}
-          key="3"
-          name="snd-anchor"
-          cx={this.props.x2}
-          cy={this.props.y2}
-          r={this.state.hover2 || this.state.handleMouseMove2 ? hoverCircleRadius : grabCircleRadius}
-          style={this.state.hover2 || this.state.handleMouseMove2 ? hoverCircleStyle : grabCircleStyle}/>
-      </g>
-    );
-
-    return (
-      <g
-        transform={`scale(${scale}, ${scale}), scale(1,-1) translate(${-this.props.width / 2}, ${-this.props.height / 2})`}>
-        {
-          this.props.imageUri && !this.state.imageLoadError ?
-            <image
-              xlinkHref={this.props.imageUri}
-              x="0"
-              y="0"
-              width={this.props.width}
-              height={this.props.height}
-            /> :
-            <g>
-              <rect x="0" y="0" width={this.props.width} height={this.props.height} fill="#CCC"></rect>
-              <text
-                x={half_w}
-                y={this.props.height / 2}
-                textAnchor="middle"
-                alignmentBaseline="central"
-                fontFamily="Arial"
-                fontSize="35"
-                fill="#666"
-              >
-                <tspan x={half_w} dy="-2em">Set the image url on the component</tspan>
-                <tspan x={half_w} dy="1em">property inside the sidebar,</tspan>
-                <tspan x={half_w} dy="1em">click and move each vertex</tspan>
-                <tspan x={half_w} dy="1em">of the ruler then set the real distance</tspan>
-                <tspan x={half_w} dy="1em">in the component property</tspan>
-              </text>
-            </g>
-        }
-        {ruler}
-      </g>
-    )
-  }
+  return (
+    <g
+      transform={`scale(${scale}, ${scale}), scale(1,-1) translate(${-width / 2}, ${-height / 2})`}>
+      {
+        imageUri && !state.imageLoadError ?
+          <image
+            xlinkHref={imageUri}
+            x="0"
+            y="0"
+            width={width}
+            height={height}
+          /> :
+          <g>
+            <rect x="0" y="0" width={width} height={height} fill="#CCC"></rect>
+            <text
+              x={half_w}
+              y={height / 2}
+              textAnchor="middle"
+              alignmentBaseline="central"
+              fontFamily="Arial"
+              fontSize="35"
+              fill="#666"
+            >
+              <tspan x={half_w} dy="-2em">Set the image url on the component</tspan>
+              <tspan x={half_w} dy="1em">property inside the sidebar,</tspan>
+              <tspan x={half_w} dy="1em">click and move each vertex</tspan>
+              <tspan x={half_w} dy="1em">of the ruler then set the real distance</tspan>
+              <tspan x={half_w} dy="1em">in the component property</tspan>
+            </text>
+          </g>
+      }
+      {ruler}
+    </g>
+  )
 }
+
 
 ImageFul.propTypes = {
   element: PropTypes.object.isRequired,
@@ -237,8 +217,4 @@ ImageFul.propTypes = {
   scene: PropTypes.object.isRequired
 };
 
-ImageFul.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+export default ImageFul;

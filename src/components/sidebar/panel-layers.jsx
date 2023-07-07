@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+import React, { useState, useContext, memo } from 'react';
 import PropTypes from 'prop-types';
 import { Map } from 'immutable';
 import Panel from './panel';
-import {TiPlus, TiDelete} from 'react-icons/ti';
-import {FaPencilAlt, FaTrash, FaEye} from 'react-icons/fa';
+import ReactPlannerContext from '../../react-planner-context';
+import { TiPlus, TiDelete } from 'react-icons/ti';
+import { FaPencilAlt, FaTrash, FaEye } from 'react-icons/fa';
 import {
   FormTextInput,
   FormNumberInput,
@@ -48,232 +49,231 @@ const tableLayerStyle = {
   marginLeft: '1px'
 };
 
-const iconColStyle = {width: '2em'};
-const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
-const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
-const styleEyeVisible = {fontSize: '1.25em'};
-const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
-const firstTdStyle = {width: '6em'};
-const newLayerLableStyle = {margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center'};
-const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
-const layerInputTableStyle = {width: '100%', borderSpacing: '2px 0', padding: '5px 15px'};
-const inputTableButtonStyle = {float: 'right', marginTop: '0.5em', borderSpacing: '0'};
+const iconColStyle = { width: '2em' };
+const styleHoverColor = { color: SharedStyle.SECONDARY_COLOR.main };
+const styleEditButtonHover = { ...styleEditButton, ...styleHoverColor };
+const styleAddLabel = { fontSize: '10px', marginLeft: '5px' };
+const styleEyeVisible = { fontSize: '1.25em' };
+const styleEyeHidden = { ...styleEyeVisible, color: '#a5a1a1' };
+const firstTdStyle = { width: '6em' };
+const newLayerLableStyle = { margin: '0.5em 0', fontSize: '1.3em', cursor: 'pointer', textAlign: 'center' };
+const newLayerLableHoverStyle = { ...newLayerLableStyle, ...styleHoverColor };
+const layerInputTableStyle = { width: '100%', borderSpacing: '2px 0', padding: '5px 15px' };
+const inputTableButtonStyle = { float: 'right', marginTop: '0.5em', borderSpacing: '0' };
 
-export default class PanelLayers extends Component {
-  constructor(props) {
-    super(props);
+const PanelLayers = ({ state }) => {
+  const { sceneActions, translator } = useContext(ReactPlannerContext);
+  const [headHovered, setHeadHovered] = useState(false);
+  const [layerAddUIVisible, setLayerAddUIVisible] = useState(false);
+  const [editingLayer, setEditingLayer] = useState(new Map());
 
-    this.state = {
-      headHovered: false,
-      layerAddUIVisible: false,
-      editingLayer: new Map()
-    };
-  }
+  console.log('PanelLayers sceneActions', sceneActions);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if(
-      this.props.state.scene.layers.size !== nextProps.state.scene.layers.size ||
-      nextState.layerAddUIVisible != this.state.layerAddUIVisible ||
-      this.state.editingLayer.hashCode() !== nextState.editingLayer.hashCode() ||
-      this.props.state.sceneHistory.hashCode() !== nextProps.state.sceneHistory.hashCode()
-    ) return true;
-
-    return false;
-  }
-
-  addLayer(e) {
+  const addLayer = (e) => {
     e.stopPropagation();
-    if (!this.state.layerAddUIVisible) {
-      this.context.sceneActions.addLayer('', 0);
-      this.setState({layerAddUIVisible: false});
+    if (!layerAddUIVisible) {
+      sceneActions.addLayer('', 0);
+      setLayerAddUIVisible(false);
     }
-    else this.setState({layerAddUIVisible: !this.state.layerAddUIVisible});
-  }
+    else setLayerAddUIVisible(!layerAddUIVisible);
+  };
 
-  resetLayerMod(e) {
+  const resetLayerMod = (e) => {
     e.stopPropagation();
-    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
-  }
+    setLayerAddUIVisible(false);
+    setEditingLayer(new Map());
+  };
 
-  updateLayer(e, layerData) {
+  const updateLayer = (e, layerData) => {
     e.stopPropagation();
-    let {id, name, opacity, altitude, order} = layerData.toJS();
+    let { id, name, opacity, altitude, order } = layerData.toJS();
 
     altitude = parseInt(altitude);
 
-    this.context.sceneActions.setLayerProperties(id, {name, opacity, altitude, order});
-    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
-  }
+    sceneActions.setLayerProperties(id, { name, opacity, altitude, order });
+    setLayerAddUIVisible(false);
+    setEditingLayer(new Map());
+  };
 
-  delLayer(e, layerID) {
+  const delLayer = (e, layerID) => {
     e.stopPropagation();
-    this.context.sceneActions.removeLayer(layerID);
-    this.setState({layerAddUIVisible: false, editingLayer: new Map()});
-  }
+    sceneActions.removeLayer(layerID);
+    setLayerAddUIVisible(false);
+    setEditingLayer(new Map());
+  };
 
-  render() {
-    if (!VISIBILITY_MODE[this.props.state.mode]) return null;
+  if (!VISIBILITY_MODE[state.mode]) return null;
 
-    let scene = this.props.state.scene;
-    let isLastLayer = scene.layers.size === 1;
+  let scene = state.scene;
+  let isLastLayer = scene.layers.size === 1;
 
-    return (
-      <Panel name={this.context.translator.t('Layers')}>
-        <table style={tableLayerStyle}>
-          <thead>
-            <tr>
-              <th colSpan='3'></th>
-              <th>{this.context.translator.t('Altitude')}</th>
-              <th>{this.context.translator.t('Name')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              scene.layers.entrySeq().map(([layerID, layer]) => {
+  return (
+    <Panel name={translator.t('Layers')}>
+      <table style={tableLayerStyle}>
+        <thead>
+          <tr>
+            <th colSpan='3'></th>
+            <th>{translator.t('Altitude')}</th>
+            <th>{translator.t('Name')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            scene.layers.entrySeq().map(([layerID, layer]) => {
 
-                let selectClick = e => this.context.sceneActions.selectLayer(layerID);
-                let configureClick = e => this.setState({editingLayer: layer, layerAddUIVisible: true});
+              let selectClick = e => sceneActions.selectLayer(layerID);
+              let configureClick = (e) => { 
+                setEditingLayer(layer); 
+                setLayerAddUIVisible(true);
+              }
 
-                let swapVisibility = e => {
-                  e.stopPropagation();
-                  this.context.sceneActions.setLayerProperties(layerID, {visible: !layer.visible});
-                };
+              let swapVisibility = e => {
+                e.stopPropagation();
+                sceneActions.setLayerProperties(layerID, { visible: !layer.visible });
+              };
 
-                let isCurrentLayer = layerID === scene.selectedLayer;
+              let isCurrentLayer = layerID === scene.selectedLayer;
 
-                return (
-                  <tr
-                    key={layerID}
-                    onClick={selectClick}
-                    onDoubleClick={configureClick}
-                    style={!isCurrentLayer ? null : styleHoverColor}
-                  >
-                    <td style={iconColStyle}>
-                      {
-                        !isCurrentLayer ?
-                          <FaEye
-                            onClick={swapVisibility}
-                            style={!layer.visible ? styleEyeHidden : styleEyeVisible}
-                          />
-                          : null
-                      }
-                    </td>
-                    <td style={iconColStyle}>
-                      <FaPencilAlt
-                        onClick={configureClick}
-                        style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
-                        title={this.context.translator.t('Configure layer')}
-                      />
-                    </td>
-                    <td style={iconColStyle}>
-                      {
-                        !isLastLayer ?
-                          <FaTrash
-                            onClick={ e => this.delLayer(e, layerID) }
-                            style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
-                            title={this.context.translator.t('Delete layer')}
-                          />
-                          : null
-                      }
-                    </td>
-                    <td style={{width: '6em', textAlign: 'center'}}>
-                      [ h : {layer.altitude} ]
-                    </td>
-                    <td>
-                      {layer.name}
-                    </td>
-                  </tr>
-                );
-
-              })
-            }
-          </tbody>
-        </table>
-        <p
-          style={ !this.state.headHovered ? newLayerLableStyle : newLayerLableHoverStyle }
-          onMouseOver={ () => this.setState({headHovered: true}) }
-          onMouseOut={ () => this.setState({headHovered: false}) }
-          onClick={ (e) => this.addLayer(e) }
-        >
-          { !this.state.layerAddUIVisible ? <TiPlus /> : <TiDelete /> }
-          <b style={styleAddLabel}>{this.context.translator.t('New layer')}</b>
-        </p>
-
-        {
-          this.state.layerAddUIVisible && this.state.editingLayer ?
-            <table style={layerInputTableStyle}>
-              <tbody>
-                <tr style={{marginTop: '1em'}}>
-                  <td style={firstTdStyle}>{this.context.translator.t('Name')}:</td>
-                  <td>
-                    <FormTextInput
-                      value={this.state.editingLayer.get('name')}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({name: e.target.value})})}
+              return (
+                <tr
+                  key={layerID}
+                  onClick={selectClick}
+                  onDoubleClick={configureClick}
+                  style={!isCurrentLayer ? null : styleHoverColor}
+                >
+                  <td style={iconColStyle}>
+                    {
+                      !isCurrentLayer ?
+                        <FaEye
+                          onClick={swapVisibility}
+                          style={!layer.visible ? styleEyeHidden : styleEyeVisible}
+                        />
+                        : null
+                    }
+                  </td>
+                  <td style={iconColStyle}>
+                    <FaPencilAlt
+                      onClick={configureClick}
+                      style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
+                      title={translator.t('Configure layer')}
                     />
                   </td>
-                </tr>
-                <tr>
-                  <td style={firstTdStyle}>{this.context.translator.t('opacity')}:</td>
+                  <td style={iconColStyle}>
+                    {
+                      !isLastLayer ?
+                        <FaTrash
+                          onClick={e => delLayer(e, layerID)}
+                          style={!isCurrentLayer ? styleEditButton : styleEditButtonHover}
+                          title={translator.t('Delete layer')}
+                        />
+                        : null
+                    }
+                  </td>
+                  <td style={{ width: '6em', textAlign: 'center' }}>
+                    [ h : {layer.altitude} ]
+                  </td>
                   <td>
-                    <FormSlider
-                      min={0}
-                      max={100}
-                      value={Math.round(this.state.editingLayer.get('opacity') * 100)}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({opacity: (e.target.value / 100)})})}
-                    />
+                    {layer.name}
                   </td>
                 </tr>
-                <tr>
-                  <td style={firstTdStyle}>{this.context.translator.t('altitude')}:</td>
-                  <td>
-                    <FormNumberInput
-                      value={this.state.editingLayer.get('altitude')}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({altitude: e.target.value})})}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td style={firstTdStyle}>{this.context.translator.t('order')}:</td>
-                  <td>
-                    <FormNumberInput
-                      value={this.state.editingLayer.get('order')}
-                      onChange={e => this.setState({editingLayer: this.state.editingLayer.merge({order: e.target.value})})}
-                    />
-                  </td>
-                </tr>
-                <tr>
-                  <td colSpan="2">
-                    <table style={inputTableButtonStyle}>
-                      <tbody>
-                        <tr>
-                          <td><CancelButton size="small" onClick={ e => {
-                            this.resetLayerMod(e);
-                          } }>{this.context.translator.t('Reset')}</CancelButton></td>
-                          <td><FormSubmitButton size="small" onClick={ e => {
-                            this.updateLayer(e, this.state.editingLayer);
-                          } }>{this.context.translator.t('Save')}</FormSubmitButton></td>
-                        </tr>
-                      </tbody>
-                    </table>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-            : null
-        }
+              );
 
-      </Panel>
-    )
-  }
+            })
+          }
+        </tbody>
+      </table>
+      <p
+        style={!headHovered ? newLayerLableStyle : newLayerLableHoverStyle}
+        onMouseOver={() => setHeadHovered(true)}
+        onMouseOut={() => setHeadHovered(false)}
+        onClick={(e) => addLayer(e)}
+      >
+        {!layerAddUIVisible ? <TiPlus /> : <TiDelete />}
+        <b style={styleAddLabel}>{translator.t('New layer')}</b>
+      </p>
 
+      {
+        layerAddUIVisible && editingLayer ?
+          <table style={layerInputTableStyle}>
+            <tbody>
+              <tr style={{ marginTop: '1em' }}>
+                <td style={firstTdStyle}>{translator.t('Name')}:</td>
+                <td>
+                  <FormTextInput
+                    value={editingLayer.get('name')}
+                    onChange={e => {
+                      setEditingLayer(editingLayer.merge({ name: e.target.value }))
+                    }}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td style={firstTdStyle}>{translator.t('opacity')}:</td>
+                <td>
+                  {/* TODO(pg): Replace back with FormSlider when fixed */}
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={Math.round(editingLayer.get('opacity') * 100)}
+                    onChange={e => setEditingLayer(editingLayer.merge({ opacity: (e.target.value / 100) }))}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td style={firstTdStyle}>{translator.t('altitude')}:</td>
+                <td>
+                  <FormNumberInput
+                    value={editingLayer.get('altitude')}
+                    onChange={e => setEditingLayer(editingLayer.merge({ altitude: e.target.value }))}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td style={firstTdStyle}>{translator.t('order')}:</td>
+                <td>
+                  <FormNumberInput
+                    value={editingLayer.get('order')}
+                    onChange={e => setEditingLayer(editingLayer.merge({ order: e.target.value }))}
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td colSpan="2">
+                  <table style={inputTableButtonStyle}>
+                    <tbody>
+                      <tr>
+                        <td>
+                          <CancelButton size="small" onClick={e => { resetLayerMod(e); }}>
+                            {translator.t('Reset')}
+                          </CancelButton></td>
+                        <td>
+                          <FormSubmitButton size="small" onClick={e => { updateLayer(e, editingLayer); }}>
+                            {translator.t('Save')}
+                          </FormSubmitButton>
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          : null
+      }
+
+    </Panel>
+  )
 }
 
 PanelLayers.propTypes = {
   state: PropTypes.object.isRequired,
 };
 
-PanelLayers.contextTypes = {
-  sceneActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+export default memo(PanelLayers, (prevProps, nextProps) => {
+  return (
+    prevProps.state.scene.layers.size === nextProps.state.scene.layers.size &&
+    prevProps.state.sceneHistory.hashCode() === nextProps.state.sceneHistory.hashCode()
+  );
+});
+

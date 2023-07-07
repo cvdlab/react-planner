@@ -23,7 +23,7 @@ export {
   FormLabel,
   FormNumberInput,
   FormSelect,
-  FormSlider,
+  // FormSlider,
   FormSubmitButton,
   FormTextInput
 };
@@ -39,7 +39,7 @@ export default {
   FormLabel,
   FormNumberInput,
   FormSelect,
-  FormSlider,
+  // FormSlider,
   FormSubmitButton,
   FormTextInput
 };

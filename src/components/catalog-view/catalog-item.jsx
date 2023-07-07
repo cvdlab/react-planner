@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import {FaPlusCircle as IconAdd} from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
+import ReactPlannerContext from '../../react-planner-context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -104,64 +105,49 @@ const STYLE_TAG = {
   borderRadius: '3px'
 };
 
-export default class CatalogItem extends Component {
+const CatalogItem = ({ element }) => {
+  const [hover, setHover] = useState(false);
+  const { linesActions, itemsActions, holesActions, projectActions } = useContext(ReactPlannerContext);
 
-  constructor(props) {
-    super(props);
-    this.state = {hover: false};
-  }
-
-  select() {
-    let element = this.props.element;
-
+  const select = () => {
     switch (element.prototype) {
       case 'lines':
-        this.context.linesActions.selectToolDrawingLine(element.name);
+        linesActions.selectToolDrawingLine(element.name);
         break;
       case 'items':
-        this.context.itemsActions.selectToolDrawingItem(element.name);
+        itemsActions.selectToolDrawingItem(element.name);
         break;
       case 'holes':
-        this.context.holesActions.selectToolDrawingHole(element.name);
+        holesActions.selectToolDrawingHole(element.name);
         break;
     }
 
-    this.context.projectActions.pushLastSelectedCatalogElementToHistory(element);
+    projectActions.pushLastSelectedCatalogElementToHistory(element);
   }
 
-  render() {
-    let element = this.props.element;
-    let hover = this.state.hover;
-
-    return (
-      <div
-        style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={e => this.select()}
-        onMouseEnter={e => this.setState({hover: true})}
-        onMouseLeave={e => this.setState({hover: false})}
-      >
-        <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{element.info.title}</b>
-        <div style={ STYLE_IMAGE_CONTAINER }>
-          <div style={{...( !hover ? STYLE_IMAGE: STYLE_IMAGE_HOVER ), backgroundImage: 'url(' + element.info.image + ')'}}>
-            { hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null }
-          </div>
+  return (
+    <div
+      style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
+      onClick={select}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{element.info.title}</b>
+      <div style={ STYLE_IMAGE_CONTAINER }>
+        <div style={{...( !hover ? STYLE_IMAGE: STYLE_IMAGE_HOVER ), backgroundImage: 'url(' + element.info.image + ')'}}>
+          { hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null }
         </div>
-        <ul style={STYLE_TAGS}>
-          {element.info.tag.map((tag, index) => <li style={STYLE_TAG} key={index}>{tag}</li>)}
-        </ul>
-        <div style={STYLE_DESCRIPTION}>{element.info.description}</div>
       </div>
-    );
-  }
+      <ul style={STYLE_TAGS}>
+        {element.info.tag.map((tag, index) => <li style={STYLE_TAG} key={index}>{tag}</li>)}
+      </ul>
+      <div style={STYLE_DESCRIPTION}>{element.info.description}</div>
+    </div>
+  );
 }
 
 CatalogItem.propTypes = {
   element: PropTypes.object.isRequired,
 };
 
-CatalogItem.contextTypes = {
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+export default CatalogItem;

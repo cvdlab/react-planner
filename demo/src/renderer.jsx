@@ -1,10 +1,10 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 import { SizeMe } from 'react-sizeme'
-import Immutable, {Map} from 'immutable';
+import Immutable, { Map } from 'immutable';
 import immutableDevtools from 'immutable-devtools';
-import {createStore} from 'redux';
-import {Provider} from 'react-redux';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
 
 import MyCatalog from './catalog/mycatalog';
 
@@ -13,16 +13,16 @@ import ToolbarScreenshotButton from './ui/toolbar-screenshot-button';
 import {
   Models as PlannerModels,
   reducer as PlannerReducer,
-  ReactPlanner,
+  ReactPlannerWrapper,
   Plugins as PlannerPlugins,
-} from 'react-planner'; //react-planner
+} from 'react-planner';
 
-//define state
+// Define state
 let AppState = Map({
   'react-planner': new PlannerModels.State()
 });
 
-//define reducer
+// Define reducer
 let reducer = (state, action) => {
   state = state || AppState;
   state = state.update('react-planner', plannerState => PlannerReducer(plannerState, action));
@@ -35,29 +35,29 @@ let blackList = isProduction === true ? [] : [
   'UPDATE_2D_CAMERA'
 ];
 
-if( !isProduction ) {
+if (!isProduction) {
   console.info('Environment is in development and these actions will be blacklisted', blackList);
   console.info('Enable Chrome custom formatter for Immutable pretty print');
-  immutableDevtools( Immutable );
+  immutableDevtools(Immutable);
 }
 
-//init store
+// Init store
 let store = createStore(
   reducer,
   null,
   !isProduction && window.devToolsExtension ?
     window.devToolsExtension({
       features: {
-        pause   : true,     // start/pause recording of dispatched actions
-        lock    : true,     // lock/unlock dispatching actions and side effects
-        persist : true,     // persist states on page reloading
-        export  : true,     // export history of actions in a file
-        import  : 'custom', // import history of actions from a file
-        jump    : true,     // jump back and forth (time travelling)
-        skip    : true,     // skip (cancel) actions
-        reorder : true,     // drag and drop actions in the history list
-        dispatch: true,     // dispatch custom actions or action creators
-        test    : true      // generate tests for the selected actions
+        pause: true,
+        lock: true,
+        persist: true,
+        export: true,
+        import: 'custom',
+        jump: true,
+        skip: true,
+        reorder: true,
+        dispatch: true,
+        test: true
       },
       actionsBlacklist: blackList,
       maxAge: 999999
@@ -75,24 +75,23 @@ let toolbarButtons = [
   ToolbarScreenshotButton,
 ];
 
-//render
-ReactDOM.render(
-  (
-    <Provider store={store}>
-      <SizeMe>
-        {({size}) =>
-          <ReactPlanner
-            catalog={MyCatalog}
-            width={size.width}
-            height={size.height}
-            plugins={plugins}
-            toolbarButtons={toolbarButtons}
-            stateExtractor={state => state.get('react-planner')}
-          />
-        }
-      </SizeMe>
-    </Provider>
-  ),
-  document.getElementById('app')
-);
+// Render
+const root = createRoot(document.getElementById('app'));
 
+root.render(
+  <Provider store={store}>
+    <SizeMe>
+      {({ size }) => (
+        <ReactPlannerWrapper
+          store={store}
+          catalog={MyCatalog}
+          width={size.width}
+          height={size.height || 900}
+          plugins={plugins}
+          toolbarButtons={toolbarButtons}
+          stateExtractor={state => state.get('react-planner')}
+        />
+      )}
+    </SizeMe>
+  </Provider>
+);

@@ -1,6 +1,6 @@
 'use strict';
 
-import React from 'react';
+import React, { useContext, useEffect, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import * as Three from 'three';
@@ -9,49 +9,62 @@ import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
 import * as SharedStyle from '../../shared-style';
+import ReactPlannerContext from '../../react-planner-context';
 
-export default class Scene3DViewer extends React.Component {
+const Scene3DViewer = ({ state, width, height }) => {
+  let canvasWrapper = useRef(null);
+  const [renderer] = useState(window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true }));
+  window.__threeRenderer = renderer;
+  const [lastMousePosition, setLastMousePosition] = useState({});
+  const [renderingID, setRenderingID] = useState(0);
+  window.__threeRenderer = renderer;
+  const actions = useContext(ReactPlannerContext);
+  const { projectActions, catalog } = actions;
 
-  constructor(props) {
-    super(props);
+  let scene3D = new Three.Scene();
+  let planData = parseData(state.scene, actions, catalog);
+  let aspectRatio = width / height;
+  let camera = new Three.PerspectiveCamera(45, aspectRatio, 1, 300000);
+  let orbitController = new OrbitControls(camera, renderer.domElement);
+  let toIntersect = [planData.plan];
+  let mouse = new Three.Vector2();
+  let raycaster = new Three.Raycaster();
 
-    this.lastMousePosition = {};
-    this.width = props.width;
-    this.height = props.height;
-    this.renderingID = 0;
+  const mouseDownEvent = (event) => {
+    let x = event.offsetX / width * 2 - 1;
+    let y = -event.offsetY / height * 2 + 1;
+    setLastMousePosition({ x: x, y: y });
+  };
 
-    this.renderer = window.__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
-    window.__threeRenderer = this.renderer;
-  }
+  const mouseUpEvent = (event) => {
+    event.preventDefault();
 
-  componentDidMount() {
+    mouse.x = (event.offsetX / width) * 2 - 1;
+    mouse.y = -(event.offsetY / height) * 2 + 1;
 
-    let actions = {
-      areaActions: this.context.areaActions,
-      holesActions: this.context.holesActions,
-      itemsActions: this.context.itemsActions,
-      linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
-    };
+    if (Math.abs(mouse.x - lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - lastMousePosition.y) <= 0.02) {
 
-    let { state } = this.props;
-    let data = state.scene;
-    let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
+      raycaster.setFromCamera(mouse, camera);
+      let intersects = raycaster.intersectObjects(toIntersect, true);
 
-    let scene3D = new Three.Scene();
+      if (intersects.length > 0 && !(isNaN(intersects[0].distance))) {
+        intersects[0].object.interact && intersects[0].object.interact();
+      } else {
+        projectActions.unselectAll();
+      }
+    }
+  };
+
+  useEffect(() => {
+    canvasWrapper = ReactDOM.findDOMNode(canvasWrapper);
 
     //RENDERER
-    this.renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
-    this.renderer.setSize(this.width, this.height);
+    renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
+    renderer.setSize(width, height);
 
-    // LOAD DATA
-    let planData = parseData(data, actions, this.context.catalog);
-
+    // CANVAS
     scene3D.add(planData.plan);
     scene3D.add(planData.grid);
-
-    let aspectRatio = this.width / this.height;
-    let camera = new Three.PerspectiveCamera(45, aspectRatio, 1, 300000);
 
     scene3D.add(camera);
 
@@ -78,43 +91,15 @@ export default class Scene3DViewer extends React.Component {
     scene3D.add(spotLight1);
 
     // OBJECT PICKING
-    let toIntersect = [planData.plan];
-    let mouse = new Three.Vector2();
-    let raycaster = new Three.Raycaster();
 
-    this.mouseDownEvent = (event) => {
-      this.lastMousePosition.x = event.offsetX / this.width * 2 - 1;
-      this.lastMousePosition.y = -event.offsetY / this.height * 2 + 1;
-    };
-
-    this.mouseUpEvent = (event) => {
-      event.preventDefault();
-
-      mouse.x = (event.offsetX / this.width) * 2 - 1;
-      mouse.y = -(event.offsetY / this.height) * 2 + 1;
-
-      if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
-
-        raycaster.setFromCamera(mouse, camera);
-        let intersects = raycaster.intersectObjects(toIntersect, true);
-
-        if (intersects.length > 0 && !(isNaN(intersects[0].distance))) {
-          intersects[0].object.interact && intersects[0].object.interact();
-        } else {
-          this.context.projectActions.unselectAll();
-        }
-      }
-    };
-
-    this.renderer.domElement.addEventListener('mousedown', this.mouseDownEvent);
-    this.renderer.domElement.addEventListener('mouseup', this.mouseUpEvent);
-    this.renderer.domElement.style.display = 'block';
+    renderer.domElement.addEventListener('mousedown', mouseDownEvent);
+    renderer.domElement.addEventListener('mouseup', mouseUpEvent);
+    renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(this.renderer.domElement);
+    canvasWrapper.appendChild(renderer.domElement);
 
     // create orbit controls
-    let orbitController = new OrbitControls(camera, this.renderer.domElement);
     let spotLightTarget = new Three.Object3D();
     spotLightTarget.name = 'spotLightTarget';
     spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
@@ -132,66 +117,39 @@ export default class Scene3DViewer extends React.Component {
         planData.sceneGraph.LODs[elemID].update(camera);
       }
 
-      this.renderer.render(scene3D, camera);
-      this.renderingID = requestAnimationFrame(render);
+      renderer.render(scene3D, camera);
+      setRenderingID(requestAnimationFrame(render));
     };
 
     render();
 
-    this.orbitControls = orbitController;
-    this.camera = camera;
-    this.scene3D = scene3D;
-    this.planData = planData;
-  }
+    return () => {
+      cancelAnimationFrame(renderingID);
 
-  componentWillUnmount() {
-    cancelAnimationFrame(this.renderingID);
+      orbitController.dispose();
 
-    this.orbitControls.dispose();
+      renderer.domElement.removeEventListener('mousedown', mouseDownEvent);
+      renderer.domElement.removeEventListener('mouseup', mouseUpEvent);
 
-    this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
-    this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
+      disposeScene(scene3D);
+      scene3D.remove(planData.plan);
+      scene3D.remove(planData.grid);
 
-    disposeScene(this.scene3D);
-    this.scene3D.remove(this.planData.plan);
-    this.scene3D.remove(this.planData.grid);
-
-    this.scene3D = null;
-    this.planData = null;
-    this.camera = null;
-    this.orbitControls = null;
-    this.renderer.renderLists.dispose();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let { width, height } = nextProps;
-
-    let actions = {
-      areaActions: this.context.areaActions,
-      holesActions: this.context.holesActions,
-      itemsActions: this.context.itemsActions,
-      linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
+      renderer.renderLists.dispose();
     };
+  }, [width, height]);
 
-    this.width = width;
-    this.height = height;
 
-    this.camera.aspect = width / height;
-
-    this.camera.updateProjectionMatrix();
-
-    if (nextProps.state.scene !== this.props.state.scene) {
-      let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
+  useEffect(() => {
+    if (state.scene !== state.scene) {
+      let changedValues = diff(state.scene, state.scene);
+      updateScene(planData, state.scene, state.scene, changedValues.toJS(), actions, catalog);
     }
 
-    this.renderer.setSize(width, height);
-  }
+    renderer.setSize(width, height);
+  }, [state.scene, width, height]);
 
-  render() {
-    return React.createElement('div', { ref: 'canvasWrapper' });
-  }
+  return React.createElement('div', { ref: 'canvasWrapper' });
 }
 
 Scene3DViewer.propTypes = {
@@ -200,11 +158,4 @@ Scene3DViewer.propTypes = {
   height: PropTypes.number.isRequired
 };
 
-Scene3DViewer.contextTypes = {
-  areaActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object
-};
+export default Scene3DViewer;

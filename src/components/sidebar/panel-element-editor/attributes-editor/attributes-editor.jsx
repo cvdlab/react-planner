@@ -6,6 +6,7 @@ import HoleAttributesEditor from './hole-attributes-editor';
 
 
 export default function AttributesEditor({element, onUpdate, onValid, attributeFormData, state, ...rest}) {
+  console.log('element', element);
 
   switch (element.prototype) {
     case 'items':

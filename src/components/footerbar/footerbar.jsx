@@ -1,5 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
+import ReactPlannerContext from '../../react-planner-context';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
@@ -49,129 +50,121 @@ const coordStyle = {
 
 const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
 
-export default class FooterBar extends Component {
-  constructor(props, context) {
-    super(props, context);
-    this.state = {};
-  }
+const FooterBar = ({ state: globalState, width, height, footerbarComponents, softwareSignature }) => {
+  const [state] = useState({});
+  const { translator, projectActions } = useContext(ReactPlannerContext);
+  const { x, y } = globalState.get('mouse').toJS();
+  const zoom = globalState.get('zoom');
+  const mode = globalState.get('mode');
 
-  render() {
-    let { state: globalState, width, height } = this.props;
-    let { translator, projectActions } = this.context;
-    let { x, y } = globalState.get('mouse').toJS();
-    let zoom = globalState.get('zoom');
-    let mode = globalState.get('mode');
+  let errors = globalState.get('errors').toArray();
+  let errorsJsx = errors.map((err, ind) =>
+    <div key={ind} style={appMessageStyle}>[ {(new Date(err.date)).toLocaleString()} ] {err.error}</div>
+  );
+  let errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
+  let errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
 
-    let errors = globalState.get('errors').toArray();
-    let errorsJsx = errors.map((err, ind) =>
-      <div key={ind} style={appMessageStyle}>[ {(new Date(err.date)).toLocaleString()} ] {err.error}</div>
-    );
-    let errorLableStyle = errors.length ? { color: SharedStyle.MATERIAL_COLORS[500].red } : {};
-    let errorIconStyle = errors.length ? { transform: 'rotate(45deg)', color: SharedStyle.MATERIAL_COLORS[500].red } : { transform: 'rotate(45deg)' };
+  let warnings = globalState.get('warnings').toArray();
+  let warningsJsx = warnings.map((warn, ind) =>
+    <div key={ind} style={appMessageStyle}>[ {(new Date(warn.date)).toLocaleString()} ] {warn.warning}</div>
+  );
+  let warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
+  let warningIconStyle = warningLableStyle;
 
-    let warnings = globalState.get('warnings').toArray();
-    let warningsJsx = warnings.map((warn, ind) =>
-      <div key={ind} style={appMessageStyle}>[ {(new Date(warn.date)).toLocaleString()} ] {warn.warning}</div>
-    );
-    let warningLableStyle = warnings.length ? { color: SharedStyle.MATERIAL_COLORS[500].yellow } : {};
-    let warningIconStyle = warningLableStyle;
+  let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
 
-    let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
+  return (
+    <div style={{ ...footerBarStyle, width, height }}>
 
-    return (
-      <div style={{ ...footerBarStyle, width, height }}>
-
-        <If condition={MODE_SNAPPING.includes(mode)}>
-          <div style={leftTextStyle}>
-            <div title={translator.t('Mouse X Coordinate')} style={coordStyle}>X : {x.toFixed(3)}</div>
-            <div title={translator.t('Mouse Y Coordinate')} style={coordStyle}>Y : {y.toFixed(3)}</div>
-          </div>
-
-          <div style={leftTextStyle} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
-
-          <div style={leftTextStyle}>
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
-              text="Snap PT"
-              toggleState={globalState.snapMask.get(SNAP_POINT)}
-              title={translator.t('Snap to Point')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
-              text="Snap LN"
-              toggleState={globalState.snapMask.get(SNAP_LINE)}
-              title={translator.t('Snap to Line')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
-              text="Snap SEG"
-              toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
-              title={translator.t('Snap to Segment')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
-              text="Snap GRD"
-              toggleState={globalState.snapMask.get(SNAP_GRID)}
-              title={translator.t('Snap to Grid')}
-            />
-            <FooterToggleButton
-              state={this.state}
-              toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
-              toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
-              text="Snap GDE"
-              toggleState={globalState.snapMask.get(SNAP_GUIDE)}
-              title={translator.t('Snap to Guide')}
-            />
-          </div>
-        </If>
-
-        {this.props.footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
-
-        {
-          this.props.softwareSignature ?
-            <div
-              style={rightTextStyle}
-              title={this.props.softwareSignature + (this.props.softwareSignature.includes('React-Planner') ? '' : ` using React-Planner ${VERSION}`)}
-            >
-              {this.props.softwareSignature}
-            </div>
-            : null
-        }
-
-        <div style={rightTextStyle}>
-          <FooterContentButton
-            state={this.state}
-            icon={MdAddCircle}
-            iconStyle={errorIconStyle}
-            text={errors.length.toString()}
-            textStyle={errorLableStyle}
-            title={`Errors [ ${errors.length} ]`}
-            titleStyle={errorLableStyle}
-            content={[errorsJsx]}
-          />
-          <FooterContentButton
-            state={this.state}
-            icon={MdWarning}
-            iconStyle={warningIconStyle}
-            text={warnings.length.toString()}
-            textStyle={warningLableStyle}
-            title={`Warnings [ ${warnings.length} ]`}
-            titleStyle={warningLableStyle}
-            content={[warningsJsx]}
-          />
+      <If condition={MODE_SNAPPING.includes(mode)}>
+        <div style={leftTextStyle}>
+          <div title={translator.t('Mouse X Coordinate')} style={coordStyle}>X : {x.toFixed(3)}</div>
+          <div title={translator.t('Mouse Y Coordinate')} style={coordStyle}>Y : {y.toFixed(3)}</div>
         </div>
 
+        <div style={leftTextStyle} title={translator.t('Scene Zoom Level')}>Zoom: {zoom.toFixed(3)}X</div>
+
+        <div style={leftTextStyle}>
+          <FooterToggleButton
+            state={state}
+            toggleOn={() => { updateSnapMask({ SNAP_POINT: true }); }}
+            toggleOff={() => { updateSnapMask({ SNAP_POINT: false }); }}
+            text="Snap PT"
+            toggleState={globalState.snapMask.get(SNAP_POINT)}
+            title={translator.t('Snap to Point')}
+          />
+          <FooterToggleButton
+            state={state}
+            toggleOn={() => { updateSnapMask({ SNAP_LINE: true }); }}
+            toggleOff={() => { updateSnapMask({ SNAP_LINE: false }); }}
+            text="Snap LN"
+            toggleState={globalState.snapMask.get(SNAP_LINE)}
+            title={translator.t('Snap to Line')}
+          />
+          <FooterToggleButton
+            state={state}
+            toggleOn={() => { updateSnapMask({ SNAP_SEGMENT: true }); }}
+            toggleOff={() => { updateSnapMask({ SNAP_SEGMENT: false }); }}
+            text="Snap SEG"
+            toggleState={globalState.snapMask.get(SNAP_SEGMENT)}
+            title={translator.t('Snap to Segment')}
+          />
+          <FooterToggleButton
+            state={state}
+            toggleOn={() => { updateSnapMask({ SNAP_GRID: true }); }}
+            toggleOff={() => { updateSnapMask({ SNAP_GRID: false }); }}
+            text="Snap GRD"
+            toggleState={globalState.snapMask.get(SNAP_GRID)}
+            title={translator.t('Snap to Grid')}
+          />
+          <FooterToggleButton
+            state={state}
+            toggleOn={() => { updateSnapMask({ SNAP_GUIDE: true }); }}
+            toggleOff={() => { updateSnapMask({ SNAP_GUIDE: false }); }}
+            text="Snap GDE"
+            toggleState={globalState.snapMask.get(SNAP_GUIDE)}
+            title={translator.t('Snap to Guide')}
+          />
+        </div>
+      </If>
+
+      {footerbarComponents.map((Component, index) => <Component state={state} key={index} />)}
+
+      {
+        softwareSignature ?
+          <div
+            style={rightTextStyle}
+            title={softwareSignature + (softwareSignature.includes('React-Planner') ? '' : ` using React-Planner ${VERSION}`)}
+          >
+            {softwareSignature}
+          </div>
+          : null
+      }
+
+      <div style={rightTextStyle}>
+        <FooterContentButton
+          state={state}
+          icon={MdAddCircle}
+          iconStyle={errorIconStyle}
+          text={errors.length.toString()}
+          textStyle={errorLableStyle}
+          title={`Errors [ ${errors.length} ]`}
+          titleStyle={errorLableStyle}
+          content={[errorsJsx]}
+        />
+        <FooterContentButton
+          state={state}
+          icon={MdWarning}
+          iconStyle={warningIconStyle}
+          text={warnings.length.toString()}
+          textStyle={warningLableStyle}
+          title={`Warnings [ ${warnings.length} ]`}
+          titleStyle={warningLableStyle}
+          content={[warningsJsx]}
+        />
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 FooterBar.propTypes = {
@@ -182,12 +175,4 @@ FooterBar.propTypes = {
   softwareSignature: PropTypes.string
 };
 
-FooterBar.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+export default FooterBar;

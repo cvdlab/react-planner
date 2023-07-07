@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 
+import ReactPlannerContext from '../../react-planner-context';
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
 import * as constants from '../../constants';
 import State from './state';
@@ -90,8 +91,9 @@ function extractElementData(node) {
 
 export default function Viewer2D(
   { state, width, height },
-  { viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog }) {
+) {
 
+  let { viewer2DActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, projectActions, catalog } = useContext(ReactPlannerContext);
 
   let { viewer2D, mode, scene } = state;
 
@@ -304,8 +306,8 @@ export default function Viewer2D(
   let sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
   let sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
   let sceneZoom = state.zoom || 1;
-  let rulerXElements = Math.ceil( sceneWidth / rulerUnitPixelSize ) + 1;
-  let rulerYElements = Math.ceil( sceneHeight / rulerUnitPixelSize ) + 1;
+  let rulerXElements = Math.ceil(sceneWidth / rulerUnitPixelSize) + 1;
+  let rulerYElements = Math.ceil(sceneHeight / rulerUnitPixelSize) + 1;
 
   return (
     <div style={{
@@ -320,7 +322,7 @@ export default function Viewer2D(
     }}>
       <div style={{ gridColumn: 1, gridRow: 1, backgroundColor: rulerBgColor }}></div>
       <div style={{ gridRow: 1, gridColumn: 2, position: 'relative', overflow: 'hidden' }} id="rulerX">
-      { sceneWidth ? <RulerX
+        {sceneWidth ? <RulerX
           unitPixelSize={rulerUnitPixelSize}
           zoom={sceneZoom}
           mouseX={state.mouse.get('x')}
@@ -331,10 +333,10 @@ export default function Viewer2D(
           markerColor={rulerMkColor}
           positiveUnitsNumber={rulerXElements}
           negativeUnitsNumber={0}
-        /> : null }
+        /> : null}
       </div>
       <div style={{ gridColumn: 1, gridRow: 2, position: 'relative', overflow: 'hidden' }} id="rulerY">
-        { sceneHeight ? <RulerY
+        {sceneHeight ? <RulerY
           unitPixelSize={rulerUnitPixelSize}
           zoom={sceneZoom}
           mouseY={state.mouse.get('y')}
@@ -345,7 +347,7 @@ export default function Viewer2D(
           markerColor={rulerMkColor}
           positiveUnitsNumber={rulerYElements}
           negativeUnitsNumber={0}
-        /> : null }
+        /> : null}
       </div>
       <ReactSVGPanZoom
         style={{ gridColumn: 2, gridRow: 2 }}
@@ -385,15 +387,4 @@ Viewer2D.propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
-};
-
-Viewer2D.contextTypes = {
-  viewer2DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  verticesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  areaActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
 };

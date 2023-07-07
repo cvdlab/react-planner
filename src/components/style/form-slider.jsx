@@ -1,17 +1,19 @@
 import React from 'react';
-import ReactRange from '@mapbox/react-range';
+import Range from 'react-range';
 import FormTextInput from './form-text-input';
 
-const sliderContainerStyle = {display: 'inline-block', width: '80%', marginRight: '5%'};
+const sliderContainerTrackStyle = {display: 'inline-block', width: '80%', marginRight: '5%'};
+const sliderContainerThumbStyle = {display: 'inline-block', width: '', marginRight: '5%'};
 const sliderStyle = { display: 'block', width: '100%', height: '30px' };
 const textContainerStyle = {display: 'inline-block', width: '15%', float: 'right'};
 const textStyle = {height:'34px', textAlign:'center'};
 
-export default function FormNumberInput({value, onChange, ...rest}) {
+// TODO(pg): port this component
+export default function FormSlider({value, onChange, ...rest}) {
   return (
     <div>
       <div style={sliderContainerStyle}>
-        <ReactRange type='range' style={sliderStyle} onChange={onChange} value={value} {...rest}/>
+        <Range style={sliderStyle} onChange={onChange} value={[value]} {...rest}/>
       </div>
 
       <div style={textContainerStyle}>

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Panel from '../panel';
+import ReactPlannerContext from '../../../react-planner-context';
 import {Seq} from 'immutable';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -10,7 +11,8 @@ import {
 } from '../../../constants';
 import ElementEditor from './element-editor';
 
-export default function PanelElementEditor({state}, {projectActions, translator}) {
+const PanelElementEditor = ({state}) => {
+  let {translator} = useContext(ReactPlannerContext);
 
   let {scene, mode} = state;
 
@@ -41,7 +43,4 @@ PanelElementEditor.propTypes = {
   state: PropTypes.object.isRequired,
 };
 
-PanelElementEditor.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired
-};
+export default PanelElementEditor;

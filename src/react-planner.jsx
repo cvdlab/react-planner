@@ -1,79 +1,72 @@
-import React, {Component} from 'react';
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
-import {bindActionCreators} from 'redux';
-import {connect} from 'react-redux';
+import { bindActionCreators } from 'redux';
+import { connect } from 'react-redux';
 
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
 import actions from './actions/export';
-import {objectsMap} from './utils/objects-utils';
+import { objectsMap } from './utils/objects-utils';
 import {
   ToolbarComponents,
   Content,
   SidebarComponents,
   FooterBarComponents
 } from './components/export';
-import {VERSION} from './version';
+import { VERSION } from './version';
 import './styles/export';
+import ReactPlannerContext from './react-planner-context';
 
-const {Toolbar} = ToolbarComponents;
-const {Sidebar} = SidebarComponents;
-const {FooterBar} = FooterBarComponents;
+const { Toolbar } = ToolbarComponents;
+const { Sidebar } = SidebarComponents;
+const { FooterBar } = FooterBarComponents;
 
 const toolbarW = 50;
 const sidebarW = 300;
-const footerBarH= 20;
+const footerBarH = 20;
 
 const wrapperStyle = {
   display: 'flex',
   flexFlow: 'row nowrap'
 };
 
-class ReactPlanner extends Component {
+function ReactPlanner(props) {
+  const { width, height, state, stateExtractor, ...otherProps } = props;
 
-  getChildContext() {
-    return {
-      ...objectsMap(actions, actionNamespace => this.props[actionNamespace]),
-      translator: this.props.translator,
-      catalog: this.props.catalog,
-    }
-  }
+  const contentW = width - toolbarW - sidebarW;
+  const toolbarH = height - footerBarH;
+  const contentH = height - footerBarH;
+  const sidebarH = height - footerBarH;
 
-  componentWillMount() {
-    let {store} = this.context;
-    let {projectActions, catalog, stateExtractor, plugins} = this.props;
+  const extractedState = stateExtractor(state);
+  const contextValue = useContext(ReactPlannerContext); // Step 3: Access the context value using useContext
+
+  useEffect(() => {
+    let { store } = contextValue;
+    let { projectActions, catalog, stateExtractor, plugins } = props;
     plugins.forEach(plugin => plugin(store, stateExtractor));
     projectActions.initCatalog(catalog);
-  }
+  }, []);
 
-  componentWillReceiveProps(nextProps) {
-    let {stateExtractor, state, projectActions, catalog} = nextProps;
-    let plannerState = stateExtractor(state);
-    let catalogReady = plannerState.getIn(['catalog', 'ready']);
-    if (!catalogReady) {
-      projectActions.initCatalog(catalog);
+  useEffect(() => {
+    if (props.state !== state) {
+      const { stateExtractor, state, projectActions, catalog } = props;
+      const plannerState = stateExtractor(state);
+      const catalogReady = plannerState.getIn(['catalog', 'ready']);
+      if (!catalogReady) {
+        projectActions.initCatalog(catalog);
+      }
     }
-  }
+  }, [props.state]);
 
-  render() {
-    let {width, height, state, stateExtractor, ...props} = this.props;
-
-    let contentW = width - toolbarW - sidebarW;
-    let toolbarH = height - footerBarH;
-    let contentH = height - footerBarH;
-    let sidebarH = height - footerBarH;
-
-    let extractedState = stateExtractor(state);
-
-    return (
-      <div style={{...wrapperStyle, height}}>
-        <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
-        <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={event => event.preventDefault()} />
-        <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
-        <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
-      </div>
-    );
-  }
+  return (
+    <div style={{ ...wrapperStyle, height }}>
+      <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...otherProps} />
+      <Content width={contentW} height={contentH} state={extractedState} {...otherProps} onWheel={event => event.preventDefault()} />
+      <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...otherProps} />
+      <FooterBar width={width} height={footerBarH} state={extractedState} {...otherProps} />
+    </div>
+  );
 }
 
 ReactPlanner.propTypes = {
@@ -93,17 +86,21 @@ ReactPlanner.propTypes = {
   softwareSignature: PropTypes.string
 };
 
-ReactPlanner.contextTypes = {
-  store: PropTypes.object.isRequired,
-};
+// Step 3: Wrap the component tree with the Provider component
+function ReactPlannerWrapper(props) {
+  const { state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions } = props;
 
-ReactPlanner.childContextTypes = {
-  ...objectsMap(actions, () => PropTypes.object),
-  translator: PropTypes.object,
-  catalog: PropTypes.object,
-};
+  return (
+    <ReactPlannerContext.Provider value={{
+      state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions, store: props.store
+    }}>
+      <ReactPlanner {...props} />
+    </ReactPlannerContext.Provider>
+  );
+}
 
-ReactPlanner.defaultProps = {
+// Step 4: Define defaultProps directly on the component function
+ReactPlannerWrapper.defaultProps = {
   translator: new Translator(),
   catalog: new Catalog(),
   plugins: [],
@@ -119,11 +116,11 @@ ReactPlanner.defaultProps = {
 function mapStateToProps(reduxState) {
   return {
     state: reduxState
-  }
+  };
 }
 
 function mapDispatchToProps(dispatch) {
   return objectsMap(actions, actionNamespace => bindActionCreators(actions[actionNamespace], dispatch));
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ReactPlanner);
+export default connect(mapStateToProps, mapDispatchToProps)(ReactPlannerWrapper);

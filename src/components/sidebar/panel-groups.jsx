@@ -1,9 +1,10 @@
-import React, {Component} from 'react';
+import React, { useState, useContext, memo } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
+import ReactPlannerContext from '../../react-planner-context';
 import * as SharedStyle from '../../shared-style';
-import {TiPlus, TiDelete} from 'react-icons/ti';
-import {FaTrash, FaEye, FaLink, FaUnlink} from 'react-icons/fa';
+import { TiPlus } from 'react-icons/ti';
+import { FaTrash, FaEye, FaLink, FaUnlink } from 'react-icons/fa';
 import { Map } from 'immutable';
 
 import {
@@ -37,162 +38,142 @@ const tablegroupStyle = {
   marginLeft: '1px'
 };
 
-const iconColStyle = {width: '2em', textAlign: 'center'};
-const styleHoverColor = {color: SharedStyle.SECONDARY_COLOR.main};
-const styleEditButtonHover = {...styleEditButton, ...styleHoverColor};
-const styleAddLabel = {fontSize: '10px', marginLeft: '5px'};
-const styleEyeVisible = {fontSize: '1.25em'};
-const styleEyeHidden = {...styleEyeVisible, color: '#a5a1a1'};
-const newLayerLableStyle = {fontSize: '1.3em', cursor: 'pointer', textAlign: 'center'};
-const newLayerLableHoverStyle = {...newLayerLableStyle, ...styleHoverColor};
+const iconColStyle = { width: '2em', textAlign: 'center' };
+const styleHoverColor = { color: SharedStyle.SECONDARY_COLOR.main };
+const styleEditButtonHover = { ...styleEditButton, ...styleHoverColor };
+const styleAddLabel = { fontSize: '10px', marginLeft: '5px' };
+const styleEyeVisible = { fontSize: '1.25em' };
+const styleEyeHidden = { ...styleEyeVisible, color: '#a5a1a1' };
+const newLayerLableStyle = { fontSize: '1.3em', cursor: 'pointer', textAlign: 'center' };
+const newLayerLableHoverStyle = { ...newLayerLableStyle, ...styleHoverColor };
 
-export default class PanelGroups extends Component {
+const PanelGroups = ({ mode, groups, layers }) => {
+  const { translator, groupsActions } = useContext(ReactPlannerContext);
+  const [newEmptyHover, setNewEmptyHover] = useState(false);
+  const [newSelectedHover, setNewSelectedHover] = useState(false);
 
-  constructor(props, context) {
-    super(props, context);
+  if (!VISIBILITY_MODE[mode]) return null;
 
-    this.state = {
-      newEmptyHover: false,
-      newSelectedHover: false
-    };
-  }
+  return (
+    <Panel name={translator.t('Groups')} opened={groups.size > 0}>
+      {groups.size ? <table style={tablegroupStyle}>
+        <thead>
+          <tr>
+            <th colSpan="4"></th>
+            <th>{translator.t('Elements')}</th>
+            <th>{translator.t('Name')}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {
+            groups.entrySeq().map(([groupID, group]) => {
 
-  shouldComponentUpdate(nextProps, nextState) {
-    return ( 
-      this.props.groups.hashCode() !== nextProps.groups.hashCode() ||
-      this.props.layers.hashCode() !== nextProps.layers.hashCode() ||
-      this.props.mode !== nextProps.mode
-    );
-  }
+              let selectClick = e => groupsActions.selectGroup(groupID);
 
-  render() {
-    let { mode, groups, layers } = this.props;
+              let swapVisibility = e => {
+                e.stopPropagation();
+                groupsActions.setGroupProperties(groupID, new Map({ visible: !group.get('visible') }));
+              };
 
-    if (!VISIBILITY_MODE[ mode ]) return null;
+              let chainToGroup = e => {
+                layers.forEach((layer) => {
 
-    return (
-      <Panel name={this.context.translator.t('Groups')} opened={groups.size > 0}>
-        { groups.size ? <table style={tablegroupStyle}>
-          <thead>
-            <tr>
-              <th colSpan="4"></th>
-              <th>{this.context.translator.t('Elements')}</th>
-              <th>{this.context.translator.t('Name')}</th>
-            </tr>
-          </thead>
-          <tbody>
-            {
-              groups.entrySeq().map(([ groupID, group ]) => {
+                  let layerID = layer.get('id');
+                  let layerElements = {
+                    'lines': layer.get('lines'),
+                    'items': layer.get('items'),
+                    'holes': layer.get('holes'),
+                    'areas': layer.get('areas')
+                  };
 
-                let selectClick = e => this.context.groupsActions.selectGroup(groupID);
+                  for (let elementPrototype in layerElements) {
+                    let ElementList = layerElements[elementPrototype];
+                    ElementList.filter(el => el.get('selected')).forEach(element => {
+                      groupsActions.addToGroup(groupID, layerID, elementPrototype, element.get('id'));
+                    });
+                  }
+                });
 
-                let swapVisibility = e => {
-                  e.stopPropagation();
-                  this.context.groupsActions.setGroupProperties(groupID, new Map({visible: !group.get('visible')}));
-                };
+                selectClick(e);
+              };
 
-                let chainToGroup = e => {
-                  layers.forEach((layer) => {
+              let isCurrentgroup = group.get('selected');
+              let shouldHighlight = isCurrentgroup;
+              let rowStyle = !shouldHighlight ? null : styleHoverColor;
 
-                    let layerID = layer.get('id');
-                    let layerElements = {
-                      'lines': layer.get('lines'),
-                      'items': layer.get('items'),
-                      'holes': layer.get('holes'),
-                      'areas': layer.get('areas')
-                    };
+              let dimension = group.get('elements').reduce((sum, layer) => {
+                return sum + layer.reduce((lSum, elProt) => lSum + elProt.size, 0);
+              }, 0);
 
-                    for( let elementPrototype in layerElements )
-                    {
-                      let ElementList = layerElements[elementPrototype];
-                      ElementList.filter( el => el.get('selected') ).forEach( element => {
-                        this.context.groupsActions.addToGroup( groupID, layerID, elementPrototype, element.get('id') );
-                      });
-                    }
-                  });
+              return (
+                <tr
+                  key={groupID}
+                  style={rowStyle}
+                >
+                  <td style={iconColStyle} title={translator.t('Toggle Group Visibility')}>
+                    <FaEye
+                      onClick={swapVisibility}
+                      style={!group.get('visible') ? styleEyeHidden : styleEyeVisible}
+                    />
+                  </td>
+                  <td style={iconColStyle} title={translator.t('Chain selected Elements to Group')}>
+                    <FaLink
+                      onClick={chainToGroup}
+                      style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
+                    />
+                  </td>
+                  <td style={iconColStyle} title={translator.t('Un-chain all Group\'s Elements and remove Group')}>
+                    <FaUnlink
+                      onClick={e => groupsActions.removeGroup(groupID)}
+                      style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
+                    />
+                  </td>
+                  <td style={iconColStyle} title={translator.t('Delete group and all Elements')}>
+                    <FaTrash
+                      onClick={e => groupsActions.removeGroupAndDeleteElements(groupID)}
+                      style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
+                    />
+                  </td>
+                  <td onClick={selectClick} style={{ width: '0em', textAlign: 'center' }}>
+                    {dimension}
+                  </td>
+                  <td onClick={selectClick}>
+                    {group.get('name')}
+                  </td>
+                </tr>
+              );
+            })
+          }
+        </tbody>
+      </table> : null}
 
-                  selectClick(e);
-                };
+      <table style={{ width: '100%', marginTop: '0.1em' }}>
+        <tbody>
+          <tr>
+            <td
+              style={!newEmptyHover ? newLayerLableStyle : newLayerLableHoverStyle}
+              onMouseOver={() => setNewEmptyHover(true)}
+              onMouseOut={() => setNewEmptyHover(false)}
+              onClick={e => groupsActions.addGroup()}
+            >
+              <TiPlus />
+              <b style={styleAddLabel}>{translator.t('New Empty Group')}</b>
+            </td>
+            <td
+              style={!newSelectedHover ? newLayerLableStyle : newLayerLableHoverStyle}
+              onMouseOver={() => setNewSelectedHover(true)}
+              onMouseOut={() => setNewSelectedHover(false)}
+              onClick={e => groupsActions.addGroupFromSelected()}
+            >
+              <TiPlus />
+              <b style={styleAddLabel}>{translator.t('New Group from selected')}</b>
+            </td>
+          </tr>
+        </tbody>
+      </table>
 
-                let isCurrentgroup = group.get('selected');
-                let shouldHighlight = isCurrentgroup;
-                let rowStyle = !shouldHighlight ? null : styleHoverColor;
-
-                let dimension = group.get('elements').reduce( ( sum, layer ) => {
-                  return sum + layer.reduce( ( lSum, elProt ) => lSum + elProt.size, 0 );
-                }, 0);
-
-                return (
-                  <tr
-                    key={groupID}
-                    style={rowStyle}
-                  >
-                    <td style={iconColStyle} title={this.context.translator.t('Toggle Group Visibility')}>
-                      <FaEye
-                        onClick={swapVisibility}
-                        style={!group.get('visible') ? styleEyeHidden : styleEyeVisible}
-                      />
-                    </td>
-                    <td style={iconColStyle} title={this.context.translator.t('Chain selected Elements to Group')}>
-                      <FaLink
-                        onClick={chainToGroup}
-                        style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
-                      />
-                    </td>
-                    <td style={iconColStyle} title={this.context.translator.t('Un-chain all Group\'s Elements and remove Group')}>
-                      <FaUnlink
-                        onClick={ e => this.context.groupsActions.removeGroup(groupID) }
-                        style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
-                      />
-                    </td>
-                    <td style={iconColStyle} title={this.context.translator.t('Delete group and all Elements')}>
-                      <FaTrash
-                        onClick={ e => this.context.groupsActions.removeGroupAndDeleteElements(groupID) }
-                        style={!shouldHighlight ? styleEditButton : styleEditButtonHover}
-                      />
-                    </td>
-                    <td onClick={selectClick} style={{width:'0em', textAlign:'center'}}>
-                      { dimension }
-                    </td>
-                    <td onClick={selectClick}>
-                      {group.get('name')}
-                    </td>
-                  </tr>
-                );
-              })
-            }
-          </tbody>
-        </table> : null }
-
-        <table style={{width:'100%', marginTop: '0.1em'}}>
-          <tbody>
-            <tr>
-              <td
-                style={ !this.state.newEmptyHover ? newLayerLableStyle : newLayerLableHoverStyle }
-                onMouseOver={ () => this.setState({newEmptyHover: true}) }
-                onMouseOut={ () => this.setState({newEmptyHover: false}) }
-                onClick={ e => this.context.groupsActions.addGroup() }
-              >
-                <TiPlus />
-                <b style={styleAddLabel}>{this.context.translator.t('New Empty Group')}</b>
-              </td>
-              <td
-                style={ !this.state.newSelectedHover ? newLayerLableStyle : newLayerLableHoverStyle }
-                onMouseOver={ () => this.setState({newSelectedHover: true}) }
-                onMouseOut={ () => this.setState({newSelectedHover: false}) }
-                onClick={ e => this.context.groupsActions.addGroupFromSelected() }
-              >
-                <TiPlus />
-                <b style={styleAddLabel}>{this.context.translator.t('New Group from selected')}</b>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-
-      </Panel>
-    )
-  }
-
+    </Panel>
+  )
 }
 
 PanelGroups.propTypes = {
@@ -201,12 +182,10 @@ PanelGroups.propTypes = {
   layers: PropTypes.object.isRequired
 };
 
-PanelGroups.contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  groupsActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+export default memo(PanelGroups, (prevProps, nextProps) => {
+  return (
+    prevProps.groups.hashCode() !== nextProps.groups.hashCode() ||
+    prevProps.layers.hashCode() !== nextProps.layers.hashCode() ||
+    prevProps.mode !== nextProps.mode
+  );
+});

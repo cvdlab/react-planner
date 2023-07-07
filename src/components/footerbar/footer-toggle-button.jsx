@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
@@ -21,61 +21,40 @@ const toggleButtonStyleOver = {
   color: SharedStyle.COLORS.white
 };
 
-export default class FooterToggleButton extends Component {
-  constructor(props) {
-    super(props);
+const FooterToggleButton = ({ toggleOn, toggleOff, text, toggleState = false, title }) => {
+  const [over, setOver] = useState(false);
+  const [active, setActive] = useState(toggleState);
 
-    this.state = {
-      over: false,
-      active: this.props.toggleState || false
-    };
-  }
+  const toggleOver = () => setOver(true);
+  const toggleOut = () => setOver(false);
 
-  toggleOver(e) { this.setState({ over: true }); }
-  toggleOut(e) { this.setState({ over: false }); }
+  const toggle = () => {
+    const isActive = !active;
+    setActive(isActive);
 
-  toggle(e) {
-    let isActive = !this.state.active;
-    this.setState({ active: isActive });
-
-    if (isActive)
-    {
-      this.props.toggleOn();
+    if (isActive) {
+      toggleOn();
+    } else {
+      toggleOff();
     }
-    else
-    {
-      this.props.toggleOff();
-    }
-  }
+  };
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if( this.state.over != nextState.over ) return true;
-    if( this.state.active != nextState.active ) return true;
-    if( this.props.toggleState != nextProps.toggleState ) return true;
+  useEffect(() => {
+    setActive(toggleState);
+  }, [toggleState]);
 
-    return false;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.toggleState != this.props.toggleState  )
-      this.state.active = nextProps.toggleState;
-  }
-
-  render() {
-
-    return (
-      <div
-        style={this.state.over || this.state.active ? toggleButtonStyleOver : toggleButtonStyle}
-        onMouseOver={e => this.toggleOver(e)}
-        onMouseOut={e => this.toggleOut(e)}
-        onClick={e => this.toggle(e)}
-        title={this.props.title}
-      >
-        {this.props.text}
-      </div>
-    );
-  }
-}
+  return (
+    <div
+      style={over || active ? toggleButtonStyleOver : toggleButtonStyle}
+      onMouseOver={toggleOver}
+      onMouseOut={toggleOut}
+      onClick={toggle}
+      title={title}
+    >
+      {text}
+    </div>
+  );
+};
 
 FooterToggleButton.propTypes = {
   state: PropTypes.object.isRequired,
@@ -86,12 +65,4 @@ FooterToggleButton.propTypes = {
   title: PropTypes.string
 };
 
-FooterToggleButton.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+export default FooterToggleButton;

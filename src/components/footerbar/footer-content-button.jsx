@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import {FaTimes as IconClose} from 'react-icons/fa';
@@ -94,79 +94,59 @@ const textStyle = {
   position: 'relative'
 }
 
-export default class FooterContentButton extends Component {
-  constructor(props) {
-    super(props);
+const FooterContentButton = ({ state, text, textStyle, icon, iconStyle, content, toggleState = false, title, titleStyle }) => {
+  const [over, setOver] = useState(false);
+  const [closeOver, setCloseOver] = useState(false);
+  const [active, setActive] = useState(toggleState);
 
-    this.state = {
-      over: false,
-      closeOver: false,
-      active: this.props.toggleState || false
-    };
-  }
+  const toggleOver = () => setOver(true);
+  const toggleOut = () => setOver(false);
+  const toggleCloseOver = () => setCloseOver(true);
+  const toggleCloseOut = () => setCloseOver(false);
 
-  toggleOver(e) { this.setState({ over: true }); }
-  toggleOut(e) { this.setState({ over: false }); }
+  const toggle = () => {
+    const isActive = !active;
+    setActive(isActive);
+  };
 
-  toggle(e) {
-    let isActive = !this.state.active;
-    this.setState({ active: isActive });
-  }
+  useEffect(() => {
+    setActive(toggleState);
+  }, [toggleState]);
 
-  shouldComponentUpdate(nextProps, nextState) {
-    if( this.state.over != nextState.over ) return true;
-    if( this.state.closeOver != nextState.closeOver ) return true;
-    if( this.state.active != nextState.active ) return true;
+  const LabelIcon = icon || null;
+  const labelIconStyle = iconStyle || {};
+  const labelTextStyle = textStyle || {};
+  const inputTitleStyle = titleStyle || {};
 
-    if( this.props.content.length != nextProps.content.length ) return true;
-    if( this.props.toggleState != nextProps.toggleState ) return true;
-
-    return false;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if( nextProps.toggleState != this.props.toggleState  )
-      this.state.active = nextProps.toggleState;
-  }
-
-  render() {
-
-    let s = this.state;
-    let p = this.props;
-
-    let LabelIcon = p.icon || null;
-    let labelIconStyle = p.iconStyle || {};
-    let labelTextStyle = p.textStyle || {};
-    let inputTitleStyle = p.titleStyle || {};
-
-    return (
-      <div style={labelContainerStyle}>
-        <div
-          style={s.over || s.active ? toggleButtonStyleOver : toggleButtonStyle}
-          onClick={e => this.toggle(e)}
-          title={p.title}
-        >
-          <LabelIcon style={{...labelIconStyle, ...iconStyle}}/>
-          <span style={{...textStyle, ...labelTextStyle}}>{p.text}</span>
+  return (
+    <div style={labelContainerStyle}>
+      <div
+        style={over || active ? toggleButtonStyleOver : toggleButtonStyle}
+        onMouseOver={toggleOver}
+        onMouseOut={toggleOut}
+        onClick={toggle}
+        title={title}
+      >
+        <LabelIcon style={{...labelIconStyle, ...iconStyle}}/>
+        <span style={{...textStyle, ...labelTextStyle}}>{text}</span>
+      </div>
+      <div style={active ? contentContainerStyleActive : contentContainerStyleInactive}>
+        <div style={contentHeaderStyle}>
+          <b style={{...titleStyle, ...inputTitleStyle}}>{title}</b>
+          <IconClose
+            style={closeOver ? iconCloseStyleOver : iconCloseStyleOut}
+            onMouseOver={toggleCloseOver}
+            onMouseOut={toggleCloseOut}
+            onClick={toggle}
+          />
         </div>
-        <div style={s.active ? contentContainerStyleActive : contentContainerStyleInactive}>
-          <div style={contentHeaderStyle}>
-            <b style={{...titleStyle, ...inputTitleStyle}}>{p.title}</b>
-            <IconClose
-              style={ s.closeOver ? iconCloseStyleOver : iconCloseStyleOut}
-              onMouseOver={e => this.setState({closeOver:true})}
-              onMouseOut={e => this.setState({closeOver:false})}
-              onClick={e => this.toggle(e)}
-            />
-          </div>
-          <div style={contentAreaStyle}>
-            {p.content}
-          </div>
+        <div style={contentAreaStyle}>
+          {content}
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
 FooterContentButton.propTypes = {
   state: PropTypes.object.isRequired,
@@ -180,12 +160,4 @@ FooterContentButton.propTypes = {
   titleStyle: PropTypes.object
 };
 
-FooterContentButton.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+export default FooterContentButton;

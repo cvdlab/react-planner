@@ -1,6 +1,6 @@
 "use strict";
 
-import React from 'react';
+import React, { useEffect, useState, useRef, useContext } from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import * as Three from 'three';
@@ -11,20 +11,22 @@ import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 import * as SharedStyle from '../../shared-style';
 
-export default class Viewer3DFirstPerson extends React.Component {
+const Viewer3DFirstPerson = ({ state, width, height }) => {
+  const [renderer, setRenderer] = useState(window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true}));
+  window.__threeRenderer = renderer;
+  const [stopRendering, setStopRendering] = useState(false);
+  const canvasWrapperRef = useRef(null);
+  const actions = useContext(ReactPlannerContext);
+  const { areaActions, holesActions, itemsActions, linesActions, projectActions, catalog } = actions;
 
-  constructor(props) {
-    super(props);
-
-    this.width = props.width;
-    this.height = props.height;
-    this.stopRendering = false;
-    this.renderer = window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true});
-    window.__threeRenderer = this.renderer;
-  }
-
-  componentDidMount() {
-
+  let scene3D = new Three.Scene();
+  let sceneOnTop = new Three.Scene();
+  let aspectRatio = width / height;
+  let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
+  let {controls, pointerlockChangeEvent, requestPointerLockEvent} = initPointerLock(camera, renderer.domElement);
+  let planData = parseData(state.scene, actions, catalog);
+  
+  useEffect(() => {
     /** Variables for movement control **/
     let prevTime = performance.now();
     let velocity = new Three.Vector3();
@@ -35,37 +37,33 @@ export default class Viewer3DFirstPerson extends React.Component {
     let moveRight = false;
     let canJump = false;
 
-    let {catalog} = this.context;
-
     let actions = {
-      areaActions: this.context.areaActions,
-      holesActions: this.context.holesActions,
-      itemsActions: this.context.itemsActions,
-      linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
+      areaActions: areaActions,
+      holesActions: holesActions,
+      itemsActions: itemsActions,
+      linesActions: linesActions,
+      projectActions: projectActions
     };
 
-    let {state} = this.props;
-    let data = state.scene;
-    let canvasWrapper = ReactDOM.findDOMNode(this.refs.canvasWrapper);
+    let canvasWrapper = ReactDOM.findDOMNode(canvasWrapperRef);
 
-    let scene3D = new Three.Scene();
+    // let scene3D = new Three.Scene();
 
     // As I need to show the pointer above all scene objects, I use this workaround http://stackoverflow.com/a/13309722
-    let sceneOnTop = new Three.Scene();
+    // let sceneOnTop = new Three.Scene();
 
     //RENDERER
-    this.renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
-    this.renderer.setSize(this.width, this.height);
+    renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
+    renderer.setSize(width, height);
 
     // LOAD DATA
-    this.planData = parseData(data, actions, catalog);
+    // this.planData = parseData(state.scene, actions, catalog);
 
-    scene3D.add(this.planData.plan);
+    scene3D.add(planData.plan);
 
     // CAMERA
-    let aspectRatio = this.width / this.height;
-    let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
+    // let aspectRatio = width / height;
+    // let camera = new Three.PerspectiveCamera(45, aspectRatio, 0.1, 300000);
 
     sceneOnTop.add(camera); // The pointer is on the camera so I show it above all
 
@@ -94,21 +92,21 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     document.body.requestPointerLock();
 
-    let {controls, pointerlockChangeEvent, requestPointerLockEvent} = initPointerLock(camera, this.renderer.domElement);
-    this.controls = controls;
-    this.pointerlockChangeListener = pointerlockChangeEvent;
-    this.requestPointerLockEvent = requestPointerLockEvent;
+    // let {controls, pointerlockChangeEvent, requestPointerLockEvent} = initPointerLock(camera, renderer.domElement);
+    // this.controls = controls;
+    // this.pointerlockChangeListener = pointerlockChangeEvent;
+    // this.requestPointerLockEvent = requestPointerLockEvent;
 
     /* Set user initial position */
     let humanHeight = 170; // 170 cm
 
-    let yInitialPosition = this.planData.boundingBox.min.y +
-      (this.planData.boundingBox.min.y - this.planData.boundingBox.max.y) / 2 + humanHeight;
-    this.controls.getObject().position.set(-50, yInitialPosition, -100);
-    sceneOnTop.add(this.controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
+    let yInitialPosition = planData.boundingBox.min.y +
+      (planData.boundingBox.min.y - planData.boundingBox.max.y) / 2 + humanHeight;
+    controls.getObject().position.set(-50, yInitialPosition, -100);
+    sceneOnTop.add(controls.getObject()); // Add the pointer lock controls to the scene that will be rendered on top
 
     // Add move controls on the page
-    this.keyDownEvent = (event) => {
+    const keyDownEvent = (event) => {
       let moveResult = firstPersonOnKeyDown(event, moveForward, moveLeft, moveBackward, moveRight, canJump, velocity);
       moveForward = moveResult.moveForward;
       moveLeft = moveResult.moveLeft;
@@ -117,7 +115,7 @@ export default class Viewer3DFirstPerson extends React.Component {
       canJump = moveResult.canJump;
     };
 
-    this.keyUpEvent = (event) => {
+    const keyUpEvent = (event) => {
       let moveResult = firstPersonOnKeyUp(event, moveForward, moveLeft, moveBackward, moveRight, canJump);
       moveForward = moveResult.moveForward;
       moveLeft = moveResult.moveLeft;
@@ -126,8 +124,8 @@ export default class Viewer3DFirstPerson extends React.Component {
       canJump = moveResult.canJump;
     };
 
-    document.addEventListener('keydown', this.keyDownEvent);
-    document.addEventListener('keyup', this.keyUpEvent);
+    document.addEventListener('keydown', keyDownEvent);
+    document.addEventListener('keyup', keyUpEvent);
 
     // Add a pointer to the scene
 
@@ -168,16 +166,16 @@ export default class Viewer3DFirstPerson extends React.Component {
 
 
     // OBJECT PICKING
-    let toIntersect = [this.planData.plan];
+    let toIntersect = [planData.plan];
 
     let mouseVector = new Three.Vector2(0, 0);
     let raycaster = new Three.Raycaster();
 
-    this.firstPersonMouseDown = (event) => {
+    const firstPersonMouseDown = (event) => {
 
       // First of all I check if controls are enabled
 
-      if (this.controls.enabled) {
+      if (controls.enabled) {
         event.preventDefault();
 
         /* Per avere la direzione da assegnare al raycaster, chiamo il metodo getDirection di PointerLockControls,
@@ -190,24 +188,24 @@ export default class Viewer3DFirstPerson extends React.Component {
         if (intersects.length > 0 && !(isNaN(intersects[0].distance))) {
           intersects[0].object.interact && intersects[0].object.interact();
         } else {
-          this.context.projectActions.unselectAll();
+          projectActions.unselectAll();
         }
       }
 
     };
 
-    document.addEventListener('mousedown', this.firstPersonMouseDown, false);
+    document.addEventListener('mousedown', firstPersonMouseDown, false);
 
-    this.renderer.domElement.style.display = 'block';
+    renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(this.renderer.domElement);
-    this.renderer.autoClear = false;
+    canvasWrapper.appendChild(renderer.domElement);
+    renderer.autoClear = false;
 
     let render = () => {
 
-      if (!this.stopRendering) {
-        yInitialPosition = this.planData.boundingBox.min.y + humanHeight;
+      if (!stopRendering) {
+        yInitialPosition = planData.boundingBox.min.y + humanHeight;
 
         let multiplier = 5;
 
@@ -225,30 +223,30 @@ export default class Viewer3DFirstPerson extends React.Component {
         if ( moveForward || moveBackward ) velocity.z -= direction.z * 400.0 * delta;
         if ( moveLeft || moveRight ) velocity.x -= direction.x * 400.0 * delta;
 
-        this.controls.getObject().translateX(velocity.x * delta);
-        this.controls.getObject().translateY(velocity.y * delta);
-        this.controls.getObject().translateZ(velocity.z * delta);
+        controls.getObject().translateX(velocity.x * delta);
+        controls.getObject().translateY(velocity.y * delta);
+        controls.getObject().translateZ(velocity.z * delta);
 
-        if ( this.controls.getObject().position.y < yInitialPosition ) {
+        if ( controls.getObject().position.y < yInitialPosition ) {
           velocity.y = 0;
-          this.controls.getObject().position.y = yInitialPosition;
+          controls.getObject().position.y = yInitialPosition;
           canJump = true;
         }
 
         prevTime = time;
 
         // Set light position
-        let controlObjectPosition = this.controls.getObject().position;
+        let controlObjectPosition = controls.getObject().position;
         pointLight.position.set(controlObjectPosition.x, controlObjectPosition.y, controlObjectPosition.z);
 
-        for (let elemID in this.planData.sceneGraph.LODs) {
-          this.planData.sceneGraph.LODs[elemID].update(camera);
+        for (let elemID in planData.sceneGraph.LODs) {
+          planData.sceneGraph.LODs[elemID].update(camera);
         }
 
-        this.renderer.clear();                     // clear buffers
-        this.renderer.render(scene3D, camera);     // render scene 1
-        this.renderer.clearDepth();                // clear depth buffer
-        this.renderer.render(sceneOnTop, camera);  // render scene 2
+        renderer.clear();                     // clear buffers
+        renderer.render(scene3D, camera);     // render scene 1
+        renderer.clearDepth();                // clear depth buffer
+        renderer.render(sceneOnTop, camera);  // render scene 2
 
         requestAnimationFrame(render);
       }
@@ -256,54 +254,41 @@ export default class Viewer3DFirstPerson extends React.Component {
 
     render();
 
-    this.camera = camera;
-    this.scene3D = scene3D;
-    this.sceneOnTop = sceneOnTop;
+    camera = camera;
+    scene3D = scene3D;
+    sceneOnTop = sceneOnTop;
     // this.planData = planData;
-  }
 
-  componentWillUnmount() {
-    this.stopRendering = true;
-    this.renderer.autoClear = true;
-    document.removeEventListener('mousedown', this.firstPersonMouseDown);
-    document.removeEventListener('keydown', this.keyDownEvent);
-    document.removeEventListener('keyup', this.keyUpEvent);
-    document.removeEventListener('pointerlockchange', this.pointerlockChangeEvent);
-    document.removeEventListener('mozpointerlockchange', this.pointerlockChangeEvent);
-    document.removeEventListener('webkitpointerlockchange', this.pointerlockChangeEvent);
-    this.renderer.domElement.removeEventListener('click', this.requestPointerLockEvent);
-
-    disposeScene(this.scene3D);
-
-    this.scene3D.remove(this.planData.plan);
-
-    this.scene3D = null;
-    this.planData = null;
-    this.renderer.renderLists.dispose();
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let {width, height} = nextProps;
-    let {camera, renderer, scene3D, sceneOnTop, planData} = this;
-
-    let actions = {
-      areaActions: this.context.areaActions,
-      holesActions: this.context.holesActions,
-      itemsActions: this.context.itemsActions,
-      linesActions: this.context.linesActions,
-      projectActions: this.context.projectActions
+    return () => {
+      setStopRendering(true);
+      
+      renderer.autoClear = true;
+      document.removeEventListener('mousedown', firstPersonMouseDown);
+      document.removeEventListener('keydown', keyDownEvent);
+      document.removeEventListener('keyup', keyUpEvent);
+      document.removeEventListener('pointerlockchange', pointerlockChangeEvent);
+      document.removeEventListener('mozpointerlockchange', pointerlockChangeEvent);
+      document.removeEventListener('webkitpointerlockchange', pointerlockChangeEvent);
+      renderer.domElement.removeEventListener('click', requestPointerLockEvent);
+  
+      disposeScene(scene3D);
+  
+      scene3D.remove(planData.plan);
+  
+      scene3D = null;
+      planData = null;
+      renderer.renderLists.dispose();
     };
+  }, []); // Run once on mount and cleanup on unmount
 
-    this.width = width;
-    this.height = height;
-
+  useEffect(() => {
     camera.aspect = width / height;
 
     camera.updateProjectionMatrix();
 
-    if (nextProps.scene !== this.props.state.scene) {
-      let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, this.context.catalog);
+    if (nextProps.scene !== state.scene) {
+      let changedValues = diff(state.scene, nextProps.state.scene);
+      updateScene(planData, nextProps.state.scene, state.scene, changedValues.toJS(), actions, catalog);
     }
 
     renderer.setSize(width, height);
@@ -311,14 +296,11 @@ export default class Viewer3DFirstPerson extends React.Component {
     renderer.render(scene3D, camera);     // render scene 1
     renderer.clearDepth();                // clear depth buffer
     renderer.render(sceneOnTop, camera);  // render scene 2
+  }, [state, width, height]); // Run when state, width, or height changes
 
-  }
-
-  render() {
-    return React.createElement("div", {
-      ref: "canvasWrapper"
-    });
-  }
+  return React.createElement("div", {
+    ref: "canvasWrapper"
+  });
 }
 
 Viewer3DFirstPerson.propTypes = {
@@ -327,11 +309,4 @@ Viewer3DFirstPerson.propTypes = {
   height: PropTypes.number.isRequired
 };
 
-Viewer3DFirstPerson.contextTypes = {
-  areaActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object
-};
+export default Viewer3DFirstPerson;

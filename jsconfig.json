@@ -1,0 +1,10 @@
+{
+    "compilerOptions": {
+      "baseUrl": ".",
+      "paths": {
+        "react-planner": ["src/index"],
+      }
+    },
+    "exclude": ["node_modules", "dist", "lib", "es", "docs"]
+  }
+  

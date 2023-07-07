@@ -1,7 +1,8 @@
-import React, {Component} from 'react';
+import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import {MdNavigateNext} from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import ReactPlannerContext from '../../react-planner-context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -61,41 +62,33 @@ const CONTAINER_DIV = {
   justifyContent: 'center'
 };
 
-export default class CatalogPageItem extends Component {
+const CatalogPageItem = ({ page, oldPage }) => {
+  const [hover, setHover] = useState(false);
+  const { projectActions } = useContext(ReactPlannerContext);
 
-  constructor(props) {
-    super(props);
-    this.state = {hover: false};
+  const changePage = (newPage) => {
+    projectActions.changeCatalogPage(newPage, oldPage.name)
   }
 
-  changePage(newPage) {
-    this.context.projectActions.changeCatalogPage(newPage, this.props.oldPage.name)
-  }
+  return (
+    <div
+      style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
+      onClick={() => changePage(page.name)}
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      {hover ?
+        <div style={CONTAINER_DIV}>
+          <b style={STYLE_TITLE_HOVERED}>{page.label}</b>
+          <MdNavigateNext style={STYLE_NEXT_HOVER}/>
+        </div>
+        :
+        <div style={CONTAINER_DIV}>
+          <b style={STYLE_TITLE}>{page.label}</b>
+        </div>}
 
-  render() {
-    let page = this.props.page;
-    let hover = this.state.hover;
-
-    return (
-      <div
-        style={hover ? STYLE_BOX_HOVER : STYLE_BOX}
-        onClick={e => this.changePage(page.name)}
-        onMouseEnter={e => this.setState({hover: true})}
-        onMouseLeave={e => this.setState({hover: false})}
-      >
-        {hover ?
-          <div style={CONTAINER_DIV}>
-            <b style={STYLE_TITLE_HOVERED}>{page.label}</b>
-            <MdNavigateNext style={STYLE_NEXT_HOVER}/>
-          </div>
-          :
-          <div style={CONTAINER_DIV}>
-            <b style={STYLE_TITLE}>{page.label}</b>
-          </div>}
-
-      </div>
-    );
-  }
+    </div>
+  );
 }
 
 CatalogPageItem.propTypes = {
@@ -103,6 +96,4 @@ CatalogPageItem.propTypes = {
   oldPage: PropTypes.object.isRequired,
 };
 
-CatalogPageItem.contextTypes = {
-  projectActions: PropTypes.object.isRequired
-};
+export default CatalogPageItem;

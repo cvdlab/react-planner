@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Scene from './scene';
 import Snap from './snap';
@@ -9,7 +9,7 @@ const guideStyle = {
   strokewidth:'2.5px'
 };
 
-export default function State({state, catalog}) {
+export default function State({ state, catalog }) {
 
   let {activeSnapElement, snapElements, scene} = state;
   let {width, height} = scene;

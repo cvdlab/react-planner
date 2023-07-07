@@ -1,6 +1,7 @@
-import React, {Component} from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
+import ReactPlannerContext from '../../react-planner-context';
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
   MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAWING_HOLE, MODE_DRAWING_ITEM, MODE_DRAGGING_LINE,
@@ -53,178 +54,136 @@ const tableSearchStyle = {width: '100%', marginTop: '0.8em'};
 const searchIconStyle = {fontSize: '1.5em'};
 const searchInputStyle = {fontSize: '1em', width: '100%', height: '1em', padding: '1em 0.5em'};
 
-export default class PanelLayerElement extends Component {
+const PanelLayerElement = ({ mode, layers, selectedLayer }) => {
+  const { translator, itemsActions, linesActions, holesActions } = useContext(ReactPlannerContext);
+  const [matchString, setMatchString] = useState('');
+  const [elements, setElements] = useState({ lines: new Map(), holes: new Map(), items: new Map() });
+  const [matchedElements, setMatchedElements] = useState(elements);
 
-  constructor(props, context) {
-    super(props, context);
-
-    let layer = props.layers.get(props.selectedLayer);
-    let elements = {
+  useEffect(() => {
+    let layer = layers.get(selectedLayer);
+    let newElements = {
       lines: layer.lines,
       holes: layer.holes,
       items: layer.items,
     };
-
-    this.state = {
-      elements,
-      matchString: '',
-      matchedElements: elements
-    };
-  }
-
-  shouldComponentUpdate(nextProps, nextState) {
-    if (this.state.matchString !== nextState.matchString) return true;
-
-    let oldElements = this.state.elements;
-    let newElements = nextState.elements;
-
-    if(
-      oldElements.lines.hashCode() !== newElements.lines.hashCode() ||
-      oldElements.holes.hashCode() !== newElements.holes.hashCode() ||
-      oldElements.items.hashCode() !== newElements.items.hashCode()
-    ) return true;
-
-    return false;
-  }
-
-  componentWillReceiveProps(nextProps) {
-    let layer = nextProps.layers.get(nextProps.selectedLayer);
-
-    if ( this.props.layers.hashCode() === nextProps.layers.hashCode() ) return;
-
-    let elements = {
-      lines: layer.lines,
-      holes: layer.holes,
-      items: layer.items,
-    };
-
-    if (this.state.matchString !== '') {
-      let regexp = new RegExp(this.state.matchString, 'i');
+    setElements(newElements);
+    if (matchString !== '') {
+      let regexp = new RegExp(matchString, 'i');
       let filterCb = el => regexp.test(el.get('name'));
-
-      this.setState({
-        matchedElements: {
-          elements,
-          lines: elements.lines.filter(filterCb),
-          holes: elements.holes.filter(filterCb),
-          items: elements.items.filter(filterCb)
-        }
+      setMatchedElements({
+        lines: newElements.lines.filter(filterCb),
+        holes: newElements.holes.filter(filterCb),
+        items: newElements.items.filter(filterCb)
       });
     } else {
-      this.setState({elements, matchedElements: elements});
+      setMatchedElements(newElements);
     }
-  }
-
-  matcharray(text) {
+  }, [layers, selectedLayer]);
+  
+  const matchArray = (text) => {
     if (text === '') {
-      this.setState({
-        matchString: '',
-        matchedElements: this.state.elements
-      });
+      setMatchString('');
+      setMatchedElements(elements);
       return;
     }
 
     let regexp = new RegExp(text, 'i');
     let filterCb = el => regexp.test(el.get('name'));
 
-    this.setState({
-      matchString: text,
-      matchedElements: {
-        lines: this.state.elements.lines.filter(filterCb),
-        holes: this.state.elements.holes.filter(filterCb),
-        items: this.state.elements.items.filter(filterCb)
-      }
+    setMatchString(text);
+    setMatchedElements({
+      lines: elements.lines.filter(filterCb),
+      holes: elements.holes.filter(filterCb),
+      items: elements.items.filter(filterCb)
     });
-  }
+  };
 
-  render() {
-    if (!VISIBILITY_MODE[this.props.mode]) return null;
+  if (!VISIBILITY_MODE[mode]) return null;
 
-    let layer = this.props.layers.get(this.props.selectedLayer);
+  let layer = layers.get(selectedLayer);
 
-    return (
-      <Panel name={this.context.translator.t('Elements on layer {0}', layer.name)}>
-        <div style={contentArea} onWheel={e => e.stopPropagation()}>
+  return (
+    <Panel name={translator.t('Elements on layer {0}', layer.name)}>
+      <div style={contentArea} onWheel={e => e.stopPropagation()}>
 
-          <table style={tableSearchStyle}>
-            <tbody>
-            <tr>
-              <td><MdSearch style={searchIconStyle}/></td>
-              <td><input type="text" style={searchInputStyle} onChange={(e) => {
-                this.matcharray(e.target.value);
-              }}/></td>
-            </tr>
-            </tbody>
-          </table>
+        <table style={tableSearchStyle}>
+          <tbody>
+          <tr>
+            <td><MdSearch style={searchIconStyle}/></td>
+            <td><input type="text" style={searchInputStyle} onChange={(e) => {
+              matchArray(e.target.value);
+            }}/></td>
+          </tr>
+          </tbody>
+        </table>
 
-          {
-            this.state.matchedElements.lines.count() ?
-              <div>
-                <p style={categoryDividerStyle}>{this.context.translator.t('Lines')}</p>
-                {
-                  this.state.matchedElements.lines.entrySeq().map(([lineID, line]) => {
-                    return (
-                      <div
-                        key={lineID}
-                        onClick={e => this.context.linesActions.selectLine(layer.id, line.id)}
-                        style={line.selected ? elementSelectedStyle : elementStyle}
-                      >
-                        {line.name}
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              : null
-          }
+        {
+          matchedElements.lines.size ?
+            <div>
+              <p style={categoryDividerStyle}>{translator.t('Lines')}</p>
+              {
+                matchedElements.lines.entrySeq().map(([lineID, line]) => {
+                  return (
+                    <div
+                      key={lineID}
+                      onClick={e => linesActions.selectLine(layer.id, line.id)}
+                      style={line.selected ? elementSelectedStyle : elementStyle}
+                    >
+                      {line.name}
+                    </div>
+                  )
+                })
+              }
+            </div>
+            : null
+        }
 
-          {
-            this.state.matchedElements.holes.count() ?
-              <div>
-                <p style={categoryDividerStyle}>{this.context.translator.t('Holes')}</p>
-                {
-                  this.state.matchedElements.holes.entrySeq().map(([holeID, hole]) => {
-                    return (
-                      <div
-                        key={holeID}
-                        onClick={e => this.context.holesActions.selectHole(layer.id, hole.id)}
-                        style={hole.selected ? elementSelectedStyle : elementStyle}
-                      >
-                        {hole.name}
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              : null
-          }
+        {
+          matchedElements.holes.size ?
+            <div>
+              <p style={categoryDividerStyle}>{translator.t('Holes')}</p>
+              {
+                matchedElements.holes.entrySeq().map(([holeID, hole]) => {
+                  return (
+                    <div
+                      key={holeID}
+                      onClick={e => holesActions.selectHole(layer.id, hole.id)}
+                      style={hole.selected ? elementSelectedStyle : elementStyle}
+                    >
+                      {hole.name}
+                    </div>
+                  )
+                })
+              }
+            </div>
+            : null
+        }
 
-          {
-            this.state.matchedElements.items.count() ?
-              <div>
-                <p style={categoryDividerStyle}>{this.context.translator.t('Items')}</p>
-                {
-                  this.state.matchedElements.items.entrySeq().map(([itemID, item]) => {
-                    return (
-                      <div
-                        key={itemID}
-                        onClick={e => this.context.itemsActions.selectItem(layer.id, item.id)}
-                        style={item.selected ? elementSelectedStyle : elementStyle}
-                      >
-                        {item.name}
-                      </div>
-                    )
-                  })
-                }
-              </div>
-              : null
-          }
+        {
+          matchedElements.items.size ?
+            <div>
+              <p style={categoryDividerStyle}>{translator.t('Items')}</p>
+              {
+                matchedElements.items.entrySeq().map(([itemID, item]) => {
+                  return (
+                    <div
+                      key={itemID}
+                      onClick={e => itemsActions.selectItem(layer.id, item.id)}
+                      style={item.selected ? elementSelectedStyle : elementStyle}
+                    >
+                      {item.name}
+                    </div>
+                  )
+                })
+              }
+            </div>
+            : null
+        }
 
-        </div>
-      </Panel>
-    );
-  }
-
+      </div>
+    </Panel>
+  );
 }
 
 PanelLayerElement.propTypes = {
@@ -232,11 +191,4 @@ PanelLayerElement.propTypes = {
   layers: PropTypes.object.isRequired,
 };
 
-PanelLayerElement.contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+export default PanelLayerElement;
