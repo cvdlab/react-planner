@@ -5,7 +5,6 @@
 function sub(v1, v2) {
   return [v1[0] - v2[0], v1[1] - v2[1]];
 }
-
 function mod(n, m) {
   return (n % m + m) % m;
 }
@@ -22,33 +21,27 @@ function compute_ev_mapping(EV) {
       direction: -1
     };
   });
-
   return ev_mapping;
 }
-
 function compute_angle(P, V) {
   var point = sub(V, P);
   var angle = Math.atan2(point[1], point[0]);
   return angle;
 }
-
 function compute_incidences(V, EV) {
   var incidences = V.map(function (vertex, i) {
     var incidence = [];
     EV.forEach(function (edge, j) {
-      var endpoint = void 0;
-      var position = void 0;
-
+      var endpoint;
+      var position;
       if (edge[0] === i) {
         endpoint = edge[1];
         position = 1;
       }
-
       if (edge[1] === i) {
         endpoint = edge[0];
         position = 0;
       }
-
       endpoint !== undefined && incidence.push({
         index: j,
         endpoint: endpoint,
@@ -57,21 +50,17 @@ function compute_incidences(V, EV) {
         position: position
       });
     });
-
     incidence.sort(function (i1, i2) {
       return i2.angle - i1.angle;
     });
-
     return incidence;
   });
-
   return incidences;
 }
-
 function get_starting_edge(incidences, ev_mapping) {
-  var e = void 0;
-  var position = void 0;
-  var direction = void 0;
+  var e;
+  var position;
+  var direction;
   for (e = 0; e < ev_mapping.length; e += 1) {
     if (ev_mapping[e].color < 2) {
       direction = -1 * ev_mapping[e].direction;
@@ -84,14 +73,13 @@ function get_starting_edge(incidences, ev_mapping) {
     }
   }
 }
-
 function get_next_edge(incidences, edge, position, EV) {
   var items = incidences[EV[edge][position]];
   //console.log(items, incidences, EV, edge, position);
   var n_items = items.length;
-  var item = void 0;
-  var out = void 0;
-  var j = void 0;
+  var item;
+  var out;
+  var j;
   for (j = 0; j < n_items; j += 1) {
     item = items[j];
     if (item.index === edge) {
@@ -105,25 +93,22 @@ function get_next_edge(incidences, edge, position, EV) {
     }
   }
 }
-
 function color(ev_mapping, index, direction) {
   ev_mapping[index].color += 1;
   ev_mapping[index].direction = direction;
 }
-
 function find_cycles(V, EV) {
   var ev_mapping = compute_ev_mapping(EV);
   var incidences = compute_incidences(V, EV);
   var V_cycles = [];
   var E_cycles = [];
   var dir_E_cycles = [];
-  var V_cycle = void 0;
-  var E_cycle = void 0;
-  var dir_E_cycle = void 0;
-  var next = void 0;
+  var V_cycle;
+  var E_cycle;
+  var dir_E_cycle;
+  var next;
   var counter = 0;
   var start = get_starting_edge(incidences, ev_mapping);
-
   while (start !== undefined) {
     V_cycle = [EV[start.edge][mod(start.position + 1, 2)], EV[start.edge][start.position]];
     E_cycle = [start.edge];
@@ -149,7 +134,6 @@ function find_cycles(V, EV) {
 
     start = get_starting_edge(incidences, ev_mapping);
   }
-
   return {
     v_cycles: V_cycles,
     e_cycles: E_cycles,
@@ -157,13 +141,11 @@ function find_cycles(V, EV) {
     ev_mapping: ev_mapping
   };
 }
-
 function find_short_cycles_indexes(v_cycles, e_cycles) {
   var indexes = [];
-  var e_cycle = void 0;
-  var v_cycle = void 0;
-  var i = void 0;
-
+  var e_cycle;
+  var v_cycle;
+  var i;
   for (i = 0; i < e_cycles.length; i += 1) {
     e_cycle = e_cycles[i];
     v_cycle = v_cycles[i];
@@ -171,10 +153,8 @@ function find_short_cycles_indexes(v_cycles, e_cycles) {
       indexes.push(i);
     }
   }
-
   return indexes;
 }
-
 function find_inner_cycles(V, EV) {
   var cycles = find_cycles(V, EV);
   var v_cycles = cycles.v_cycles;
@@ -187,11 +167,9 @@ function find_inner_cycles(V, EV) {
   var dir_e_cycles = cycles.dir_e_cycles;
   var rooms_values = cycles.e_cycles.map(function (cycle, i) {
     return cycle.map(function (edge, j) {
-      var v1 = void 0;
-      var v2 = void 0;
-
+      var v1;
+      var v2;
       var dir = dir_e_cycles[i][j] > 0;
-
       if (dir > 0) {
         v1 = EV[edge][0];
         v2 = EV[edge][1];
@@ -199,24 +177,19 @@ function find_inner_cycles(V, EV) {
         v1 = EV[edge][1];
         v2 = EV[edge][0];
       }
-
       return (V[v2][0] - V[v1][0]) * (V[v2][1] + V[v1][1]);
     });
   });
-
   var rooms_sums = rooms_values.map(function (room) {
     return room.reduce(function (a, b) {
       return a + b;
     });
   });
-
   var positive_count = rooms_sums.filter(function (sum) {
     return sum > 0;
   }).length;
   var negative_count = rooms_sums.length - positive_count;
-
   var rm_neg = positive_count >= negative_count ? 1 : -1;
-
   return {
     v_cycles: cycles.v_cycles.filter(function (v, i) {
       return rm_neg * rooms_sums[i] > 0;

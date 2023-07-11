@@ -11,9 +11,9 @@ import FormSelect from './form-select';
 import FormSlider from './form-slider';
 import FormSubmitButton from './form-submit-button';
 import FormTextInput from './form-text-input';
-
-export { Button, CancelButton, ContentContainer, ContentTitle, DeleteButton, FormBlock, FormColorInput, FormLabel, FormNumberInput, FormSelect, FormSlider, FormSubmitButton, FormTextInput };
-
+export { Button, CancelButton, ContentContainer, ContentTitle, DeleteButton, FormBlock, FormColorInput, FormLabel, FormNumberInput, FormSelect,
+// FormSlider,
+FormSubmitButton, FormTextInput };
 export default {
   Button: Button,
   CancelButton: CancelButton,
@@ -25,7 +25,7 @@ export default {
   FormLabel: FormLabel,
   FormNumberInput: FormNumberInput,
   FormSelect: FormSelect,
-  FormSlider: FormSlider,
+  // FormSlider,
   FormSubmitButton: FormSubmitButton,
   FormTextInput: FormTextInput
 };

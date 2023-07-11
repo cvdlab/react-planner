@@ -1,16 +1,10 @@
 import { MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW, MODE_SNAPPING, KEYBOARD_BUTTON_CODE } from '../constants';
-
 import { rollback, undo, remove, toggleSnap, copyProperties, pasteProperties, setAlterateState } from '../actions/project-actions';
-
 export default function keyboard() {
-
   return function (store, stateExtractor) {
-
     window.addEventListener('keydown', function (event) {
-
       var state = stateExtractor(store.getState());
       var mode = state.get('mode');
-
       switch (event.keyCode) {
         case KEYBOARD_BUTTON_CODE.BACKSPACE:
         case KEYBOARD_BUTTON_CODE.DELETE:
@@ -44,7 +38,6 @@ export default function keyboard() {
           {
             var selectedLayer = state.getIn(['scene', 'selectedLayer']);
             var selected = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
-
             if ((mode === MODE_IDLE || mode === MODE_3D_VIEW) && (selected.holes.size || selected.areas.size || selected.items.size || selected.lines.size)) {
               if (selected.holes.size) {
                 var hole = state.getIn(['scene', 'layers', selectedLayer, 'holes', selected.holes.get(0)]);
@@ -74,12 +67,9 @@ export default function keyboard() {
           }
       }
     });
-
     window.addEventListener('keyup', function (event) {
-
       var state = stateExtractor(store.getState());
       var mode = state.get('mode');
-
       switch (event.keyCode) {
         case KEYBOARD_BUTTON_CODE.ALT:
           {

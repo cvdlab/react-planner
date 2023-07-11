@@ -3,7 +3,6 @@ export var COLORS = {
   white: '#FFF',
   black: '#000'
 };
-
 export var MATERIAL_COLORS = {
   500: {
     amber: '#FFC107',
@@ -27,7 +26,6 @@ export var MATERIAL_COLORS = {
     yellow: '#FFEB3B'
   }
 };
-
 export var PRIMARY_COLOR = {
   main: '#28292D',
   alt: '#2E2F33',
@@ -37,21 +35,17 @@ export var PRIMARY_COLOR = {
   text_alt: '#EBEBEB',
   input: '#55595C'
 };
-
 export var SECONDARY_COLOR = {
   main: '#1CA6FC',
   alt: '#005FAF',
   icon: '#1CA6FC',
   border: '1px solid #FFF'
 };
-
 export var MESH_SELECTED = '#99C3FB';
-
 export var AREA_MESH_COLOR = {
   selected: MESH_SELECTED,
   unselected: '#F5F4F4'
 };
-
 export var LINE_MESH_COLOR = {
   selected: MESH_SELECTED,
   unselected: '#8E9BA2'

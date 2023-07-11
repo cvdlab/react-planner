@@ -1,164 +1,81 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-import React, { Component } from 'react';
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
+function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefined" != typeof Symbol && arr[Symbol.iterator] || arr["@@iterator"]; if (null != _i) { var _s, _e, _x, _r, _arr = [], _n = !0, _d = !1; try { if (_x = (_i = _i.call(arr)).next, 0 === i) { if (Object(_i) !== _i) return; _n = !1; } else for (; !(_n = (_s = _x.call(_i)).done) && (_arr.push(_s.value), _arr.length !== i); _n = !0); } catch (err) { _d = !0, _e = err; } finally { try { if (!_n && null != _i["return"] && (_r = _i["return"](), Object(_r) !== _r)) return; } finally { if (_d) throw _e; } } return _arr; } }
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { ContentTitle, ContentContainer, FormLabel, FormBlock, FormNumberInput, FormSubmitButton, CancelButton } from '../style/export';
-
-var ProjectConfigurator = function (_Component) {
-  _inherits(ProjectConfigurator, _Component);
-
-  function ProjectConfigurator(props, context) {
-    _classCallCheck(this, ProjectConfigurator);
-
-    var _this = _possibleConstructorReturn(this, (ProjectConfigurator.__proto__ || Object.getPrototypeOf(ProjectConfigurator)).call(this, props, context));
-
-    var scene = props.state.scene;
-
-    _this.state = {
-      dataWidth: scene.width,
-      dataHeight: scene.height
-    };
-    return _this;
-  }
-
-  _createClass(ProjectConfigurator, [{
-    key: 'onSubmit',
-    value: function onSubmit(event) {
-      event.preventDefault();
-
-      var projectActions = this.context.projectActions;
-      var _state = this.state,
-          dataWidth = _state.dataWidth,
-          dataHeight = _state.dataHeight;
-
-      dataWidth = parseInt(dataWidth);
-      dataHeight = parseInt(dataHeight);
-      if (dataWidth <= 100 || dataHeight <= 100) {
-        alert('Scene size too small');
-      } else {
-        projectActions.setProjectProperties({ width: dataWidth, height: dataHeight });
-      }
+import ReactPlannerContext from '../../react-planner-context';
+var ProjectConfigurator = function ProjectConfigurator(_ref) {
+  var width = _ref.width,
+    height = _ref.height,
+    state = _ref.state;
+  var _useContext = useContext(ReactPlannerContext),
+    projectActions = _useContext.projectActions,
+    translator = _useContext.translator;
+  var scene = state.scene;
+  var _useState = useState(scene.width),
+    _useState2 = _slicedToArray(_useState, 2),
+    dataWidth = _useState2[0],
+    setDataWidth = _useState2[1];
+  var _useState3 = useState(scene.height),
+    _useState4 = _slicedToArray(_useState3, 2),
+    dataHeight = _useState4[0],
+    setDataHeight = _useState4[1];
+  var onSubmit = function onSubmit(event) {
+    event.preventDefault();
+    var width = parseInt(dataWidth);
+    var height = parseInt(dataHeight);
+    if (width <= 100 || height <= 100) {
+      alert('Scene size too small');
+    } else {
+      projectActions.setProjectProperties({
+        width: width,
+        height: height
+      });
     }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _this2 = this;
-
-      var _props = this.props,
-          width = _props.width,
-          height = _props.height;
-      var _state2 = this.state,
-          dataWidth = _state2.dataWidth,
-          dataHeight = _state2.dataHeight;
-      var _context = this.context,
-          projectActions = _context.projectActions,
-          translator = _context.translator;
-
-
-      return React.createElement(
-        ContentContainer,
-        { width: width, height: height },
-        React.createElement(
-          ContentTitle,
-          null,
-          translator.t('Project config')
-        ),
-        React.createElement(
-          'form',
-          { onSubmit: function onSubmit(e) {
-              return _this2.onSubmit(e);
-            } },
-          React.createElement(
-            FormBlock,
-            null,
-            React.createElement(
-              FormLabel,
-              { htmlFor: 'width' },
-              translator.t('width')
-            ),
-            React.createElement(FormNumberInput, {
-              id: 'width',
-              placeholder: 'width',
-              value: dataWidth,
-              onChange: function onChange(e) {
-                return _this2.setState({ dataWidth: e.target.value });
-              }
-            })
-          ),
-          React.createElement(
-            FormBlock,
-            null,
-            React.createElement(
-              FormLabel,
-              { htmlFor: 'height' },
-              translator.t('height')
-            ),
-            React.createElement(FormNumberInput, {
-              id: 'height',
-              placeholder: 'height',
-              value: dataHeight,
-              onChange: function onChange(e) {
-                return _this2.setState({ dataHeight: e.target.value });
-              }
-            })
-          ),
-          React.createElement(
-            'table',
-            { style: { float: 'right' } },
-            React.createElement(
-              'tbody',
-              null,
-              React.createElement(
-                'tr',
-                null,
-                React.createElement(
-                  'td',
-                  null,
-                  React.createElement(
-                    CancelButton,
-                    { size: 'large',
-                      onClick: function onClick(e) {
-                        return projectActions.rollback();
-                      } },
-                    translator.t('Cancel')
-                  )
-                ),
-                React.createElement(
-                  'td',
-                  null,
-                  React.createElement(
-                    FormSubmitButton,
-                    { size: 'large' },
-                    translator.t('Save')
-                  )
-                )
-              )
-            )
-          )
-        )
-      );
+  };
+  return /*#__PURE__*/React.createElement(ContentContainer, {
+    width: width,
+    height: height
+  }, /*#__PURE__*/React.createElement(ContentTitle, null, translator.t('Project config')), /*#__PURE__*/React.createElement("form", {
+    onSubmit: onSubmit
+  }, /*#__PURE__*/React.createElement(FormBlock, null, /*#__PURE__*/React.createElement(FormLabel, {
+    htmlFor: "width"
+  }, translator.t('width')), /*#__PURE__*/React.createElement(FormNumberInput, {
+    id: "width",
+    placeholder: "width",
+    value: dataWidth,
+    onChange: function onChange(e) {
+      return setDataWidth(e.target.value);
     }
-  }]);
-
-  return ProjectConfigurator;
-}(Component);
-
-export default ProjectConfigurator;
-
-
+  })), /*#__PURE__*/React.createElement(FormBlock, null, /*#__PURE__*/React.createElement(FormLabel, {
+    htmlFor: "height"
+  }, translator.t('height')), /*#__PURE__*/React.createElement(FormNumberInput, {
+    id: "height",
+    placeholder: "height",
+    value: dataHeight,
+    onChange: function onChange(e) {
+      return setDataHeight(e.target.value);
+    }
+  })), /*#__PURE__*/React.createElement("table", {
+    style: {
+      "float": 'right'
+    }
+  }, /*#__PURE__*/React.createElement("tbody", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement(CancelButton, {
+    size: "large",
+    onClick: function onClick(e) {
+      return projectActions.rollback();
+    }
+  }, translator.t('Cancel'))), /*#__PURE__*/React.createElement("td", null, /*#__PURE__*/React.createElement(FormSubmitButton, {
+    size: "large"
+  }, translator.t('Save'))))))));
+};
 ProjectConfigurator.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   state: PropTypes.object.isRequired
 };
-
-ProjectConfigurator.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired
-};
+export default ProjectConfigurator;

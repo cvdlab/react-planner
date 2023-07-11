@@ -8,9 +8,7 @@ import * as verticesActions from './vertices-actions';
 import * as itemsActions from './items-actions';
 import * as areaActions from './area-actions';
 import * as groupsActions from './groups-actions';
-
 export { projectActions, viewer2DActions, viewer3DActions, linesActions, holesActions, sceneActions, verticesActions, itemsActions, areaActions, groupsActions };
-
 export default {
   projectActions: projectActions,
   viewer2DActions: viewer2DActions,

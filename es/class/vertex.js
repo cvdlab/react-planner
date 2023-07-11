@@ -1,28 +1,28 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import { Map, List } from 'immutable';
 import { Vertex as VertexModel } from '../models';
 import { IDBroker, GeometryUtils, SnapSceneUtils, SnapUtils } from '../utils/export';
 import { MODE_DRAGGING_VERTEX, MODE_IDLE } from '../constants';
 import { Layer, Line, Group } from '../class/export';
-
-var Vertex = function () {
+var Vertex = /*#__PURE__*/function () {
   function Vertex() {
     _classCallCheck(this, Vertex);
   }
-
   _createClass(Vertex, null, [{
-    key: 'add',
+    key: "add",
     value: function add(state, layerID, x, y, relatedPrototype, relatedID) {
-
       var vertex = state.getIn(['scene', 'layers', layerID, 'vertices']).find(function (vertex) {
-        return GeometryUtils.samePoints(vertex, { x: x, y: y });
+        return GeometryUtils.samePoints(vertex, {
+          x: x,
+          y: y
+        });
       });
-
       if (vertex) {
         vertex = vertex.update(relatedPrototype, function (related) {
           return related.push(relatedID);
@@ -31,31 +31,36 @@ var Vertex = function () {
         vertex = new VertexModel(_defineProperty({
           id: IDBroker.acquireID(),
           name: 'Vertex',
-          x: x, y: y
+          x: x,
+          y: y
         }, relatedPrototype, new List([relatedID])));
       }
-
       state = state.setIn(['scene', 'layers', layerID, 'vertices', vertex.id], vertex);
-
-      return { updatedState: state, vertex: vertex };
+      return {
+        updatedState: state,
+        vertex: vertex
+      };
     }
   }, {
-    key: 'setAttributes',
+    key: "setAttributes",
     value: function setAttributes(state, layerID, vertexID, vertexAttributes) {
       state = state.mergeIn(['scene', 'layers', layerID, 'vertices', vertexID], vertexAttributes);
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'addElement',
+    key: "addElement",
     value: function addElement(state, layerID, vertexID, elementPrototype, elementID) {
       state = state.updateIn(['scene', 'layers', layerID, 'vertices', vertexID, elementPrototype], function (list) {
         return list.push(elementID);
       });
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'removeElement',
+    key: "removeElement",
     value: function removeElement(state, layerID, vertexID, elementPrototype, elementID) {
       var elementIndex = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID, elementPrototype]).findIndex(function (el) {
         return el === elementID;
@@ -65,20 +70,23 @@ var Vertex = function () {
           return list.remove(elementIndex);
         });
       }
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'select',
+    key: "select",
     value: function select(state, layerID, vertexID) {
       state = state.setIn(['scene', 'layers', layerID, 'vertices', vertexID, 'selected'], true);
       state = state.updateIn(['scene', 'layers', layerID, 'selected', 'vertices'], function (elems) {
         return elems.push(vertexID);
       });
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'unselect',
+    key: "unselect",
     value: function unselect(state, layerID, vertexID) {
       state = state.setIn(['scene', 'layers', layerID, 'vertices', vertexID, 'selected'], false);
       state = state.updateIn(['scene', 'layers', layerID, 'selected', 'vertices'], function (elems) {
@@ -86,39 +94,36 @@ var Vertex = function () {
           return el.id !== vertexID;
         });
       });
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'remove',
+    key: "remove",
     value: function remove(state, layerID, vertexID, relatedPrototype, relatedID, forceRemove) {
       var vertex = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID]);
-
       if (vertex) {
         if (relatedPrototype && relatedID) vertex = vertex.update(relatedPrototype, function (related) {
           var index = related.findIndex(function (ID) {
             return relatedID === ID;
           });
-          return related.delete(index);
+          return related["delete"](index);
         });
-
         var inUse = vertex.areas.size || vertex.lines.size;
-
         if (inUse && !forceRemove) {
           state = state.setIn(['scene', 'layers', layerID, 'vertices', vertexID], vertex);
         } else {
           state = state.deleteIn(['scene', 'layers', layerID, 'vertices', vertexID]);
         }
       }
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'beginDraggingVertex',
+    key: "beginDraggingVertex",
     value: function beginDraggingVertex(state, layerID, vertexID, x, y) {
-
       var snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
-
       state = state.merge({
         mode: MODE_DRAGGING_VERTEX,
         snapElements: snapElements,
@@ -128,72 +133,67 @@ var Vertex = function () {
           previousMode: state.get('mode')
         })
       });
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'updateDraggingVertex',
+    key: "updateDraggingVertex",
     value: function updateDraggingVertex(state, x, y) {
       var _state = state,
-          draggingSupport = _state.draggingSupport,
-          snapElements = _state.snapElements,
-          scene = _state.scene;
-
-
+        draggingSupport = _state.draggingSupport,
+        snapElements = _state.snapElements,
+        scene = _state.scene;
       var snap = null;
       if (state.snapMask && !state.snapMask.isEmpty()) {
         snap = SnapUtils.nearestSnap(snapElements, x, y, state.snapMask);
         if (snap) {
-          ;
           var _snap$point = snap.point;
           x = _snap$point.x;
           y = _snap$point.y;
         }
       }
-
       var layerID = draggingSupport.get('layerID');
       var vertexID = draggingSupport.get('vertexID');
       state = state.merge({
         activeSnapElement: snap ? snap.snap : null,
-        scene: scene.mergeIn(['layers', layerID, 'vertices', vertexID], { x: x, y: y })
+        scene: scene.mergeIn(['layers', layerID, 'vertices', vertexID], {
+          x: x,
+          y: y
+        })
       });
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }, {
-    key: 'endDraggingVertex',
+    key: "endDraggingVertex",
     value: function endDraggingVertex(state, x, y) {
       var _state2 = state,
-          draggingSupport = _state2.draggingSupport;
-
+        draggingSupport = _state2.draggingSupport;
       var layerID = draggingSupport.get('layerID');
       var vertexID = draggingSupport.get('vertexID');
       var lines = state.getIn(['scene', 'layers', layerID, 'vertices', vertexID, 'lines']);
-
       if (lines) {
         state = lines.reduce(function (reducedState, lineID) {
           if (!reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID])) return reducedState;
-
           var v_id0 = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 0]);
           var v_id1 = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 1]);
           var oldVertexID = v_id0 === vertexID ? v_id1 : v_id0;
-
           var oldVertex = reducedState.getIn(['scene', 'layers', layerID, 'vertices', oldVertexID]);
           var vertex = reducedState.getIn(['scene', 'layers', layerID, 'vertices', vertexID]);
-
           var oldHoles = [];
-
           var orderedVertices = GeometryUtils.orderVertices([oldVertex, vertex]);
-
           var holes = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'holes']).forEach(function (holeID) {
             var hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
             var oldLineLength = GeometryUtils.pointsDistance(oldVertex.x, oldVertex.y, vertex.x, vertex.y);
             var offset = GeometryUtils.samePoints(orderedVertices[1], reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', 1])) ? 1 - hole.offset : hole.offset;
             var offsetPosition = GeometryUtils.extendLine(oldVertex.x, oldVertex.y, vertex.x, vertex.y, oldLineLength * offset);
-
-            oldHoles.push({ hole: hole, offsetPosition: offsetPosition });
+            oldHoles.push({
+              hole: hole,
+              offsetPosition: offsetPosition
+            });
           });
-
           var lineType = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'type']);
           var lineProps = reducedState.getIn(['scene', 'layers', layerID, 'lines', lineID, 'properties']);
           var lineGroups = reducedState //get groups membership if present
@@ -201,14 +201,11 @@ var Vertex = function () {
             var lines = group.getIn(['elements', layerID, 'lines']);
             return lines && lines.contains(lineID);
           });
-
           reducedState = Layer.removeZeroLengthLines(reducedState, layerID).updatedState;
           reducedState = Layer.mergeEqualsVertices(reducedState, layerID, vertexID).updatedState;
           reducedState = Line.remove(reducedState, layerID, lineID).updatedState;
-
           if (!GeometryUtils.samePoints(oldVertex, vertex)) {
             var ret = Line.createAvoidingIntersections(reducedState, layerID, lineType, oldVertex.x, oldVertex.y, vertex.x, vertex.y, lineProps, oldHoles);
-
             reducedState = ret.updatedState;
 
             //re-add to old line's groups if present
@@ -218,25 +215,21 @@ var Vertex = function () {
               });
             });
           }
-
           return reducedState;
         }, state);
       }
-
       state = Layer.detectAndUpdateAreas(state, layerID).updatedState;
-
       state = state.merge({
         mode: draggingSupport.get('previousMode'),
         draggingSupport: null,
         activeSnapElement: null,
         snapElements: new List()
       });
-
-      return { updatedState: state };
+      return {
+        updatedState: state
+      };
     }
   }]);
-
   return Vertex;
 }();
-
 export { Vertex as default };

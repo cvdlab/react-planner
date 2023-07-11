@@ -1,20 +1,17 @@
-var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _objectWithoutProperties(obj, keys) { var target = {}; for (var i in obj) { if (keys.indexOf(i) >= 0) continue; if (!Object.prototype.hasOwnProperty.call(obj, i)) continue; target[i] = obj[i]; } return target; }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-import React, { Component } from 'react';
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+var _excluded = ["width", "height", "state", "stateExtractor"];
+function _extends() { _extends = Object.assign ? Object.assign.bind() : function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; }; return _extends.apply(this, arguments); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
+function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
+function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
+import React, { createContext, useContext, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
 import actions from './actions/export';
@@ -22,104 +19,80 @@ import { objectsMap } from './utils/objects-utils';
 import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
 import { VERSION } from './version';
 import './styles/export';
-
+import ReactPlannerContext from './react-planner-context';
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;
 var FooterBar = FooterBarComponents.FooterBar;
-
-
 var toolbarW = 50;
 var sidebarW = 300;
 var footerBarH = 20;
-
 var wrapperStyle = {
   display: 'flex',
   flexFlow: 'row nowrap'
 };
+function ReactPlanner(props) {
+  var width = props.width,
+    height = props.height,
+    state = props.state,
+    stateExtractor = props.stateExtractor,
+    otherProps = _objectWithoutProperties(props, _excluded);
+  var contentW = width - toolbarW - sidebarW;
+  var toolbarH = height - footerBarH;
+  var contentH = height - footerBarH;
+  var sidebarH = height - footerBarH;
+  var extractedState = stateExtractor(state);
+  var contextValue = useContext(ReactPlannerContext); // Step 3: Access the context value using useContext
 
-var ReactPlanner = function (_Component) {
-  _inherits(ReactPlanner, _Component);
-
-  function ReactPlanner() {
-    _classCallCheck(this, ReactPlanner);
-
-    return _possibleConstructorReturn(this, (ReactPlanner.__proto__ || Object.getPrototypeOf(ReactPlanner)).apply(this, arguments));
-  }
-
-  _createClass(ReactPlanner, [{
-    key: 'getChildContext',
-    value: function getChildContext() {
-      var _this2 = this;
-
-      return _extends({}, objectsMap(actions, function (actionNamespace) {
-        return _this2.props[actionNamespace];
-      }), {
-        translator: this.props.translator,
-        catalog: this.props.catalog
-      });
-    }
-  }, {
-    key: 'componentWillMount',
-    value: function componentWillMount() {
-      var store = this.context.store;
-      var _props = this.props,
-          projectActions = _props.projectActions,
-          catalog = _props.catalog,
-          stateExtractor = _props.stateExtractor,
-          plugins = _props.plugins;
-
-      plugins.forEach(function (plugin) {
-        return plugin(store, stateExtractor);
-      });
-      projectActions.initCatalog(catalog);
-    }
-  }, {
-    key: 'componentWillReceiveProps',
-    value: function componentWillReceiveProps(nextProps) {
-      var stateExtractor = nextProps.stateExtractor,
-          state = nextProps.state,
-          projectActions = nextProps.projectActions,
-          catalog = nextProps.catalog;
-
-      var plannerState = stateExtractor(state);
+  useEffect(function () {
+    var store = contextValue.store;
+    var projectActions = props.projectActions,
+      catalog = props.catalog,
+      stateExtractor = props.stateExtractor,
+      plugins = props.plugins;
+    plugins.forEach(function (plugin) {
+      return plugin(store, stateExtractor);
+    });
+    projectActions.initCatalog(catalog);
+  }, []);
+  useEffect(function () {
+    if (props.state !== state) {
+      var _stateExtractor = props.stateExtractor,
+        _state = props.state,
+        projectActions = props.projectActions,
+        catalog = props.catalog;
+      var plannerState = _stateExtractor(_state);
       var catalogReady = plannerState.getIn(['catalog', 'ready']);
       if (!catalogReady) {
         projectActions.initCatalog(catalog);
       }
     }
-  }, {
-    key: 'render',
-    value: function render() {
-      var _props2 = this.props,
-          width = _props2.width,
-          height = _props2.height,
-          state = _props2.state,
-          stateExtractor = _props2.stateExtractor,
-          props = _objectWithoutProperties(_props2, ['width', 'height', 'state', 'stateExtractor']);
-
-      var contentW = width - toolbarW - sidebarW;
-      var toolbarH = height - footerBarH;
-      var contentH = height - footerBarH;
-      var sidebarH = height - footerBarH;
-
-      var extractedState = stateExtractor(state);
-
-      return React.createElement(
-        'div',
-        { style: _extends({}, wrapperStyle, { height: height }) },
-        React.createElement(Toolbar, _extends({ width: toolbarW, height: toolbarH, state: extractedState }, props)),
-        React.createElement(Content, _extends({ width: contentW, height: contentH, state: extractedState }, props, { onWheel: function onWheel(event) {
-            return event.preventDefault();
-          } })),
-        React.createElement(Sidebar, _extends({ width: sidebarW, height: sidebarH, state: extractedState }, props)),
-        React.createElement(FooterBar, _extends({ width: width, height: footerBarH, state: extractedState }, props))
-      );
+  }, [props.state]);
+  return /*#__PURE__*/React.createElement("div", {
+    style: _objectSpread(_objectSpread({}, wrapperStyle), {}, {
+      height: height
+    })
+  }, /*#__PURE__*/React.createElement(Toolbar, _extends({
+    width: toolbarW,
+    height: toolbarH,
+    state: extractedState
+  }, otherProps)), /*#__PURE__*/React.createElement(Content, _extends({
+    width: contentW,
+    height: contentH,
+    state: extractedState
+  }, otherProps, {
+    onWheel: function onWheel(event) {
+      return event.preventDefault();
     }
-  }]);
-
-  return ReactPlanner;
-}(Component);
-
+  })), /*#__PURE__*/React.createElement(Sidebar, _extends({
+    width: sidebarW,
+    height: sidebarH,
+    state: extractedState
+  }, otherProps)), /*#__PURE__*/React.createElement(FooterBar, _extends({
+    width: width,
+    height: footerBarH,
+    state: extractedState
+  }, otherProps)));
+}
 ReactPlanner.propTypes = {
   translator: PropTypes.instanceOf(Translator),
   catalog: PropTypes.instanceOf(Catalog),
@@ -137,23 +110,48 @@ ReactPlanner.propTypes = {
   softwareSignature: PropTypes.string
 };
 
-ReactPlanner.contextTypes = {
-  store: PropTypes.object.isRequired
-};
+// Step 3: Wrap the component tree with the Provider component
+function ReactPlannerWrapper(props) {
+  var state = props.state,
+    translator = props.translator,
+    catalog = props.catalog,
+    projectActions = props.projectActions,
+    sceneActions = props.sceneActions,
+    linesActions = props.linesActions,
+    holesActions = props.holesActions,
+    verticesActions = props.verticesActions,
+    itemsActions = props.itemsActions,
+    areaActions = props.areaActions,
+    viewer2DActions = props.viewer2DActions,
+    viewer3DActions = props.viewer3DActions,
+    groupsActions = props.groupsActions;
+  return /*#__PURE__*/React.createElement(ReactPlannerContext.Provider, {
+    value: {
+      state: state,
+      translator: translator,
+      catalog: catalog,
+      projectActions: projectActions,
+      sceneActions: sceneActions,
+      linesActions: linesActions,
+      holesActions: holesActions,
+      verticesActions: verticesActions,
+      itemsActions: itemsActions,
+      areaActions: areaActions,
+      viewer2DActions: viewer2DActions,
+      viewer3DActions: viewer3DActions,
+      groupsActions: groupsActions,
+      store: props.store
+    }
+  }, /*#__PURE__*/React.createElement(ReactPlanner, props));
+}
 
-ReactPlanner.childContextTypes = _extends({}, objectsMap(actions, function () {
-  return PropTypes.object;
-}), {
-  translator: PropTypes.object,
-  catalog: PropTypes.object
-});
-
-ReactPlanner.defaultProps = {
+// Step 4: Define defaultProps directly on the component function
+ReactPlannerWrapper.defaultProps = {
   translator: new Translator(),
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-  softwareSignature: 'React-Planner ' + VERSION,
+  softwareSignature: "React-Planner ".concat(VERSION),
   toolbarButtons: [],
   sidebarComponents: [],
   footerbarComponents: [],
@@ -166,11 +164,9 @@ function mapStateToProps(reduxState) {
     state: reduxState
   };
 }
-
 function mapDispatchToProps(dispatch) {
   return objectsMap(actions, function (actionNamespace) {
     return bindActionCreators(actions[actionNamespace], dispatch);
   });
 }
-
-export default connect(mapStateToProps, mapDispatchToProps)(ReactPlanner);
+export default connect(mapStateToProps, mapDispatchToProps)(ReactPlannerWrapper);

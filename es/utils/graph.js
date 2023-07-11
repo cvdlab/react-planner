@@ -1,7 +1,9 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
 //JS porting of this code http://www.geeksforgeeks.org/biconnected-components/
 
 function create_array(length) {
@@ -11,18 +13,14 @@ function create_array(length) {
   }
   return array;
 }
-
-var Edge = function Edge(u, v) {
+var Edge = /*#__PURE__*/_createClass(function Edge(u, v) {
   _classCallCheck(this, Edge);
-
   this.u = u;
   this.v = v;
-};
-
-var Graph = function () {
+});
+var Graph = /*#__PURE__*/function () {
   function Graph(v) {
     _classCallCheck(this, Graph);
-
     this.count = 0; // count is number of biconnected components
     this.subgraphs = []; //biconnected components
     this.time = 0; // time is used to find discovery times
@@ -35,8 +33,6 @@ var Graph = function () {
   }
 
   //Function to add an edge into the graph
-
-
   _createClass(Graph, [{
     key: "addEdge",
     value: function addEdge(v, w) {
@@ -60,12 +56,10 @@ var Graph = function () {
     //             discovery time) that can be reached from subtree
     //             rooted with current vertex
     // *st -- >> To store visited edges
-
   }, {
     key: "_BCCUtil",
     value: function _BCCUtil(u, disc, low, st, parent) {
       var _this = this;
-
       // Initialize discovery time and low value
       disc[u] = low[u] = ++this.time;
       this.children = 0;
@@ -73,7 +67,6 @@ var Graph = function () {
       // Go through all vertices adjacent to this
       // v is current adjacent of 'u'
       this.adj[u].forEach(function (v) {
-
         // If v is not visited yet, then recur for it
         if (disc[v] == -1) {
           _this.children++;
@@ -97,14 +90,12 @@ var Graph = function () {
               //console.log(st[st.length - 1].u + "--" + st[st.length - 1].v + " ");
               st.splice(st.length - 1, 1);
             }
-
             subgraph.push(st[st.length - 1]);
             //console.log(st[st.length - 1].u + "--" + st[st.length - 1].v + " ");
             _this.subgraphs.push(subgraph);
             subgraph = [];
             //console.log()
             st.splice(st.length - 1, 1);
-
             _this.count++;
           }
         }
@@ -113,9 +104,9 @@ var Graph = function () {
         // (i.e. it's a back edge, not cross edge).
         // Case 2 -- per Strongly Connected Components Article
         else if (v != parent[u] && disc[v] < low[u]) {
-            if (low[u] > disc[v]) low[u] = disc[v];
-            st.push(new Edge(u, v));
-          }
+          if (low[u] > disc[v]) low[u] = disc[v];
+          st.push(new Edge(u, v));
+        }
       });
     }
   }, {
@@ -133,10 +124,8 @@ var Graph = function () {
         low[i] = -1;
         parent[i] = -1;
       }
-
       for (var _i = 0; _i < V; _i++) {
         if (disc[_i] == -1) this._BCCUtil(_i, disc, low, st, parent);
-
         var j = 0;
 
         // If stack is not empty, pop all edges from stack
@@ -147,7 +136,6 @@ var Graph = function () {
           //console.log(st[st.length - 1].u + "--" + st[st.length - 1].v + " ");
           st.splice(st.length - 1, 1);
         }
-
         if (j == 1) {
           this.subgraphs.push(subgraph);
           subgraph = [];
@@ -157,8 +145,6 @@ var Graph = function () {
       }
     }
   }]);
-
   return Graph;
 }();
-
 module.exports = Graph;

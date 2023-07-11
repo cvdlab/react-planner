@@ -1,24 +1,32 @@
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, _toPropertyKey(descriptor.key), descriptor); } }
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import { PropertyColor, PropertyEnum, PropertyString, PropertyNumber, PropertyLengthMeasure, PropertyToggle, PropertyCheckbox, PropertyHidden, PropertyReadOnly } from './properties/export';
-
 import { UNIT_CENTIMETER } from '../constants';
-
-var Catalog = function () {
+var Catalog = /*#__PURE__*/function () {
   function Catalog() {
     var unit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : UNIT_CENTIMETER;
-
     _classCallCheck(this, Catalog);
-
     this.elements = {};
-    this.categories = { root: { name: 'root', label: '/', elements: [], categories: [] } };
+    this.categories = {
+      root: {
+        name: 'root',
+        label: '/',
+        elements: [],
+        categories: []
+      }
+    };
     this.propertyTypes = {};
     this.unit = unit;
-
     this.registerMultiplePropertyType([['color', PropertyColor, PropertyColor], ['enum', PropertyEnum, PropertyEnum], ['string', PropertyString, PropertyString], ['number', PropertyNumber, PropertyNumber], ['length-measure', PropertyLengthMeasure, PropertyLengthMeasure], ['toggle', PropertyToggle, PropertyToggle], ['checkbox', PropertyCheckbox, PropertyCheckbox], ['hidden', PropertyHidden, PropertyHidden], ['read-only', PropertyReadOnly, PropertyReadOnly]]);
   }
 
@@ -26,52 +34,47 @@ var Catalog = function () {
    *  @param {string} type Element's type
    *  @return {?object} Element
   */
-
-
   _createClass(Catalog, [{
-    key: 'getElement',
+    key: "getElement",
     value: function getElement(type) {
       if (this.hasElement(type)) {
         return this.elements[type];
       }
-      throw new Error('Element ' + type + ' does not exist in catalog');
+      throw new Error("Element ".concat(type, " does not exist in catalog"));
     }
 
     /** @description Get catalog category
      *  @param {string} categoryName Name of category
      *  @return {object} Category
     */
-
   }, {
-    key: 'getCategory',
+    key: "getCategory",
     value: function getCategory(categoryName) {
       if (this.hasCategory(categoryName)) {
         return this.categories[categoryName];
       }
-      throw new Error('Category ' + categoryName + ' does not exist in catalog');
+      throw new Error("Category ".concat(categoryName, " does not exist in catalog"));
     }
 
     /** @description Return type of a specfied property
      *  @param {string} type Property type
      *  @return {?object} Property
     */
-
   }, {
-    key: 'getPropertyType',
+    key: "getPropertyType",
     value: function getPropertyType(type) {
       if (this.propertyTypes.hasOwnProperty(type)) {
         return this.propertyTypes[type];
       }
-      throw new Error('Element ' + type + ' does not exist in catalog');
+      throw new Error("Element ".concat(type, " does not exist in catalog"));
     }
 
     /** @description Register a new element
      *  @param {object} json Element structure
      *  @return {void}
     */
-
   }, {
-    key: 'registerElement',
+    key: "registerElement",
     value: function registerElement(json) {
       json.properties = json.properties || {};
       if (this.validateElement(json)) {
@@ -84,12 +87,10 @@ var Catalog = function () {
      *  @param {array} [elementArray] Array of elements
      *  @return {void}
     */
-
   }, {
-    key: 'registerMultipleElements',
+    key: "registerMultipleElements",
     value: function registerMultipleElements(elementArray) {
       var _this = this;
-
       elementArray.forEach(function (el) {
         return _this.registerElement(el);
       });
@@ -101,23 +102,24 @@ var Catalog = function () {
      *  @param {object} Editor Property editor component
      *  @return {void}
     */
-
   }, {
-    key: 'registerPropertyType',
+    key: "registerPropertyType",
     value: function registerPropertyType(type, Viewer, Editor) {
-      this.propertyTypes[type] = { type: type, Viewer: Viewer, Editor: Editor };
+      this.propertyTypes[type] = {
+        type: type,
+        Viewer: Viewer,
+        Editor: Editor
+      };
     }
 
     /** @description Register multiple property
      *  @param {array} propertyTypeArray Array of properties
      *  @return {void}
     */
-
   }, {
-    key: 'registerMultiplePropertyType',
+    key: "registerMultiplePropertyType",
     value: function registerMultiplePropertyType(propertyTypeArray) {
       var _this2 = this;
-
       propertyTypeArray.forEach(function (el) {
         return _this2.registerPropertyType.apply(_this2, _toConsumableArray(el));
       });
@@ -127,30 +129,24 @@ var Catalog = function () {
      *  @param {object} json Element's structure
      *  @return {?boolean}
     */
-
   }, {
-    key: 'validateElement',
+    key: "validateElement",
     value: function validateElement(json) {
       if (!json.hasOwnProperty('name')) throw new Error('Element not valid');
-
       var name = json.name;
-      if (!json.hasOwnProperty('prototype')) throw new Error('Element ' + name + ' doesn\'t have prototype');
-
-      if (!json.hasOwnProperty('info')) throw new Error('Element ' + name + ' doesn\'t have info');
-      if (!json.info.hasOwnProperty('tag')) throw new Error('Element ' + name + ' doesn\'t have tag');
-      if (!json.info.hasOwnProperty('description')) throw new Error('Element ' + name + ' doesn\'t have description');
-      if (!json.info.hasOwnProperty('image')) throw new Error('Element ' + name + ' doesn\'t have image');
-
-      if (!json.hasOwnProperty('render2D')) throw new Error('Element ' + name + ' doesn\'t have render2D handler');
-      if (!json.hasOwnProperty('render3D')) throw new Error('Element ' + name + ' doesn\'t have render3D handler');
-      if (!json.hasOwnProperty('properties')) throw new Error('Element ' + name + ' doesn\'t have properties');
-
+      if (!json.hasOwnProperty('prototype')) throw new Error("Element ".concat(name, " doesn't have prototype"));
+      if (!json.hasOwnProperty('info')) throw new Error("Element ".concat(name, " doesn't have info"));
+      if (!json.info.hasOwnProperty('tag')) throw new Error("Element ".concat(name, " doesn't have tag"));
+      if (!json.info.hasOwnProperty('description')) throw new Error("Element ".concat(name, " doesn't have description"));
+      if (!json.info.hasOwnProperty('image')) throw new Error("Element ".concat(name, " doesn't have image"));
+      if (!json.hasOwnProperty('render2D')) throw new Error("Element ".concat(name, " doesn't have render2D handler"));
+      if (!json.hasOwnProperty('render3D')) throw new Error("Element ".concat(name, " doesn't have render3D handler"));
+      if (!json.hasOwnProperty('properties')) throw new Error("Element ".concat(name, " doesn't have properties"));
       for (var propertyName in json.properties) {
         var propertyConfigs = json.properties[propertyName];
-        if (!propertyConfigs.hasOwnProperty('type')) throw new Error('Element ' + name + ', Property ' + propertyName + ' doesn\'t have type');
-        if (!propertyConfigs.hasOwnProperty('defaultValue')) throw new Error('Element ' + name + ', Property ' + propertyName + ' doesn\'t have defaultValue');
+        if (!propertyConfigs.hasOwnProperty('type')) throw new Error("Element ".concat(name, ", Property ").concat(propertyName, " doesn't have type"));
+        if (!propertyConfigs.hasOwnProperty('defaultValue')) throw new Error("Element ".concat(name, ", Property ").concat(propertyName, " doesn't have defaultValue"));
       }
-
       return true;
     }
 
@@ -158,9 +154,8 @@ var Catalog = function () {
      *  @param {string} type Element's type
      *  @return {boolean}
     */
-
   }, {
-    key: 'hasElement',
+    key: "hasElement",
     value: function hasElement(type) {
       return this.elements.hasOwnProperty(type);
     }
@@ -171,22 +166,23 @@ var Catalog = function () {
      *  @param {array} [childs] Category's childs
      *  @return {?object} Registered category
     */
-
   }, {
-    key: 'registerCategory',
+    key: "registerCategory",
     value: function registerCategory(name, label, childs) {
       var _this3 = this;
-
       if (this.validateCategory(name, label)) {
-        this.categories[name] = { name: name, label: label, categories: [], elements: [] };
+        this.categories[name] = {
+          name: name,
+          label: label,
+          categories: [],
+          elements: []
+        };
         this.categories.root.categories.push(this.categories[name]);
-
         if (childs && childs.length) {
           childs.forEach(function (el) {
             return _this3.addToCategory(name, el);
           });
         }
-
         return this.categories[name];
       }
       return null;
@@ -197,9 +193,8 @@ var Catalog = function () {
      *  @param {object} child Element's structure
      *  @return {?void}
     */
-
   }, {
-    key: 'addToCategory',
+    key: "addToCategory",
     value: function addToCategory(name, child) {
       if (this.hasElement(child.name)) {
         this.categories[name].elements.push(child);
@@ -208,7 +203,7 @@ var Catalog = function () {
         this.categories[name].categories.push(child);
         this.categories.root.categories.splice(this.categories.root.categories.indexOf(child), 1);
       } else {
-        throw new Error('child ' + child + ' is either category nor element');
+        throw new Error("child ".concat(child, " is either category nor element"));
       }
     }
 
@@ -217,9 +212,8 @@ var Catalog = function () {
      *  @param {string} elementName Name of element
      *  @return {boolean}
     */
-
   }, {
-    key: 'categoryHasElement',
+    key: "categoryHasElement",
     value: function categoryHasElement(categoryName, elementName) {
       return this.hasCategory(categoryName) && this.categories[categoryName].elements.some(function (el) {
         return el.name === elementName;
@@ -231,9 +225,8 @@ var Catalog = function () {
      *  @param {string} label Label of category
      *  @return {?boolean}
     */
-
   }, {
-    key: 'validateCategory',
+    key: "validateCategory",
     value: function validateCategory(name, label) {
       if (!name) {
         throw new Error('Category has undefined name');
@@ -244,7 +237,6 @@ var Catalog = function () {
       if (this.hasCategory(name)) {
         throw new Error('Category has already been registered');
       }
-
       return true;
     }
 
@@ -252,15 +244,12 @@ var Catalog = function () {
      *  @param {string} categoryName Name of category
      *  @return {boolean}
     */
-
   }, {
-    key: 'hasCategory',
+    key: "hasCategory",
     value: function hasCategory(categoryName) {
       return this.categories.hasOwnProperty(categoryName);
     }
   }]);
-
   return Catalog;
 }();
-
-export default Catalog;
+export { Catalog as default };

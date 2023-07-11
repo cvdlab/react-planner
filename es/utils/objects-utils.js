@@ -1,5 +1,4 @@
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 export function objectsMap(object, func) {
   var mappedObject = {};
   for (var key in object) {
@@ -7,12 +6,10 @@ export function objectsMap(object, func) {
   }
   return mappedObject;
 }
-
 export function objectsCompare(x, y) {
   if (x === y) return true;
   if (!(x instanceof Object) || !(y instanceof Object)) return false;
   if (x.constructor !== y.constructor) return false;
-
   for (var p in x) {
     if (!x.hasOwnProperty(p)) continue;
     if (!y.hasOwnProperty(p)) return false;
@@ -20,10 +17,8 @@ export function objectsCompare(x, y) {
     if (_typeof(x[p]) !== 'object') return false;
     if (!objectsCompare(x[p], y[p])) return false;
   }
-
   for (var _p in y) {
     if (y.hasOwnProperty(_p) && !x.hasOwnProperty(_p)) return false;
   }
-
   return true;
 }

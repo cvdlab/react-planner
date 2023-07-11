@@ -5,7 +5,6 @@
 */
 export function toFixedFloat(num) {
   var precision = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 6;
-
   if (num && precision) {
     return parseFloat(parseFloat(num).toFixed(precision));
   }
@@ -17,7 +16,9 @@ export function toFixedFloat(num) {
  *  @return {number}
 */
 export var fAbs = function fAbs(n) {
-  var x = n;x < 0 && (x = ~x + 1);return x;
+  var x = n;
+  x < 0 && (x = ~x + 1);
+  return x;
 };
 
 /** @description Multiply two matrices

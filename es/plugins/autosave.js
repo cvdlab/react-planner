@@ -1,16 +1,10 @@
 var localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
 import { loadProject } from '../actions/project-actions';
-
 var TIMEOUT_DELAY = 500;
-
 var timeout = null;
-
 export default function autosave(autosaveKey, delay) {
-
   return function (store, stateExtractor) {
-
     delay = delay || TIMEOUT_DELAY;
-
     if (!autosaveKey) return;
     if (!localStorage) return;
 

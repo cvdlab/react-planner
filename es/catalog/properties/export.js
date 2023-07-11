@@ -7,9 +7,7 @@ import PropertyToggle from './property-toggle';
 import PropertyCheckbox from './property-checkbox';
 import PropertyHidden from './property-hidden';
 import PropertyReadOnly from './property-read-only';
-
 export { PropertyColor, PropertyEnum, PropertyString, PropertyNumber, PropertyLengthMeasure, PropertyToggle, PropertyCheckbox, PropertyHidden, PropertyReadOnly };
-
 export default {
   PropertyColor: PropertyColor,
   PropertyEnum: PropertyEnum,

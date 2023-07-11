@@ -7,9 +7,7 @@ import * as history from './history';
 import * as ObjectUtils from './objects-utils';
 import IDBroker from './id-broker';
 import NameGenerator from './name-generator';
-
 export { GeometryUtils, GraphInnerCycles, MathUtils, SnapUtils, SnapSceneUtils, history, IDBroker, NameGenerator, ObjectUtils };
-
 export default {
   GeometryUtils: GeometryUtils,
   GraphInnerCycles: GraphInnerCycles,
