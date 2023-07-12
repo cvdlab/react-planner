@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { FaFolderOpen as IconLoad } from 'react-icons/fa';
-import ReactPlannerContext from '../../react-planner-context';
+import ReactPlannerContext from '../../utils/react-planner-context';
 import ToolbarButton from './toolbar-button';
 import { browserUpload } from '../../utils/browser';
 export default function ToolbarLoadButton(_ref) {

@@ -7,7 +7,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { ContentTitle, ContentContainer, FormLabel, FormBlock, FormNumberInput, FormSubmitButton, CancelButton } from '../style/export';
-import ReactPlannerContext from '../../react-planner-context';
+import ReactPlannerContext from '../../utils/react-planner-context';
 var ProjectConfigurator = function ProjectConfigurator(_ref) {
   var width = _ref.width,
     height = _ref.height,

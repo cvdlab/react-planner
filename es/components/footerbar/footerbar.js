@@ -12,13 +12,13 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 import React, { useState, useContext } from 'react';
 import PropTypes from 'prop-types';
-import ReactPlannerContext from '../../react-planner-context';
+import ReactPlannerContext from '../../utils/react-planner-context';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
 import { SNAP_POINT, SNAP_LINE, SNAP_SEGMENT, SNAP_GRID, SNAP_GUIDE } from '../../utils/snap';
-import { MODE_SNAPPING } from '../../constants';
-import * as SharedStyle from '../../shared-style';
+import { MODE_SNAPPING } from '../../utils/constants';
+import * as SharedStyle from '../../styles/shared-style';
 import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
 var footerBarStyle = {

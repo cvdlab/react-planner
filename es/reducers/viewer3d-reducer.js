@@ -1,4 +1,4 @@
-import { MODE_3D_VIEW, MODE_3D_FIRST_PERSON, SELECT_TOOL_3D_VIEW, SELECT_TOOL_3D_FIRST_PERSON } from '../constants';
+import { MODE_3D_VIEW, MODE_3D_FIRST_PERSON, SELECT_TOOL_3D_VIEW, SELECT_TOOL_3D_FIRST_PERSON } from '../utils/constants';
 import { Project } from '../class/export';
 import { history } from '../utils/export';
 export default function (state, action) {

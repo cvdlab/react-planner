@@ -9,7 +9,7 @@ import {
   AREA_ACTIONS,
   SCENE_ACTIONS,
   VERTEX_ACTIONS
-} from '../constants';
+} from '../utils/constants';
 
 import {
   ReactPlannerAreasReducer,
@@ -24,7 +24,7 @@ import {
   ReactPlannerViewer3dReducer
 } from './export';
 
-import {State} from '../models';
+import {State} from '../models/models';
 
 export const initialState = new State();
 

@@ -14,8 +14,8 @@ import { parseData, updateScene } from './scene-creator';
 import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
-import * as SharedStyle from '../../shared-style';
-import ReactPlannerContext from '../../react-planner-context';
+import * as SharedStyle from '../../styles/shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
 var Scene3DViewer = function Scene3DViewer(_ref) {
   var state = _ref.state,
     width = _ref.width,

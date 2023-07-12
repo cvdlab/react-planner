@@ -12,10 +12,10 @@ function _iterableToArrayLimit(arr, i) { var _i = null == arr ? null : "undefine
 function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 import { MdUpdate } from 'react-icons/md';
-import { KEYBOARD_BUTTON_CODE } from '../../constants';
-import ReactPlannerContext from '../../react-planner-context';
+import { KEYBOARD_BUTTON_CODE } from '../../utils/constants';
+import ReactPlannerContext from '../../utils/react-planner-context';
 var STYLE_INPUT = {
   display: 'block',
   width: '100%',

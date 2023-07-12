@@ -7,7 +7,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 import { Layer, Group } from './export';
 import { IDBroker, NameGenerator } from '../utils/export';
 import { Map, fromJS } from 'immutable';
-import { MODE_IDLE, MODE_DRAWING_ITEM, MODE_DRAGGING_ITEM, MODE_ROTATING_ITEM } from '../constants';
+import { MODE_IDLE, MODE_DRAWING_ITEM, MODE_DRAGGING_ITEM, MODE_ROTATING_ITEM } from '../utils/constants';
 var Item = /*#__PURE__*/function () {
   function Item() {
     _classCallCheck(this, Item);

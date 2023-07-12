@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {UNITS_LENGTH, UNIT_CENTIMETER} from './../../constants';
+import {UNITS_LENGTH, UNIT_CENTIMETER} from '../../utils/constants';
 import convert from 'convert-units';
 import { FormLabel, FormNumberInput, FormSelect } from '../../components/style/export';
 import {Map} from 'immutable';

@@ -6,7 +6,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import FormNumberInput from '../../../style/form-number-input';
 import FormTextInput from '../../../style/form-text-input';
-import ReactPlannerContext from '../../../../react-planner-context';
+import ReactPlannerContext from '../../../../utils/react-planner-context';
 var tableStyle = {
   width: '100%'
 };

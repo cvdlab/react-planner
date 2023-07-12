@@ -13,7 +13,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 import { Map, List, fromJS } from 'immutable';
 import { Group, Layer, Hole, Vertex } from './export';
 import { IDBroker, NameGenerator, GeometryUtils, SnapUtils, SnapSceneUtils } from '../utils/export';
-import { MODE_IDLE, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAGGING_LINE } from '../constants';
+import { MODE_IDLE, MODE_WAITING_DRAWING_LINE, MODE_DRAWING_LINE, MODE_DRAGGING_LINE } from '../utils/constants';
 var Line = /*#__PURE__*/function () {
   function Line() {
     _classCallCheck(this, Line);

@@ -10,7 +10,7 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 var STYLE = {
   color: SharedStyle.PRIMARY_COLOR.alt,
   fontWeight: 300

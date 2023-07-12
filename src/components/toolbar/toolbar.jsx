@@ -2,7 +2,7 @@ import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
 import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
 import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
-import ReactPlannerContext from '../../react-planner-context';
+import ReactPlannerContext from '../../utils/react-planner-context';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
@@ -13,8 +13,8 @@ import {
   MODE_3D_FIRST_PERSON,
   MODE_VIEWING_CATALOG,
   MODE_CONFIGURING_PROJECT
-} from '../../constants';
-import * as SharedStyle from '../../shared-style';
+} from '../../utils/constants';
+import * as SharedStyle from '../../styles/shared-style';
 
 const iconTextStyle = {
   fontSize: '19px',

@@ -6,7 +6,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import React from 'react';
 import { createArea, updatedArea } from './area-factory-3d';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 import Translator from '../../translator/translator';
 var translator = new Translator();
 export default function AreaFactory(name, info, textures) {

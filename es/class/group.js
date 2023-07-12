@@ -12,7 +12,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import { Project, Line, Hole, Item, Area, Layer, Vertex } from './export';
 import { Map, List } from 'immutable';
-import { Group as GroupModel } from '../models';
+import { Group as GroupModel } from '../models/models';
 import { IDBroker, MathUtils, GeometryUtils } from '../utils/export';
 var Group = /*#__PURE__*/function () {
   function Group() {

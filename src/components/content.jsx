@@ -6,7 +6,7 @@ import Viewer3DFirstPerson from './viewer3d/viewer3d-first-person';
 import CatalogList from './catalog-view/catalog-list';
 import ProjectConfigurator from './configurator/project-configurator';
 
-import * as constants from '../constants';
+import * as constants from '../utils/constants';
 
 export default function Content({width, height, state, customContents}) {
   let mode = state.get('mode');

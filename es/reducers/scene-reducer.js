@@ -1,6 +1,6 @@
 import { Layer } from '../class/export';
 import { history } from '../utils/export';
-import { ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES, REMOVE_LAYER } from '../constants';
+import { ADD_LAYER, SELECT_LAYER, SET_LAYER_PROPERTIES, REMOVE_LAYER } from '../utils/constants';
 export default function (state, action) {
   state = state.merge({
     sceneHistory: history.historyPush(state.sceneHistory, state.scene)

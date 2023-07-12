@@ -7,7 +7,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 import React from 'react';
 import PropTypes from 'prop-types';
 import { MdArrowBack as Arrow } from 'react-icons/md';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 var breadcrumbStyle = {
   margin: '1.5em',
   display: 'flex'

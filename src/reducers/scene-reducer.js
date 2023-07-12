@@ -5,7 +5,7 @@ import {
   SELECT_LAYER,
   SET_LAYER_PROPERTIES,
   REMOVE_LAYER
-} from '../constants';
+} from '../utils/constants';
 
 export default function (state, action) {
 

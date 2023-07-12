@@ -6,9 +6,9 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import { Map, List } from 'immutable';
-import { Vertex as VertexModel } from '../models';
+import { Vertex as VertexModel } from '../models/models';
 import { IDBroker, GeometryUtils, SnapSceneUtils, SnapUtils } from '../utils/export';
-import { MODE_DRAGGING_VERTEX, MODE_IDLE } from '../constants';
+import { MODE_DRAGGING_VERTEX, MODE_IDLE } from '../utils/constants';
 import { Layer, Line, Group } from '../class/export';
 var Vertex = /*#__PURE__*/function () {
   function Vertex() {

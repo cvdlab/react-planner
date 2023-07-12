@@ -8,7 +8,7 @@ import {
   UPDATE_DRAGGING_HOLE,
   END_DRAGGING_HOLE,
   SELECT_HOLE,
-} from '../constants';
+} from '../utils/constants';
 
 export default function (state, action) {
   switch (action.type) {

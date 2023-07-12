@@ -9,7 +9,7 @@ import {
   BEGIN_ROTATING_ITEM,
   UPDATE_ROTATING_ITEM,
   END_ROTATING_ITEM
-} from '../constants';
+} from '../utils/constants';
 
 export function selectItem(layerID, itemID) {
   return {

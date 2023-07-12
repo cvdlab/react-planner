@@ -8,7 +8,7 @@ import { Map, List, fromJS } from 'immutable';
 import { Layer, Group } from './export';
 import { IDBroker, NameGenerator } from '../utils/export';
 import { nearestSnap, addLineSegmentSnap } from '../utils/snap';
-import { MODE_IDLE, MODE_DRAWING_HOLE, MODE_DRAGGING_HOLE } from '../constants';
+import { MODE_IDLE, MODE_DRAWING_HOLE, MODE_DRAGGING_HOLE } from '../utils/constants';
 import { GeometryUtils } from '../utils/export';
 var Hole = /*#__PURE__*/function () {
   function Hole() {

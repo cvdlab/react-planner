@@ -15,7 +15,7 @@ import { disposeScene } from './three-memory-cleaner';
 import diff from 'immutablediff';
 import { initPointerLock } from "./pointer-lock-navigation";
 import { firstPersonOnKeyDown, firstPersonOnKeyUp } from "./libs/first-person-controls";
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 var Viewer3DFirstPerson = function Viewer3DFirstPerson(_ref) {
   var state = _ref.state,
     width = _ref.width,

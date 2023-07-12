@@ -1,4 +1,4 @@
-import { UPDATE_2D_CAMERA, SELECT_TOOL_PAN, SELECT_TOOL_ZOOM_IN, SELECT_TOOL_ZOOM_OUT, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT } from '../constants';
+import { UPDATE_2D_CAMERA, SELECT_TOOL_PAN, SELECT_TOOL_ZOOM_IN, SELECT_TOOL_ZOOM_OUT, MODE_2D_PAN, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT } from '../utils/constants';
 export default function (state, action) {
   switch (action.type) {
     case UPDATE_2D_CAMERA:

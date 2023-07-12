@@ -1,7 +1,7 @@
 import { TextureLoader, Mesh, RepeatWrapping, Vector2, BoxGeometry, MeshBasicMaterial, Group } from 'three';
 import ThreeBSP from '../../utils/threeCSG.es6';
 import { verticesDistance } from '../../utils/geometry';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 var halfPI = Math.PI / 2;
 
 /**

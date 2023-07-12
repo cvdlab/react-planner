@@ -11,7 +11,7 @@ import {
   UPDATE_ROTATING_ITEM,
   END_ROTATING_ITEM,
   SELECT_ITEM
-} from '../constants';
+} from '../utils/constants';
 
 export default function (state, action) {
   switch (action.type) {

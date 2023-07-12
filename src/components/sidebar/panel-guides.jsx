@@ -1,8 +1,8 @@
 import React, { useState, useContext, memo } from 'react';
 import PropTypes from 'prop-types';
 import Panel from './panel';
-import ReactPlannerContext from '../../react-planner-context';
-import * as SharedStyle from '../../shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
+import * as SharedStyle from '../../styles/shared-style';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaPencil, FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';

@@ -1,6 +1,6 @@
 import { Hole } from '../class/export';
 import { history } from '../utils/export';
-import { SELECT_TOOL_DRAWING_HOLE, UPDATE_DRAWING_HOLE, END_DRAWING_HOLE, BEGIN_DRAGGING_HOLE, UPDATE_DRAGGING_HOLE, END_DRAGGING_HOLE, SELECT_HOLE } from '../constants';
+import { SELECT_TOOL_DRAWING_HOLE, UPDATE_DRAWING_HOLE, END_DRAWING_HOLE, BEGIN_DRAGGING_HOLE, UPDATE_DRAGGING_HOLE, END_DRAGGING_HOLE, SELECT_HOLE } from '../utils/constants';
 export default function (state, action) {
   switch (action.type) {
     case SELECT_TOOL_DRAWING_HOLE:

@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 const RulerX = (props) => {
   let elementW = props.unitPixelSize * props.zoom;

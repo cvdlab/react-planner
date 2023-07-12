@@ -1,4 +1,4 @@
-import { UPDATE_2D_CAMERA, SELECT_TOOL_PAN, SELECT_TOOL_ZOOM_IN, SELECT_TOOL_ZOOM_OUT } from '../constants';
+import { UPDATE_2D_CAMERA, SELECT_TOOL_PAN, SELECT_TOOL_ZOOM_IN, SELECT_TOOL_ZOOM_OUT } from '../utils/constants';
 export function updateCameraView(value) {
   return {
     type: UPDATE_2D_CAMERA,

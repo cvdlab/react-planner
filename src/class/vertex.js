@@ -1,5 +1,5 @@
 import { Map, List } from 'immutable';
-import { Vertex as VertexModel } from '../models';
+import { Vertex as VertexModel } from '../models/models';
 import {
   IDBroker,
   GeometryUtils,
@@ -9,7 +9,7 @@ import {
 import {
   MODE_DRAGGING_VERTEX,
   MODE_IDLE
-} from '../constants';
+} from '../utils/constants';
 import { Layer, Line, Group } from '../class/export';
 
 class Vertex{

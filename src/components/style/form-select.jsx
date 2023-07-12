@@ -1,5 +1,5 @@
 import React from 'react';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 const BASE_STYLE = {
   display: "block",

@@ -4,7 +4,7 @@ import {
   MODE_3D_VIEW,
   MODE_SNAPPING,
   KEYBOARD_BUTTON_CODE
-} from '../constants';
+} from '../utils/constants';
 
 import {
   rollback,

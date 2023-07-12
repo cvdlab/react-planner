@@ -9,7 +9,7 @@ import {
   FormSubmitButton,
   CancelButton
 } from '../style/export';
-import ReactPlannerContext from '../../react-planner-context';
+import ReactPlannerContext from '../../utils/react-planner-context';
 
 const ProjectConfigurator = ({ width, height, state }) => {
   const { projectActions, translator } = useContext(ReactPlannerContext);

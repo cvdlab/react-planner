@@ -1,6 +1,6 @@
 import { Line } from '../class/export';
 import { history } from '../utils/export';
-import { SELECT_TOOL_DRAWING_LINE, BEGIN_DRAWING_LINE, UPDATE_DRAWING_LINE, END_DRAWING_LINE, BEGIN_DRAGGING_LINE, UPDATE_DRAGGING_LINE, END_DRAGGING_LINE, SELECT_LINE } from '../constants';
+import { SELECT_TOOL_DRAWING_LINE, BEGIN_DRAWING_LINE, UPDATE_DRAWING_LINE, END_DRAWING_LINE, BEGIN_DRAGGING_LINE, UPDATE_DRAGGING_LINE, END_DRAGGING_LINE, SELECT_LINE } from '../utils/constants';
 export default function (state, action) {
   switch (action.type) {
     case SELECT_TOOL_DRAWING_LINE:

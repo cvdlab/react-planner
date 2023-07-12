@@ -1,4 +1,4 @@
-import { SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, REMOVE_LAYER } from '../constants';
+import { SELECT_LAYER, ADD_LAYER, SET_LAYER_PROPERTIES, REMOVE_LAYER } from '../utils/constants';
 export function selectLayer(layerID) {
   return {
     type: SELECT_LAYER,

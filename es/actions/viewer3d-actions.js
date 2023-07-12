@@ -1,4 +1,4 @@
-import { SELECT_TOOL_3D_VIEW, SELECT_TOOL_3D_FIRST_PERSON } from '../constants';
+import { SELECT_TOOL_3D_VIEW, SELECT_TOOL_3D_FIRST_PERSON } from '../utils/constants';
 export function selectTool3DView() {
   return {
     type: SELECT_TOOL_3D_VIEW

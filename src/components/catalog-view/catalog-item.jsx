@@ -1,8 +1,8 @@
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import {FaPlusCircle as IconAdd} from 'react-icons/fa';
-import * as SharedStyle from '../../shared-style';
-import ReactPlannerContext from '../../react-planner-context';
+import * as SharedStyle from '../../styles/shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
 
 const STYLE_BOX = {
   width: '14em',

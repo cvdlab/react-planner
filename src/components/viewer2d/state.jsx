@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import Scene from './scene';
 import Snap from './snap';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 const guideStyle = {
   stroke: SharedStyle.SECONDARY_COLOR.main,

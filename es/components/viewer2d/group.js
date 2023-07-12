@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
-import * as sharedStyles from '../../shared-style';
+import * as sharedStyles from '../../styles/shared-style';
 var cx = 0;
 var cy = 0;
 var radius = 5;

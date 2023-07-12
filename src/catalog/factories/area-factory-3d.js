@@ -13,7 +13,7 @@ import {
   Vector2,
   DoubleSide
 } from 'three';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 /**
  * Apply a texture to a wall face

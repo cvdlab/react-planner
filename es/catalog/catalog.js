@@ -11,7 +11,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import { PropertyColor, PropertyEnum, PropertyString, PropertyNumber, PropertyLengthMeasure, PropertyToggle, PropertyCheckbox, PropertyHidden, PropertyReadOnly } from './properties/export';
-import { UNIT_CENTIMETER } from '../constants';
+import { UNIT_CENTIMETER } from '../utils/constants';
 var Catalog = /*#__PURE__*/function () {
   function Catalog() {
     var unit = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : UNIT_CENTIMETER;

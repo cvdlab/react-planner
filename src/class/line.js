@@ -17,7 +17,7 @@ import {
   MODE_WAITING_DRAWING_LINE,
   MODE_DRAWING_LINE,
   MODE_DRAGGING_LINE
-} from '../constants';
+} from '../utils/constants';
 
 class Line{
 

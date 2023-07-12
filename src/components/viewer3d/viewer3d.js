@@ -8,8 +8,8 @@ import { parseData, updateScene } from './scene-creator';
 import { disposeScene } from './three-memory-cleaner';
 import OrbitControls from './libs/orbit-controls';
 import diff from 'immutablediff';
-import * as SharedStyle from '../../shared-style';
-import ReactPlannerContext from '../../react-planner-context';
+import * as SharedStyle from '../../styles/shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
 
 const Scene3DViewer = ({ state, width, height }) => {
   let canvasWrapper = useRef(null);

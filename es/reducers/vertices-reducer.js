@@ -1,4 +1,4 @@
-import { BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX } from '../constants';
+import { BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX } from '../utils/constants';
 import { Vertex } from '../class/export';
 export default function (state, action) {
   switch (action.type) {

@@ -3,7 +3,7 @@ import {
   MODE_3D_FIRST_PERSON,
   SELECT_TOOL_3D_VIEW,
   SELECT_TOOL_3D_FIRST_PERSON
-} from '../constants';
+} from '../utils/constants';
 import { Project } from '../class/export';
 import { history } from '../utils/export';
 

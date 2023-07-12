@@ -5,7 +5,7 @@ import {
   GeometryUtils,
   IDBroker
 } from '../utils/export';
-import { Layer as LayerModel } from '../models';
+import { Layer as LayerModel } from '../models/models';
 
 const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 

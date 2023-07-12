@@ -8,7 +8,7 @@ import {
   Vertex
 } from './export';
 import { Map, List } from 'immutable';
-import { Group as GroupModel } from '../models';
+import { Group as GroupModel } from '../models/models';
 import { IDBroker, MathUtils, GeometryUtils } from '../utils/export';
 
 class Group{

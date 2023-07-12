@@ -1,5 +1,5 @@
 import { Area } from '../class/export';
-import { SELECT_AREA } from '../constants';
+import { SELECT_AREA } from '../utils/constants';
 
 export default function (state, action) {
   switch (action.type) {

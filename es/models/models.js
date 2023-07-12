@@ -1,13 +1,4 @@
-"use strict";
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.Vertex = exports.State = exports.Scene = exports.Line = exports.Layer = exports.Item = exports.Hole = exports.HistoryStructure = exports.Group = exports.Grid = exports.ElementsSet = exports.DefaultLayers = exports.DefaultGrids = exports.CatalogElement = exports.Catalog = exports.Area = void 0;
-var _immutable = require("immutable");
-var _constants = require("./constants");
-var _snap = require("./utils/snap");
 function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
 function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
@@ -23,29 +14,31 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf.bind() : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
+import { Record, List, Map, fromJS } from 'immutable';
+import { MODE_IDLE } from '../utils/constants';
+import { SNAP_MASK } from '../utils/snap';
 var safeLoadMapList = function safeLoadMapList(mapList, Model, defaultMap) {
-  return mapList ? new _immutable.Map(mapList).map(function (m) {
+  return mapList ? new Map(mapList).map(function (m) {
     return new Model(m);
-  }).toMap() : defaultMap || new _immutable.Map();
+  }).toMap() : defaultMap || new Map();
 };
-var Grid = /*#__PURE__*/function (_Record) {
+export var Grid = /*#__PURE__*/function (_Record) {
   _inherits(Grid, _Record);
   var _super = _createSuper(Grid);
   function Grid() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Grid);
     return _super.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      properties: (0, _immutable.fromJS)(json.properties || {})
+      properties: fromJS(json.properties || {})
     }));
   }
   return _createClass(Grid);
-}((0, _immutable.Record)({
+}(Record({
   id: '',
   type: '',
-  properties: (0, _immutable.Map)()
+  properties: Map()
 }, 'Grid'));
-exports.Grid = Grid;
-var DefaultGrids = new _immutable.Map({
+export var DefaultGrids = new Map({
   'h1': new Grid({
     id: 'h1',
     type: 'horizontal-streak',
@@ -63,133 +56,126 @@ var DefaultGrids = new _immutable.Map({
     }
   })
 });
-exports.DefaultGrids = DefaultGrids;
-var ElementsSet = /*#__PURE__*/function (_Record2) {
+export var ElementsSet = /*#__PURE__*/function (_Record2) {
   _inherits(ElementsSet, _Record2);
   var _super2 = _createSuper(ElementsSet);
   function ElementsSet() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, ElementsSet);
     return _super2.call(this, {
-      vertices: new _immutable.List(json.vertices || []),
-      lines: new _immutable.List(json.lines || []),
-      holes: new _immutable.List(json.holes || []),
-      areas: new _immutable.List(json.areas || []),
-      items: new _immutable.List(json.items || [])
+      vertices: new List(json.vertices || []),
+      lines: new List(json.lines || []),
+      holes: new List(json.holes || []),
+      areas: new List(json.areas || []),
+      items: new List(json.items || [])
     });
   }
   return _createClass(ElementsSet);
-}((0, _immutable.Record)({
-  vertices: new _immutable.List(),
-  lines: new _immutable.List(),
-  holes: new _immutable.List(),
-  areas: new _immutable.List(),
-  items: new _immutable.List()
+}(Record({
+  vertices: new List(),
+  lines: new List(),
+  holes: new List(),
+  areas: new List(),
+  items: new List()
 }, 'ElementsSet'));
-exports.ElementsSet = ElementsSet;
 var sharedAttributes = {
   id: '',
   type: '',
   prototype: '',
   name: '',
-  misc: new _immutable.Map(),
+  misc: new Map(),
   selected: false,
-  properties: new _immutable.Map(),
+  properties: new Map(),
   visible: true
 };
-var Vertex = /*#__PURE__*/function (_Record3) {
+export var Vertex = /*#__PURE__*/function (_Record3) {
   _inherits(Vertex, _Record3);
   var _super3 = _createSuper(Vertex);
   function Vertex() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Vertex);
     return _super3.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      lines: new _immutable.List(json.lines || []),
-      areas: new _immutable.List(json.areas || [])
+      lines: new List(json.lines || []),
+      areas: new List(json.areas || [])
     }));
   }
   return _createClass(Vertex);
-}((0, _immutable.Record)(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
+}(Record(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
   x: -1,
   y: -1,
   prototype: 'vertices',
-  lines: new _immutable.List(),
-  areas: new _immutable.List()
+  lines: new List(),
+  areas: new List()
 }), 'Vertex'));
-exports.Vertex = Vertex;
-var Line = /*#__PURE__*/function (_Record4) {
+export var Line = /*#__PURE__*/function (_Record4) {
   _inherits(Line, _Record4);
   var _super4 = _createSuper(Line);
   function Line() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Line);
     return _super4.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      properties: (0, _immutable.fromJS)(json.properties || {}),
-      vertices: new _immutable.List(json.vertices || []),
-      holes: new _immutable.List(json.holes || [])
+      properties: fromJS(json.properties || {}),
+      vertices: new List(json.vertices || []),
+      holes: new List(json.holes || [])
     }));
   }
   return _createClass(Line);
-}((0, _immutable.Record)(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
+}(Record(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
   prototype: 'lines',
-  vertices: new _immutable.List(),
-  holes: new _immutable.List()
+  vertices: new List(),
+  holes: new List()
 }), 'Line'));
-exports.Line = Line;
-var Hole = /*#__PURE__*/function (_Record5) {
+export var Hole = /*#__PURE__*/function (_Record5) {
   _inherits(Hole, _Record5);
   var _super5 = _createSuper(Hole);
   function Hole() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Hole);
     return _super5.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      properties: (0, _immutable.fromJS)(json.properties || {})
+      properties: fromJS(json.properties || {})
     }));
   }
   return _createClass(Hole);
-}((0, _immutable.Record)(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
+}(Record(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
   prototype: 'holes',
   offset: -1,
   line: ''
 }), 'Hole'));
-exports.Hole = Hole;
-var Area = /*#__PURE__*/function (_Record6) {
+export var Area = /*#__PURE__*/function (_Record6) {
   _inherits(Area, _Record6);
   var _super6 = _createSuper(Area);
   function Area() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Area);
     return _super6.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      properties: (0, _immutable.fromJS)(json.properties || {}),
-      vertices: new _immutable.List(json.vertices || [])
+      properties: fromJS(json.properties || {}),
+      vertices: new List(json.vertices || [])
     }));
   }
   return _createClass(Area);
-}((0, _immutable.Record)(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
+}(Record(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
   prototype: 'areas',
-  vertices: new _immutable.List(),
-  holes: new _immutable.List()
+  vertices: new List(),
+  holes: new List()
 }), 'Area'));
-exports.Area = Area;
-var Item = /*#__PURE__*/function (_Record7) {
+export var Item = /*#__PURE__*/function (_Record7) {
   _inherits(Item, _Record7);
   var _super7 = _createSuper(Item);
   function Item() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Item);
     return _super7.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      properties: (0, _immutable.fromJS)(json.properties || {})
+      properties: fromJS(json.properties || {})
     }));
   }
   return _createClass(Item);
-}((0, _immutable.Record)(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
+}(Record(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
   prototype: 'items',
   x: 0,
   y: 0,
   rotation: 0
 }), 'Item'));
-exports.Item = Item;
-var Layer = /*#__PURE__*/function (_Record8) {
+export var Layer = /*#__PURE__*/function (_Record8) {
   _inherits(Layer, _Record8);
   var _super8 = _createSuper(Layer);
   function Layer() {
@@ -205,49 +191,46 @@ var Layer = /*#__PURE__*/function (_Record8) {
     }));
   }
   return _createClass(Layer);
-}((0, _immutable.Record)({
+}(Record({
   id: '',
   altitude: 0,
   order: 0,
   opacity: 1,
   name: '',
   visible: true,
-  vertices: new _immutable.Map(),
-  lines: new _immutable.Map(),
-  holes: new _immutable.Map(),
-  areas: new _immutable.Map(),
-  items: new _immutable.Map(),
+  vertices: new Map(),
+  lines: new Map(),
+  holes: new Map(),
+  areas: new Map(),
+  items: new Map(),
   selected: new ElementsSet()
 }, 'Layer'));
-exports.Layer = Layer;
-var Group = /*#__PURE__*/function (_Record9) {
+export var Group = /*#__PURE__*/function (_Record9) {
   _inherits(Group, _Record9);
   var _super9 = _createSuper(Group);
   function Group() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, Group);
     return _super9.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      properties: (0, _immutable.fromJS)(json.properties || {}),
-      elements: (0, _immutable.fromJS)(json.elements || {})
+      properties: fromJS(json.properties || {}),
+      elements: fromJS(json.elements || {})
     }));
   }
   return _createClass(Group);
-}((0, _immutable.Record)(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
+}(Record(_objectSpread(_objectSpread({}, sharedAttributes), {}, {
   prototype: 'groups',
   x: 0,
   y: 0,
   rotation: 0,
-  elements: new _immutable.Map()
+  elements: new Map()
 }), 'Group'));
-exports.Group = Group;
-var DefaultLayers = new _immutable.Map({
+export var DefaultLayers = new Map({
   'layer-1': new Layer({
     id: 'layer-1',
     name: 'default'
   })
 });
-exports.DefaultLayers = DefaultLayers;
-var Scene = /*#__PURE__*/function (_Record10) {
+export var Scene = /*#__PURE__*/function (_Record10) {
   _inherits(Scene, _Record10);
   var _super10 = _createSuper(Scene);
   function Scene() {
@@ -259,48 +242,46 @@ var Scene = /*#__PURE__*/function (_Record10) {
       layers: layers,
       selectedLayer: layers.first().id,
       groups: safeLoadMapList(json.groups || {}, Group),
-      meta: json.meta ? (0, _immutable.fromJS)(json.meta) : new _immutable.Map(),
-      guides: json.guides ? (0, _immutable.fromJS)(json.guides) : new _immutable.Map({
-        horizontal: new _immutable.Map(),
-        vertical: new _immutable.Map(),
-        circular: new _immutable.Map()
+      meta: json.meta ? fromJS(json.meta) : new Map(),
+      guides: json.guides ? fromJS(json.guides) : new Map({
+        horizontal: new Map(),
+        vertical: new Map(),
+        circular: new Map()
       })
     }));
   }
   return _createClass(Scene);
-}((0, _immutable.Record)({
+}(Record({
   unit: 'cm',
-  layers: new _immutable.Map(),
-  grids: new _immutable.Map(),
+  layers: new Map(),
+  grids: new Map(),
   selectedLayer: null,
-  groups: new _immutable.Map(),
+  groups: new Map(),
   width: 3000,
   height: 2000,
-  meta: new _immutable.Map(),
+  meta: new Map(),
   //additional info
-  guides: new _immutable.Map()
+  guides: new Map()
 }, 'Scene'));
-exports.Scene = Scene;
-var CatalogElement = /*#__PURE__*/function (_Record11) {
+export var CatalogElement = /*#__PURE__*/function (_Record11) {
   _inherits(CatalogElement, _Record11);
   var _super11 = _createSuper(CatalogElement);
   function CatalogElement() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, CatalogElement);
     return _super11.call(this, _objectSpread(_objectSpread({}, json), {}, {
-      info: (0, _immutable.fromJS)(json.info),
-      properties: (0, _immutable.fromJS)(json.properties)
+      info: fromJS(json.info),
+      properties: fromJS(json.properties)
     }));
   }
   return _createClass(CatalogElement);
-}((0, _immutable.Record)({
+}(Record({
   name: '',
   prototype: '',
-  info: new _immutable.Map(),
-  properties: new _immutable.Map()
+  info: new Map(),
+  properties: new Map()
 }, 'CatalogElement'));
-exports.CatalogElement = CatalogElement;
-var Catalog = /*#__PURE__*/function (_Record12) {
+export var Catalog = /*#__PURE__*/function (_Record12) {
   _inherits(Catalog, _Record12);
   var _super12 = _createSuper(Catalog);
   function Catalog() {
@@ -348,33 +329,31 @@ var Catalog = /*#__PURE__*/function (_Record12) {
     }
   }]);
   return Catalog;
-}((0, _immutable.Record)({
+}(Record({
   ready: false,
   page: 'root',
-  path: new _immutable.List(),
-  elements: new _immutable.Map()
+  path: new List(),
+  elements: new Map()
 }, 'Catalog'));
-exports.Catalog = Catalog;
-var HistoryStructure = /*#__PURE__*/function (_Record13) {
+export var HistoryStructure = /*#__PURE__*/function (_Record13) {
   _inherits(HistoryStructure, _Record13);
   var _super13 = _createSuper(HistoryStructure);
   function HistoryStructure() {
     var json = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
     _classCallCheck(this, HistoryStructure);
     return _super13.call(this, {
-      list: (0, _immutable.fromJS)(json.list || []),
+      list: fromJS(json.list || []),
       first: new Scene(json.scene),
       last: new Scene(json.last || json.scene)
     });
   }
   return _createClass(HistoryStructure);
-}((0, _immutable.Record)({
-  list: new _immutable.List(),
+}(Record({
+  list: new List(),
   first: null,
   last: null
 }, 'HistoryStructure'));
-exports.HistoryStructure = HistoryStructure;
-var State = /*#__PURE__*/function (_Record14) {
+export var State = /*#__PURE__*/function (_Record14) {
   _inherits(State, _Record14);
   var _super14 = _createSuper(State);
   function State() {
@@ -384,37 +363,36 @@ var State = /*#__PURE__*/function (_Record14) {
       scene: new Scene(json.scene),
       sceneHistory: new HistoryStructure(json),
       catalog: new Catalog(json.catalog || {}),
-      viewer2D: new _immutable.Map(json.viewer2D || {}),
-      drawingSupport: new _immutable.Map(json.drawingSupport || {}),
-      draggingSupport: new _immutable.Map(json.draggingSupport || {}),
-      rotatingSupport: new _immutable.Map(json.rotatingSupport || {}),
-      misc: json.misc ? (0, _immutable.fromJS)(json.misc) : new _immutable.Map()
+      viewer2D: new Map(json.viewer2D || {}),
+      drawingSupport: new Map(json.drawingSupport || {}),
+      draggingSupport: new Map(json.draggingSupport || {}),
+      rotatingSupport: new Map(json.rotatingSupport || {}),
+      misc: json.misc ? fromJS(json.misc) : new Map()
     }));
   }
   return _createClass(State);
-}((0, _immutable.Record)({
-  mode: _constants.MODE_IDLE,
+}(Record({
+  mode: MODE_IDLE,
   scene: new Scene(),
   sceneHistory: new HistoryStructure(),
   catalog: new Catalog(),
-  viewer2D: new _immutable.Map(),
-  mouse: new _immutable.Map({
+  viewer2D: new Map(),
+  mouse: new Map({
     x: 0,
     y: 0
   }),
   zoom: 0,
-  snapMask: _snap.SNAP_MASK,
-  snapElements: new _immutable.List(),
+  snapMask: SNAP_MASK,
+  snapElements: new List(),
   activeSnapElement: null,
-  drawingSupport: new _immutable.Map(),
-  draggingSupport: new _immutable.Map(),
-  rotatingSupport: new _immutable.Map(),
-  errors: new _immutable.List(),
-  warnings: new _immutable.List(),
-  clipboardProperties: new _immutable.Map(),
-  selectedElementsHistory: new _immutable.List(),
-  misc: new _immutable.Map(),
+  drawingSupport: new Map(),
+  draggingSupport: new Map(),
+  rotatingSupport: new Map(),
+  errors: new List(),
+  warnings: new List(),
+  clipboardProperties: new Map(),
+  selectedElementsHistory: new List(),
+  misc: new Map(),
   //additional info
   alterate: false
 }, 'State'));
-exports.State = State;

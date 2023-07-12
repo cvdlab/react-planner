@@ -3,10 +3,10 @@ import PropTypes from 'prop-types';
 import { Map, fromJS } from 'immutable';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import { GeometryUtils, MathUtils } from '../../../utils/export';
-import * as SharedStyle from '../../../shared-style';
+import * as SharedStyle from '../../../styles/shared-style';
 import convert from 'convert-units';
 import { MdContentCopy, MdContentPaste } from 'react-icons/md';
-import ReactPlannerContext from '../../../react-planner-context';
+import ReactPlannerContext from '../../../utils/react-planner-context';
 
 const PRECISION = 2;
 

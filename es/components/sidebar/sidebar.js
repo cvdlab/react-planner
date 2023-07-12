@@ -13,7 +13,7 @@ import PanelLayers from './panel-layers';
 import PanelGuides from './panel-guides';
 import PanelGroups from './panel-groups';
 import PanelLayerElements from './panel-layer-elements';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 import If from '../../utils/react-if';
 var STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,

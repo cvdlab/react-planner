@@ -13,8 +13,8 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 import React, { useContext, useState } from 'react';
 import PropTypes from 'prop-types';
 import { MdNavigateNext } from 'react-icons/md';
-import * as SharedStyle from '../../shared-style';
-import ReactPlannerContext from '../../react-planner-context';
+import * as SharedStyle from '../../styles/shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
 var STYLE_BOX = {
   width: '14em',
   height: '14em',

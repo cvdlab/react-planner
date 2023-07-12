@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 const STYLE_INPUT = {
   display: 'block',

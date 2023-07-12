@@ -34,6 +34,13 @@ module.exports = (env, self) => {
       extensions: ['.js', '.jsx'],
       alias: {
         'react-planner': path.join(__dirname, '../src/index'),
+        'react-planner-catalog': path.join(__dirname, '../src/catalog/index'),
+        'react-planner-utils': path.join(__dirname, '../src/utils/index'),
+        'react-planner-styles': path.join(__dirname, '../src/styles/index'),
+        'react-planner-models': path.join(__dirname, '../src/models/index'),
+        'react-planner-reducers': path.join(__dirname, '../src/reducers/index'),
+        'react-planner-plugins': path.join(__dirname, '../src/plugins/index'),
+        'react-planner-components': path.join(__dirname, '../src/components/index'),
       },
       // TODO(pg): check the comment below
       // This section in Webpack 5 was added to manage the removal of automatic Node.js polyfills in Webpack 5. If your code depends on these or other Node.js core modules, you might need to install appropriate polyfills.

@@ -6,7 +6,7 @@ import {
   BEGIN_DRAGGING_HOLE,
   UPDATE_DRAGGING_HOLE,
   END_DRAGGING_HOLE
-} from '../constants';
+} from '../utils/constants';
 
 export function selectHole(layerID, holeID) {
   return {

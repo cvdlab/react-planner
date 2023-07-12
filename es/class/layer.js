@@ -7,7 +7,7 @@ function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input ==
 import { List } from 'immutable';
 import { Project, Area, Line, Hole, Item, Vertex } from './export';
 import { GraphInnerCycles, GeometryUtils, IDBroker } from '../utils/export';
-import { Layer as LayerModel } from '../models';
+import { Layer as LayerModel } from '../models/models';
 var sameSet = function sameSet(set1, set2) {
   return set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 };

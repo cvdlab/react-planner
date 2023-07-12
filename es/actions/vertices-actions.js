@@ -1,4 +1,4 @@
-import { BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX } from '../constants';
+import { BEGIN_DRAGGING_VERTEX, UPDATE_DRAGGING_VERTEX, END_DRAGGING_VERTEX } from '../utils/constants';
 export function beginDraggingVertex(layerID, vertexID, x, y, snapMask) {
   return {
     type: BEGIN_DRAGGING_VERTEX,

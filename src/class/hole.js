@@ -15,7 +15,7 @@ import {
   MODE_IDLE,
   MODE_DRAWING_HOLE,
   MODE_DRAGGING_HOLE,
-} from '../constants';
+} from '../utils/constants';
 
 import {
   GeometryUtils

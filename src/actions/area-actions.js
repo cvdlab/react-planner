@@ -1,4 +1,4 @@
-import {SELECT_AREA} from '../constants';
+import {SELECT_AREA} from '../utils/constants';
 
 export function selectArea(layerID, areaID) {
   return {

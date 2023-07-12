@@ -7,7 +7,9 @@ import * as history from './history';
 import * as ObjectUtils from './objects-utils';
 import IDBroker from './id-broker';
 import NameGenerator from './name-generator';
-export { GeometryUtils, GraphInnerCycles, MathUtils, SnapUtils, SnapSceneUtils, history, IDBroker, NameGenerator, ObjectUtils };
+import ReactPlannerContext from './react-planner-context';
+import * as ReactPlannerConstants from './constants';
+export { GeometryUtils, GraphInnerCycles, MathUtils, SnapUtils, SnapSceneUtils, history, IDBroker, NameGenerator, ObjectUtils, ReactPlannerContext, ReactPlannerConstants };
 export default {
   GeometryUtils: GeometryUtils,
   GraphInnerCycles: GraphInnerCycles,
@@ -17,5 +19,7 @@ export default {
   history: history,
   IDBroker: IDBroker,
   NameGenerator: NameGenerator,
-  ObjectUtils: ObjectUtils
+  ObjectUtils: ObjectUtils,
+  ReactPlannerContext: ReactPlannerContext,
+  ReactPlannerConstants: ReactPlannerConstants
 };

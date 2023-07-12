@@ -10,7 +10,7 @@ import {
   MODE_DRAWING_ITEM,
   MODE_DRAGGING_ITEM,
   MODE_ROTATING_ITEM
-} from '../constants';
+} from '../utils/constants';
 
 class Item{
 

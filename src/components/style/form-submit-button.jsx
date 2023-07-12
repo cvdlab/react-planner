@@ -1,6 +1,6 @@
 import React from 'react';
 import Button from './button';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 const STYLE = {
   borderColor: "#415375",

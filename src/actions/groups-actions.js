@@ -1,4 +1,4 @@
-import { GROUP_ACTIONS } from '../constants';
+import { GROUP_ACTIONS } from '../utils/constants';
 
 export function addGroup() {
   return {

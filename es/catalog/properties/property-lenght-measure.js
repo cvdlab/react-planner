@@ -4,7 +4,7 @@ function _objectWithoutProperties(source, excluded) { if (source == null) return
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
 import React from 'react';
 import PropTypes from 'prop-types';
-import { UNITS_LENGTH, UNIT_CENTIMETER } from './../../constants';
+import { UNITS_LENGTH, UNIT_CENTIMETER } from '../../utils/constants';
 import convert from 'convert-units';
 import { FormLabel, FormNumberInput, FormSelect } from '../../components/style/export';
 import { Map } from 'immutable';

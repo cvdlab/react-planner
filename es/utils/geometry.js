@@ -12,7 +12,7 @@ function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
  *  @return {number}
  */
 import { toFixedFloat, fAbs } from './math.js';
-import { EPSILON } from '../constants';
+import { EPSILON } from './constants.js';
 export function compareVertices(v0, v1) {
   return v0.x === v1.x ? v0.y - v1.y : v0.x - v1.x;
 }

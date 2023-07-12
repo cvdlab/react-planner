@@ -6,7 +6,7 @@ import {
   MODE_2D_PAN,
   MODE_2D_ZOOM_IN,
   MODE_2D_ZOOM_OUT
-} from '../constants';
+} from '../utils/constants';
 
 export default function (state, action) {
   switch (action.type) {

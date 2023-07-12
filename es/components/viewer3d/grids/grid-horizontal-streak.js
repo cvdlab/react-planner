@@ -1,6 +1,6 @@
 import * as Three from 'three';
 import { List } from 'immutable';
-import { COLORS } from '../../../shared-style';
+import { COLORS } from '../../../styles/shared-style';
 export default function (width, height, grid, font) {
   var step = grid.properties.get('step');
   var colors = grid.properties.has('color') ? new List([grid.properties.get('color')]) : grid.properties.get('colors');

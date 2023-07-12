@@ -34,7 +34,7 @@ import {
   REMOVE_HORIZONTAL_GUIDE,
   REMOVE_VERTICAL_GUIDE,
   REMOVE_CIRCULAR_GUIDE
-} from '../constants';
+} from '../utils/constants';
 
 import { Project } from '../class/export';
 

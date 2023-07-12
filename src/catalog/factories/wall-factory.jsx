@@ -1,6 +1,6 @@
 import React from 'react';
 import { buildWall, updatedWall } from './wall-factory-3d';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 import * as Geometry from '../../utils/geometry';
 import Translator from '../../translator/translator';
 

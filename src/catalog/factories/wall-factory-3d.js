@@ -10,7 +10,7 @@ import {
 
 import ThreeBSP from '../../utils/threeCSG.es6';
 import {verticesDistance} from '../../utils/geometry';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 
 const halfPI = Math.PI / 2;
 

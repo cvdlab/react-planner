@@ -1,6 +1,6 @@
 import React from 'react';
 import { createArea, updatedArea } from './area-factory-3d';
-import * as SharedStyle from '../../shared-style';
+import * as SharedStyle from '../../styles/shared-style';
 import Translator from '../../translator/translator';
 
 let translator = new Translator();

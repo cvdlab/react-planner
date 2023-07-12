@@ -10,7 +10,7 @@ import {
   PropertyReadOnly
 } from './properties/export';
 
-import {UNIT_CENTIMETER} from '../constants';
+import {UNIT_CENTIMETER} from '../utils/constants';
 
 export default class Catalog {
 

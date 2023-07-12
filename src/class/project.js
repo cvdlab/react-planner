@@ -3,8 +3,8 @@ import {
   MODE_VIEWING_CATALOG,
   MODE_CONFIGURING_PROJECT,
   MODE_IDLE
-} from '../constants';
-import { State, Catalog } from '../models';
+} from '../utils/constants';
+import { State, Catalog } from '../models/models';
 import { history } from '../utils/export';
 import {
   Layer,
