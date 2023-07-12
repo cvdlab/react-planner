@@ -20,7 +20,7 @@ import {
   Plugins as PlannerPlugins,
 } from 'react-planner/plugins';
 import {
-  ReactPlannerWrapper as ReactPlanner,
+  ReactPlanner,
 } from 'react-planner';
 
 // Define state
