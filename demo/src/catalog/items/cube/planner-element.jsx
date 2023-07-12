@@ -1,6 +1,6 @@
 import React from 'react';
 import { BoxGeometry, MeshBasicMaterial, Mesh, BoxHelper } from 'three';
-import { ReactPlannerSharedStyle } from 'react-planner-styles';
+import { ReactPlannerSharedStyle } from 'react-planner/styles';
 
 export default {
   name: 'cube',

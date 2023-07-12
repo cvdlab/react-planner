@@ -12,13 +12,13 @@ import ToolbarScreenshotButton from './ui/toolbar-screenshot-button';
 
 import {
   Models as PlannerModels,
-} from 'react-planner-models';
+} from 'react-planner/models';
 import {
   reducer as PlannerReducer,
-} from 'react-planner-reducers';
+} from 'react-planner/reducers';
 import {
   Plugins as PlannerPlugins,
-} from 'react-planner-plugins';
+} from 'react-planner/plugins';
 import {
   ReactPlannerWrapper as ReactPlanner,
 } from 'react-planner';

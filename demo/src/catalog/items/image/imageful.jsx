@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import PropTypes from 'prop-types';
 import {Map} from 'immutable';
-import { ReactPlannerContext } from 'react-planner-utils';
+import { ReactPlannerContext } from 'react-planner/utils';
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;

@@ -1,4 +1,4 @@
-import {ElementsFactories} from 'react-planner-catalog';
+import {ElementsFactories} from 'react-planner/catalog';
 
 const info = {
   title: 'wall',
