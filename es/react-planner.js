@@ -30,7 +30,7 @@ var wrapperStyle = {
   display: 'flex',
   flexFlow: 'row nowrap'
 };
-function ReactPlanner(props) {
+function ReactPlannerContent(props) {
   var width = props.width,
     height = props.height,
     state = props.state,
@@ -93,7 +93,7 @@ function ReactPlanner(props) {
     state: extractedState
   }, otherProps)));
 }
-ReactPlanner.propTypes = {
+ReactPlannerContent.propTypes = {
   translator: PropTypes.instanceOf(Translator),
   catalog: PropTypes.instanceOf(Catalog),
   allowProjectFileSupport: PropTypes.bool,
@@ -111,7 +111,7 @@ ReactPlanner.propTypes = {
 };
 
 // Step 3: Wrap the component tree with the Provider component
-function ReactPlannerWrapper(props) {
+function ReactPlanner(props) {
   var state = props.state,
     translator = props.translator,
     catalog = props.catalog,
@@ -142,11 +142,11 @@ function ReactPlannerWrapper(props) {
       groupsActions: groupsActions,
       store: props.store
     }
-  }, /*#__PURE__*/React.createElement(ReactPlanner, props));
+  }, /*#__PURE__*/React.createElement(ReactPlannerContent, props));
 }
 
 // Step 4: Define defaultProps directly on the component function
-ReactPlannerWrapper.defaultProps = {
+ReactPlanner.defaultProps = {
   translator: new Translator(),
   catalog: new Catalog(),
   plugins: [],
@@ -169,4 +169,4 @@ function mapDispatchToProps(dispatch) {
     return bindActionCreators(actions[actionNamespace], dispatch);
   });
 }
-export default connect(mapStateToProps, mapDispatchToProps)(ReactPlannerWrapper);
+export default connect(mapStateToProps, mapDispatchToProps)(ReactPlanner);
