@@ -16,6 +16,7 @@ import diff from 'immutablediff';
 import { initPointerLock } from "./pointer-lock-navigation";
 import { firstPersonOnKeyDown, firstPersonOnKeyUp } from "./libs/first-person-controls";
 import * as SharedStyle from '../../styles/shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
 var Viewer3DFirstPerson = function Viewer3DFirstPerson(_ref) {
   var state = _ref.state,
     width = _ref.width,
@@ -31,7 +32,7 @@ var Viewer3DFirstPerson = function Viewer3DFirstPerson(_ref) {
     _useState4 = _slicedToArray(_useState3, 2),
     stopRendering = _useState4[0],
     setStopRendering = _useState4[1];
-  var canvasWrapperRef = useRef(null);
+  var canvasWrapper = useRef(null);
   var actions = useContext(ReactPlannerContext);
   var areaActions = actions.areaActions,
     holesActions = actions.holesActions,
@@ -65,7 +66,7 @@ var Viewer3DFirstPerson = function Viewer3DFirstPerson(_ref) {
       linesActions: linesActions,
       projectActions: projectActions
     };
-    var canvasWrapper = ReactDOM.findDOMNode(canvasWrapperRef);
+    var canvas = canvasWrapper.current;
 
     // let scene3D = new Three.Scene();
 
@@ -201,7 +202,7 @@ var Viewer3DFirstPerson = function Viewer3DFirstPerson(_ref) {
     renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(renderer.domElement);
+    canvas.appendChild(renderer.domElement);
     renderer.autoClear = false;
     var render = function render() {
       if (!stopRendering) {
@@ -267,22 +268,26 @@ var Viewer3DFirstPerson = function Viewer3DFirstPerson(_ref) {
     };
   }, []); // Run once on mount and cleanup on unmount
 
-  useEffect(function () {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-    if (nextProps.scene !== state.scene) {
-      var changedValues = diff(state.scene, nextProps.state.scene);
-      updateScene(planData, nextProps.state.scene, state.scene, changedValues.toJS(), actions, catalog);
-    }
-    renderer.setSize(width, height);
-    renderer.clear(); // clear buffers
-    renderer.render(scene3D, camera); // render scene 1
-    renderer.clearDepth(); // clear depth buffer
-    renderer.render(sceneOnTop, camera); // render scene 2
-  }, [state, width, height]); // Run when state, width, or height changes
+  // TODO(pg): check with old code...
+  // useEffect(() => {
+  //   camera.aspect = width / height;
+
+  //   camera.updateProjectionMatrix();
+
+  //   if (nextProps.scene !== state.scene) {
+  //     let changedValues = diff(state.scene, nextProps.state.scene);
+  //     updateScene(planData, nextProps.state.scene, state.scene, changedValues.toJS(), actions, catalog);
+  //   }
+
+  //   renderer.setSize(width, height);
+  //   renderer.clear();                     // clear buffers
+  //   renderer.render(scene3D, camera);     // render scene 1
+  //   renderer.clearDepth();                // clear depth buffer
+  //   renderer.render(sceneOnTop, camera);  // render scene 2
+  // }, [state, width, height]); // Run when state, width, or height changes
 
   return /*#__PURE__*/React.createElement("div", {
-    ref: "canvasWrapper"
+    ref: canvasWrapper
   });
 };
 Viewer3DFirstPerson.propTypes = {
