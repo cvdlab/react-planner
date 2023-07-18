@@ -10,12 +10,14 @@ import diff from 'immutablediff';
 import {initPointerLock} from "./pointer-lock-navigation";
 import {firstPersonOnKeyDown, firstPersonOnKeyUp} from "./libs/first-person-controls";
 import * as SharedStyle from '../../styles/shared-style';
+import ReactPlannerContext from '../../utils/react-planner-context';
+
 
 const Viewer3DFirstPerson = ({ state, width, height }) => {
   const [renderer, setRenderer] = useState(window.__threeRenderer || new Three.WebGLRenderer({preserveDrawingBuffer: true}));
   window.__threeRenderer = renderer;
   const [stopRendering, setStopRendering] = useState(false);
-  const canvasWrapperRef = useRef(null);
+  const canvasWrapper = useRef(null);
   const actions = useContext(ReactPlannerContext);
   const { areaActions, holesActions, itemsActions, linesActions, projectActions, catalog } = actions;
 
@@ -45,7 +47,7 @@ const Viewer3DFirstPerson = ({ state, width, height }) => {
       projectActions: projectActions
     };
 
-    let canvasWrapper = ReactDOM.findDOMNode(canvasWrapperRef);
+    let canvas = canvasWrapper.current;
 
     // let scene3D = new Three.Scene();
 
@@ -199,7 +201,7 @@ const Viewer3DFirstPerson = ({ state, width, height }) => {
     renderer.domElement.style.display = 'block';
 
     // add the output of the renderer to the html element
-    canvasWrapper.appendChild(renderer.domElement);
+    canvas.appendChild(renderer.domElement);
     renderer.autoClear = false;
 
     let render = () => {
@@ -281,26 +283,25 @@ const Viewer3DFirstPerson = ({ state, width, height }) => {
     };
   }, []); // Run once on mount and cleanup on unmount
 
-  useEffect(() => {
-    camera.aspect = width / height;
+  // TODO(pg): check with old code...
+  // useEffect(() => {
+  //   camera.aspect = width / height;
 
-    camera.updateProjectionMatrix();
+  //   camera.updateProjectionMatrix();
 
-    if (nextProps.scene !== state.scene) {
-      let changedValues = diff(state.scene, nextProps.state.scene);
-      updateScene(planData, nextProps.state.scene, state.scene, changedValues.toJS(), actions, catalog);
-    }
+  //   if (nextProps.scene !== state.scene) {
+  //     let changedValues = diff(state.scene, nextProps.state.scene);
+  //     updateScene(planData, nextProps.state.scene, state.scene, changedValues.toJS(), actions, catalog);
+  //   }
 
-    renderer.setSize(width, height);
-    renderer.clear();                     // clear buffers
-    renderer.render(scene3D, camera);     // render scene 1
-    renderer.clearDepth();                // clear depth buffer
-    renderer.render(sceneOnTop, camera);  // render scene 2
-  }, [state, width, height]); // Run when state, width, or height changes
+  //   renderer.setSize(width, height);
+  //   renderer.clear();                     // clear buffers
+  //   renderer.render(scene3D, camera);     // render scene 1
+  //   renderer.clearDepth();                // clear depth buffer
+  //   renderer.render(sceneOnTop, camera);  // render scene 2
+  // }, [state, width, height]); // Run when state, width, or height changes
 
-  return React.createElement("div", {
-    ref: "canvasWrapper"
-  });
+  return <div ref={canvasWrapper} />;
 }
 
 Viewer3DFirstPerson.propTypes = {

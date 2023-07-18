@@ -1,8 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import { MdCamera } from 'react-icons/md'
-import { ReactPlannerContext, ReactPlannerConstants } from 'react-planner/utils';
-import { ReactPlannerComponents} from 'react-planner/components';
+import { ReactPlannerContext, ReactPlannerConstants, ReactPlannerComponents } from 'react-planner';
 
 const {
   MODE_IDLE,
