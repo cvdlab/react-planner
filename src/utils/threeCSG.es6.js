@@ -7,7 +7,7 @@ const EPSILON = 1e-5,
     BACK = 2,
     SPANNING = 3;
 
-export default  class ThreeBSP {
+export default class ThreeBSP {
     constructor(geometry) {
         // Convert THREE.Geometry to ThreeBSP
         var i, _length_i,
@@ -208,7 +208,7 @@ export default  class ThreeBSP {
         return geometry;
     }
 
-    toMesh (material) {
+    toMesh(material) {
         var geometry = this.toGeometry(),
             mesh = new THREE.Mesh(geometry, material);
 
@@ -220,7 +220,7 @@ export default  class ThreeBSP {
 }
 class Polygon {
     constructor(vertices, normal, w) {
-        if (!( vertices instanceof Array )) {
+        if (!(vertices instanceof Array)) {
             vertices = [];
         }
 
@@ -316,7 +316,7 @@ class Polygon {
 
         if (classification === COPLANAR) {
 
-            ( this.normal.dot(polygon.normal) > 0 ? coplanar_front : coplanar_back ).push(polygon);
+            (this.normal.dot(polygon.normal) > 0 ? coplanar_front : coplanar_back).push(polygon);
 
         } else if (classification === FRONT) {
 
@@ -345,7 +345,7 @@ class Polygon {
                 if (ti != BACK) f.push(vi);
                 if (ti != FRONT) b.push(vi);
                 if ((ti | tj) === SPANNING) {
-                    t = ( this.w - this.normal.dot(vi) ) / this.normal.dot(vj.clone().subtract(vi));
+                    t = (this.w - this.normal.dot(vi)) / this.normal.dot(vj.clone().subtract(vi));
                     v = vi.interpolate(vj, t);
                     f.push(v);
                     b.push(v);
@@ -581,4 +581,6 @@ class Node {
     }
 }
 
-window.ThreeBSP = ThreeBSP;
+if (typeof window !== 'undefined') {
+    window.ThreeBSP = ThreeBSP;
+}

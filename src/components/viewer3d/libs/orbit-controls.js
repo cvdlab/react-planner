@@ -13,7 +13,12 @@
 //    Zoom - middle mouse, or mousewheel / touch: two finger spread or squish
 //    Pan - right mouse, or arrow keys / touch: three finter swipe
 
-let THREE = window.THREE || require('three');
+let THREE;
+if (typeof window === 'undefined') {
+  let THREE = require('three');
+} else {
+  let THREE = window.THREE || require('three');
+}
 let OrbitControls;
 
 module.exports = OrbitControls = function (object, domElement) {

@@ -2,7 +2,12 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-let THREE = window.THREE || require('three');
+let THREE;
+if (typeof window === 'undefined') {
+  THREE = require('three');
+} else {
+  THREE = window.THREE || require('three');
+}
 let PointerLockControls;
 
 module.exports = PointerLockControls = function ( camera ) {

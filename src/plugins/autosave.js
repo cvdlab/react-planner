@@ -1,4 +1,10 @@
-const localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
+let localStorage;
+if (typeof window === 'undefined') {
+  localStorage = false;
+} else {
+  localStorage = window.hasOwnProperty('localStorage') ? window.localStorage : false;
+}
+
 import { loadProject } from '../actions/project-actions';
 
 const TIMEOUT_DELAY = 500;

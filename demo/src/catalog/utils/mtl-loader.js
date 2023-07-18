@@ -4,7 +4,12 @@
  * @author angelxuanchang
  */
 
-var THREE = window.THREE || require('three');
+let THREE;
+if (typeof window === 'undefined') {
+  THREE = require('three');
+} else {
+  THREE = window.THREE || require('three');
+}
 let MTLLoader;
 
 MTLLoader = function( manager ) {

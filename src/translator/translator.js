@@ -69,6 +69,9 @@ export default class Translator {
   }
 
   static getBrowserLanguages() {
+    if (typeof navigator === 'undefined') 
+      return []
+
     return navigator.languages
       ? navigator.languages
       : [navigator.language || navigator.userLanguage]
