@@ -551,4 +551,6 @@ var Node = /*#__PURE__*/function () {
   }]);
   return Node;
 }();
-window.ThreeBSP = ThreeBSP;
+if (typeof window !== 'undefined') {
+  window.ThreeBSP = ThreeBSP;
+}

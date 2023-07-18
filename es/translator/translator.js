@@ -77,6 +77,7 @@ var Translator = /*#__PURE__*/function () {
   }], [{
     key: "getBrowserLanguages",
     value: function getBrowserLanguages() {
+      if (typeof navigator === 'undefined') return [];
       return navigator.languages ? navigator.languages : [navigator.language || navigator.userLanguage];
     }
   }]);

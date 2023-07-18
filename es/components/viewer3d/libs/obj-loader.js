@@ -2,7 +2,12 @@
  * @author mrdoob / http://mrdoob.com/
  */
 
-var THREE = window.THREE || require('three');
+var THREE;
+if (typeof window === 'undefined') {
+  THREE = require('three');
+} else {
+  THREE = window.THREE || require('three');
+}
 var OBJLoader;
 OBJLoader = function OBJLoader(manager) {
   this.manager = manager !== undefined ? manager : THREE.DefaultLoadingManager;
