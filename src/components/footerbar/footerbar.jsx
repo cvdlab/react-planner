@@ -141,7 +141,8 @@ const FooterBar = ({ state: globalState, width, height, footerbarComponents, sof
           : null
       }
 
-      <div style={rightTextStyle}>
+      {/* TODO(pg): reintegrate when needed and fix issue with display in Luccid if this is the case */}
+      {/* <div style={rightTextStyle}>
         <FooterContentButton
           state={state}
           icon={MdAddCircle}
@@ -162,7 +163,7 @@ const FooterBar = ({ state: globalState, width, height, footerbarComponents, sof
           titleStyle={warningLableStyle}
           content={[warningsJsx]}
         />
-      </div>
+      </div> */}
     </div>
   );
 }

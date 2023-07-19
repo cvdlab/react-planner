@@ -209,27 +209,7 @@ var FooterBar = function FooterBar(_ref) {
   }), softwareSignature ? /*#__PURE__*/React.createElement("div", {
     style: rightTextStyle,
     title: softwareSignature + (softwareSignature.includes('React-Planner') ? '' : " using React-Planner ".concat(VERSION))
-  }, softwareSignature) : null, /*#__PURE__*/React.createElement("div", {
-    style: rightTextStyle
-  }, /*#__PURE__*/React.createElement(FooterContentButton, {
-    state: state,
-    icon: MdAddCircle,
-    iconStyle: errorIconStyle,
-    text: errors.length.toString(),
-    textStyle: errorLableStyle,
-    title: "Errors [ ".concat(errors.length, " ]"),
-    titleStyle: errorLableStyle,
-    content: [errorsJsx]
-  }), /*#__PURE__*/React.createElement(FooterContentButton, {
-    state: state,
-    icon: MdWarning,
-    iconStyle: warningIconStyle,
-    text: warnings.length.toString(),
-    textStyle: warningLableStyle,
-    title: "Warnings [ ".concat(warnings.length, " ]"),
-    titleStyle: warningLableStyle,
-    content: [warningsJsx]
-  })));
+  }, softwareSignature) : null);
 };
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,
