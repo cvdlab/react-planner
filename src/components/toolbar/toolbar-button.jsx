@@ -10,7 +10,9 @@ const STYLE = {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
-  marginBottom: '5px',
+  marginTop: '5px',
+  marginLeft: '5px',
+  marginRight: '5px',
   fontSize: '25px',
   position: 'relative',
   cursor: 'pointer'

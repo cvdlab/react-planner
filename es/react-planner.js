@@ -8,7 +8,7 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _objectWithoutProperties(source, excluded) { if (source == null) return {}; var target = _objectWithoutPropertiesLoose(source, excluded); var key, i; if (Object.getOwnPropertySymbols) { var sourceSymbolKeys = Object.getOwnPropertySymbols(source); for (i = 0; i < sourceSymbolKeys.length; i++) { key = sourceSymbolKeys[i]; if (excluded.indexOf(key) >= 0) continue; if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue; target[key] = source[key]; } } return target; }
 function _objectWithoutPropertiesLoose(source, excluded) { if (source == null) return {}; var target = {}; var sourceKeys = Object.keys(source); var key, i; for (i = 0; i < sourceKeys.length; i++) { key = sourceKeys[i]; if (excluded.indexOf(key) >= 0) continue; target[key] = source[key]; } return target; }
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -23,12 +23,11 @@ import ReactPlannerContext from './utils/react-planner-context';
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;
 var FooterBar = FooterBarComponents.FooterBar;
-var toolbarW = 50;
-var sidebarW = 300;
 var footerBarH = 20;
 var wrapperStyle = {
   display: 'flex',
-  flexFlow: 'row nowrap'
+  flexFlow: 'row nowrap',
+  height: '100%'
 };
 function ReactPlannerContent(props) {
   var width = props.width,
@@ -36,10 +35,7 @@ function ReactPlannerContent(props) {
     state = props.state,
     stateExtractor = props.stateExtractor,
     otherProps = _objectWithoutProperties(props, _excluded);
-  var contentW = width - toolbarW - sidebarW;
-  var toolbarH = height - footerBarH;
   var contentH = height - footerBarH;
-  var sidebarH = height - footerBarH;
   var extractedState = stateExtractor(state);
   var contextValue = useContext(ReactPlannerContext); // Step 3: Access the context value using useContext
 
@@ -68,15 +64,11 @@ function ReactPlannerContent(props) {
     }
   }, [props.state]);
   return /*#__PURE__*/React.createElement("div", {
-    style: _objectSpread(_objectSpread({}, wrapperStyle), {}, {
-      height: height
-    })
+    style: _objectSpread({}, wrapperStyle)
   }, /*#__PURE__*/React.createElement(Toolbar, _extends({
-    width: toolbarW,
-    height: toolbarH,
     state: extractedState
   }, otherProps)), /*#__PURE__*/React.createElement(Content, _extends({
-    width: contentW,
+    width: width,
     height: contentH,
     state: extractedState
   }, otherProps, {
@@ -84,12 +76,8 @@ function ReactPlannerContent(props) {
       return event.preventDefault();
     }
   })), /*#__PURE__*/React.createElement(Sidebar, _extends({
-    width: sidebarW,
-    height: sidebarH,
     state: extractedState
   }, otherProps)), /*#__PURE__*/React.createElement(FooterBar, _extends({
-    width: width,
-    height: footerBarH,
     state: extractedState
   }, otherProps)));
 }

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useMemo } from 'react';
+import React, { useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
@@ -21,22 +21,18 @@ const { Toolbar } = ToolbarComponents;
 const { Sidebar } = SidebarComponents;
 const { FooterBar } = FooterBarComponents;
 
-const toolbarW = 50;
-const sidebarW = 300;
 const footerBarH = 20;
 
 const wrapperStyle = {
   display: 'flex',
-  flexFlow: 'row nowrap'
+  flexFlow: 'row nowrap',
+  height: '100%'
 };
 
 function ReactPlannerContent(props) {
   const { width, height, state, stateExtractor, ...otherProps } = props;
 
-  const contentW = width - toolbarW - sidebarW;
-  const toolbarH = height - footerBarH;
   const contentH = height - footerBarH;
-  const sidebarH = height - footerBarH;
 
   const extractedState = stateExtractor(state);
   const contextValue = useContext(ReactPlannerContext); // Step 3: Access the context value using useContext
@@ -60,11 +56,11 @@ function ReactPlannerContent(props) {
   }, [props.state]);
 
   return (
-    <div style={{ ...wrapperStyle, height }}>
-      <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...otherProps} />
-      <Content width={contentW} height={contentH} state={extractedState} {...otherProps} onWheel={event => event.preventDefault()} />
-      <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...otherProps} />
-      <FooterBar width={width} height={footerBarH} state={extractedState} {...otherProps} />
+    <div style={{ ...wrapperStyle }}>
+      <Toolbar state={extractedState} {...otherProps} />
+      <Content width={width} height={contentH} state={extractedState} {...otherProps} onWheel={event => event.preventDefault()} />
+      <Sidebar state={extractedState} {...otherProps} />
+      <FooterBar state={extractedState} {...otherProps} />
     </div>
   );
 }

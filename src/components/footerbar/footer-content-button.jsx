@@ -1,17 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../styles/shared-style';
-import {FaTimes as IconClose} from 'react-icons/fa';
+import { FaTimes as IconClose } from 'react-icons/fa';
 
 const labelContainerStyle = {
   width: 'auto',
   display: 'inline-block',
-  margin:0,
-  padding:'0px 5px 0px 0px'
+  margin: 0,
+  padding: '0px 5px 0px 0px'
 };
 
 const toggleButtonStyle = {
-  color: '#CCC',
+  color: SharedStyle.PRIMARY_COLOR.alt,
   textAlign: 'center',
   cursor: 'pointer',
   userSelect: 'none'
@@ -23,71 +23,71 @@ const toggleButtonStyleOver = {
 };
 
 const contentContainerStyleActive = {
-  position:'fixed',
-  width:'calc( 100% - 2px )',
-  height:'40%',
-  left:0,
-  bottom:20,
-  backgroundColor:SharedStyle.PRIMARY_COLOR.alt,
+  position: 'fixed',
+  width: 'calc( 100% - 2px )',
+  height: '40%',
+  left: 0,
+  bottom: 20,
+  backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
   borderTop: SharedStyle.PRIMARY_COLOR.border,
-  zIndex:0,
-  padding:0,
-  margin:0,
-  transition:'all 300ms ease'
+  zIndex: 0,
+  padding: 0,
+  margin: 0,
+  transition: 'all 300ms ease'
 };
 
 const contentContainerStyleInactive = {
   ...contentContainerStyleActive,
-  visibility:'hidden',
-  height:0
+  visibility: 'hidden',
+  height: 0
 };
 
 const contentHeaderStyle = {
-  position:'relative',
-  width:'100%',
-  height:'2em',
-  top:0,
-  left:0,
-  borderBottom:SharedStyle.PRIMARY_COLOR.border
+  position: 'relative',
+  width: '100%',
+  height: '2em',
+  top: 0,
+  left: 0,
+  borderBottom: SharedStyle.PRIMARY_COLOR.border
 };
 
 const titleStyle = {
-  position:'relative',
-  height:'2em',
-  lineHeight:'2em',
-  marginLeft:'1em'
+  position: 'relative',
+  height: '2em',
+  lineHeight: '2em',
+  marginLeft: '1em'
 };
 
 const contentAreaStyle = {
-  position:'relative',
-  width:'100%',
-  height:'calc( 100% - 2em )',
-  padding:'1em',
-  overflowY:'auto'
+  position: 'relative',
+  width: '100%',
+  height: 'calc( 100% - 2em )',
+  padding: '1em',
+  overflowY: 'auto'
 };
 
 const iconCloseStyleOut = {
-  position:'absolute',
-  width:'2em',
-  height:'2em',
-  right:0,
-  top:0,
-  padding:'0.5em',
-  borderLeft:SharedStyle.PRIMARY_COLOR.border,
-  cursor:'pointer'
+  position: 'absolute',
+  width: '2em',
+  height: '2em',
+  right: 0,
+  top: 0,
+  padding: '0.5em',
+  borderLeft: SharedStyle.PRIMARY_COLOR.border,
+  cursor: 'pointer'
 };
 
 const iconCloseStyleOver = {
   ...iconCloseStyleOut,
-  color:SharedStyle.COLORS.white,
-  backgroundColor:SharedStyle.SECONDARY_COLOR.alt
+  color: SharedStyle.COLORS.white,
+  backgroundColor: SharedStyle.SECONDARY_COLOR.alt
 };
 
 const iconStyle = {
-  width:'15px',
-  height:'15px',
-  marginTop:'-2px',
-  marginRight:'2px'
+  width: '15px',
+  height: '15px',
+  marginTop: '-2px',
+  marginRight: '2px'
 };
 
 const textStyle = {
@@ -127,12 +127,12 @@ const FooterContentButton = ({ state, text, textStyle, icon, iconStyle, content,
         onClick={toggle}
         title={title}
       >
-        <LabelIcon style={{...labelIconStyle, ...iconStyle}}/>
-        <span style={{...textStyle, ...labelTextStyle}}>{text}</span>
+        <LabelIcon style={{ ...labelIconStyle, ...iconStyle }} />
+        <span style={{ ...textStyle, ...labelTextStyle }}>{text}</span>
       </div>
       <div style={active ? contentContainerStyleActive : contentContainerStyleInactive}>
         <div style={contentHeaderStyle}>
-          <b style={{...titleStyle, ...inputTitleStyle}}>{title}</b>
+          <b style={{ ...titleStyle, ...inputTitleStyle }}>{title}</b>
           <IconClose
             style={closeOver ? iconCloseStyleOver : iconCloseStyleOut}
             onMouseOver={toggleCloseOver}
