@@ -23,7 +23,6 @@ import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
 var footerBarStyle = {
   position: 'absolute',
-  width: '100%',
   bottom: 0,
   lineHeight: '14px',
   fontSize: '12px',
@@ -62,6 +61,8 @@ var appMessageStyle = {
 };
 var FooterBar = function FooterBar(_ref) {
   var globalState = _ref.state,
+    width = _ref.width,
+    height = _ref.height,
     footerbarComponents = _ref.footerbarComponents,
     softwareSignature = _ref.softwareSignature;
   var _useState = useState({}),
@@ -106,7 +107,10 @@ var FooterBar = function FooterBar(_ref) {
     return projectActions.toggleSnap(globalState.snapMask.merge(val));
   };
   return /*#__PURE__*/React.createElement("div", {
-    style: _objectSpread({}, footerBarStyle)
+    style: _objectSpread(_objectSpread({}, footerBarStyle), {}, {
+      width: width,
+      height: height
+    })
   }, /*#__PURE__*/React.createElement(If, {
     condition: MODE_SNAPPING.includes(mode)
   }, /*#__PURE__*/React.createElement("div", {

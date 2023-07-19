@@ -78,6 +78,8 @@ function ReactPlannerContent(props) {
   })), /*#__PURE__*/React.createElement(Sidebar, _extends({
     state: extractedState
   }, otherProps)), /*#__PURE__*/React.createElement(FooterBar, _extends({
+    width: width,
+    height: footerBarH,
     state: extractedState
   }, otherProps)));
 }
