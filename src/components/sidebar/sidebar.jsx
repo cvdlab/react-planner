@@ -11,11 +11,12 @@ import * as SharedStyle from '../../styles/shared-style';
 import If from '../../utils/react-if';
 
 const STYLE = {
-  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   display: 'block',
+  borderRadius: '10px',
+  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   overflowY: 'auto',
   overflowX: 'hidden',
-  paddingBottom: '20px'
+  paddingBottom: '20px',
 };
 
 const sortButtonsCb = (a, b) => {
@@ -32,7 +33,7 @@ const sortButtonsCb = (a, b) => {
 
 const mapButtonsCb = (el, ind) => <If key={ind} condition={el.condition} style={{ position: 'relative' }}>{el.dom}</If>;
 
-export default function Sidebar({ state, width, height, sidebarComponents }) {
+export default function Sidebar({ state, sidebarComponents }) {
 
   let selectedLayer = state.getIn(['scene', 'selectedLayer']);
 
@@ -72,14 +73,16 @@ export default function Sidebar({ state, width, height, sidebarComponents }) {
   }));
 
   return (
-    <aside
-      style={{ width, height, ...STYLE }}
-      onKeyDown={event => event.stopPropagation()}
-      onKeyUp={event => event.stopPropagation()}
-      className="sidebar"
-    >
-      {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
-    </aside>
+    <div style={{ position: 'fixed', width: 256, right: 5, top: '50%', transform: 'translateY(-50%)', zIndex: 9999 }}>
+      <aside
+        style={STYLE}
+        onKeyDown={event => event.stopPropagation()}
+        onKeyUp={event => event.stopPropagation()}
+        className="sidebar"
+      >
+        {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
+      </aside>
+    </div>
   );
 }
 

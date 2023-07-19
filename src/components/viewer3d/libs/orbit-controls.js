@@ -15,9 +15,9 @@
 
 let THREE;
 if (typeof window === 'undefined') {
-  let THREE = require('three');
+  THREE = require('three');
 } else {
-  let THREE = window.THREE || require('three');
+  THREE = window.THREE || require('three');
 }
 let OrbitControls;
 

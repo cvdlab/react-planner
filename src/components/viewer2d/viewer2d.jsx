@@ -301,8 +301,8 @@ export default function Viewer2D(
   let rulerSize = 15; //px
   let rulerUnitPixelSize = 100;
   let rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
-  let rulerFnColor = SharedStyle.COLORS.white;
-  let rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
+  let rulerFnColor = SharedStyle.MATERIAL_COLORS['500'].indigo;
+  let rulerMkColor = SharedStyle.MATERIAL_COLORS['500'].indigo;
   let sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
   let sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
   let sceneZoom = state.zoom || 1;

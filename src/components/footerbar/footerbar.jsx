@@ -12,11 +12,12 @@ import { VERSION } from '../../version';
 
 const footerBarStyle = {
   position: 'absolute',
+  width: '100%',
   bottom: 0,
   lineHeight: '14px',
   fontSize: '12px',
-  color: SharedStyle.COLORS.white,
-  backgroundColor: SharedStyle.SECONDARY_COLOR.alt,
+  color: SharedStyle.PRIMARY_COLOR.text_main,
+  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
   padding: '3px 1em',
   margin: 0,
   boxSizing: 'border-box',
@@ -50,7 +51,7 @@ const coordStyle = {
 
 const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
 
-const FooterBar = ({ state: globalState, width, height, footerbarComponents, softwareSignature }) => {
+const FooterBar = ({ state: globalState, footerbarComponents, softwareSignature }) => {
   const [state] = useState({});
   const { translator, projectActions } = useContext(ReactPlannerContext);
   const { x, y } = globalState.get('mouse').toJS();
@@ -74,7 +75,7 @@ const FooterBar = ({ state: globalState, width, height, footerbarComponents, sof
   let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
 
   return (
-    <div style={{ ...footerBarStyle, width, height }}>
+    <div style={{ ...footerBarStyle }}>
 
       <If condition={MODE_SNAPPING.includes(mode)}>
         <div style={leftTextStyle}>
@@ -170,8 +171,6 @@ const FooterBar = ({ state: globalState, width, height, footerbarComponents, sof
 FooterBar.propTypes = {
   state: PropTypes.object.isRequired,
   footerbarComponents: PropTypes.array.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   softwareSignature: PropTypes.string
 };
 

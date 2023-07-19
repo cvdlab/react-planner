@@ -28,8 +28,15 @@ const Icon2D = ({ style }) => <p style={{ ...iconTextStyle, ...style }}>2D</p>;
 const Icon3D = ({ style }) => <p style={{ ...iconTextStyle, ...style }}>3D</p>;
 
 const ASIDE_STYLE = {
+  left: 0,
+  right: 0,
+  display: 'flex',
+  justifyContent: 'center',
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
-  padding: '10px'
+  border: '2px solid #ddd',
+  borderRadius: '30px',
+  padding: '10px',
+  zIndex: 99999
 };
 
 const sortButtonsCb = (a, b) => {
@@ -56,7 +63,7 @@ const mapButtonsCb = (el, ind) => {
   );
 };
 
-const Toolbar = ({ state, width, height, toolbarButtons, allowProjectFileSupport }) => {
+const Toolbar = ({ state, toolbarButtons, allowProjectFileSupport }) => {
   const { projectActions, viewer3DActions, translator } = useContext(ReactPlannerContext);
 
   let mode = state.get('mode');
@@ -145,23 +152,22 @@ const Toolbar = ({ state, width, height, toolbarButtons, allowProjectFileSupport
   }));
 
   return (
-    <aside style={{ ...ASIDE_STYLE, maxWidth: width, maxHeight: height }} className='toolbar'>
-      {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
-    </aside>
-  )
+    <div style={{ position: 'fixed', bottom: 30, left: '50%', transform: 'translateX(-50%)', zIndex: 9999 }}>
+      <aside style={ASIDE_STYLE} className='toolbar'>
+        {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
+      </aside>
+    </div>
+  );
+  
 }
 
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired,
   toolbarButtons: PropTypes.array
 };
 
 export default memo(Toolbar, (prevProps, nextProps) => {
   return prevProps.state.mode === nextProps.state.mode &&
-    prevProps.height === nextProps.height &&
-    prevProps.width === nextProps.width &&
     prevProps.state.alterate === nextProps.state.alterate;
 });
