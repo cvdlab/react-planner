@@ -15,7 +15,7 @@ import PropTypes from 'prop-types';
 import * as SharedStyle from '../../styles/shared-style';
 var toggleButtonStyle = {
   width: '5.5em',
-  color: '#CCC',
+  color: SharedStyle.PRIMARY_COLOR.alt,
   textAlign: 'center',
   cursor: 'pointer',
   userSelect: 'none',
@@ -25,7 +25,7 @@ var toggleButtonStyle = {
   display: 'inline-block'
 };
 var toggleButtonStyleOver = _objectSpread(_objectSpread({}, toggleButtonStyle), {}, {
-  backgroundColor: '#1c82c6',
+  backgroundColor: SharedStyle.PRIMARY_COLOR.alt,
   border: '1px solid #FFF',
   color: SharedStyle.COLORS.white
 });

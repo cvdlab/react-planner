@@ -273,8 +273,8 @@ export default function Viewer2D(_ref) {
   var rulerSize = 15; //px
   var rulerUnitPixelSize = 100;
   var rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
-  var rulerFnColor = SharedStyle.COLORS.white;
-  var rulerMkColor = SharedStyle.SECONDARY_COLOR.main;
+  var rulerFnColor = SharedStyle.MATERIAL_COLORS['500'].indigo;
+  var rulerMkColor = SharedStyle.MATERIAL_COLORS['500'].indigo;
   var sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
   var sceneHeight = SVGHeight || state.getIn(['scene', 'height']);
   var sceneZoom = state.zoom || 1;

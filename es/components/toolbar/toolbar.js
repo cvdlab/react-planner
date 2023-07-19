@@ -35,8 +35,15 @@ var Icon3D = function Icon3D(_ref2) {
   }, "3D");
 };
 var ASIDE_STYLE = {
+  left: 0,
+  right: 0,
+  display: 'flex',
+  justifyContent: 'center',
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
-  padding: '10px'
+  border: '2px solid #ddd',
+  borderRadius: '30px',
+  padding: '10px',
+  zIndex: 99999
 };
 var sortButtonsCb = function sortButtonsCb(a, b) {
   if (a.index === undefined || a.index === null) {
@@ -58,8 +65,6 @@ var mapButtonsCb = function mapButtonsCb(el, ind) {
 };
 var Toolbar = function Toolbar(_ref3) {
   var state = _ref3.state,
-    width = _ref3.width,
-    height = _ref3.height,
     toolbarButtons = _ref3.toolbarButtons,
     allowProjectFileSupport = _ref3.allowProjectFileSupport;
   var _useContext = useContext(ReactPlannerContext),
@@ -181,21 +186,24 @@ var Toolbar = function Toolbar(_ref3) {
       })
     };
   }));
-  return /*#__PURE__*/React.createElement("aside", {
-    style: _objectSpread(_objectSpread({}, ASIDE_STYLE), {}, {
-      maxWidth: width,
-      maxHeight: height
-    }),
+  return /*#__PURE__*/React.createElement("div", {
+    style: {
+      position: 'fixed',
+      bottom: 30,
+      left: '50%',
+      transform: 'translateX(-50%)',
+      zIndex: 9999
+    }
+  }, /*#__PURE__*/React.createElement("aside", {
+    style: ASIDE_STYLE,
     className: "toolbar"
-  }, sorter.sort(sortButtonsCb).map(mapButtonsCb));
+  }, sorter.sort(sortButtonsCb).map(mapButtonsCb)));
 };
 Toolbar.propTypes = {
   state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
   allowProjectFileSupport: PropTypes.bool.isRequired,
   toolbarButtons: PropTypes.array
 };
 export default /*#__PURE__*/memo(Toolbar, function (prevProps, nextProps) {
-  return prevProps.state.mode === nextProps.state.mode && prevProps.height === nextProps.height && prevProps.width === nextProps.width && prevProps.state.alterate === nextProps.state.alterate;
+  return prevProps.state.mode === nextProps.state.mode && prevProps.state.alterate === nextProps.state.alterate;
 });
