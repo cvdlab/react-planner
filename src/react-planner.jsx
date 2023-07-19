@@ -60,7 +60,7 @@ function ReactPlannerContent(props) {
       <Toolbar state={extractedState} {...otherProps} />
       <Content width={width} height={contentH} state={extractedState} {...otherProps} onWheel={event => event.preventDefault()} />
       <Sidebar state={extractedState} {...otherProps} />
-      <FooterBar state={extractedState} {...otherProps} />
+      <FooterBar width={width} height={footerBarH} state={extractedState} {...otherProps} />
     </div>
   );
 }

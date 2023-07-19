@@ -12,7 +12,6 @@ import { VERSION } from '../../version';
 
 const footerBarStyle = {
   position: 'absolute',
-  width: '100%',
   bottom: 0,
   lineHeight: '14px',
   fontSize: '12px',
@@ -51,7 +50,7 @@ const coordStyle = {
 
 const appMessageStyle = { borderBottom: '1px solid #555', lineHeight: '1.5em' };
 
-const FooterBar = ({ state: globalState, footerbarComponents, softwareSignature }) => {
+const FooterBar = ({ state: globalState, width, height, footerbarComponents, softwareSignature }) => {
   const [state] = useState({});
   const { translator, projectActions } = useContext(ReactPlannerContext);
   const { x, y } = globalState.get('mouse').toJS();
@@ -75,7 +74,7 @@ const FooterBar = ({ state: globalState, footerbarComponents, softwareSignature 
   let updateSnapMask = (val) => projectActions.toggleSnap(globalState.snapMask.merge(val));
 
   return (
-    <div style={{ ...footerBarStyle }}>
+    <div style={{ ...footerBarStyle, width, height }}>
 
       <If condition={MODE_SNAPPING.includes(mode)}>
         <div style={leftTextStyle}>
