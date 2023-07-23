@@ -223,6 +223,10 @@ export function angleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(y2 - y1, x2 - x1);
 }
 
+export function angleBetweenTwoVertices(v1, v2) {
+  return angleBetweenTwoPoints(v1.x, v1.y, v2.x, v2.y);
+}
+
 export function absAngleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));
 }

@@ -36,12 +36,10 @@ const ElementEditor = ({ state: appState, element, layer }) => {
   const { projectActions, catalog, translator } = useContext(ReactPlannerContext);
 
   const initAttrData = (element, layer, state) => {
-    console.log('ElementEditor initAttrData', element, layer, state);
     element = typeof element.misc === 'object' ? element.set('misc', new Map(element.misc)) : element;
 
     switch (element.prototype) {
       case 'items': {
-        console.log('ElementEditor initAttrData items', element);
         return new Map(element);
       }
       case 'lines': {
