@@ -51,7 +51,7 @@ export function linePassingThroughTwoPoints(x1, y1, x2, y2) {
   if (x1 === x2 && y1 == y2) {
     throw new Error('Geometry error');
   }
-  if (x1 === x2) return verticalLine(x);
+  if (x1 === x2) return verticalLine(x1);
   if (y1 === y2) return horizontalLine(y1);
 
   return {
