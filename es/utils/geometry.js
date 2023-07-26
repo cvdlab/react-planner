@@ -52,8 +52,10 @@ export function verticalLine(x) {
   };
 }
 export function linePassingThroughTwoPoints(x1, y1, x2, y2) {
-  if (x1 === x2 && y1 == y2) throw new Error('Geometry error');
-  if (x1 === x2) return verticalLine(x);
+  if (x1 === x2 && y1 == y2) {
+    throw new Error('Geometry error');
+  }
+  if (x1 === x2) return verticalLine(x1);
   if (y1 === y2) return horizontalLine(y1);
   return {
     a: y1 - y2,
@@ -230,6 +232,9 @@ export function angleBetweenTwoPointsAndOrigin(x1, y1, x2, y2) {
 }
 export function angleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(y2 - y1, x2 - x1);
+}
+export function angleBetweenTwoVertices(v1, v2) {
+  return angleBetweenTwoPoints(v1.x, v1.y, v2.x, v2.y);
 }
 export function absAngleBetweenTwoPoints(x1, y1, x2, y2) {
   return Math.atan2(Math.abs(y2 - y1), Math.abs(x2 - x1));

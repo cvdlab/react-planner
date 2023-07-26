@@ -43,12 +43,10 @@ var ElementEditor = function ElementEditor(_ref) {
     catalog = _useContext.catalog,
     translator = _useContext.translator;
   var initAttrData = function initAttrData(element, layer, state) {
-    console.log('ElementEditor initAttrData', element, layer, state);
     element = _typeof(element.misc) === 'object' ? element.set('misc', new Map(element.misc)) : element;
     switch (element.prototype) {
       case 'items':
         {
-          console.log('ElementEditor initAttrData items', element);
           return new Map(element);
         }
       case 'lines':

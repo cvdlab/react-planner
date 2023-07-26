@@ -14,7 +14,6 @@ export default function AttributesEditor(_ref) {
     attributeFormData = _ref.attributeFormData,
     state = _ref.state,
     rest = _objectWithoutProperties(_ref, _excluded);
-  console.log('element', element);
   switch (element.prototype) {
     case 'items':
       return /*#__PURE__*/React.createElement(ItemAttributesEditor, _extends({
