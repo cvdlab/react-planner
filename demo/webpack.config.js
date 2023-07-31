@@ -60,9 +60,9 @@ module.exports = (env, self) => {
         }]
       }, {
         test: /\.(jpe?g|png|gif|mtl|obj)$/i,
-        type: 'asset/resource',
+        type: 'asset',
         generator: {
-          filename: '[path][name].[ext]'
+          filename: '[path][name][ext]'
         }
       }, {
         test: /\.css$/,
