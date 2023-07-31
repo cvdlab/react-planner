@@ -27,8 +27,7 @@ module.exports = (env, self) => {
     devtool: isProduction ? 'source-map' : 'eval',
     devServer: {
       open: true,
-      port: port,
-      static: path.join(__dirname, './dist'),
+      port: port
     },
     resolve: {
       extensions: ['.js', '.jsx'],
@@ -62,7 +61,8 @@ module.exports = (env, self) => {
         test: /\.(jpe?g|png|gif|mtl|obj)$/i,
         type: 'asset/resource',
         generator: {
-          filename: '[path][name].[ext]'
+          filename: '[path][name][ext]',
+          publicPath: ''
         }
       }, {
         test: /\.css$/,
