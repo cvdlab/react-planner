@@ -1,0 +1,527 @@
+{
+    "unit": "cm",
+    "layers": {
+        "layer-1": {
+            "id": "layer-1",
+            "altitude": 0,
+            "order": 0,
+            "opacity": 1,
+            "name": "default",
+            "visible": true,
+            "vertices": {
+                "DGIekc_SBX": {
+                    "id": "DGIekc_SBX",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 600,
+                    "y": 1400,
+                    "lines": [
+                        "Av9UuximC"
+                    ],
+                    "areas": []
+                },
+                "lompBSW77f": {
+                    "id": "lompBSW77f",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 600,
+                    "y": 1801,
+                    "lines": [
+                        "TFLf5Nzrq"
+                    ],
+                    "areas": []
+                },
+                "p2Aw3RUKWQ": {
+                    "id": "p2Aw3RUKWQ",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 900,
+                    "y": 1700,
+                    "lines": [
+                        "CzfarVYr7"
+                    ],
+                    "areas": []
+                },
+                "Wcy2b6UQz1": {
+                    "id": "Wcy2b6UQz1",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 900,
+                    "y": 1501,
+                    "lines": [
+                        "Iv6tj5cxHC"
+                    ],
+                    "areas": []
+                },
+                "pKCc279r7k": {
+                    "id": "pKCc279r7k",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 600,
+                    "y": 1700,
+                    "lines": [
+                        "CzfarVYr7"
+                    ],
+                    "areas": []
+                },
+                "ZwwpaOOAbz": {
+                    "id": "ZwwpaOOAbz",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 600,
+                    "y": 1501,
+                    "lines": [
+                        "Iv6tj5cxHC"
+                    ],
+                    "areas": []
+                },
+                "SL2HnDsczS": {
+                    "id": "SL2HnDsczS",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 300,
+                    "y": 1600,
+                    "lines": [
+                        "f2mateTHF"
+                    ],
+                    "areas": []
+                },
+                "_rc-qOCRfr": {
+                    "id": "_rc-qOCRfr",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 300,
+                    "y": 1801,
+                    "lines": [
+                        "TFLf5Nzrq"
+                    ],
+                    "areas": []
+                },
+                "3GqnV5Bajs": {
+                    "id": "3GqnV5Bajs",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 600,
+                    "y": 1600,
+                    "lines": [
+                        "f2mateTHF"
+                    ],
+                    "areas": []
+                },
+                "f_NN2oDBl4": {
+                    "id": "f_NN2oDBl4",
+                    "type": "",
+                    "prototype": "vertices",
+                    "name": "Vertex",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {},
+                    "visible": true,
+                    "x": 300,
+                    "y": 1400,
+                    "lines": [
+                        "Av9UuximC"
+                    ],
+                    "areas": []
+                }
+            },
+            "lines": {
+                "f2mateTHF": {
+                    "id": "f2mateTHF",
+                    "type": "wall",
+                    "prototype": "lines",
+                    "name": "Wall",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {
+                        "height": {
+                            "length": 300
+                        },
+                        "thickness": {
+                            "length": 20
+                        },
+                        "textureA": "bricks",
+                        "textureB": "bricks"
+                    },
+                    "visible": true,
+                    "vertices": [
+                        "SL2HnDsczS",
+                        "3GqnV5Bajs"
+                    ],
+                    "holes": [
+                        "Tpw_dHCPu"
+                    ]
+                },
+                "CzfarVYr7": {
+                    "id": "CzfarVYr7",
+                    "type": "wall",
+                    "prototype": "lines",
+                    "name": "Wall",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {
+                        "height": {
+                            "length": 300
+                        },
+                        "thickness": {
+                            "length": 20
+                        },
+                        "textureA": "bricks",
+                        "textureB": "bricks"
+                    },
+                    "visible": true,
+                    "vertices": [
+                        "pKCc279r7k",
+                        "p2Aw3RUKWQ"
+                    ],
+                    "holes": [
+                        "4H07OV-Dr"
+                    ]
+                },
+                "TFLf5Nzrq": {
+                    "id": "TFLf5Nzrq",
+                    "type": "wall",
+                    "prototype": "lines",
+                    "name": "Wall",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {
+                        "height": {
+                            "length": 300
+                        },
+                        "thickness": {
+                            "length": 20
+                        },
+                        "textureA": "bricks",
+                        "textureB": "bricks"
+                    },
+                    "visible": true,
+                    "vertices": [
+                        "_rc-qOCRfr",
+                        "lompBSW77f"
+                    ],
+                    "holes": [
+                        "7TzxY-1vsO"
+                    ]
+                },
+                "Iv6tj5cxHC": {
+                    "id": "Iv6tj5cxHC",
+                    "type": "wall",
+                    "prototype": "lines",
+                    "name": "Wall",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {
+                        "height": {
+                            "length": 300
+                        },
+                        "thickness": {
+                            "length": 20
+                        },
+                        "textureA": "bricks",
+                        "textureB": "bricks"
+                    },
+                    "visible": true,
+                    "vertices": [
+                        "ZwwpaOOAbz",
+                        "Wcy2b6UQz1"
+                    ],
+                    "holes": [
+                        "ch-vRD7uN"
+                    ]
+                },
+                "Av9UuximC": {
+                    "id": "Av9UuximC",
+                    "type": "wall",
+                    "prototype": "lines",
+                    "name": "Wall",
+                    "misc": {},
+                    "selected": false,
+                    "properties": {
+                        "height": {
+                            "length": 300
+                        },
+                        "thickness": {
+                            "length": 20,
+                            "_length": 20,
+                            "_unit": "cm"
+                        },
+                        "textureA": "bricks",
+                        "textureB": "bricks"
+                    },
+                    "visible": true,
+                    "vertices": [
+                        "f_NN2oDBl4",
+                        "DGIekc_SBX"
+                    ],
+                    "holes": [
+                        "xZmCXyqUZ"
+                    ]
+                }
+            },
+            "holes": {
+                "4H07OV-Dr": {
+                    "id": "4H07OV-Dr",
+                    "type": "double door",
+                    "prototype": "holes",
+                    "name": "Double Door",
+                    "misc": {
+                        "_unitA": "cm",
+                        "_unitB": "cm"
+                    },
+                    "selected": false,
+                    "properties": {
+                        "width": {
+                            "length": 200,
+                            "unit": "cm"
+                        },
+                        "height": {
+                            "length": 215,
+                            "unit": "cm"
+                        },
+                        "altitude": {
+                            "length": 0,
+                            "unit": "cm"
+                        },
+                        "thickness": {
+                            "length": 30,
+                            "unit": "cm"
+                        },
+                        "flip_horizontal": true,
+                        "flip_vertical": false
+                    },
+                    "visible": true,
+                    "offset": 0.5,
+                    "line": "CzfarVYr7"
+                },
+                "7TzxY-1vsO": {
+                    "id": "7TzxY-1vsO",
+                    "type": "door",
+                    "prototype": "holes",
+                    "name": "Door",
+                    "misc": {
+                        "_unitA": "cm",
+                        "_unitB": "cm"
+                    },
+                    "selected": false,
+                    "properties": {
+                        "width": {
+                            "length": 100,
+                            "_length": 100,
+                            "_unit": "cm"
+                        },
+                        "height": {
+                            "length": 215
+                        },
+                        "altitude": {
+                            "length": 0
+                        },
+                        "thickness": {
+                            "length": 30
+                        },
+                        "flip_horizontal": false,
+                        "flip_vertical": false
+                    },
+                    "visible": true,
+                    "offset": 0.5,
+                    "line": "TFLf5Nzrq"
+                },
+                "ch-vRD7uN": {
+                    "id": "ch-vRD7uN",
+                    "type": "double panic door",
+                    "prototype": "holes",
+                    "name": "Double Panic Door",
+                    "misc": {
+                        "_unitA": "cm",
+                        "_unitB": "cm"
+                    },
+                    "selected": false,
+                    "properties": {
+                        "width": {
+                            "length": 200,
+                            "unit": "cm"
+                        },
+                        "height": {
+                            "length": 215,
+                            "unit": "cm"
+                        },
+                        "altitude": {
+                            "length": 0,
+                            "unit": "cm"
+                        },
+                        "thickness": {
+                            "length": 30,
+                            "unit": "cm"
+                        },
+                        "flip_horizontal": false
+                    },
+                    "visible": true,
+                    "offset": 0.6233333333333333,
+                    "line": "Iv6tj5cxHC"
+                },
+                "Tpw_dHCPu": {
+                    "id": "Tpw_dHCPu",
+                    "type": "panic door",
+                    "prototype": "holes",
+                    "name": "Panic Door",
+                    "misc": {
+                        "_unitA": "cm",
+                        "_unitB": "cm"
+                    },
+                    "selected": false,
+                    "properties": {
+                        "width": {
+                            "length": 100,
+                            "unit": "cm"
+                        },
+                        "height": {
+                            "length": 215,
+                            "unit": "cm"
+                        },
+                        "altitude": {
+                            "length": 0,
+                            "unit": "cm"
+                        },
+                        "thickness": {
+                            "length": 30,
+                            "unit": "cm"
+                        },
+                        "flip_horizontal": false,
+                        "flip_vertical": false
+                    },
+                    "visible": true,
+                    "offset": 0.5,
+                    "line": "f2mateTHF"
+                },
+                "xZmCXyqUZ": {
+                    "id": "xZmCXyqUZ",
+                    "type": "sliding door",
+                    "prototype": "holes",
+                    "name": "Sliding Door",
+                    "misc": {
+                        "_unitA": "cm",
+                        "_unitB": "cm"
+                    },
+                    "selected": false,
+                    "properties": {
+                        "width": {
+                            "length": 200,
+                            "unit": "cm"
+                        },
+                        "height": {
+                            "length": 215,
+                            "unit": "cm"
+                        },
+                        "altitude": {
+                            "length": 0,
+                            "unit": "cm"
+                        },
+                        "thickness": {
+                            "length": 30,
+                            "unit": "cm"
+                        },
+                        "flip_horizontal": false,
+                        "flip_vertical": false
+                    },
+                    "visible": true,
+                    "offset": 0.5166666666666667,
+                    "line": "Av9UuximC"
+                }
+            },
+            "areas": {},
+            "items": {},
+            "selected": {
+                "vertices": [],
+                "lines": [],
+                "holes": [],
+                "areas": [],
+                "items": []
+            }
+        }
+    },
+    "grids": {
+        "h1": {
+            "id": "h1",
+            "type": "horizontal-streak",
+            "properties": {
+                "step": 20,
+                "colors": [
+                    "#808080",
+                    "#ddd",
+                    "#ddd",
+                    "#ddd",
+                    "#ddd"
+                ]
+            }
+        },
+        "v1": {
+            "id": "v1",
+            "type": "vertical-streak",
+            "properties": {
+                "step": 20,
+                "colors": [
+                    "#808080",
+                    "#ddd",
+                    "#ddd",
+                    "#ddd",
+                    "#ddd"
+                ]
+            }
+        }
+    },
+    "selectedLayer": "layer-1",
+    "groups": {},
+    "width": 3000,
+    "height": 2000,
+    "meta": {},
+    "guides": {
+        "horizontal": {},
+        "vertical": {},
+        "circular": {}
+    }
+}
