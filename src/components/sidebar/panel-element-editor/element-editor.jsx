@@ -269,14 +269,14 @@ const ElementEditor = ({ state: appState, element, layer }) => {
     }
 
     setAttributesFormData(_attributesFormData);
-    save({ attributesFormData });
+    save({ attributesFormData: _attributesFormData });
   }
 
   const updateProperty = (propertyName, value) => {
     let _propertiesFormData = propertiesFormData;
     _propertiesFormData = _propertiesFormData.setIn([propertyName, 'currentValue'], value);
     setPropertiesFormData(_propertiesFormData);
-    save({ propertiesFormData });
+    save({ propertiesFormData: _propertiesFormData });
   }
 
   const reset = () => {

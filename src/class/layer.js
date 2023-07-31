@@ -281,6 +281,7 @@ class Layer{
     selected.lines.forEach(lineID => state = Line.setAttributes( state, layerID, lineID, attributes ).updatedState);
     selected.holes.forEach(holeID => state = Hole.setAttributes( state, layerID, holeID, attributes ).updatedState);
     selected.items.forEach(itemID => state = Item.setAttributes( state, layerID, itemID, attributes ).updatedState);
+    // TODO(pg): check why it was commented
     //selected.areas.forEach(areaID => state = Area.setAttributes( state, layerID, areaID, attributes ).updatedState);
 
     return { updatedState: state };
