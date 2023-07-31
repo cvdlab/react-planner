@@ -48,6 +48,7 @@ const PanelGroupEditor = (props) => {
   const { groupID, state } = props;
   const { catalog, translator, itemsActions, linesActions, holesActions, groupsActions, projectActions } = useContext(ReactPlannerContext);
 
+  // TODO(pg): groupState is not used, check original code
   const [groupState, setGroupState] = useState({});
 
   useEffect(() => {
