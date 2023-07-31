@@ -49,7 +49,7 @@ export default function WallFactory(name, info, textures) {
       let point;
       let poly_points = [];
 
-      console.log("Rendering end point WP1");
+      // console.log("Rendering end point WP1");
       if (lines1.size == 0) {
         poly_points.push({ x: 0, y: half_thickness });
         poly_points.push({ x: 0, y: - half_thickness });
@@ -112,7 +112,7 @@ export default function WallFactory(name, info, textures) {
           }
         }
       } else {
-        console.log("more than 2 lines");
+        // console.log("more than 2 lines");
         // We are first computing the min and max angles between the wall and the lines that are impacting rendering
         const lines = lines1.map((line) => layer.lines.get(line));
         const points = lines.map((line) => {
@@ -142,14 +142,14 @@ export default function WallFactory(name, info, textures) {
           return acc;
         }, { min: undefined, max: undefined, minIdx: undefined, maxIdx: undefined });
 
-        console.log("angles: ", angles);
-        console.log("angleDiffs: ", angleDiffs);
+        // console.log("angles: ", angles);
+        // console.log("angleDiffs: ", angleDiffs);
 
         // Rendering the intersection of the wall and line with min angle
         let minLength = lengths.get(minIdx);
         let minAngleDiff = angleDiffs.get(minIdx);
-        console.log("minLength: ", minLength);
-        console.log("minAngleDiff: ", minAngleDiff);
+        // console.log("minLength: ", minLength);
+        // console.log("minAngleDiff: ", minAngleDiff);
 
         if (Math.abs(minAngleDiff) < EPSILON_ANGLE || minLength < EPSILON) {
           poly_points.push({ x: 0, y: half_thickness });
@@ -197,8 +197,8 @@ export default function WallFactory(name, info, textures) {
         // Rendering the intersection of the wall and line with max angle
         let maxLength = lengths.get(maxIdx);
         let maxAngleDiff = angleDiffs.get(maxIdx);
-        console.log("maxLength: ", maxLength);
-        console.log("maxAngleDiff: ", maxAngleDiff);
+        // console.log("maxLength: ", maxLength);
+        // console.log("maxAngleDiff: ", maxAngleDiff);
 
         if (Math.abs(maxAngleDiff) < EPSILON_ANGLE || maxLength < EPSILON) {
           poly_points.push({ x: 0, y: - half_thickness });
@@ -241,7 +241,7 @@ export default function WallFactory(name, info, textures) {
         }
       }
 
-      console.log("Rendering end point WP2");
+      // console.log("Rendering end point WP2");
       if (lines2.size == 0) {
         poly_points.push({ x: length, y: - half_thickness });
         poly_points.push({ x: length, y: half_thickness });
@@ -306,7 +306,7 @@ export default function WallFactory(name, info, textures) {
           }
         }
       } else {
-        console.log("more than 2 lines");
+        // console.log("more than 2 lines");
         // We are first computing the min and max angles between the wall and the lines that are impacting rendering
         const lines = lines2.map((line) => layer.lines.get(line));
         const points = lines.map((line) => {
@@ -336,14 +336,14 @@ export default function WallFactory(name, info, textures) {
           return acc;
         }, { min: undefined, max: undefined, minIdx: undefined, maxIdx: undefined });
 
-        console.log("angles: ", angles);
-        console.log("angleDiffs: ", angleDiffs);
+        // console.log("angles: ", angles);
+        // console.log("angleDiffs: ", angleDiffs);
 
         // Rendering the intersection of the wall and line with min angle
         let minLength = lengths.get(minIdx);
         let minAngleDiff = angleDiffs.get(minIdx);
-        console.log("minLength: ", minLength);
-        console.log("minAngleDiff: ", minAngleDiff);
+        // console.log("minLength: ", minLength);
+        // console.log("minAngleDiff: ", minAngleDiff);
 
         if (Math.abs(minAngleDiff) < EPSILON_ANGLE || minLength < EPSILON) {
           poly_points.push({ x: wp2.x, y: wp2.y - half_thickness });
@@ -391,8 +391,8 @@ export default function WallFactory(name, info, textures) {
         // Rendering the intersection of the wall and line with max angle
         let maxLength = lengths.get(maxIdx);
         let maxAngleDiff = angleDiffs.get(maxIdx);
-        console.log("maxLength: ", maxLength);
-        console.log("maxAngleDiff: ", maxAngleDiff);
+        // console.log("maxLength: ", maxLength);
+        // console.log("maxAngleDiff: ", maxAngleDiff);
 
         if (Math.abs(maxAngleDiff) < EPSILON_ANGLE || maxLength < EPSILON) {
           poly_points.push({ x: wp2.x, y: wp2.y + half_thickness });
@@ -480,9 +480,9 @@ export default function WallFactory(name, info, textures) {
     },
 
     render2D: function (element, layer, scene) {
-      console.log("element ID: ", element.id);
-      console.log("element: ", element);
-      console.log("layer: ", layer);
+      // console.log("element ID: ", element.id);
+      // console.log("element: ", element);
+      // console.log("layer: ", layer);
 
       let wall = layer.lines.get(element.id);
       let { x: x1, y: y1, lines: lines1 } = layer.vertices.get(element.vertices.get(0));
@@ -502,20 +502,20 @@ export default function WallFactory(name, info, textures) {
       // lines1 = lines1.filter((line, idx) => (lines1.indexOf(line) === idx));
       // lines2 = lines2.filter((line, idx) => (lines2.indexOf(line) === idx));
 
-      console.log("lines1.size: ", lines1.size);
-      console.log("lines2.size: ", lines2.size);
-      console.log("lines1: ", lines1);
-      console.log("lines2: ", lines2);
+      // console.log("lines1.size: ", lines1.size);
+      // console.log("lines2.size: ", lines2.size);
+      // console.log("lines1: ", lines1);
+      // console.log("lines2: ", lines2);
 
       let wp1 = layer.vertices.get(wall.vertices.get(0));
       let wp2 = layer.vertices.get(wall.vertices.get(1));
       let angleWall1_2 = Geometry.angleBetweenTwoVertices(wp1, wp2);
       let angleWall2_1 = Geometry.angleBetweenTwoVertices(wp2, wp1);
-      console.log("angleWall1_2: ", angleWall1_2);
-      console.log("angleWall2_1: ", angleWall2_1);
+      // console.log("angleWall1_2: ", angleWall1_2);
+      // console.log("angleWall2_1: ", angleWall2_1);
 
       const poly_points = this.calculatePolygonPoints(element, layer, length, lines1, lines2, wp1, wp2, angleWall1_2, angleWall2_1);
-      console.log("polygon points: ", poly_points);
+      // console.log("polygon points: ", poly_points);
 
       return this.renderPolygon(element, length, poly_points);
     },
