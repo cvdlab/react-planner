@@ -95,6 +95,7 @@ const Wrapper = () => {
                         width={width}
                         height={height}
                         plugins={plugins}
+                        // TODO(LM-51): Add miniature toolbarbutton to active/desactive
                         toolbarButtons={toolbarButtons}
                         stateExtractor={state => state.get('react-planner')}
                     />

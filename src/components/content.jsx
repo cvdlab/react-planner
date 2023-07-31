@@ -13,6 +13,7 @@ export default function Content({ width, height, state, customContents }) {
 
   switch (mode) {
     case constants.MODE_3D_VIEW:
+      // TODO(LM-51): customContents might be an option to display the miniature
       return <Viewer3D state={state} width={width} height={height} />;
 
     case constants.MODE_3D_FIRST_PERSON:
