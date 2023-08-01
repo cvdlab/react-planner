@@ -1216,13 +1216,6 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
-"@types/react-svg-pan-zoom@2.5.4":
-  version "2.5.4"
-  resolved "https://registry.npmmirror.com/@types/react-svg-pan-zoom/-/react-svg-pan-zoom-2.5.4.tgz#2340a37ffd5018b25e3b1c4b6282cbf3a969f698"
-  integrity sha512-l8qi1R5YBZoV7toKmnbX+1RxcaLUL0cjy4j0LL9vhTkhYNkl75dLbq5KSL5HcHnOkZQwBDP/VdPIjiEHoKo3Mw==
-  dependencies:
-    "@types/react" "*"
-
 "@types/react@*":
   version "18.2.14"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.2.14.tgz"
@@ -3476,7 +3469,7 @@ process-nextick-args@~2.0.0:
   resolved "https://registry.npmjs.org/process-nextick-args/-/process-nextick-args-2.0.1.tgz"
   integrity sha512-3ouUOpQhtgrbOa17J7+uxOTpITYWaGP7/AhoR3+A+/1e9skrzelGi/dXzEYyvbxubEF6Wn2ypscTKiKJFFn1ag==
 
-prop-types@15.7.2, prop-types@^15.5.0, prop-types@^15.6.2, prop-types@^15.7.2:
+prop-types@15.7.2, prop-types@^15.5.0, prop-types@^15.7.2:
   version "15.7.2"
   resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.7.2.tgz"
   integrity sha512-8QQikdH7//R2vurIJSutZ1smHYTcLpRWEOlHnzcWHmBYrOGUysKwSsrC89BCiFj3CbrfJ/nXFdJepOVrY1GCHQ==
@@ -3484,6 +3477,15 @@ prop-types@15.7.2, prop-types@^15.5.0, prop-types@^15.6.2, prop-types@^15.7.2:
     loose-envify "^1.4.0"
     object-assign "^4.1.1"
     react-is "^16.8.1"
+
+prop-types@^15.8.1:
+  version "15.8.1"
+  resolved "https://registry.npmmirror.com/prop-types/-/prop-types-15.8.1.tgz#67d87bf1a694f48435cf332c24af10214a3140b5"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
 
 proxy-addr@~2.0.7:
   version "2.0.7"
@@ -3548,7 +3550,7 @@ react-icons@3.5.0:
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-3.5.0.tgz"
   integrity sha512-LuKUcavgPWjPrRkIdNbsGw8LqcnhfNN0AGCtU4Td1UkOenJSIWbYppSJrD6zi/TDZOHtTs9opu6ZKB/NFWk21g==
 
-react-is@^16.7.0, react-is@^16.8.1:
+react-is@^16.13.1, react-is@^16.7.0, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -3585,13 +3587,13 @@ react-sizeme@^3.0.2:
     shallowequal "^1.1.0"
     throttle-debounce "^3.0.1"
 
-react-svg-pan-zoom@2.18.0:
-  version "2.18.0"
-  resolved "https://registry.npmjs.org/react-svg-pan-zoom/-/react-svg-pan-zoom-2.18.0.tgz"
-  integrity sha512-1nmYFFOd9qL025U4vy2KeHI6ja2GAAMkVELwc2IHTufE9O4r17uCj7V6mW6wIbaC37eWB6CGXiVEESjAKZmvRg==
+react-svg-pan-zoom@^3.12.1:
+  version "3.12.1"
+  resolved "https://registry.npmmirror.com/react-svg-pan-zoom/-/react-svg-pan-zoom-3.12.1.tgz#971de6163fbad0d2a98d3ad7eb09bd1941564376"
+  integrity sha512-ug1LHCN5qed56C64xFypr/ClajuMFkig1OKvwJrIgGeSyHOjWM7XGgSgeP3IfHAkNw8QEc6a31ggZRpTijWYRw==
   dependencies:
-    prop-types "^15.6.2"
-    transformation-matrix "^1.12.0"
+    prop-types "^15.8.1"
+    transformation-matrix "^2.14.0"
 
 react-tabs@6.0.1:
   version "6.0.1"
@@ -4157,10 +4159,10 @@ toidentifier@1.0.1:
   resolved "https://registry.npmjs.org/toidentifier/-/toidentifier-1.0.1.tgz"
   integrity sha512-o5sSPKEkg/DIQNmH43V0/uerLrpzVedkUh8tGNvaeXpfpuwjKenlSox/2O/BTlZUtEe+JG7s5YhEz608PlAHRA==
 
-transformation-matrix@^1.12.0:
-  version "1.15.3"
-  resolved "https://registry.npmjs.org/transformation-matrix/-/transformation-matrix-1.15.3.tgz"
-  integrity sha512-ThJH58GNFKhCw3gIoOtwf3tNwuYjbyEeiGdeq4mNMYWdJctnI896KUqn6PVt7jmNVepqa1bcKQtnMB1HtjsDMA==
+transformation-matrix@^2.14.0:
+  version "2.15.0"
+  resolved "https://registry.npmmirror.com/transformation-matrix/-/transformation-matrix-2.15.0.tgz#4276ac7e384d9764b044c2d48ced77f8cc1f88c0"
+  integrity sha512-HN3kCvvH4ug3Xm/ycOfCFQOOktg5htxlC4Ih1Z7Wb6BMtQho+q+irOdGo10ARRKpqkRBXgBzQFw/AVmR0oIf0g==
 
 trim-repeated@^1.0.0:
   version "1.0.0"

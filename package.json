@@ -76,7 +76,7 @@
     "react-icons": "3.5.0",
     "react-range": "1.8.14",
     "react-redux": "7.2.9",
-    "react-svg-pan-zoom": "2.18.0",
+    "react-svg-pan-zoom": "^3.12.1",
     "react-tabs": "6.0.1",
     "redux": "4.0.1",
     "shortid": "2.2.14"
