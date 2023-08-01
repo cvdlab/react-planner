@@ -1,15 +1,12 @@
 import React from 'react';
 import * as Three from 'three';
 
-const black = new Three.MeshLambertMaterial({color : 0x000000});
-const green = new Three.MeshLambertMaterial( {color : 0x348781});
-const red = new Three.MeshLambertMaterial({color : 0xFF0000});
-const turquoise = new Three.MeshLambertMaterial({color : 0x43C6DB,opacity :0.7,transparent: true});
-const metalBlue = new Three.MeshLambertMaterial({color : 0xB7CEEC});
-const darkGrey = new Three.MeshLambertMaterial({color : 0x313131});
-const darkGrey2 = new Three.MeshLambertMaterial({color : 0x212121});
-const metalBlueGrey = new Three.MeshLambertMaterial({color : 0x566D7E});
-
+const black = new Three.MeshLambertMaterial({ color: 0x000000 });
+const green = new Three.MeshLambertMaterial({ color: 0x348781 });
+const red = new Three.MeshLambertMaterial({ color: 0xFF0000 });
+const turquoise = new Three.MeshLambertMaterial({ color: 0x43C6DB, opacity: 0.7, transparent: true });
+const metalBlue = new Three.MeshLambertMaterial({ color: 0xB7CEEC });
+const metalBlueGrey = new Three.MeshLambertMaterial({ color: 0x566D7E });
 
 function makePanicDoor() {
 
@@ -84,8 +81,8 @@ function makeSafetyHandle() {
 
   let handle = new Three.Object3D();
   let handleSupportGeometry = new Three.BoxGeometry(0.5, 0.1, 0.005);
-  let PushButtonGeometry = new Three.CylinderGeometry(0.04, 0.04, 0.48, Math.round(32 ));
-  let PushButtonCoverGeometry = new Three.CylinderGeometry(0.042, 0.042, 0.01, Math.round(32 ));
+  let PushButtonGeometry = new Three.CylinderGeometry(0.04, 0.04, 0.48, Math.round(32));
+  let PushButtonCoverGeometry = new Three.CylinderGeometry(0.042, 0.042, 0.01, Math.round(32));
   let handleSupport = new Three.Mesh(handleSupportGeometry, black);
   let pushButton = new Three.Mesh(PushButtonGeometry, red);
   let pushButtonCover1 = new Three.Mesh(PushButtonCoverGeometry, black);
@@ -105,8 +102,8 @@ function makeSafetyHandle() {
 function makePivot() {
 
   let DoorPivot = new Three.Object3D();
-  let DownPivotGeometry = new Three.CylinderGeometry(0.009, 0.009, 0.04, Math.round(32 ));
-  let UpPivotGeometry = new Three.CylinderGeometry(0.01, 0.01, 0.04, Math.round(32 ));
+  let DownPivotGeometry = new Three.CylinderGeometry(0.009, 0.009, 0.04, Math.round(32));
+  let UpPivotGeometry = new Three.CylinderGeometry(0.01, 0.01, 0.04, Math.round(32));
   let downPivot1 = new Three.Mesh(DownPivotGeometry, green);
   let upPivot1 = new Three.Mesh(UpPivotGeometry, green);
   let downPivot2 = new Three.Mesh(DownPivotGeometry, green);
@@ -140,9 +137,9 @@ function makeHandle() {
 function makeHilt() {
 
   let hilt = new Three.Object3D();
-  let GeometryPiece1 = new Three.CylinderGeometry(0.01, 0.01, 0.03, Math.round(32 ));
-  let GeometryPiece2 = new Three.SphereGeometry(0.01, Math.round(32 ), Math.round(32 ));
-  let GeometryPiece3 = new Three.CylinderGeometry(0.01, 0.01, 0.07, Math.round(32 ));
+  let GeometryPiece1 = new Three.CylinderGeometry(0.01, 0.01, 0.03, Math.round(32));
+  let GeometryPiece2 = new Three.SphereGeometry(0.01, Math.round(32), Math.round(32));
+  let GeometryPiece3 = new Three.CylinderGeometry(0.01, 0.01, 0.07, Math.round(32));
   let piece1 = new Three.Mesh(GeometryPiece1, black);
   let piece2 = new Three.Mesh(GeometryPiece2, black);
   let piece3 = new Three.Mesh(GeometryPiece3, black);
@@ -163,7 +160,7 @@ function makeHandleBase() {
 
   let base = new Three.Object3D();
   let BaseGeometry1 = new Three.BoxGeometry(0.038, 0.14, 0.01);
-  let BaseGeometry2 = new Three.CylinderGeometry(0.023, 0.023, 0.01, Math.round(32 ));
+  let BaseGeometry2 = new Three.CylinderGeometry(0.023, 0.023, 0.01, Math.round(32));
   let lock = makeLockKey();
   let base1 = new Three.Mesh(BaseGeometry1, black);
   let base2 = new Three.Mesh(BaseGeometry2, black);
@@ -182,7 +179,7 @@ function makeHandleBase() {
 function makeLockKey() {
 
   let lock = new Three.Object3D();
-  let geometryLock1 = new Three.CylinderGeometry(0.005, 0.005, 0.02, Math.round(32 ));
+  let geometryLock1 = new Three.CylinderGeometry(0.005, 0.005, 0.02, Math.round(32));
   let geometryLock2 = new Three.BoxGeometry(0.008, 0.02, 0.02);
   let geometryLock3 = new Three.BoxGeometry(0.007, 0.0203, 0.0018);
   let lockPiece1 = new Three.Mesh(geometryLock1, metalBlue);
@@ -199,47 +196,47 @@ function makeLockKey() {
 function makeDoorStructure() {
 
   let door = new Three.Object3D();
-  let lowBaseDoorGeometry = new Three.BoxGeometry(0.6,1.2,0.01);
-  let middleBaseDoorGeometry = new Three.BoxGeometry(0.2,0.7,0.01);
-  let highBaseDoorGeometry = new Three.BoxGeometry(0.2,0.2,0.01);
-  let BorderCoverDoorGeometry1 = new Three.CylinderGeometry(0.005,0.005,1.9,Math.round(32));
-  let BorderCoverDoorGeometry2 = new Three.BoxGeometry(0.03,1.9,0.01);
-  let MiddleDoorGeometry2 = new Three.BoxGeometry(0.2,0.7,0.06);
-  let MiddleDoorGeometry1 = new Three.BoxGeometry(0.19,0.7,0.06);
-  let HighDoorGeometry = new Three.BoxGeometry(0.2,0.2,0.06);
-  let glassGeometry = new Three.BoxGeometry(0.2,0.5,0.05);
-  let LowDoorGeometry = new Three.BoxGeometry(0.59,1.2,0.06);
-  let glassCoverVertical = new Three.BoxGeometry(0.01,0.52,0.064);
-  let glassCoverHorizontal = new Three.BoxGeometry(0.224,0.01,0.064);
-  let lowCoverDoor = new Three.Mesh( lowBaseDoorGeometry , green );
-  let middleDoor1 = new Three.Mesh( MiddleDoorGeometry1, green);
-  let middleDoor2 = new Three.Mesh( MiddleDoorGeometry2, green);
-  let baseDoor = new Three.Mesh( LowDoorGeometry, green );
-  let middleCoverDoor1 = new Three.Mesh( middleBaseDoorGeometry, green);
-  let middleCoverDoor2 = new Three.Mesh( middleBaseDoorGeometry, green);
-  let highCoverDoor = new Three.Mesh( highBaseDoorGeometry, green);
-  let highDoor = new Three.Mesh( HighDoorGeometry, green);
-  let borderCoverDoor1 = new Three.Mesh( BorderCoverDoorGeometry1, green);
-  let borderCoverDoor2 = new Three.Mesh( BorderCoverDoorGeometry2, green);
-  let glass = new Three.Mesh( glassGeometry, turquoise);
-  let glassVerticalCover1 = new Three.Mesh( glassCoverVertical, green);
-  let glassVerticalCover2 = new Three.Mesh( glassCoverVertical, green);
-  let glassHorizontalCover1 = new Three.Mesh( glassCoverHorizontal, green);
-  let glassHorizontalCover2 = new Three.Mesh( glassCoverHorizontal, green);
-  lowCoverDoor.position.set(-(0.6-0.59)/2,0,-0.05/2);
-  middleCoverDoor1.position.set(-0.2,1.2/2 +0.7/2,0);
-  middleCoverDoor2.position.set(0.2,1.2/2 +0.7/2,0);
-  highCoverDoor.position.set(0,(0.5 +0.2)/2,-0.05/2);
-  highDoor.position.set(0,(0.5 +0.2)/2,-0.05/2 +0.05/2);
-  glass.position.set(-0.01/2,1.2/2 +0.5/2,0);
-  middleDoor2.position.z =0.05/2;
-  middleDoor1.position.set(0.005,0,0.05/2);
-  borderCoverDoor1.position.set(-0.6/2,0.7/2,0);
-  glassVerticalCover1.position.x = 0.2/2 +0.014/2;
-  glassVerticalCover2.position.x =-0.2/2 -0.014/2;
-  glassHorizontalCover1.position.y = 0.5/2 +0.014/2;
-  glassHorizontalCover2.position.y =-0.5/2 -0.014/2;
-  borderCoverDoor2.position.set(0.02/2,0,-0.01/2 );
+  let lowBaseDoorGeometry = new Three.BoxGeometry(0.6, 1.2, 0.01);
+  let middleBaseDoorGeometry = new Three.BoxGeometry(0.2, 0.7, 0.01);
+  let highBaseDoorGeometry = new Three.BoxGeometry(0.2, 0.2, 0.01);
+  let BorderCoverDoorGeometry1 = new Three.CylinderGeometry(0.005, 0.005, 1.9, Math.round(32));
+  let BorderCoverDoorGeometry2 = new Three.BoxGeometry(0.03, 1.9, 0.01);
+  let MiddleDoorGeometry2 = new Three.BoxGeometry(0.2, 0.7, 0.06);
+  let MiddleDoorGeometry1 = new Three.BoxGeometry(0.19, 0.7, 0.06);
+  let HighDoorGeometry = new Three.BoxGeometry(0.2, 0.2, 0.06);
+  let glassGeometry = new Three.BoxGeometry(0.2, 0.5, 0.05);
+  let LowDoorGeometry = new Three.BoxGeometry(0.59, 1.2, 0.06);
+  let glassCoverVertical = new Three.BoxGeometry(0.01, 0.52, 0.064);
+  let glassCoverHorizontal = new Three.BoxGeometry(0.224, 0.01, 0.064);
+  let lowCoverDoor = new Three.Mesh(lowBaseDoorGeometry, green);
+  let middleDoor1 = new Three.Mesh(MiddleDoorGeometry1, green);
+  let middleDoor2 = new Three.Mesh(MiddleDoorGeometry2, green);
+  let baseDoor = new Three.Mesh(LowDoorGeometry, green);
+  let middleCoverDoor1 = new Three.Mesh(middleBaseDoorGeometry, green);
+  let middleCoverDoor2 = new Three.Mesh(middleBaseDoorGeometry, green);
+  let highCoverDoor = new Three.Mesh(highBaseDoorGeometry, green);
+  let highDoor = new Three.Mesh(HighDoorGeometry, green);
+  let borderCoverDoor1 = new Three.Mesh(BorderCoverDoorGeometry1, green);
+  let borderCoverDoor2 = new Three.Mesh(BorderCoverDoorGeometry2, green);
+  let glass = new Three.Mesh(glassGeometry, turquoise);
+  let glassVerticalCover1 = new Three.Mesh(glassCoverVertical, green);
+  let glassVerticalCover2 = new Three.Mesh(glassCoverVertical, green);
+  let glassHorizontalCover1 = new Three.Mesh(glassCoverHorizontal, green);
+  let glassHorizontalCover2 = new Three.Mesh(glassCoverHorizontal, green);
+  lowCoverDoor.position.set(-(0.6 - 0.59) / 2, 0, -0.05 / 2);
+  middleCoverDoor1.position.set(-0.2, 1.2 / 2 + 0.7 / 2, 0);
+  middleCoverDoor2.position.set(0.2, 1.2 / 2 + 0.7 / 2, 0);
+  highCoverDoor.position.set(0, (0.5 + 0.2) / 2, -0.05 / 2);
+  highDoor.position.set(0, (0.5 + 0.2) / 2, -0.05 / 2 + 0.05 / 2);
+  glass.position.set(-0.01 / 2, 1.2 / 2 + 0.5 / 2, 0);
+  middleDoor2.position.z = 0.05 / 2;
+  middleDoor1.position.set(0.005, 0, 0.05 / 2);
+  borderCoverDoor1.position.set(-0.6 / 2, 0.7 / 2, 0);
+  glassVerticalCover1.position.x = 0.2 / 2 + 0.014 / 2;
+  glassVerticalCover2.position.x = -0.2 / 2 - 0.014 / 2;
+  glassHorizontalCover1.position.y = 0.5 / 2 + 0.014 / 2;
+  glassHorizontalCover2.position.y = -0.5 / 2 - 0.014 / 2;
+  borderCoverDoor2.position.set(0.02 / 2, 0, -0.01 / 2);
   borderCoverDoor1.add(borderCoverDoor2);
   glass.add(highCoverDoor);
   glass.add(glassVerticalCover1);
@@ -266,95 +263,88 @@ export default {
   prototype: 'holes',
 
   info: {
-    tag: ['door'],
     title: 'double panic door',
-    description: 'iron door',
+    tag: ['door'],
+    description: 'Double Panic Door',
     image: require('./panicDoorDouble.png')
   },
 
   properties: {
     width: {
-      label: 'width',
+      label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 200,
-        unit: 'cm'
+        length: 200
       }
     },
     height: {
-      label: 'height',
+      label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 215,
-        unit: 'cm'
-      }
-    },
-    thickness: {
-      label: 'thickness',
-      type: 'length-measure',
-      defaultValue: {
-        length: 30,
-        unit: 'cm'
+        length: 215
       }
     },
     altitude: {
-      label:'altitude',
+      label: 'Altitude',
       type: 'length-measure',
       defaultValue: {
-        length: 0,
-        unit: 'cm'
+        length: 0
+      }
+    },
+    thickness: {
+      label: 'Thickness',
+      type: 'length-measure',
+      defaultValue: {
+        length: 30
       }
     },
     flip_horizontal: {
-      label: 'flip',
+      label: 'Horizontal Flip',
       type: 'checkbox',
       defaultValue: false,
       values: {
         'none': false,
-        'yes':  true
+        'yes': true
       }
-    }
+    },
   },
 
   render2D: function (element, layer, scene) {
+    const STYLE_HOLE_BASE = { stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000' };
+    const STYLE_HOLE_SELECTED = { stroke: '#0096fd', strokeWidth: '4px', fill: '#0096fd', cursor: 'move' };
+    const STYLE_ARC_BASE = { stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none' };
+    const STYLE_ARC_SELECTED = { stroke: '#0096fd', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move' };
+    const EPSILON = 3;
 
-    const STYLE_HOLE_BASE = {stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000'};
-    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: 'move'};
-    const STYLE_ARC_BASE = {stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
-    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
-
-    let epsilon = 3;
-    let flip = element.properties.get('flip_horizontal');
-    let holeWidth = element.properties.get('width').get('length');
-    let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
-    let arcPath = `M${0},${0}  A${holeWidth/2},${holeWidth/2} 0 0,1 ${holeWidth/2},${holeWidth/2}`;
-    let arcPath2 =`M${0},${0}  A${holeWidth/2},${holeWidth/2} 0 0,0 ${holeWidth/2},${holeWidth/2}`;
-    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
-    let arcStyle = element.selected ? STYLE_ARC_SELECTED : STYLE_ARC_BASE;
+    let hFlip = element.properties.get('flip_horizontal');
     let length = element.properties.get('width').get('length');
+    let holePath = `M${0} ${-EPSILON}  L${length} ${-EPSILON}  L${length} ${EPSILON}  L${0} ${EPSILON}  z`;
+    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
+    let arcPath1 = `M${0},${0}  A${length / 2},${length / 2} 0 0,1 ${length / 2},${length / 2}`;
+    let arcPath2 = `M${0},${0}  A${length / 2},${length / 2} 0 0,0 ${length / 2},${length / 2}`;
+    let arcStyle = element.selected ? STYLE_ARC_SELECTED : STYLE_ARC_BASE;
 
-
-    if(flip){
+    if (hFlip) {
       return (
-        <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <path key='1' d={arcPath} style={arcStyle} transform={`translate(${0},${-holeWidth/2})`}/>
-          <line key='2' x1={0}  y1={0 - epsilon} x2={0} y2={-holeWidth/2 - epsilon} style={holeStyle}/>
-          <path key='3' d={arcPath2} style={arcStyle} transform={`translate(${holeWidth},${-holeWidth/2}) rotate(90)`}/>
-          <line key='4' x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={-holeWidth/2 - epsilon} style={holeStyle}/>
-          <path key='5' d={holePath} style={holeStyle}/>
+        <g transform={`translate(${-length / 2}, 0)`}>
+          <path d={arcPath1} style={arcStyle} transform={`translate(${0},${-length / 2})`} />
+          <line x1={0} y1={0 - EPSILON} x2={0} y2={-length / 2 - EPSILON} style={holeStyle} />
+          <path d={arcPath2} style={arcStyle} transform={`translate(${length},${-length / 2}) rotate(90)`} />
+          <line x1={length} y1={0 - EPSILON} x2={length} y2={-length / 2 - EPSILON} style={holeStyle} />
+          <path d={holePath} style={holeStyle} />
         </g>
       )
     }
     else {
-        return (
-          <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-            <path key='1' d={arcPath} style={arcStyle} transform={`translate(${holeWidth},${holeWidth/2}) rotate(180)`}/>
-            <line key='2' x1={0}  y1={0 - epsilon} x2={0} y2={holeWidth/2 - epsilon} style={holeStyle}/>
-            <path key='3' d={arcPath2} style={arcStyle} transform={`translate(${0},${holeWidth/2}) rotate(270)`}/>
-            <line key='4' x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={holeWidth/2 - epsilon} style={holeStyle}/>
-            <path key='5' d={holePath} style={holeStyle}/>
-          </g>
-        )
+      return (
+        <g transform={`translate(${-length / 2}, 0)`}>
+          <path d={arcPath1} style={arcStyle} transform={`translate(${length},${length / 2}) rotate(180)`} />
+          <line x1={0} y1={0 - EPSILON} x2={0} y2={length / 2 - EPSILON} style={holeStyle} />
+          <path d={arcPath2} style={arcStyle} transform={`translate(${0},${length / 2}) rotate(270)`} />
+          <line x1={length} y1={0 - EPSILON} x2={length} y2={length / 2 - EPSILON} style={holeStyle} />
+          <path d={holePath} style={holeStyle} />
+        </g>
+      )
     }
   },
 
@@ -383,13 +373,12 @@ export default {
       panicDoorDouble.add(boundingBox);
     }
 
-    if(flip)
-      panicDoorDouble.rotation.y+=Math.PI;
+    if (flip)
+      panicDoorDouble.rotation.y += Math.PI;
 
-    panicDoorDouble.position.y+= newAltitude;
-    panicDoorDouble.scale.set( width / deltaX, height / deltaY,thickness / deltaZ);
+    panicDoorDouble.position.y += newAltitude;
+    panicDoorDouble.scale.set(width / deltaX, height / deltaY, thickness / deltaZ);
 
     return Promise.resolve(panicDoorDouble);
-
   }
 };

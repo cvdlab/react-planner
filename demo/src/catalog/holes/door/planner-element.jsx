@@ -1,15 +1,8 @@
 import React from 'react';
 import * as Three from 'three';
-import {loadObjWithMaterial} from '../../utils/load-obj';
-import path from 'path';
+import { loadObjWithMaterial } from '../../utils/load-obj';
 
 let cached3DDoor = null;
-
-const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '3px', fill: '#000'};
-const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '4px', fill: '#0096fd', cursor: 'move'};
-const STYLE_ARC_BASE = {stroke: '#000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
-const STYLE_ARC_SELECTED = {stroke: '#0096fd', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
-const EPSILON = 3;
 
 export default {
   name: 'door',
@@ -18,7 +11,7 @@ export default {
   info: {
     title: 'door',
     tag: ['door'],
-    description: 'Wooden door',
+    description: 'Door',
     image: require('./door.png')
   },
 
@@ -27,7 +20,7 @@ export default {
       label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 80
+        length: 100
       }
     },
     height: {
@@ -51,44 +44,100 @@ export default {
         length: 30
       }
     },
-    flip_orizzontal: {
-      label: 'flip orizzontale',
+    flip_horizontal: {
+      label: 'Horizontal Flip',
       type: 'checkbox',
       defaultValue: false,
       values: {
         'none': false,
-        'yes':  true
+        'yes': true
       }
-    }
+    },
+    flip_vertical: {
+      label: 'Vertical Flip',
+      type: 'checkbox',
+      defaultValue: false,
+      values: {
+        'none': false,
+        'yes': true
+      }
+    },
   },
 
   render2D: function (element, layer, scene) {
-    let flip = element.properties.get('flip_orizzontal');
-    let holeWidth = element.properties.get('width').get('length');
-    let holePath = `M${0} ${ -EPSILON}  L${holeWidth} ${-EPSILON}  L${holeWidth} ${EPSILON}  L${0} ${EPSILON}  z`;
-    let arcPath = `M${0},${0}  A${holeWidth},${holeWidth} 0 0,1 ${holeWidth},${holeWidth}`;
-    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
-    let arcStyle = element.selected ? STYLE_ARC_SELECTED : STYLE_ARC_BASE;
+    const STYLE_HOLE_BASE = { stroke: '#000', strokeWidth: '3px', fill: '#000' };
+    const STYLE_HOLE_SELECTED = { stroke: '#0096fd', strokeWidth: '4px', fill: '#0096fd', cursor: 'move' };
+    const STYLE_ARC_BASE = { stroke: '#000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none' };
+    const STYLE_ARC_SELECTED = { stroke: '#0096fd', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move' };
+    const EPSILON = 3;
+    
+    let hFlip = element.properties.get('flip_horizontal');
+    let vFlip = element.properties.get('flip_vertical');
     let length = element.properties.get('width').get('length');
+    let holePath = `M${0} ${-EPSILON}  L${length} ${-EPSILON}  L${length} ${EPSILON}  L${0} ${EPSILON}  z`;
+    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
+    let arcPath = `M${0},${0}  A${length},${length} 0 0,1 ${length},${length}`;
+    let arcStyle = element.selected ? STYLE_ARC_SELECTED : STYLE_ARC_BASE;
 
-    if(flip == false) {
-      return (
-        <g transform={`translate(${-length / 2}, 0)`}>
-          <path d={arcPath} style={arcStyle} transform={`translate(${0},${holeWidth}) scale(${1},${-1}) rotate(${0})`}/>
-          <line x1={0} y1={holeWidth - EPSILON} x2={0} y2={0 - EPSILON} style={holeStyle} transform={`scale(${-1},${1})`}/>
-          <path d={holePath} style={holeStyle}/>
-        </g>
-      )
+    let scaleX, scaleY;
+    let rotateAngle;
+    let tX, tY;
+    let pX1, pX2, pY1, pY2;
+
+    if (hFlip) {
+      scaleX = 1;
+      if (vFlip) {
+        tX = length;
+        tY = -length;
+        pX1 = -length;
+        pY1 = 0;
+        pX2 = -length;
+        pY2 = length;
+        rotateAngle = 180;
+        scaleY = -1;
+      }
+      else {
+        tX = 0;
+        tY = -length;
+        pX1 = 0;
+        pY1 = 0;
+        pX2 = 0;
+        pY2 = -length;
+        scaleY = 1;
+        rotateAngle = 0;
+      }
     }
-    else{
-      return (
-        <g transform={`translate(${-length / 2}, 0)`}>
-          <path d={arcPath} style={arcStyle} transform={`translate(${0},${-holeWidth}) scale(${1},${1}) rotate(${0})`}/>
-          <line x1={0} y1={-holeWidth - EPSILON} x2={0} y2={0 - EPSILON} style={holeStyle} transform={`scale(${-1},${1})`}/>
-          <path d={holePath} style={holeStyle}/>
-        </g>
-      )
+    else {
+      scaleX = -1;
+      if (vFlip) {
+        tX = 0;
+        tY = 0;
+        pX1 = length;
+        pY1 = 0;
+        pX2 = length;
+        pY2 = length;
+        rotateAngle = 90;
+        scaleY = 1;
+      }
+      else {
+        tX = length;
+        tY = 0;
+        pX1 = 0;
+        pY1 = 0;
+        pX2 = 0;
+        pY2 = -length;
+        rotateAngle = -90;
+        scaleY = -1;
+      }
     }
+
+    return (
+      <g transform={`translate(${-length / 2}, 0)`}>
+        <path d={arcPath} style={arcStyle} transform={`translate(${tX},${tY}) scale(${scaleX},${scaleY}) rotate(${rotateAngle})`} />
+        <line x1={pX1} y1={pY1 - EPSILON} x2={pX2} y2={pY2 - EPSILON} style={holeStyle} transform={`scale(${-scaleX},${scaleY})`} />
+        <path d={holePath} style={holeStyle} />
+      </g>
+    );
   },
 
   render3D: function (element, layer, scene) {
@@ -117,7 +166,7 @@ export default {
       return object;
     };
 
-    if(cached3DDoor) {
+    if (cached3DDoor) {
       return Promise.resolve(onLoadItem(cached3DDoor.clone()));
     }
 
@@ -130,6 +179,5 @@ export default {
         cached3DDoor = object;
         return onLoadItem(cached3DDoor.clone())
       })
-
   }
 };

@@ -48,7 +48,6 @@ function makeDoor(width,height,thickness){
   return door_double
 }
 
-
 function makeHandle(width) {
 
   let handle = new Three.Object3D();
@@ -115,91 +114,95 @@ export default {
   info: {
     tag: ['door'],
     title: 'double door',
-    description: 'iron door',
+    description: 'Double Door',
     image: require('./door_double.png')
   },
 
   properties: {
     width: {
-      label: 'width',
+      label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 200,
-        unit: 'cm'
+        length: 200
       }
     },
     height: {
-      label: 'height',
+      label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 215,
-        unit: 'cm'
-      }
-    },
-    thickness: {
-      label: 'thickness',
-      type: 'length-measure',
-      defaultValue: {
-        length: 30,
-        unit: 'cm'
+        length: 215
       }
     },
     altitude: {
-      label:'altitude',
+      label:'Altitude',
       type: 'length-measure',
       defaultValue: {
-        length: 0,
-        unit: 'cm'
+        length: 0
+      }
+    },
+    thickness: {
+      label: 'Thickness',
+      type: 'length-measure',
+      defaultValue: {
+        length: 30
       }
     },
     flip_horizontal: {
-      label: 'flip',
+      label: 'Horizontal Flip',
       type: 'checkbox',
       defaultValue: false,
       values: {
         'none': false,
-        'yes':  true
+        'yes': true
       }
-    }
+    },
+    flip_vertical: {
+      label: 'Vertical Flip',
+      type: 'checkbox',
+      defaultValue: false,
+      values: {
+        'none': false,
+        'yes': true
+      }
+    },
   },
 
   render2D: function (element, layer, scene) {
+    const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '3px', fill: '#000'};
+    const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '4px', fill: '#0096fd', cursor: 'move'};
+    const STYLE_ARC_BASE = {stroke: '#000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
+    const STYLE_ARC_SELECTED = {stroke: '#0096fd', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
+    const EPSILON = 3;
 
-    const STYLE_HOLE_BASE = {stroke: '#ff0000', strokeWidth: '3px', fill: '#ff0000'};
-    const STYLE_HOLE_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', fill: '#ff0000', cursor: 'move'};
-    const STYLE_ARC_BASE = {stroke: '#ff0000', strokeWidth: '3px', strokeDasharray: '5,5', fill: 'none'};
-    const STYLE_ARC_SELECTED = {stroke: '#ff0000', strokeWidth: '4px', strokeDasharray: '5,5', fill: 'none', cursor: 'move'};
-
-    let epsilon = 3;
-    let flip = element.properties.get('flip_horizontal');
-    let holeWidth = element.properties.get('width').get('length');
-    let holePath = `M${0} ${ -epsilon}  L${holeWidth} ${-epsilon}  L${holeWidth} ${epsilon}  L${0} ${epsilon}  z`;
-    let arcPath = `M${0},${0}  A${holeWidth/4},${holeWidth/4} 0 0,1 ${holeWidth/4},${holeWidth/4}`;
-    let arcPath2 =`M${0},${0}  A${holeWidth/2+holeWidth/4},${holeWidth/2+holeWidth/4} 0 0,0 ${holeWidth/2+holeWidth/4},${holeWidth/2+holeWidth/4}`;
-    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
-    let arcStyle = element.selected ? STYLE_ARC_SELECTED : STYLE_ARC_BASE;
+    let hFlip = element.properties.get('flip_horizontal');
+    let vFlip = element.properties.get('flip_vertical');
     let length = element.properties.get('width').get('length');
+    let holePath = `M${0} ${ -EPSILON}  L${length} ${-EPSILON}  L${length} ${EPSILON}  L${0} ${EPSILON}  z`;
+    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
+    let arcPath1 = `M${0},${0}  A${length/4},${length/4} 0 0,1 ${length/4},${length/4}`;
+    let arcPath2 =`M${0},${0}  A${length/2+length/4},${length/2+length/4} 0 0,0 ${length/2+length/4},${length/2+length/4}`;
+    let arcStyle = element.selected ? STYLE_ARC_SELECTED : STYLE_ARC_BASE;
 
-
-    if(flip){
+    // TODO(pg): handle vertical flip and correct horizontal flip
+    if(hFlip){
       return (
-        <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <path key='1' d={arcPath} style={arcStyle} transform={`translate(${0},${-holeWidth/4})`}/>
-          <line key='2' x1={0}  y1={0 - epsilon} x2={0} y2={-holeWidth/4 - epsilon} style={holeStyle}/>
-          <path key='3' d={arcPath2} style={arcStyle} transform={`translate(${holeWidth},${-holeWidth/2-holeWidth/4}) rotate(90)`}/>
-          <line key='4' x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={-holeWidth/2 - holeWidth/4 - epsilon} style={holeStyle}/>
-          <path key='5' d={holePath} style={holeStyle}/>
+        <g transform={`translate(${-length / 2}, 0)`}>
+          <path d={arcPath1} style={arcStyle} transform={`translate(${0},${-length/4})`}/>
+          <line x1={0}  y1={0 - EPSILON} x2={0} y2={-length/4 - EPSILON} style={holeStyle}/>
+          <path d={arcPath2} style={arcStyle} transform={`translate(${length},${-length/2-length/4}) rotate(90)`}/>
+          <line x1={length}  y1={0 - EPSILON} x2={length} y2={-length/2 - length/4 - EPSILON} style={holeStyle}/>
+          <path d={holePath} style={holeStyle}/>
         </g>
       )
     }
     else {
       return (
-        <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <path key='1' d={arcPath} style={arcStyle} transform={`translate(${holeWidth},${holeWidth/4}) rotate(180)`}/>
-          <line key='2' x1={0}  y1={0 - epsilon} x2={0} y2={holeWidth/2 + holeWidth/4 - epsilon} style={holeStyle}/>
-          <path key='3' d={arcPath2} style={arcStyle} transform={`translate(${0},${holeWidth/2+holeWidth/4}) rotate(270)`}/>
-          <line key='4' x1={holeWidth}  y1={0 - epsilon} x2={holeWidth} y2={holeWidth/4 - epsilon} style={holeStyle}/>
-          <path key='5' d={holePath} style={holeStyle}/>
+        <g transform={`translate(${-length / 2}, 0)`}>
+          <path d={arcPath1} style={arcStyle} transform={`translate(${length},${length/4}) rotate(180)`}/>
+          <line x1={0}  y1={0 - EPSILON} x2={0} y2={length/2 + length/4 - EPSILON} style={holeStyle}/>
+          <path d={arcPath2} style={arcStyle} transform={`translate(${0},${length/2+length/4}) rotate(270)`}/>
+          <line x1={length}  y1={0 - EPSILON} x2={length} y2={length/4 - EPSILON} style={holeStyle}/>
+          <path d={holePath} style={holeStyle}/>
         </g>
       )
     }
@@ -240,7 +243,6 @@ export default {
     door_double.scale.set( width / deltaX, height / deltaY,thickness / deltaZ);
 
     return Promise.resolve(door_double);
-
   }
 };
 

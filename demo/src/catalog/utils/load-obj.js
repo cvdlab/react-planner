@@ -1,6 +1,7 @@
 import MTLLoader from './mtl-loader';
 import OBJLoader from './obj-loader';
 
+// TODO(pg): re-integrate img somehow which can be used by some elements like door(s)
 // export function loadObjWithMaterial(mtlFile, objFile, imgPath) {
 export function loadObjWithMaterial(mtlFile, objFile) {
   let mtlLoader = new MTLLoader();

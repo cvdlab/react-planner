@@ -84,121 +84,108 @@ export default {
   info: {
     tag: ['door'],
     title: 'sliding door',
-    description: 'iron door',
+    description: 'Sliding Door',
     image: require('./slidingDoor.png')
   },
 
   properties: {
     width: {
-      label: 'width',
+      label: 'Width',
       type: 'length-measure',
       defaultValue: {
-        length: 200,
-        unit: 'cm'
+        length: 200
       }
     },
     height: {
-      label: 'height',
+      label: 'Height',
       type: 'length-measure',
       defaultValue: {
-        length: 215,
-        unit: 'cm'
-      }
-    },
-    thickness: {
-      label: 'thickness',
-      type: 'length-measure',
-      defaultValue: {
-        length: 30,
-        unit: 'cm'
+        length: 215
       }
     },
     altitude: {
-      label: 'altitude',
+      label: 'Altitude',
       type: 'length-measure',
       defaultValue: {
-        length: 0,
-        unit: 'cm'
+        length: 0
+      }
+    },
+    thickness: {
+      label: 'Thickness',
+      type: 'length-measure',
+      defaultValue: {
+        length: 30
       }
     },
     flip_horizontal: {
-      label: 'horizontal flip',
+      label: 'Horizontal Flip',
       type: 'checkbox',
-      defaultValue: 'none',
+      defaultValue: false,
       values: {
-        'none': 'none',
-        'yes':  'yes'
+        'none': false,
+        'yes': true
       }
     },
     flip_vertical: {
-      label: 'vertical flip',
+      label: 'Vertical Flip',
       type: 'checkbox',
-      defaultValue: 'right',
+      defaultValue: false,
       values: {
-        'right': 'right',
-        'left':  'left'
+        'none': false,
+        'yes': true
       }
-    }
+    },
   },
 
   render2D: function (element, layer, scene) {
 
-    const STYLE_HOLE_BASE = {stroke: '#000', strokeWidth: '14px', fill: '#000'};
+    const STYLE_HOLE_BASE1 = {stroke: '#000', strokeWidth: '14px', fill: '#000'};
     const STYLE_HOLE_BASE2 = {stroke: '#000', strokeWidth: '16px', fill: '#000'};
     const STYLE_HOLE_SELECTED = {stroke: '#0096fd', strokeWidth: '14px', fill: '#0096fd', cursor: 'move'};
+    const EPSILON = 3;
 
-    let epsilon = 3;
-    let flip = element.properties.get('flip_horizontal');
-    let handleSide = element.properties.get('flip_vertical');
-    let holeWidth = element.properties.get('width').get('length');
-    let holeStyle = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE;
-    let holeStyle2 = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE2;
+    let hFlip = element.properties.get('flip_horizontal');
+    let vFlip = element.properties.get('flip_vertical');
     let length = element.properties.get('width').get('length');
+    let holeStyle1 = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE1;
+    let holeStyle2 = element.selected ? STYLE_HOLE_SELECTED : STYLE_HOLE_BASE2;
 
     let scaleX, scaleY;
-    let scaleX2, scaleY2;
     let pX1, pX2;
 
-    flip ? flip = 'yes' : flip = 'none';
-    handleSide ? handleSide = 'right' : handleSide = 'left';
-
-    if(flip === 'yes') {
+    if(hFlip) {
       scaleX = 1;
-      if (handleSide === 'right') {
+      if (vFlip) {
         pX1 = 0;
-        pX2 = holeWidth/2;
+        pX2 = length/2;
         scaleY = -1;
       }
       else {
-        pX1 = holeWidth/2;
-        pX2 = holeWidth;
+        pX1 = length/2;
+        pX2 = length;
         scaleY = -1;
       }
     }
     else {
       scaleX = 1;
-      if (handleSide === 'right') {
-        pX1 = holeWidth/2;
-        pX2 = holeWidth;
+      if (vFlip) {
+        pX1 = 0;
+        pX2 = length/2;
         scaleY = 1;
       }
       else {
-        pX1 = 0;
-        pX2 = holeWidth/2;
+        pX1 = length/2;
+        pX2 = length;
         scaleY = 1;
       }
 
     }
       return (
-        <g transform={`translate(${-element.properties.get('width').get('length') / 2}, 0)`}>
-          <line key='1' x1='0' y1={0 - epsilon} x2={holeWidth} y2={0 - epsilon} style={holeStyle}
-                transform={`scale(${scaleX},${scaleY})`}/>
-          <line key='2' x1={pX1} y1={5 - epsilon} x2={pX2} y2={5 - epsilon} style={holeStyle2}
-                transform={`scale(${scaleX},${scaleY})`}/>
-          <line key='3' x1={holeWidth} y1={0 - epsilon} x2={holeWidth} y2={15 + epsilon} style={holeStyle2}
-                transform={`scale(${scaleX},${scaleY})`}/>
-          <line key='4' x1='0' y1={0 - epsilon} x2='0' y2={15 + epsilon} style={holeStyle2}
-                transform={`scale(${scaleX},${scaleY})`}/>
+        <g transform={`translate(${-length / 2}, 0)`}>
+          <line x1='0' y1={0 - EPSILON} x2={length} y2={0 - EPSILON} style={holeStyle1} transform={`scale(${scaleX},${scaleY})`}/>
+          <line x1={pX1} y1={5 - EPSILON} x2={pX2} y2={5 - EPSILON} style={holeStyle2} transform={`scale(${scaleX},${scaleY})`}/>
+          <line x1={length} y1={0 - EPSILON} x2={length} y2={15 + EPSILON} style={holeStyle2} transform={`scale(${scaleX},${scaleY})`}/>
+          <line x1='0' y1={0 - EPSILON} x2='0' y2={15 + EPSILON} style={holeStyle2} transform={`scale(${scaleX},${scaleY})`}/>
         </g>
       )
   },
@@ -239,6 +226,5 @@ export default {
     slidingDoor.scale.set(width / deltaX, height / deltaY, thickness / deltaZ);
 
     return Promise.resolve(slidingDoor);
-
   }
 };
