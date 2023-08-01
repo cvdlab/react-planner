@@ -367,16 +367,6 @@ export default {
     else {
       scaleX = -1;
       if (vFlip) {
-        tX = length;
-        tY = 0;
-        pX1 = 0;
-        pY1 = 0;
-        pX2 = 0;
-        pY2 = -length;
-        rotateAngle = -90;
-        scaleY = -1;
-      }
-      else {
         tX = 0;
         tY = 0;
         pX1 = length;
@@ -385,6 +375,16 @@ export default {
         pY2 = length;
         rotateAngle = 90;
         scaleY = 1;
+      }
+      else {
+        tX = length;
+        tY = 0;
+        pX1 = 0;
+        pY1 = 0;
+        pX2 = 0;
+        pY2 = -length;
+        rotateAngle = -90;
+        scaleY = -1;
       }
     }
 

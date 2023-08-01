@@ -169,13 +169,13 @@ export default {
     else {
       scaleX = 1;
       if (vFlip) {
-        pX1 = length/2;
-        pX2 = length;
+        pX1 = 0;
+        pX2 = length/2;
         scaleY = 1;
       }
       else {
-        pX1 = 0;
-        pX2 = length/2;
+        pX1 = length/2;
+        pX2 = length;
         scaleY = 1;
       }
 
