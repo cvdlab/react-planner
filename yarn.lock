@@ -1216,6 +1216,13 @@
     hoist-non-react-statics "^3.3.0"
     redux "^4.0.0"
 
+"@types/react-svg-pan-zoom@2.5.4":
+  version "2.5.4"
+  resolved "https://registry.npmmirror.com/@types/react-svg-pan-zoom/-/react-svg-pan-zoom-2.5.4.tgz#2340a37ffd5018b25e3b1c4b6282cbf3a969f698"
+  integrity sha512-l8qi1R5YBZoV7toKmnbX+1RxcaLUL0cjy4j0LL9vhTkhYNkl75dLbq5KSL5HcHnOkZQwBDP/VdPIjiEHoKo3Mw==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react@*":
   version "18.2.14"
   resolved "https://registry.npmjs.org/@types/react/-/react-18.2.14.tgz"
