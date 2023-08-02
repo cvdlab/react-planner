@@ -11,7 +11,7 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { FaPlusCircle as IconAdd } from 'react-icons/fa';
 import * as SharedStyle from '../../styles/shared-style';
@@ -104,6 +104,19 @@ var CatalogItem = function CatalogItem(_ref) {
     itemsActions = _useContext.itemsActions,
     holesActions = _useContext.holesActions,
     projectActions = _useContext.projectActions;
+  var _useState3 = useState(""),
+    _useState4 = _slicedToArray(_useState3, 2),
+    img = _useState4[0],
+    setImg = _useState4[1];
+
+  // TODO(pg): workaround to be able to use image in next.js app
+  useEffect(function () {
+    if (element.info.image && element.info.image["default"]) {
+      setImg(element.info.image["default"].src);
+    } else {
+      setImg(element.info.image);
+    }
+  }, [element.info.image]);
   var select = function select() {
     switch (element.prototype) {
       case 'lines':
@@ -133,7 +146,7 @@ var CatalogItem = function CatalogItem(_ref) {
     style: STYLE_IMAGE_CONTAINER
   }, /*#__PURE__*/React.createElement("div", {
     style: _objectSpread(_objectSpread({}, !hover ? STYLE_IMAGE : STYLE_IMAGE_HOVER), {}, {
-      backgroundImage: 'url(' + element.info.image + ')'
+      backgroundImage: 'url(' + img + ')'
     })
   }, hover ? /*#__PURE__*/React.createElement(IconAdd, {
     style: STYLE_PLUS_HOVER
