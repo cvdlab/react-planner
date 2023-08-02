@@ -342,6 +342,7 @@ var Layer = /*#__PURE__*/function () {
       selected.items.forEach(function (itemID) {
         return state = Item.setAttributes(state, layerID, itemID, attributes).updatedState;
       });
+      // TODO(pg): check why it was commented
       //selected.areas.forEach(areaID => state = Area.setAttributes( state, layerID, areaID, attributes ).updatedState);
 
       return {

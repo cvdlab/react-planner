@@ -475,7 +475,8 @@ export default function WallFactory(name, info, textures) {
         <>
           {/* <rect x="0" y={-half_thickness} width={length} height={thickness} style={STYLE_RECT} /> */}
           <polygon points={points.map((p) => `${p.x},${p.y}`).join(' ')} style={STYLE_RECT} />;
-          <text x={length_5} y={-thickness} style={STYLE_TEXT}>{element.id}</text>
+          {/* Used for debug purpose to identify the wall id easily */}
+          {/* <text x={length_5} y={-thickness} style={STYLE_TEXT}>{element.id}</text> */}
         </>
     },
 

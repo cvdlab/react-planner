@@ -265,7 +265,7 @@ var ElementEditor = function ElementEditor(_ref) {
     }
     setAttributesFormData(_attributesFormData);
     save({
-      attributesFormData: attributesFormData
+      attributesFormData: _attributesFormData
     });
   };
   var updateProperty = function updateProperty(propertyName, value) {
@@ -273,7 +273,7 @@ var ElementEditor = function ElementEditor(_ref) {
     _propertiesFormData = _propertiesFormData.setIn([propertyName, 'currentValue'], value);
     setPropertiesFormData(_propertiesFormData);
     save({
-      propertiesFormData: propertiesFormData
+      propertiesFormData: _propertiesFormData
     });
   };
   var reset = function reset() {

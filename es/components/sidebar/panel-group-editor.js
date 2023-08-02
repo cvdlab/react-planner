@@ -70,6 +70,8 @@ var PanelGroupEditor = function PanelGroupEditor(props) {
     holesActions = _useContext.holesActions,
     groupsActions = _useContext.groupsActions,
     projectActions = _useContext.projectActions;
+
+  // TODO(pg): groupState is not used, check original code
   var _useState = useState({}),
     _useState2 = _slicedToArray(_useState, 2),
     groupState = _useState2[0],
