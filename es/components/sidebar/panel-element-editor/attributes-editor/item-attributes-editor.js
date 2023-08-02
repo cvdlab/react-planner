@@ -24,7 +24,6 @@ var ItemAttributesEditor = function ItemAttributesEditor(_ref) {
     rest = _objectWithoutProperties(_ref, _excluded);
   var _useContext = useContext(ReactPlannerContext),
     translator = _useContext.translator;
-  console.log('translator', translator);
   var name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   var renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;
   var renderedY = attributeFormData.has('y') ? attributeFormData.get('y') : element.y;

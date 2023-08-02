@@ -25,7 +25,12 @@ const applyTexture = (material, texture, length, height) => {
   let loader = new TextureLoader();
 
   if (texture) {
-    material.map = loader.load(texture.uri);
+    // TODO(pg): workaround so that we can load the file in a next.js app
+    if (texture.uri && texture.uri.default) {
+      material.map = loader.load(texture.uri.default.src);
+    } else {
+      material.map = loader.load(texture.uri);
+    }  
     material.needsUpdate = true;
     material.map.wrapS = RepeatWrapping;
     material.map.wrapT = RepeatWrapping;
@@ -35,7 +40,12 @@ const applyTexture = (material, texture, length, height) => {
     );
 
     if (texture.normal) {
-      material.normalMap = loader.load(texture.normal.uri);
+      // TODO(pg): workaround so that we can load the file in a next.js app
+      if (texture.normal.uri && texture.normal.uri.default) {
+        material.normalMap = loader.load(texture.normal.uri.default.src);
+      } else {
+        material.normalMap = loader.load(texture.normal.uri);
+      }
       material.normalScale = new Vector2(
         texture.normal.normalScaleX,
         texture.normal.normalScaleY,

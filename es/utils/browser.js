@@ -1,11 +1,18 @@
-export function browserDownload(json) {
+export function browserDownload(file) {
+  var ext = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : "json";
+  var typeMap = {
+    json: "text/plain",
+    obj: "model/obj",
+    mtl: "model/mtl	"
+  };
+  if (!typeMap[ext]) return;
   var fileOutputLink = document.createElement('a');
-  var filename = 'output' + Date.now() + '.json';
+  var filename = 'output' + Date.now() + '.' + ext;
   filename = window.prompt('Insert output filename', filename);
   if (!filename) return;
-  var output = JSON.stringify(json);
-  var data = new Blob([output], {
-    type: 'text/plain'
+  var data = null;
+  data = new Blob([file], {
+    type: typeMap[ext]
   });
   var url = window.URL.createObjectURL(data);
   fileOutputLink.setAttribute('download', filename);

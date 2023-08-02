@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import ReactPlannerContext from '../../utils/react-planner-context';
-import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO } from 'react-svg-pan-zoom';
+import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO, INITIAL_VALUE } from 'react-svg-pan-zoom';
 import * as constants from '../../utils/constants';
 import State from './state';
 import * as SharedStyle from '../../styles/shared-style';
@@ -308,7 +308,7 @@ export default function Viewer2D(_ref) {
   }, sceneWidth ? /*#__PURE__*/React.createElement(RulerX, {
     unitPixelSize: rulerUnitPixelSize,
     zoom: sceneZoom,
-    mouseX: state.mouse.get('x'),
+    mouseX: state.mouse.get('x') || 0,
     width: width - rulerSize,
     zeroLeftPosition: e || 0,
     backgroundColor: rulerBgColor,
@@ -327,7 +327,7 @@ export default function Viewer2D(_ref) {
   }, sceneHeight ? /*#__PURE__*/React.createElement(RulerY, {
     unitPixelSize: rulerUnitPixelSize,
     zoom: sceneZoom,
-    mouseY: state.mouse.get('y'),
+    mouseY: state.mouse.get('y') || 0,
     height: height - rulerSize,
     zeroTopPosition: sceneHeight * sceneZoom + f || 0,
     backgroundColor: rulerBgColor,
@@ -342,7 +342,7 @@ export default function Viewer2D(_ref) {
     },
     width: width - rulerSize,
     height: height - rulerSize,
-    value: viewer2D.isEmpty() ? null : viewer2D.toJS(),
+    value: viewer2D.isEmpty() ? INITIAL_VALUE : viewer2D.toJS(),
     onChangeValue: onChangeValue,
     tool: mode2Tool(mode),
     onChangeTool: onChangeTool,
@@ -350,8 +350,12 @@ export default function Viewer2D(_ref) {
     onMouseDown: onMouseDown,
     onMouseMove: onMouseMove,
     onMouseUp: onMouseUp,
-    miniaturePosition: "none",
-    toolbarPosition: "none"
+    toolbarProps: {
+      position: "none"
+    },
+    miniatureProps: {
+      position: "none"
+    }
   }, /*#__PURE__*/React.createElement("svg", {
     width: scene.width,
     height: scene.height

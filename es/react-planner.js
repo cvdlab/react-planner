@@ -51,18 +51,16 @@ function ReactPlannerContent(props) {
     projectActions.initCatalog(catalog);
   }, []);
   useEffect(function () {
-    if (props.state !== state) {
-      var _stateExtractor = props.stateExtractor,
-        _state = props.state,
-        projectActions = props.projectActions,
-        catalog = props.catalog;
-      var plannerState = _stateExtractor(_state);
-      var catalogReady = plannerState.getIn(['catalog', 'ready']);
-      if (!catalogReady) {
-        projectActions.initCatalog(catalog);
-      }
+    var stateExtractor = props.stateExtractor,
+      state = props.state,
+      projectActions = props.projectActions,
+      catalog = props.catalog;
+    var plannerState = stateExtractor(state);
+    var catalogReady = plannerState.getIn(['catalog', 'ready']);
+    if (!catalogReady) {
+      projectActions.initCatalog(catalog);
     }
-  }, [props.state]);
+  }, [props]);
   return /*#__PURE__*/React.createElement("div", {
     style: _objectSpread({}, wrapperStyle)
   }, /*#__PURE__*/React.createElement(Toolbar, _extends({

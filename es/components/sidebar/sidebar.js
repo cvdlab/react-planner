@@ -130,7 +130,5 @@ export default function Sidebar(_ref) {
   }, sorter.sort(sortButtonsCb).map(mapButtonsCb)));
 }
 Sidebar.propTypes = {
-  state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  state: PropTypes.object.isRequired
 };
