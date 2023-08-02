@@ -8,7 +8,6 @@ import { Project } from '../../class/export';
 import { OBJExporter } from './OBJExporter';
 import Dropdown from 'rc-dropdown';
 import Menu, { Item as MenuItem } from 'rc-menu';
-import './rc-dropdown.css';
 import { parseData } from '../viewer3d/scene-creator';
 import * as Three from 'three';
 export default function ToolbarSaveButton(_ref) {

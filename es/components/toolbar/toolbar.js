@@ -15,7 +15,6 @@ import ToolbarLoadButton from './toolbar-load-button';
 import If from '../../utils/react-if';
 import { MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../utils/constants';
 import * as SharedStyle from '../../styles/shared-style';
-import "./toolbar.css";
 var iconTextStyle = {
   fontSize: '19px',
   textDecoration: 'none',

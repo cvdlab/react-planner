@@ -18,7 +18,6 @@ import actions from './actions/export';
 import { objectsMap } from './utils/objects-utils';
 import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
 import { VERSION } from './version';
-import './styles/styles';
 import ReactPlannerContext from './utils/react-planner-context';
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;
