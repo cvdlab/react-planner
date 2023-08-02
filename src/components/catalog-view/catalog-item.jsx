@@ -1,6 +1,6 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import {FaPlusCircle as IconAdd} from 'react-icons/fa';
+import { FaPlusCircle as IconAdd } from 'react-icons/fa';
 import * as SharedStyle from '../../styles/shared-style';
 import ReactPlannerContext from '../../utils/react-planner-context';
 
@@ -26,38 +26,38 @@ const STYLE_BOX_HOVER = {
 };
 
 const STYLE_TITLE = {
-  width:'100%',
-  textAlign:'center',
-  display:'block',
-  marginBottom:'.5em',
+  width: '100%',
+  textAlign: 'center',
+  display: 'block',
+  marginBottom: '.5em',
   textTransform: 'capitalize'
 };
 
 const STYLE_TITLE_HOVER = {
   ...STYLE_TITLE,
-  color:SharedStyle.COLORS.white
+  color: SharedStyle.COLORS.white
 };
 
 const STYLE_IMAGE_CONTAINER = {
   width: '100%',
   height: '8em',
-  position:'relative',
-  overflow:'hidden',
+  position: 'relative',
+  overflow: 'hidden',
   border: 'solid 1px #e6e6e6',
-  padding:0,
-  margin:0,
+  padding: 0,
+  margin: 0,
   marginBottom: '5px'
 };
 
 const STYLE_IMAGE = {
-  position:'absolute',
+  position: 'absolute',
   background: '#222',
   width: '100%',
   height: '100%',
   backgroundSize: 'contain',
-  backgroundPosition:'50% 50%',
-  backgroundColor:SharedStyle.COLORS.white,
-  backgroundRepeat:'no-repeat',
+  backgroundPosition: '50% 50%',
+  backgroundColor: SharedStyle.COLORS.white,
+  backgroundRepeat: 'no-repeat',
   transition: 'all .2s ease-in-out'
 };
 
@@ -67,7 +67,7 @@ const STYLE_IMAGE_HOVER = {
 };
 
 const STYLE_PLUS_HOVER = {
-  marginTop:'1.5em',
+  marginTop: '1.5em',
   color: SharedStyle.SECONDARY_COLOR.main,
   fontSize: '2em',
   opacity: '0.7',
@@ -80,7 +80,7 @@ const STYLE_DESCRIPTION = {
   height: '2em',
   margin: '0 auto',
   fontSize: '0.75em',
-  fontStyle:'italic',
+  fontStyle: 'italic',
   lineHeight: '1em',
   WebkitLineClamp: '2',
   WebkitBoxOrient: 'vertical',
@@ -108,6 +108,16 @@ const STYLE_TAG = {
 const CatalogItem = ({ element }) => {
   const [hover, setHover] = useState(false);
   const { linesActions, itemsActions, holesActions, projectActions } = useContext(ReactPlannerContext);
+  const [img, setImg] = useState("");
+
+  // TODO(pg): workaround to be able to use image in next.js app
+  useEffect(() => {
+    if (element.info.image && element.info.image.default) {
+      setImg(element.info.image.default.src);
+    } else {
+      setImg(element.info.image);
+    }
+  }, [element.info.image]);
 
   const select = () => {
     switch (element.prototype) {
@@ -132,10 +142,10 @@ const CatalogItem = ({ element }) => {
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}
     >
-      <b style={ !hover ? STYLE_TITLE : STYLE_TITLE_HOVER }>{element.info.title}</b>
-      <div style={ STYLE_IMAGE_CONTAINER }>
-        <div style={{...( !hover ? STYLE_IMAGE: STYLE_IMAGE_HOVER ), backgroundImage: 'url(' + element.info.image + ')'}}>
-          { hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null }
+      <b style={!hover ? STYLE_TITLE : STYLE_TITLE_HOVER}>{element.info.title}</b>
+      <div style={STYLE_IMAGE_CONTAINER}>
+        <div style={{ ...(!hover ? STYLE_IMAGE : STYLE_IMAGE_HOVER), backgroundImage: 'url(' + img + ')' }}>
+          {hover ? <IconAdd style={STYLE_PLUS_HOVER} /> : null}
         </div>
       </div>
       <ul style={STYLE_TAGS}>
