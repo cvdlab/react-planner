@@ -45,15 +45,13 @@ function ReactPlannerContent(props) {
   }, []);
 
   useEffect(() => {
-    if (props.state !== state) {
-      const { stateExtractor, state, projectActions, catalog } = props;
-      const plannerState = stateExtractor(state);
-      const catalogReady = plannerState.getIn(['catalog', 'ready']);
-      if (!catalogReady) {
-        projectActions.initCatalog(catalog);
-      }
+    const { stateExtractor, state, projectActions, catalog } = props;
+    const plannerState = stateExtractor(state);
+    const catalogReady = plannerState.getIn(['catalog', 'ready']);
+    if (!catalogReady) {
+      projectActions.initCatalog(catalog);
     }
-  }, [props.state]);
+  }, [props]);
 
   return (
     <div style={{ ...wrapperStyle }}>

@@ -20,11 +20,12 @@ module.exports = (env, self) => {
     output: {
       path: path.join(__dirname, 'dist'),
       filename: '[contenthash].[name].js',
+      sourceMapFilename: "[name].js.map"
     },
     performance: {
       hints: isProduction ? 'warning' : false
     },
-    devtool: isProduction ? 'source-map' : 'eval',
+    devtool: isProduction ? 'source-map' : 'eval-source-map',
     devServer: {
       open: true,
       port: port

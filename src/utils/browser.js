@@ -1,12 +1,18 @@
-export function browserDownload(json) {
+export function browserDownload(file, ext="json") {
+  const typeMap = { json: "text/plain", obj: "model/obj", mtl: "model/mtl	"}
+
+  if (!typeMap[ext]) return;
+
   let fileOutputLink = document.createElement('a');
 
-  let filename = 'output' + Date.now() + '.json';
+  let filename = 'output' + Date.now() + '.' + ext;
   filename = window.prompt('Insert output filename', filename);
   if (!filename) return;
 
-  let output = JSON.stringify(json);
-  let data = new Blob([output], {type: 'text/plain'});
+  let data = null
+
+  data = new Blob([file], {type: typeMap[ext]});
+
   let url = window.URL.createObjectURL(data);
   fileOutputLink.setAttribute('download', filename);
   fileOutputLink.href = url;

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../styles/shared-style';
 
@@ -49,41 +49,31 @@ const STYLE_TOOLTIP_PIN = {
   borderBottom: '8px solid transparent'
 };
 
-export default class ToolbarButton extends Component {
+export default function ToolbarButton(props){
+  const [state, setState] = useState({active: false})
+  let color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
 
-  constructor(props, context) {
-    super(props, context);
-    this.state = { active: false };
-  }
-
-  render() {
-    let { state, props } = this;
-    let color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
-
-    return (
-      <div style={STYLE}
-        onMouseOver={event => this.setState({ active: true })}
-        onMouseOut={event => this.setState({ active: false })}>
-        <div style={{ color }} onClick={props.onClick}>
-          {props.children}
-        </div>
-
-        {
-          state.active ?
-          <div style={STYLE_TOOLTIP}>
-            <span style={STYLE_TOOLTIP_PIN} />
-            {props.tooltip}
-          </div>
-          : null
-        }
-
+  return (
+    <div style={STYLE}
+      onMouseOver={event => setState({ active: true })}
+      onMouseOut={event => setState({ active: false })}>
+      <div style={{ color }} onClick={props.onClick}>
+        {props.children}
       </div>
-    )
-  }
+
+      {
+        state.active ?
+        <div style={STYLE_TOOLTIP}>
+          <span style={STYLE_TOOLTIP_PIN} />
+          {props.tooltip}
+        </div>
+        : null
+      }
+    </div>
+  )
 }
 
 ToolbarButton.propTypes = {
   active: PropTypes.bool.isRequired,
-  tooltip: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
+  tooltip: PropTypes.string.isRequired
 };

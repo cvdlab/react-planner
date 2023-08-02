@@ -10,7 +10,6 @@ const inputStyle = { textAlign: 'left' };
 
 const ItemAttributesEditor = ({element, onUpdate, attributeFormData, state, ...rest}) => {
   const { translator } = useContext(ReactPlannerContext);
-  console.log('translator', translator);
 
   let name = attributeFormData.has('name') ? attributeFormData.get('name') : element.name;
   let renderedX = attributeFormData.has('x') ? attributeFormData.get('x') : element.x;

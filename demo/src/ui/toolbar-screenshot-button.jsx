@@ -26,7 +26,7 @@ const { ToolbarButton } = ReactPlannerComponents.ToolbarComponents;
 export default function ToolbarScreenshotButton({mode}) {
   let { translator } = useContext(ReactPlannerContext);
 
-  let imageBrowserDownload = imageUri => {
+  let imagebrowserDownload = imageUri => {
     let fileOutputLink = document.createElement('a');
 
     let filename = 'output' + Date.now() + '.png';
@@ -45,7 +45,7 @@ export default function ToolbarScreenshotButton({mode}) {
   let saveScreenshotToFile = event => {
     event.preventDefault();
     let canvas = document.getElementsByTagName('canvas')[0];
-    imageBrowserDownload(canvas.toDataURL());
+    imagebrowserDownload(canvas.toDataURL());
   };
 
   let saveSVGScreenshotToFile = event => {
@@ -87,7 +87,7 @@ export default function ToolbarScreenshotButton({mode}) {
 
     img.onload = () => {
       ctx.drawImage(img, 0, 0, maxWidthSVGElement.width.baseVal.value, maxWidthSVGElement.height.baseVal.value);
-      imageBrowserDownload(canvas.toDataURL());
+      imagebrowserDownload(canvas.toDataURL());
     };
 
   };
