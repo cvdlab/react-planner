@@ -14,7 +14,6 @@ import {
   FooterBarComponents
 } from './components/export';
 import { VERSION } from './version';
-import './styles/styles';
 import ReactPlannerContext from './utils/react-planner-context';
 
 const { Toolbar } = ToolbarComponents;

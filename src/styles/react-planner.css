@@ -1,9 +1,41 @@
-/* Fix some error */
+/* React Tabs */
+.react-tabs__tab-list {
+  border-bottom: 1px solid #aaa;
+  margin: 0 0 10px;
+  padding: 0;
+}
+
+.react-tabs__tab {
+  display: inline-block;
+  border: 1px solid transparent;
+  border-bottom: none;
+  bottom: -1px;
+  position: relative;
+  list-style: none;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+.react-tabs__tab--selected, .react-tabs__tab:focus {
+  border-color: #aaa;
+  color: #1CA6FC;
+  outline: none;
+}
+
+.react-tabs__tab-panel {
+  display: none;
+}
+
+.react-tabs__tab-panel--selected {
+  display: block;
+}
+
+/* RC Dropdown */
 .rc-dropdown {
   position: absolute;
   left: -9999px;
   top: -9999px;
-  z-index: 1070;
+  z-index: 9999;
   display: block;
   font-size: 12px;
   font-weight: normal;

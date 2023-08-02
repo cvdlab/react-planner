@@ -9,6 +9,8 @@ import MyCatalog from './catalog/mycatalog';
 
 import ToolbarScreenshotButton from './ui/toolbar-screenshot-button';
 
+import "react-planner/styles/react-planner.css"
+
 import {
     Models as PlannerModels,
     reducer as PlannerReducer,
