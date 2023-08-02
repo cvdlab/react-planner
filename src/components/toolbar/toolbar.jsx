@@ -15,6 +15,7 @@ import {
   MODE_CONFIGURING_PROJECT
 } from '../../utils/constants';
 import * as SharedStyle from '../../styles/shared-style';
+import "./toolbar.css"
 
 const iconTextStyle = {
   fontSize: '19px',
@@ -158,7 +159,7 @@ const Toolbar = ({ state, toolbarButtons, allowProjectFileSupport }) => {
       </aside>
     </div>
   );
-  
+
 }
 
 Toolbar.propTypes = {
