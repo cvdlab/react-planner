@@ -174,7 +174,7 @@ export default {
     let obj = require('./door.obj');
     let img = require('./texture.jpg');
 
-    return loadObjWithMaterial(mtl, obj)
+    return loadObjWithMaterial(mtl, obj, img)
       .then(object => {
         cached3DDoor = object;
         return onLoadItem(cached3DDoor.clone())

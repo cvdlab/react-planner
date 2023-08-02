@@ -122,7 +122,7 @@ export default {
     let obj = require('./window.obj');
     let img = require('./texture.png');
 
-    return loadObjWithMaterial(mtl, obj)
+    return loadObjWithMaterial(mtl, obj, img)
       .then(object => {
         cached3DWindow = object;
         return onLoadItem(cached3DWindow.clone());
