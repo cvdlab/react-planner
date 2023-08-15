@@ -5,3 +5,4 @@ dist/*
 !dist/index.html
 .vscode
 demo/dist
+demo/next

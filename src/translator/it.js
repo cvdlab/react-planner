@@ -7,6 +7,7 @@ export default {
   "Altitude": "Quota",
   "altitude": "Quota",
   "Areas":"Aree",
+  "Call Planfinder":"Call Planfinder",
   "Cancel": "Annulla",
   "Catalog" : "Catalogo",
   "Chain selected Elements to Group":"Collega l'Elemento selzionato al Gruppo",

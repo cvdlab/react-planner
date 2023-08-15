@@ -7,6 +7,7 @@ export default {
   "altitude": "altitude",
   "Altitude": "Altitude",
   "Areas":"Areas",
+  "Call Planfinder":"Call Planfinder",
   "Cancel": "Cancel",
   "Catalog" : "Catalog",
   "Chain selected Elements to Group":"Chain selected Elements to Group",
