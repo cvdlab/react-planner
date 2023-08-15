@@ -7,6 +7,7 @@ export default {
   "altitude": "высота",
   "Altitude": "Высота",
   "Areas": "Поверхности",
+  "Call Planfinder": "Call Planfinder",
   "Cancel": "Отмена",
   "Catalog": "Каталог",
   "Chain selected Elements to Group": "Цепочка выбранных элементов в группу",
