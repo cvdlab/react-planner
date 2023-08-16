@@ -205,5 +205,5 @@ Toolbar.propTypes = {
   toolbarButtons: PropTypes.array
 };
 export default /*#__PURE__*/memo(Toolbar, function (prevProps, nextProps) {
-  return prevProps.state.mode === nextProps.state.mode && prevProps.state.alterate === nextProps.state.alterate;
+  return prevProps.state.hashCode() === nextProps.state.hashCode();
 });

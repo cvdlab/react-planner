@@ -7,7 +7,7 @@ import { Provider } from 'react-redux';
 
 import MyCatalog from './catalog/mycatalog';
 
-import ToolbarScreenshotButton from './ui/toolbar-screenshot-button';
+import ScreenshotToolbarButton from './ui/screenshot-toolbar-button';
 
 import "react-planner/styles/react-planner.css"
 
@@ -73,7 +73,7 @@ let plugins = [
 ];
 
 let toolbarButtons = [
-    ToolbarScreenshotButton,
+    ScreenshotToolbarButton,
 ];
 
 const Wrapper = () => {
