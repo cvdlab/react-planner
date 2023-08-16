@@ -168,6 +168,5 @@ Toolbar.propTypes = {
 };
 
 export default memo(Toolbar, (prevProps, nextProps) => {
-  return prevProps.state.mode === nextProps.state.mode &&
-    prevProps.state.alterate === nextProps.state.alterate;
+  return prevProps.state.hashCode() === nextProps.state.hashCode()
 });

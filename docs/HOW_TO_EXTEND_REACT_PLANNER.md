@@ -43,7 +43,7 @@ const {
 const { ToolbarButton } = ReactPlannerComponents.ToolbarComponents;
 
 // TODO(pg): describe input parameters
-export default function ToolbarScreenshotButton({ mode, state, key }) {
+export default function ScreenshotToolbarButton({ mode, state, key }) {
     // It can access the context:
     let context = useContext(ReactPlannerContext);
 
