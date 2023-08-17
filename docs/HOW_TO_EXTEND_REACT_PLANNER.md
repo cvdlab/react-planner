@@ -53,11 +53,26 @@ export default function ScreenshotToolbarButton({ mode, state, key }) {
 
 ### Content,
 
+`customContents` can be passed as a property of `ReactPlanner` to display custom content on specific `mode`.
+
+Mode are defined in `src/utils/constants.js`, so that when adding custom mode, one has to be aware of the existing one.
+
+```typescript
+    const customContents = {
+        MODE_CUSTOM: <CustomContent />
+    }
+
+    <ReactPlanner
+        customContents={customContents}
+    />
+```
+
 ### SidebarComponents,
 
 ### FooterBarComponents,
 
 ### Viewer2DComponents,
+
 ### StyleComponents
 
 ### 
