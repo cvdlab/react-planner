@@ -134,17 +134,17 @@ var Toolbar = function Toolbar(_ref3) {
         color: alterateColor
       }
     }))
-  }, {
-    index: 6,
-    condition: true,
-    dom: /*#__PURE__*/React.createElement(ToolbarButton, {
-      active: [MODE_3D_FIRST_PERSON].includes(mode),
-      tooltip: translator.t('3D First Person'),
-      onClick: function onClick(event) {
-        return viewer3DActions.selectTool3DFirstPerson();
-      }
-    }, /*#__PURE__*/React.createElement(MdDirectionsRun, null))
-  }, {
+  },
+  // TODO(react-planner #16)
+  // {
+  //   index: 6, condition: true, dom: <ToolbarButton
+  //     active={[MODE_3D_FIRST_PERSON].includes(mode)}
+  //     tooltip={translator.t('3D First Person')}
+  //     onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
+  //     <MdDirectionsRun />
+  //   </ToolbarButton>
+  // },
+  {
     index: 7,
     condition: true,
     dom: /*#__PURE__*/React.createElement(ToolbarButton, {

@@ -19,12 +19,11 @@ export default function Content(_ref) {
         width: width,
         height: height
       });
-    case constants.MODE_3D_FIRST_PERSON:
-      return /*#__PURE__*/React.createElement(Viewer3DFirstPerson, {
-        state: state,
-        width: width,
-        height: height
-      });
+
+    // TODO(react-planner #16)
+    // case constants.MODE_3D_FIRST_PERSON:
+    //   return <Viewer3DFirstPerson state={state} width={width} height={height} />;
+
     case constants.MODE_VIEWING_CATALOG:
       return /*#__PURE__*/React.createElement(CatalogList, {
         state: state,
