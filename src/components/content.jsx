@@ -15,8 +15,9 @@ export default function Content({ width, height, state, customContents }) {
     case constants.MODE_3D_VIEW:
       return <Viewer3D state={state} width={width} height={height} />;
 
-    case constants.MODE_3D_FIRST_PERSON:
-      return <Viewer3DFirstPerson state={state} width={width} height={height} />;
+    // TODO(react-planner #16)
+    // case constants.MODE_3D_FIRST_PERSON:
+    //   return <Viewer3DFirstPerson state={state} width={width} height={height} />;
 
     case constants.MODE_VIEWING_CATALOG:
       return <CatalogList state={state} width={width} height={height} />;

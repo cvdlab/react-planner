@@ -112,14 +112,15 @@ const Toolbar = ({ state, toolbarButtons, allowProjectFileSupport }) => {
         {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D style={{ color: alterateColor }} /> : <FaMousePointer style={{ color: alterateColor }} />}
       </ToolbarButton>
     },
-    {
-      index: 6, condition: true, dom: <ToolbarButton
-        active={[MODE_3D_FIRST_PERSON].includes(mode)}
-        tooltip={translator.t('3D First Person')}
-        onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
-        <MdDirectionsRun />
-      </ToolbarButton>
-    },
+    // TODO(react-planner #16)
+    // {
+    //   index: 6, condition: true, dom: <ToolbarButton
+    //     active={[MODE_3D_FIRST_PERSON].includes(mode)}
+    //     tooltip={translator.t('3D First Person')}
+    //     onClick={event => viewer3DActions.selectTool3DFirstPerson()}>
+    //     <MdDirectionsRun />
+    //   </ToolbarButton>
+    // },
     {
       index: 7, condition: true, dom: <ToolbarButton
         active={false}
