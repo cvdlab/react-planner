@@ -7,7 +7,7 @@ import { reducer, ReactPlannerReducers } from './reducers/';
 import { Plugins } from './plugins';
 import { Catalog, ElementsFactories } from './catalog';
 import { ReactPlannerSharedStyle } from './styles';
-import { ReactPlannerContext, ReactPlannerConstants } from './utils';
+import { ReactPlannerContext, ReactPlannerConstants, ReactPlannerUtils } from './utils';
 import { ReactPlannerComponents } from './components';
 
 export {
@@ -22,6 +22,7 @@ export {
   ReactPlannerComponents,
   ReactPlannerConstants,
   ReactPlannerContext,
+  ReactPlannerUtils,
   ReactPlannerReducers,
   ReactPlannerSharedStyle,
   reducer,

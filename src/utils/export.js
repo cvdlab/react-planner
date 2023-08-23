@@ -7,8 +7,6 @@ import * as history from './history';
 import * as ObjectUtils from './objects-utils';
 import IDBroker from './id-broker';
 import NameGenerator from './name-generator';
-import ReactPlannerContext from './react-planner-context';
-import * as ReactPlannerConstants from './constants';
 
 export {
   GeometryUtils,
@@ -20,8 +18,6 @@ export {
   IDBroker,
   NameGenerator,
   ObjectUtils,
-  ReactPlannerContext,
-  ReactPlannerConstants
 };
 
 export default {
@@ -34,6 +30,4 @@ export default {
   IDBroker,
   NameGenerator,
   ObjectUtils,
-  ReactPlannerContext,
-  ReactPlannerConstants
 };
