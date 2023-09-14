@@ -85,7 +85,9 @@ class Area{
     return this.updateProperties( state, layerID, areaID, fromJS(properties) );
   }
 
-  static setAttributes( state ) {
+  static setAttributes( state, layerID, areaID, areaAttributes ) {
+    state = state.mergeIn(['scene', 'layers', layerID, 'areas', areaID ], areaAttributes)
+
     return { updatedState: state };
   }
 
