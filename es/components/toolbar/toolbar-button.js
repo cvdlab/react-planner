@@ -1,3 +1,9 @@
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
+function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
+function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
+function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
@@ -10,18 +16,24 @@ import * as SharedStyle from '../../styles/shared-style';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
-var STYLE = {
+var STYLE_OUTER = {
   width: '30px',
   height: '30px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   marginTop: '5px',
-  marginLeft: '5px',
-  marginRight: '5px',
-  fontSize: '25px',
+  marginLeft: '8px',
+  marginRight: '8px',
+  fontSize: '12px',
   position: 'relative',
   cursor: 'pointer'
+};
+var STYLE_INNER = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center'
 };
 var STYLE_TOOLTIP = {
   position: 'absolute',
@@ -60,8 +72,10 @@ export default function ToolbarButton(props) {
     state = _useState2[0],
     setState = _useState2[1];
   var color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
+  var stroke = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
+  var fill = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
   return /*#__PURE__*/React.createElement("div", {
-    style: STYLE,
+    style: STYLE_OUTER,
     onMouseOver: function onMouseOver(event) {
       return setState({
         active: true
@@ -73,9 +87,11 @@ export default function ToolbarButton(props) {
       });
     }
   }, /*#__PURE__*/React.createElement("div", {
-    style: {
-      color: color
-    },
+    style: _objectSpread(_objectSpread({}, STYLE_INNER), {}, {
+      color: color,
+      stroke: stroke,
+      fill: fill
+    }),
     onClick: props.onClick
   }, props.children), state.active ? /*#__PURE__*/React.createElement("div", {
     style: STYLE_TOOLTIP

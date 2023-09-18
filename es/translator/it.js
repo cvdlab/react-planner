@@ -71,6 +71,7 @@ export default {
   "Un-chain all Group\'s Elements and remove Group": "Elimina il Gruppo e scollega tutti gli Elementi appartenenti",
   "Un-chain Element from Group": "Scollega l'Elemento dal Gruppo",
   "Undo (CTRL-Z)": "Annulla (CTRL-Z)",
+  "Redo (CTRL-Y)": "Ripristina (CTRL-Z)",
   "Unselect": "Deseleziona",
   "Vertical": "Verticale",
   "width": "Larghezza",
