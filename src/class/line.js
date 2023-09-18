@@ -38,6 +38,9 @@ class Line{
 
     state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], line);
 
+    console.log('adding line ' + lineID);
+    console.log(`adding vertices ' + ${v0} + ' and ' + ${v1}`);
+
     return {updatedState: state, line};
   }
 
@@ -57,6 +60,11 @@ class Line{
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
     if( line ) {
+      console.log('removing line ' + lineID);
+      const v0 = line.vertices.get(0);
+      const v1 = line.vertices.get(1);
+      console.log(`removing vertices ' + ${v0} + ' and ' + ${v1}`);
+      
       state = this.unselect( state, layerID, lineID ).updatedState;
       line.holes.forEach(holeID => state = Hole.remove(state, layerID, holeID).updatedState);
       state = Layer.removeElement( state, layerID, 'lines', lineID ).updatedState;
@@ -87,6 +95,11 @@ class Line{
     let v1 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(1)]);
     let {x: x0, y: y0} = v0;
     let {x: x1, y: y1} = v1;
+
+    console.log('splitting line ' + lineID);
+    console.log(`adding vertex at (${x}, ${y})`);
+    console.log(`adding line (${x0}, ${y0}), (${x}, ${y})`);
+    console.log(`adding line (${x1}, ${y1}), (${x}, ${y})`);
 
     let { updatedState: stateL1, line: line0 } = Line.create( state  , layerID, line.type, x0, y0, x, y, line.get('properties'));
     let { updatedState: stateL2, line: line1 } = Line.create( stateL1, layerID, line.type, x1, y1, x, y, line.get('properties'));
