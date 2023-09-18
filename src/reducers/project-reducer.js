@@ -12,6 +12,7 @@ import {
   SET_HOLES_ATTRIBUTES,
   REMOVE,
   UNDO,
+  REDO,
   ROLLBACK,
   SET_PROJECT_PROPERTIES,
   OPEN_PROJECT_CONFIGURATOR,
@@ -51,10 +52,10 @@ export default function (state, action) {
       return Project.openCatalog(state).updatedState;
 
     case CHANGE_CATALOG_PAGE:
-      return Project.changeCatalogPage( state, action.oldPage, action.newPage ).updatedState;
+      return Project.changeCatalogPage(state, action.oldPage, action.newPage).updatedState;
 
     case GO_BACK_TO_CATALOG_PAGE:
-      return Project.goBackToCatalogPage( state, action.newPage ).updatedState;
+      return Project.goBackToCatalogPage(state, action.newPage).updatedState;
 
     case SELECT_TOOL_EDIT:
       return Project.setMode(state, MODE_IDLE).updatedState;
@@ -84,6 +85,9 @@ export default function (state, action) {
 
     case UNDO:
       return Project.undo(state).updatedState;
+
+    case REDO:
+      return Project.redo(state).updatedState;
 
     case ROLLBACK:
       return Project.rollback(state).updatedState;
@@ -125,18 +129,18 @@ export default function (state, action) {
       return Project.pushLastSelectedCatalogElementToHistory(state, action.element).updatedState;
 
     case ALTERATE_STATE:
-      return Project.setAlterate( state ).updatedState;
-    
+      return Project.setAlterate(state).updatedState;
+
     case SET_MODE:
       return Project.setMode(state, action.mode).updatedState;
-    
+
     case ADD_HORIZONTAL_GUIDE:
       state = state.merge({ sceneHistory: history.historyPush(state.sceneHistory, state.scene) });
       return Project.addHorizontalGuide(state, action.coordinate).updatedState;
-    
+
     case ADD_VERTICAL_GUIDE:
       return Project.addVerticalGuide(state, action.coordinate).updatedState;
-    
+
     case ADD_CIRCULAR_GUIDE:
       return Project.addCircularGuide(state, action.x, action.y, action.radius).updatedState;
 
