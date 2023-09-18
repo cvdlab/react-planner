@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { MdCamera } from 'react-icons/md'
+import RenderSVG from './render.svg';
 import { ReactPlannerContext, ReactPlannerConstants, ReactPlannerComponents } from 'react-planner';
 
 const {
@@ -95,7 +95,8 @@ export default function ScreenshotToolbarButton({mode}) {
   if ([MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode)) {
     return (
       <ToolbarButton active={false} tooltip={translator.t('Get Screenshot')} onClick={saveScreenshotToFile}>
-        <MdCamera/>
+        <RenderSVG/>
+        Render
       </ToolbarButton>
     );
   }
@@ -116,7 +117,8 @@ export default function ScreenshotToolbarButton({mode}) {
 
     return (
       <ToolbarButton active={false} tooltip={translator.t('Get Screenshot')} onClick={saveSVGScreenshotToFile}>
-        <MdCamera/>
+        <RenderSVG/>
+        Render
       </ToolbarButton>
     );
   }

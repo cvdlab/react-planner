@@ -65,6 +65,7 @@
   ],
   "homepage": "https://github.com/cvdlab/react-planner#readme",
   "dependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@uidotdev/usehooks": "^2.0.1",
     "area-polygon": "1.0.1",
     "convert-units": "2.3.4",
