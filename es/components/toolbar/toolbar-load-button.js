@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { FaFolderOpen as IconLoad } from 'react-icons/fa';
+import LoadSVG from './icons/load.svg';
 import ReactPlannerContext from '../../utils/react-planner-context';
 import ToolbarButton from './toolbar-button';
 import { browserUpload } from '../../utils/browser';
@@ -19,7 +19,7 @@ export default function ToolbarLoadButton(_ref) {
     active: false,
     tooltip: translator.t("Load project"),
     onClick: loadProjectFromFile
-  }, /*#__PURE__*/React.createElement(IconLoad, null));
+  }, /*#__PURE__*/React.createElement(LoadSVG, null), "Load");
 }
 ToolbarLoadButton.propTypes = {
   state: PropTypes.object.isRequired

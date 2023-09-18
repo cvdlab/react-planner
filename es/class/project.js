@@ -139,14 +139,36 @@ var Project = /*#__PURE__*/function () {
     key: "undo",
     value: function undo(state) {
       var sceneHistory = state.sceneHistory;
-      if (state.scene === sceneHistory.last && sceneHistory.list.size > 1) {
+      if (state.scene === sceneHistory.last && sceneHistory.undoList.size > 1) {
+        // Push the current state onto redoList before popping from history
         sceneHistory = history.historyPop(sceneHistory);
       }
+      // Update the current state
       state = state.merge({
         mode: MODE_IDLE,
         scene: sceneHistory.last,
-        sceneHistory: history.historyPop(sceneHistory)
+        sceneHistory: sceneHistory
       });
+      return {
+        updatedState: state
+      };
+    }
+  }, {
+    key: "redo",
+    value: function redo(state) {
+      var sceneHistory = state.sceneHistory;
+      // Check if we can redo
+      if (sceneHistory.redoList && sceneHistory.redoList.size > 0) {
+        // Use historyRedo function to handle the redo operation
+        sceneHistory = history.historyRedo(sceneHistory);
+
+        // Update the current state
+        state = state.merge({
+          mode: MODE_IDLE,
+          scene: sceneHistory.last,
+          sceneHistory: sceneHistory
+        });
+      }
       return {
         updatedState: state
       };
@@ -155,7 +177,7 @@ var Project = /*#__PURE__*/function () {
     key: "rollback",
     value: function rollback(state) {
       var sceneHistory = state.sceneHistory;
-      if (!sceneHistory.last && sceneHistory.list.isEmpty()) {
+      if (!sceneHistory.last && sceneHistory.undoList.isEmpty()) {
         return {
           updatedState: state
         };

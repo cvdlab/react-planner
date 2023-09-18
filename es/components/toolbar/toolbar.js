@@ -1,47 +1,29 @@
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-function ownKeys(object, enumerableOnly) { var keys = Object.keys(object); if (Object.getOwnPropertySymbols) { var symbols = Object.getOwnPropertySymbols(object); enumerableOnly && (symbols = symbols.filter(function (sym) { return Object.getOwnPropertyDescriptor(object, sym).enumerable; })), keys.push.apply(keys, symbols); } return keys; }
-function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { var source = null != arguments[i] ? arguments[i] : {}; i % 2 ? ownKeys(Object(source), !0).forEach(function (key) { _defineProperty(target, key, source[key]); }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(target, Object.getOwnPropertyDescriptors(source)) : ownKeys(Object(source)).forEach(function (key) { Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key)); }); } return target; }
-function _defineProperty(obj, key, value) { key = _toPropertyKey(key); if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _typeof(key) === "symbol" ? key : String(key); }
-function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
-import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import ReactPlannerContext from '../../utils/react-planner-context';
+import NewSVG from './icons/new.svg';
+import CatalogSVG from './icons/catalog.svg';
+import Icon2DSVG from './icons/2D.svg';
+import Icon3DSVG from './icons/3D.svg';
+import UndoSVG from './icons/undo.svg';
+import RedoSVG from './icons/redo.svg';
+import SettingsSVG from './icons/settings.svg';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
 import If from '../../utils/react-if';
 import { MODE_IDLE, MODE_3D_VIEW, MODE_3D_FIRST_PERSON, MODE_VIEWING_CATALOG, MODE_CONFIGURING_PROJECT } from '../../utils/constants';
 import * as SharedStyle from '../../styles/shared-style';
-var iconTextStyle = {
-  fontSize: '19px',
-  textDecoration: 'none',
-  fontWeight: 'bold',
-  margin: '0px',
-  userSelect: 'none'
-};
-var Icon2D = function Icon2D(_ref) {
-  var style = _ref.style;
-  return /*#__PURE__*/React.createElement("p", {
-    style: _objectSpread(_objectSpread({}, iconTextStyle), style)
-  }, "2D");
-};
-var Icon3D = function Icon3D(_ref2) {
-  var style = _ref2.style;
-  return /*#__PURE__*/React.createElement("p", {
-    style: _objectSpread(_objectSpread({}, iconTextStyle), style)
-  }, "3D");
-};
 var ASIDE_STYLE = {
   left: 0,
   right: 0,
   display: 'flex',
   justifyContent: 'center',
+  fontSize: '10px',
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
-  border: '2px solid #ddd',
+  border: '2px solid',
   borderRadius: '30px',
+  borderColor: SharedStyle.PRIMARY_COLOR.alt,
   padding: '10px',
   zIndex: 99999
 };
@@ -63,17 +45,15 @@ var mapButtonsCb = function mapButtonsCb(el, ind) {
     }
   }, el.dom);
 };
-var Toolbar = function Toolbar(_ref3) {
-  var state = _ref3.state,
-    toolbarButtons = _ref3.toolbarButtons,
-    allowProjectFileSupport = _ref3.allowProjectFileSupport;
+var Toolbar = function Toolbar(_ref) {
+  var state = _ref.state,
+    toolbarButtons = _ref.toolbarButtons,
+    allowProjectFileSupport = _ref.allowProjectFileSupport;
   var _useContext = useContext(ReactPlannerContext),
     projectActions = _useContext.projectActions,
     viewer3DActions = _useContext.viewer3DActions,
     translator = _useContext.translator;
   var mode = state.get('mode');
-  var alterate = state.get('alterate');
-  var alterateColor = alterate ? SharedStyle.MATERIAL_COLORS[500].orange : '';
   var sorter = [{
     index: 0,
     condition: allowProjectFileSupport,
@@ -83,7 +63,7 @@ var Toolbar = function Toolbar(_ref3) {
       onClick: function onClick(event) {
         return confirm(translator.t('Would you want to start a new Project?')) ? projectActions.newProject() : null;
       }
-    }, /*#__PURE__*/React.createElement(FaFile, null))
+    }, /*#__PURE__*/React.createElement(NewSVG, null), "New")
   }, {
     index: 1,
     condition: allowProjectFileSupport,
@@ -105,19 +85,9 @@ var Toolbar = function Toolbar(_ref3) {
       onClick: function onClick(event) {
         return projectActions.openCatalog();
       }
-    }, /*#__PURE__*/React.createElement(FaPlus, null))
+    }, /*#__PURE__*/React.createElement(CatalogSVG, null), "Catalog")
   }, {
     index: 4,
-    condition: true,
-    dom: /*#__PURE__*/React.createElement(ToolbarButton, {
-      active: [MODE_3D_VIEW].includes(mode),
-      tooltip: translator.t('3D View'),
-      onClick: function onClick(event) {
-        return viewer3DActions.selectTool3DView();
-      }
-    }, /*#__PURE__*/React.createElement(Icon3D, null))
-  }, {
-    index: 5,
     condition: true,
     dom: /*#__PURE__*/React.createElement(ToolbarButton, {
       active: [MODE_IDLE].includes(mode),
@@ -125,15 +95,17 @@ var Toolbar = function Toolbar(_ref3) {
       onClick: function onClick(event) {
         return projectActions.setMode(MODE_IDLE);
       }
-    }, [MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? /*#__PURE__*/React.createElement(Icon2D, {
-      style: {
-        color: alterateColor
+    }, /*#__PURE__*/React.createElement(Icon2DSVG, null), "2D")
+  }, {
+    index: 5,
+    condition: true,
+    dom: /*#__PURE__*/React.createElement(ToolbarButton, {
+      active: [MODE_3D_VIEW].includes(mode),
+      tooltip: translator.t('3D View'),
+      onClick: function onClick(event) {
+        return viewer3DActions.selectTool3DView();
       }
-    }) : /*#__PURE__*/React.createElement(FaMousePointer, {
-      style: {
-        color: alterateColor
-      }
-    }))
+    }, /*#__PURE__*/React.createElement(Icon3DSVG, null), "3D")
   },
   // TODO(react-planner #16)
   // {
@@ -145,7 +117,7 @@ var Toolbar = function Toolbar(_ref3) {
   //   </ToolbarButton>
   // },
   {
-    index: 7,
+    index: 6,
     condition: true,
     dom: /*#__PURE__*/React.createElement(ToolbarButton, {
       active: false,
@@ -153,7 +125,17 @@ var Toolbar = function Toolbar(_ref3) {
       onClick: function onClick(event) {
         return projectActions.undo();
       }
-    }, /*#__PURE__*/React.createElement(MdUndo, null))
+    }, /*#__PURE__*/React.createElement(UndoSVG, null), "Undo")
+  }, {
+    index: 7,
+    condition: true,
+    dom: /*#__PURE__*/React.createElement(ToolbarButton, {
+      active: false,
+      tooltip: translator.t('Redo (CTRL-Y)'),
+      onClick: function onClick(event) {
+        return projectActions.redo();
+      }
+    }, /*#__PURE__*/React.createElement(RedoSVG, null), "Redo")
   }, {
     index: 8,
     condition: true,
@@ -163,7 +145,7 @@ var Toolbar = function Toolbar(_ref3) {
       onClick: function onClick(event) {
         return projectActions.openProjectConfigurator();
       }
-    }, /*#__PURE__*/React.createElement(MdSettings, null))
+    }, /*#__PURE__*/React.createElement(SettingsSVG, null), "Settings")
   }];
   sorter = sorter.concat(toolbarButtons.map(function (Component, key) {
     return Component.prototype ?

@@ -1,5 +1,5 @@
 import { MODE_IDLE, MODE_3D_FIRST_PERSON, MODE_3D_VIEW, MODE_SNAPPING, KEYBOARD_BUTTON_CODE } from '../utils/constants';
-import { rollback, undo, remove, toggleSnap, copyProperties, pasteProperties, setAlterateState } from '../actions/project-actions';
+import { rollback, undo, redo, remove, toggleSnap, copyProperties, pasteProperties, setAlterateState } from '../actions/project-actions';
 export default function keyboard() {
   return function (store, stateExtractor) {
     window.addEventListener('keydown', function (event) {
@@ -15,6 +15,11 @@ export default function keyboard() {
         case KEYBOARD_BUTTON_CODE.ESC:
           {
             store.dispatch(rollback());
+            break;
+          }
+        case KEYBOARD_BUTTON_CODE.Y:
+          {
+            if (event.getModifierState('Control') || event.getModifierState('Meta')) store.dispatch(redo());
             break;
           }
         case KEYBOARD_BUTTON_CODE.Z:

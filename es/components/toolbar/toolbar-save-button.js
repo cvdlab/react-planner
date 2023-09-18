@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { FaSave as IconSave } from 'react-icons/fa';
+import SaveSVG from './icons/save.svg';
 import ReactPlannerContext from '../../utils/react-planner-context';
 import ToolbarButton from './toolbar-button';
 import { browserDownload } from '../../utils/browser';
@@ -58,7 +58,7 @@ export default function ToolbarSaveButton(_ref) {
   }, /*#__PURE__*/React.createElement(ToolbarButton, {
     active: false,
     tooltip: translator.t('Save project')
-  }, /*#__PURE__*/React.createElement(IconSave, null)));
+  }, /*#__PURE__*/React.createElement(SaveSVG, null), "Save"));
 }
 ToolbarSaveButton.propTypes = {
   state: PropTypes.object.isRequired
