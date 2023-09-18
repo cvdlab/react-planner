@@ -71,6 +71,7 @@ export default {
   "Un-chain all Group\'s Elements and remove Group":"Удалить цепочку элементов группы и удалить группу",
   "Un-chain Element from Group":"Unchain Element из группы",
   "Undo (CTRL-Z)": "Отменить действие (CTRL-Z)",
+  "Redo (CTRL-Y)": "повторить действие (CTRL-Y)",
   "Unselect": "Снять выделене",
   "Vertical":"вертикальный",
   "width": "ширина",

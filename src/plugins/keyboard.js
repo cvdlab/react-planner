@@ -9,6 +9,7 @@ import {
 import {
   rollback,
   undo,
+  redo,
   remove,
   toggleSnap,
   copyProperties,
@@ -36,6 +37,12 @@ export default function keyboard() {
         case KEYBOARD_BUTTON_CODE.ESC:
         {
           store.dispatch(rollback());
+          break;
+        }
+        case KEYBOARD_BUTTON_CODE.Y:
+        {
+          if (event.getModifierState('Control') || event.getModifierState('Meta'))
+            store.dispatch(redo());
           break;
         }
         case KEYBOARD_BUTTON_CODE.Z:

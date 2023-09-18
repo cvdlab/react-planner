@@ -16,20 +16,20 @@ import {
   VerticalGuide
 } from '../class/export';
 
-class Project{
+class Project {
 
-  static setAlterate( state ){
-    return { updatedState: state.set('alterate', !state.alterate ) };
+  static setAlterate(state) {
+    return { updatedState: state.set('alterate', !state.alterate) };
   }
 
-  static openCatalog( state ) {
-    state = this.setMode( state, MODE_VIEWING_CATALOG ).updatedState;
+  static openCatalog(state) {
+    state = this.setMode(state, MODE_VIEWING_CATALOG).updatedState;
 
     return { updatedState: state };
   }
 
   static newProject(state) {
-    state = new State({'viewer2D': state.get('viewer2D')});
+    state = new State({ 'viewer2D': state.get('viewer2D') });
 
     return { updatedState: state };
   }
@@ -41,41 +41,41 @@ class Project{
   }
 
   static setProperties(state, layerID, properties) {
-    state = Layer.setPropertiesOnSelected( state, layerID, properties ).updatedState;
+    state = Layer.setPropertiesOnSelected(state, layerID, properties).updatedState;
 
     return { updatedState: state };
   }
 
   static updateProperties(state, layerID, properties) {
-    state = Layer.updatePropertiesOnSelected( state, layerID, properties ).updatedState;
+    state = Layer.updatePropertiesOnSelected(state, layerID, properties).updatedState;
 
     return { updatedState: state };
   }
 
   static setItemsAttributes(state, attributes) {
     //TODO apply only to items
-    state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
+    state.getIn(['scene', 'layers']).forEach(layer => { state = Layer.setAttributesOnSelected(state, layer.id, attributes).updatedState; });
 
     return { updatedState: state };
   }
 
   static setLinesAttributes(state, attributes) {
     //TODO apply only to lines
-    state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
+    state.getIn(['scene', 'layers']).forEach(layer => { state = Layer.setAttributesOnSelected(state, layer.id, attributes).updatedState; });
 
     return { updatedState: state };
   }
 
   static setHolesAttributes(state, attributes) {
     //TODO apply only to holes
-    state.getIn(['scene', 'layers']).forEach( layer => { state = Layer.setAttributesOnSelected( state, layer.id, attributes ).updatedState; } );
+    state.getIn(['scene', 'layers']).forEach(layer => { state = Layer.setAttributesOnSelected(state, layer.id, attributes).updatedState; });
 
     return { updatedState: state };
   }
 
   static unselectAll(state) {
-    state.getIn(['scene', 'layers']).forEach( ({ id: layerID }) => { state = Layer.unselectAll( state, layerID ).updatedState; });
-    state.getIn(['scene', 'groups']).forEach( group => { state = Group.unselect( state, group.get('id') ).updatedState; });
+    state.getIn(['scene', 'layers']).forEach(({ id: layerID }) => { state = Layer.unselectAll(state, layerID).updatedState; });
+    state.getIn(['scene', 'groups']).forEach(group => { state = Group.unselect(state, group.get('id')).updatedState; });
 
     return { updatedState: state };
   }
@@ -88,40 +88,58 @@ class Project{
       items: selectedItems
     } = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
 
-    state = Layer.unselectAll( state, selectedLayer ).updatedState;
+    state = Layer.unselectAll(state, selectedLayer).updatedState;
 
-    selectedLines.forEach(lineID => { state = Line.remove( state, selectedLayer, lineID ).updatedState; });
-    selectedHoles.forEach(holeID => { state = Hole.remove( state, selectedLayer, holeID ).updatedState; });
-    selectedItems.forEach(itemID => { state = Item.remove( state, selectedLayer, itemID ).updatedState; });
+    selectedLines.forEach(lineID => { state = Line.remove(state, selectedLayer, lineID).updatedState; });
+    selectedHoles.forEach(holeID => { state = Hole.remove(state, selectedLayer, holeID).updatedState; });
+    selectedItems.forEach(itemID => { state = Item.remove(state, selectedLayer, itemID).updatedState; });
 
-    state = Layer.detectAndUpdateAreas( state, selectedLayer ).updatedState;
+    state = Layer.detectAndUpdateAreas(state, selectedLayer).updatedState;
 
     return { updatedState: state };
   }
 
   static undo(state) {
     let sceneHistory = state.sceneHistory;
-    if (state.scene === sceneHistory.last && sceneHistory.list.size > 1) {
+    if (state.scene === sceneHistory.last && sceneHistory.undoList.size > 1) {
+      // Push the current state onto redoList before popping from history
       sceneHistory = history.historyPop(sceneHistory);
     }
-
+    // Update the current state
     state = state.merge({
       mode: MODE_IDLE,
       scene: sceneHistory.last,
-      sceneHistory: history.historyPop(sceneHistory)
+      sceneHistory: sceneHistory
     });
 
     return { updatedState: state };
   }
 
+  static redo(state) {
+    let sceneHistory = state.sceneHistory;
+    // Check if we can redo
+    if (sceneHistory.redoList && sceneHistory.redoList.size > 0) {
+      // Use historyRedo function to handle the redo operation
+      sceneHistory = history.historyRedo(sceneHistory);
+      
+      // Update the current state
+      state = state.merge({
+        mode: MODE_IDLE,
+        scene: sceneHistory.last,
+        sceneHistory: sceneHistory
+      });
+    }
+    return { updatedState: state };
+  }
+  
   static rollback(state) {
     let sceneHistory = state.sceneHistory;
 
-    if (!sceneHistory.last && sceneHistory.list.isEmpty()) {
+    if (!sceneHistory.last && sceneHistory.undoList.isEmpty()) {
       return { updatedState: state };
     }
 
-    state = this.unselectAll( state ).updatedState;
+    state = this.unselectAll(state).updatedState;
 
     state = state.merge({
       mode: MODE_IDLE,
@@ -196,7 +214,7 @@ class Project{
     return { updatedState: state };
   }
 
-  static copyProperties(state, properties){
+  static copyProperties(state, properties) {
     state = state.set('clipboardProperties', properties);
 
     return { updatedState: state };
@@ -221,57 +239,57 @@ class Project{
     return { updatedState: state };
   }
 
-  static changeCatalogPage( state, oldPage, newPage ) {
+  static changeCatalogPage(state, oldPage, newPage) {
     state = state.setIn(['catalog', 'page'], newPage)
       .updateIn(['catalog', 'path'], path => path.push(oldPage));
 
     return { updatedState: state };
   }
 
-  static goBackToCatalogPage( state, newPage ){
+  static goBackToCatalogPage(state, newPage) {
     let pageIndex = state.catalog.path.findIndex(page => page === newPage);
-    state =  state.setIn(['catalog', 'page'], newPage)
+    state = state.setIn(['catalog', 'page'], newPage)
       .updateIn(['catalog', 'path'], path => path.take(pageIndex));
 
     return { updatedState: state };
   }
 
-  static setMode( state, mode ){
+  static setMode(state, mode) {
     state = state.set('mode', mode);
     return { updatedState: state };
   }
 
-  static addHorizontalGuide( state, coordinate ){
-    state = HorizontalGuide.create( state, coordinate ).updatedState;
+  static addHorizontalGuide(state, coordinate) {
+    state = HorizontalGuide.create(state, coordinate).updatedState;
 
     return { updatedState: state };
   }
 
-  static addVerticalGuide( state, coordinate ){
-    state = VerticalGuide.create( state, coordinate ).updatedState;
+  static addVerticalGuide(state, coordinate) {
+    state = VerticalGuide.create(state, coordinate).updatedState;
 
     return { updatedState: state };
   }
 
-  static addCircularGuide( state, x, y, radius ){
+  static addCircularGuide(state, x, y, radius) {
     console.log('adding horizontal guide at', x, y, radius);
 
     return { updatedState: state };
   }
 
-  static removeHorizontalGuide( state, guideID ){
-    state = HorizontalGuide.remove( state, guideID ).updatedState;
+  static removeHorizontalGuide(state, guideID) {
+    state = HorizontalGuide.remove(state, guideID).updatedState;
 
     return { updatedState: state };
   }
 
-  static removeVerticalGuide( state, guideID ){
-    state = VerticalGuide.remove( state, guideID ).updatedState;
+  static removeVerticalGuide(state, guideID) {
+    state = VerticalGuide.remove(state, guideID).updatedState;
 
     return { updatedState: state };
   }
 
-  static removeCircularGuide( state, guideID ){
+  static removeCircularGuide(state, guideID) {
     console.log('removeing horizontal guide ', guideID);
 
     return { updatedState: state };

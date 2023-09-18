@@ -1,6 +1,6 @@
 import React, { memo, useContext } from 'react';
 import PropTypes from 'prop-types';
-import { MdSettings, MdUndo, MdDirectionsRun } from 'react-icons/md';
+import { MdSettings, MdUndo, MdRedo } from 'react-icons/md';
 import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import ReactPlannerContext from '../../utils/react-planner-context';
 import ToolbarButton from './toolbar-button';
@@ -122,11 +122,19 @@ const Toolbar = ({ state, toolbarButtons, allowProjectFileSupport }) => {
     //   </ToolbarButton>
     // },
     {
-      index: 7, condition: true, dom: <ToolbarButton
+      index: 6, condition: true, dom: <ToolbarButton
         active={false}
         tooltip={translator.t('Undo (CTRL-Z)')}
         onClick={event => projectActions.undo()}>
         <MdUndo />
+      </ToolbarButton>
+    },
+    {
+      index: 7, condition: true, dom: <ToolbarButton
+        active={false}
+        tooltip={translator.t('Redo (CTRL-Y)')}
+        onClick={event => projectActions.redo()}>
+        <MdRedo />
       </ToolbarButton>
     },
     {

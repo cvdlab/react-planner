@@ -282,13 +282,15 @@ export class Catalog extends Record({
 }
 
 export class HistoryStructure extends Record({
-  list: new List(),
+  undoList: new List(),
+  redoList: new List(),
   first: null,
   last: null
 }, 'HistoryStructure' ){
   constructor( json = {} ){
     super({
-      list: fromJS( json.list || [] ),
+      undoList: fromJS( json.undoList || [] ),
+      redoList: fromJS( json.redoList || [] ),
       first: new Scene( json.scene ),
       last: new Scene( json.last || json.scene )
     });
