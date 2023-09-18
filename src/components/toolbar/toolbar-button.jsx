@@ -4,19 +4,26 @@ import * as SharedStyle from '../../styles/shared-style';
 
 //http://www.cssportal.com/css-tooltip-generator/
 
-const STYLE = {
+const STYLE_OUTER = {
   width: '30px',
   height: '30px',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
   marginTop: '5px',
-  marginLeft: '5px',
-  marginRight: '5px',
-  fontSize: '25px',
+  marginLeft: '8px',
+  marginRight: '8px',
+  fontSize: '12px',
   position: 'relative',
   cursor: 'pointer'
 };
+
+const STYLE_INNER = {
+  display: 'flex',
+  flexDirection: 'column',
+  alignItems: 'center',
+  justifyContent: 'center',
+}
 
 const STYLE_TOOLTIP = {
   position: 'absolute',
@@ -52,12 +59,14 @@ const STYLE_TOOLTIP_PIN = {
 export default function ToolbarButton(props){
   const [state, setState] = useState({active: false})
   let color = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
+  let stroke = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
+  let fill = props.active || state.active ? SharedStyle.SECONDARY_COLOR.icon : SharedStyle.PRIMARY_COLOR.icon;
 
   return (
-    <div style={STYLE}
+    <div style={STYLE_OUTER}
       onMouseOver={event => setState({ active: true })}
       onMouseOut={event => setState({ active: false })}>
-      <div style={{ color }} onClick={props.onClick}>
+      <div style={{ ...STYLE_INNER, color, stroke, fill }} onClick={props.onClick}>
         {props.children}
       </div>
 
