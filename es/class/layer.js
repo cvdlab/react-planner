@@ -6,11 +6,8 @@ function _toPropertyKey(arg) { var key = _toPrimitive(arg, "string"); return _ty
 function _toPrimitive(input, hint) { if (_typeof(input) !== "object" || input === null) return input; var prim = input[Symbol.toPrimitive]; if (prim !== undefined) { var res = prim.call(input, hint || "default"); if (_typeof(res) !== "object") return res; throw new TypeError("@@toPrimitive must return a primitive value."); } return (hint === "string" ? String : Number)(input); }
 import { List } from 'immutable';
 import { Project, Area, Line, Hole, Item, Vertex } from './export';
-import { GraphInnerCycles, GeometryUtils, IDBroker } from '../utils/export';
+import { GraphInnerCycles, GeometryUtils, ObjectUtils, IDBroker } from '../utils/export';
 import { Layer as LayerModel } from '../models/models';
-var sameSet = function sameSet(set1, set2) {
-  return set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
-};
 var Layer = /*#__PURE__*/function () {
   function Layer() {
     _classCallCheck(this, Layer);
@@ -156,7 +153,7 @@ var Layer = /*#__PURE__*/function () {
       //remove areas
       state.getIn(['scene', 'layers', layerID, 'areas']).forEach(function (area) {
         var areaInUse = innerCyclesByVerticesID.some(function (vertices) {
-          return sameSet(vertices, area.vertices);
+          return ObjectUtils.sameSet(vertices, area.vertices);
         });
         if (!areaInUse) {
           state = Area.remove(state, layerID, area.id).updatedState;
@@ -166,7 +163,7 @@ var Layer = /*#__PURE__*/function () {
       //add new areas
       innerCyclesByVerticesID.forEach(function (cycle, ind) {
         var areaInUse = state.getIn(['scene', 'layers', layerID, 'areas']).find(function (area) {
-          return sameSet(area.vertices, cycle);
+          return ObjectUtils.sameSet(area.vertices, cycle);
         });
         if (areaInUse) {
           areaIDs[ind] = areaInUse.id;

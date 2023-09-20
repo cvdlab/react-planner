@@ -21,7 +21,6 @@ var Line = /*#__PURE__*/function () {
   _createClass(Line, null, [{
     key: "create",
     value: function create(state, layerID, type, x0, y0, x1, y1, properties) {
-      console.log("creating line (".concat(x0, ", ").concat(y0, "), (").concat(x1, ", ").concat(y1, ")"));
       var lineID = IDBroker.acquireID();
       var _Vertex$add = Vertex.add(state, layerID, x0, y0, 'lines', lineID),
         stateV0 = _Vertex$add.updatedState,
@@ -37,8 +36,6 @@ var Line = /*#__PURE__*/function () {
         type: type
       }, properties);
       state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], line);
-      console.log('adding line ' + lineID);
-      console.log("adding vertices ' + ".concat(v0, " + ' and ' + ").concat(v1));
       return {
         updatedState: state,
         line: line
@@ -61,10 +58,8 @@ var Line = /*#__PURE__*/function () {
     value: function remove(state, layerID, lineID) {
       var line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
       if (line) {
-        console.log('removing line ' + lineID);
         var v0 = line.vertices.get(0);
         var v1 = line.vertices.get(1);
-        console.log("removing vertices ' + ".concat(v0, " + ' and ' + ").concat(v1));
         state = this.unselect(state, layerID, lineID).updatedState;
         line.holes.forEach(function (holeID) {
           return state = Hole.remove(state, layerID, holeID).updatedState;
@@ -104,10 +99,6 @@ var Line = /*#__PURE__*/function () {
         y0 = v0.y;
       var x1 = v1.x,
         y1 = v1.y;
-      console.log('splitting line ' + lineID);
-      console.log("adding vertex at (".concat(x, ", ").concat(y, ")"));
-      console.log("adding line (".concat(x0, ", ").concat(y0, "), (").concat(x, ", ").concat(y, ")"));
-      console.log("adding line (".concat(x1, ", ").concat(y1, "), (").concat(x, ", ").concat(y, ")"));
       var _Line$create = Line.create(state, layerID, line.type, x0, y0, x, y, line.get('properties')),
         stateL1 = _Line$create.updatedState,
         line0 = _Line$create.line;
@@ -212,7 +203,6 @@ var Line = /*#__PURE__*/function () {
     key: "createAvoidingIntersections",
     value: function createAvoidingIntersections(state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles) {
       var _this2 = this;
-      console.log("createAvoidingIntersections(".concat(x0, ", ").concat(y0, ", ").concat(x1, ", ").concat(y1, ")"));
       var initialPoints = [{
         x: x0,
         y: y0
@@ -271,7 +261,6 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "replaceVertex",
     value: function replaceVertex(state, layerID, lineID, vertexIndex, x, y) {
-      console.log("replacing vertex ".concat(vertexIndex, " of line ").concat(lineID, " with (").concat(x, ", ").concat(y, ")"));
       var vertexID = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex]);
       state = Vertex.remove(state, layerID, vertexID, 'lines', lineID).updatedState;
       var _Vertex$add3 = Vertex.add(state, layerID, x, y, 'lines', lineID),

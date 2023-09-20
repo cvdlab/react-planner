@@ -35,7 +35,7 @@ var PanelMultiElementsEditor = function PanelMultiElementsEditor(_ref) {
   var selecteds = state.getIn(['scene', 'layers', selectedLayer, 'selected']);
   var addSelectToGroup = function addSelectToGroup(state, groupID, layerID, selecteds) {
     if (!groupID || groupID === '' || !selecteds || !selecteds.size) return;
-    console.log('need to be added to group', groupID, 'elements', selecteds);
+    console.log('TODO: need to be added to group', groupID, 'elements', selecteds);
 
     /*let selectedJs = selecteds.toJS();
      for( let lineID in selectedJs.lines ) Group.addElement( state, groupID, layerID, 'lines', lineID );*/

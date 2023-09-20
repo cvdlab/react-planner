@@ -355,7 +355,7 @@ var Project = /*#__PURE__*/function () {
   }, {
     key: "addCircularGuide",
     value: function addCircularGuide(state, x, y, radius) {
-      console.log('adding horizontal guide at', x, y, radius);
+      console.log('TODO: adding circular guide at', x, y, radius);
       return {
         updatedState: state
       };
@@ -379,7 +379,7 @@ var Project = /*#__PURE__*/function () {
   }, {
     key: "removeCircularGuide",
     value: function removeCircularGuide(state, guideID) {
-      console.log('removeing horizontal guide ', guideID);
+      console.log('TODO: removing circular guide ', guideID);
       return {
         updatedState: state
       };
