@@ -36,7 +36,7 @@ const PanelMultiElementsEditor = ({ state }) => {
   const addSelectToGroup = (state, groupID, layerID, selecteds) => {
     if (!groupID || groupID === '' || !selecteds || !selecteds.size) return;
 
-    console.log('need to be added to group', groupID, 'elements', selecteds);
+    console.log('TODO: need to be added to group', groupID, 'elements', selecteds);
 
     /*let selectedJs = selecteds.toJS();
 

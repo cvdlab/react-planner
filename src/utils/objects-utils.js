@@ -25,3 +25,7 @@ export function objectsCompare( x, y ) {
 
   return true;
 }
+
+export function sameSet(set1, set2) {
+  return set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
+}

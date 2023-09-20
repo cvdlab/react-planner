@@ -3,11 +3,11 @@ import { Project, Area, Line, Hole, Item, Vertex } from './export';
 import {
   GraphInnerCycles,
   GeometryUtils,
+  ObjectUtils,
   IDBroker
 } from '../utils/export';
 import { Layer as LayerModel } from '../models/models';
 
-const sameSet = (set1, set2) => set1.size === set2.size && set1.isSuperset(set2) && set1.isSubset(set2);
 
 class Layer{
 
@@ -111,7 +111,7 @@ class Layer{
 
     //remove areas
     state.getIn(['scene', 'layers', layerID, 'areas']).forEach(area => {
-      let areaInUse = innerCyclesByVerticesID.some(vertices => sameSet(vertices, area.vertices));
+      let areaInUse = innerCyclesByVerticesID.some(vertices => ObjectUtils.sameSet(vertices, area.vertices));
       if (!areaInUse) {
         state = Area.remove( state, layerID, area.id ).updatedState;
       }
@@ -119,7 +119,7 @@ class Layer{
 
     //add new areas
     innerCyclesByVerticesID.forEach((cycle, ind) => {
-      let areaInUse = state.getIn(['scene', 'layers', layerID, 'areas']).find(area => sameSet(area.vertices, cycle));
+      let areaInUse = state.getIn(['scene', 'layers', layerID, 'areas']).find(area => ObjectUtils.sameSet(area.vertices, cycle));
 
       if (areaInUse) {
         areaIDs[ind] = areaInUse.id;

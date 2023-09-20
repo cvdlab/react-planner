@@ -272,7 +272,7 @@ class Project {
   }
 
   static addCircularGuide(state, x, y, radius) {
-    console.log('adding horizontal guide at', x, y, radius);
+    console.log('TODO: adding circular guide at', x, y, radius);
 
     return { updatedState: state };
   }
@@ -290,7 +290,7 @@ class Project {
   }
 
   static removeCircularGuide(state, guideID) {
-    console.log('removeing horizontal guide ', guideID);
+    console.log('TODO: removing circular guide ', guideID);
 
     return { updatedState: state };
   }

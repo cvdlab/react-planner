@@ -22,8 +22,6 @@ import {
 class Line{
 
   static create( state, layerID, type, x0, y0, x1, y1, properties ) {
-    console.log(`creating line (${x0}, ${y0}), (${x1}, ${y1})`);
-
     let lineID = IDBroker.acquireID();
 
     let { updatedState: stateV0, vertex: v0 } = Vertex.add( state  , layerID, x0, y0, 'lines', lineID );
@@ -38,9 +36,6 @@ class Line{
     }, properties);
 
     state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], line);
-
-    console.log('adding line ' + lineID);
-    console.log(`adding vertices ' + ${v0} + ' and ' + ${v1}`);
 
     return {updatedState: state, line};
   }
@@ -61,10 +56,8 @@ class Line{
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
     if( line ) {
-      console.log('removing line ' + lineID);
       const v0 = line.vertices.get(0);
       const v1 = line.vertices.get(1);
-      console.log(`removing vertices ' + ${v0} + ' and ' + ${v1}`);
       
       state = this.unselect( state, layerID, lineID ).updatedState;
       line.holes.forEach(holeID => state = Hole.remove(state, layerID, holeID).updatedState);
@@ -96,11 +89,6 @@ class Line{
     let v1 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(1)]);
     let {x: x0, y: y0} = v0;
     let {x: x1, y: y1} = v1;
-
-    console.log('splitting line ' + lineID);
-    console.log(`adding vertex at (${x}, ${y})`);
-    console.log(`adding line (${x0}, ${y0}), (${x}, ${y})`);
-    console.log(`adding line (${x1}, ${y1}), (${x}, ${y})`);
 
     let { updatedState: stateL1, line: line0 } = Line.create( state  , layerID, line.type, x0, y0, x, y, line.get('properties'));
     let { updatedState: stateL2, line: line1 } = Line.create( stateL1, layerID, line.type, x1, y1, x, y, line.get('properties'));
@@ -186,8 +174,6 @@ class Line{
   }
 
   static createAvoidingIntersections( state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles ) {
-    console.log(`createAvoidingIntersections(${x0}, ${y0}, ${x1}, ${y1})`)
-
     let initialPoints = [{x: x0, y: y0}, {x: x1, y: y1}];
     let points = [{x: x0, y: y0}, {x: x1, y: y1}];
 
@@ -237,7 +223,6 @@ class Line{
   }
 
   static replaceVertex ( state, layerID, lineID, vertexIndex, x, y ) {
-    console.log(`replacing vertex ${vertexIndex} of line ${lineID} with (${x}, ${y})`);
     let vertexID = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex]);
 
     state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState;
