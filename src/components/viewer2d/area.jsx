@@ -19,49 +19,50 @@ const STYLE_TEXT = {
 };
 
 
-export default function Area({layer, area, catalog}) {
+export default function Area({ layer, area, catalog }) {
 
   let rendered = catalog.getElement(area.type).render2D(area, layer);
 
   let renderedAreaSize = null;
 
-  if (area.selected) {
-    let polygon = area.vertices.toArray().map(vertexID => {
-      let {x, y} = layer.vertices.get(vertexID);
+  let polygon = area.vertices.toArray().map(vertexID => {
+    let { x, y } = layer.vertices.get(vertexID);
+    return [x, y];
+  });
+
+  let polygonWithHoles = polygon;
+
+  area.holes.forEach(holeID => {
+
+    let polygonHole = layer.areas.get(holeID).vertices.toArray().map(vertexID => {
+      let { x, y } = layer.vertices.get(vertexID);
       return [x, y];
     });
 
-    let polygonWithHoles = polygon;
+    polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
+  });
 
-    area.holes.forEach(holeID => {
+  let center = polylabel([polygonWithHoles], 1.0);
 
-      let polygonHole = layer.areas.get(holeID).vertices.toArray().map(vertexID => {
-        let {x, y} = layer.vertices.get(vertexID);
-        return [x, y];
-      });
+  // TODO(pg): review area calculation to take into account wall thickness
+  // so that we can have a more accurate area calculation brutto/netto
+  let areaSize = areapolygon(polygon, false);
 
-      polygonWithHoles = polygonWithHoles.concat(polygonHole.reverse());
+  //subtract holes area
+  area.holes.forEach(areaID => {
+    let hole = layer.areas.get(areaID);
+    let holePolygon = hole.vertices.toArray().map(vertexID => {
+      let { x, y } = layer.vertices.get(vertexID);
+      return [x, y];
     });
+    areaSize -= areapolygon(holePolygon, false);
+  });
 
-    let center = polylabel([polygonWithHoles], 1.0);
-    let areaSize = areapolygon(polygon, false);
-
-    //subtract holes area
-    area.holes.forEach(areaID => {
-      let hole = layer.areas.get(areaID);
-      let holePolygon = hole.vertices.toArray().map(vertexID => {
-        let {x, y} = layer.vertices.get(vertexID);
-        return [x, y];
-      });
-      areaSize -= areapolygon(holePolygon, false);
-    });
-
-    renderedAreaSize = (
-      <text x="0" y="0" transform={`translate(${center[0]} ${center[1]}) scale(1, -1)`} style={STYLE_TEXT}>
-        {(areaSize / 10000).toFixed(2)} m{String.fromCharCode(0xb2)}
-      </text>
-    )
-  }
+  renderedAreaSize = (
+    <text x="0" y="0" transform={`translate(${center[0]} ${center[1]}) scale(1, -1)`} style={STYLE_TEXT}>
+      {area.name} ({(areaSize / 10000).toFixed(2)} m{String.fromCharCode(0xb2)})
+    </text>
+  )
 
   return (
     <g
