@@ -22,6 +22,7 @@ import {
 class Line{
 
   static create( state, layerID, type, x0, y0, x1, y1, properties ) {
+    console.log(`creating line (${x0}, ${y0}), (${x1}, ${y1})`);
 
     let lineID = IDBroker.acquireID();
 
@@ -185,24 +186,27 @@ class Line{
   }
 
   static createAvoidingIntersections( state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles ) {
+    console.log(`createAvoidingIntersections(${x0}, ${y0}, ${x1}, ${y1})`)
+
+    let initialPoints = [{x: x0, y: y0}, {x: x1, y: y1}];
     let points = [{x: x0, y: y0}, {x: x1, y: y1}];
 
     state = state.getIn(['scene', 'layers', layerID, 'lines']).reduce( ( reducedState, line ) => {
       let [v0, v1] = line.vertices.map(vertexID => reducedState.getIn(['scene', 'layers', layerID, 'vertices']).get(vertexID)).toArray();
 
       let hasCommonEndpoint = (
-        GeometryUtils.samePoints(v0, points[0]) ||
-        GeometryUtils.samePoints(v0, points[1]) ||
-        GeometryUtils.samePoints(v1, points[0]) ||
-        GeometryUtils.samePoints(v1, points[1])
+        GeometryUtils.samePoints(v0, initialPoints[0]) ||
+        GeometryUtils.samePoints(v0, initialPoints[1]) ||
+        GeometryUtils.samePoints(v1, initialPoints[0]) ||
+        GeometryUtils.samePoints(v1, initialPoints[1])
       );
 
-      let intersection = GeometryUtils.twoLineSegmentsIntersection( points[0], points[1], v0, v1 );
+      let intersection = GeometryUtils.twoLineSegmentsIntersection( initialPoints[0], initialPoints[1], v0, v1 );
 
       if (intersection.type === 'colinear') {
         if (!oldHoles) { oldHoles = []; }
 
-        let orderedVertices = GeometryUtils.orderVertices(points);
+        let orderedVertices = GeometryUtils.orderVertices(initialPoints);
 
         reducedState.getIn(['scene', 'layers', layerID, 'lines', line.id, 'holes']).forEach(holeID => {
           let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
@@ -233,6 +237,7 @@ class Line{
   }
 
   static replaceVertex ( state, layerID, lineID, vertexIndex, x, y ) {
+    console.log(`replacing vertex ${vertexIndex} of line ${lineID} with (${x}, ${y})`);
     let vertexID = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex]);
 
     state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState;
