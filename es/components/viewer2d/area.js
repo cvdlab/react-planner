@@ -58,12 +58,17 @@ export default function Area(_ref) {
     });
     areaSize -= areapolygon(holePolygon, false);
   });
-  renderedAreaSize = /*#__PURE__*/React.createElement("text", {
+  renderedAreaSize = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("text", {
     x: "0",
     y: "0",
     transform: "translate(".concat(center[0], " ").concat(center[1], ") scale(1, -1)"),
     style: STYLE_TEXT
-  }, area.name, " (", (areaSize / 10000).toFixed(2), " m", String.fromCharCode(0xb2), ")");
+  }, area.name), /*#__PURE__*/React.createElement("text", {
+    x: "0",
+    y: "14",
+    transform: "translate(".concat(center[0], " ").concat(center[1], ") scale(1, -1)"),
+    style: STYLE_TEXT
+  }, "(", (areaSize / 10000).toFixed(2), " m", String.fromCharCode(0xb2), ")"));
   return /*#__PURE__*/React.createElement("g", {
     "data-element-root": true,
     "data-prototype": area.prototype,
