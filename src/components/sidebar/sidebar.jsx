@@ -35,6 +35,35 @@ const mapButtonsCb = (el, ind) => <If key={ind} condition={el.condition} style={
 
 export default function Sidebar({ state, sidebarComponents }) {
 
+  let mode = state.get('mode');
+  let isVisible = true;
+
+  switch (mode) {
+    case constants.MODE_VIEWING_CATALOG:
+      isVisible = false;
+      break;
+
+    case constants.MODE_IDLE:
+    case constants.MODE_2D_ZOOM_IN:
+    case constants.MODE_2D_ZOOM_OUT:
+    case constants.MODE_2D_PAN:
+    case constants.MODE_WAITING_DRAWING_LINE:
+    case constants.MODE_DRAGGING_LINE:
+    case constants.MODE_DRAGGING_VERTEX:
+    case constants.MODE_DRAGGING_ITEM:
+    case constants.MODE_DRAWING_LINE:
+    case constants.MODE_DRAWING_HOLE:
+    case constants.MODE_DRAWING_ITEM:
+    case constants.MODE_DRAGGING_HOLE:
+    case constants.MODE_ROTATING_ITEM:
+    case constants.MODE_3D_VIEW:
+      isVisible = true;
+      break;
+    default:
+      isVisible = false;
+      break;
+  }
+
   let selectedLayer = state.getIn(['scene', 'selectedLayer']);
 
   //TODO change in multi-layer check
@@ -47,10 +76,10 @@ export default function Sidebar({ state, sidebarComponents }) {
     selected.areas.size > 1 ||
     selected.lines.size + selected.items.size + selected.holes.size + selected.areas.size > 1;
 
-  let selectedGroup = state.getIn(['scene', 'groups']).findEntry( g => g.get('selected') );
+  let selectedGroup = state.getIn(['scene', 'groups']).findEntry(g => g.get('selected'));
 
   let sorter = [
-    { index: 0, condition: true, dom: <PanelGuides state={state}/> },
+    { index: 0, condition: true, dom: <PanelGuides state={state} /> },
     { index: 1, condition: true, dom: <PanelLayers state={state} /> },
     { index: 2, condition: true, dom: <PanelLayerElements mode={state.mode} layers={state.scene.layers} selectedLayer={state.scene.selectedLayer} /> },
     { index: 3, condition: true, dom: <PanelGroups mode={state.mode} groups={state.scene.groups} layers={state.scene.layers} /> },
@@ -74,14 +103,16 @@ export default function Sidebar({ state, sidebarComponents }) {
 
   return (
     <div style={{ position: 'fixed', width: 256, right: 5, top: '50%', transform: 'translateY(-50%)', zIndex: 9999 }}>
-      <aside
-        style={STYLE}
-        onKeyDown={event => event.stopPropagation()}
-        onKeyUp={event => event.stopPropagation()}
-        className="sidebar"
-      >
-        {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
-      </aside>
+      {isVisible &&
+        <aside
+          style={STYLE}
+          onKeyDown={event => event.stopPropagation()}
+          onKeyUp={event => event.stopPropagation()}
+          className="sidebar"
+        >
+          {sorter.sort(sortButtonsCb).map(mapButtonsCb)}
+        </aside>
+      }
     </div>
   );
 }
