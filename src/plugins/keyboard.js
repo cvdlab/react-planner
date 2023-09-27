@@ -53,15 +53,15 @@ export default function keyboard() {
         }
         case KEYBOARD_BUTTON_CODE.ALT:
         {
-          if (MODE_SNAPPING.includes(mode))
-            store.dispatch(toggleSnap(state.snapMask.merge({
-              SNAP_POINT: false,
-              SNAP_LINE: false,
-              SNAP_SEGMENT: false,
-              SNAP_GRID : false,
-              SNAP_GUIDE : false,
-              tempSnapConfiguartion: state.snapMask.toJS()
-            })));
+          // if (MODE_SNAPPING.includes(mode))
+          //   store.dispatch(toggleSnap(state.snapMask.merge({
+          //     SNAP_POINT: false,
+          //     SNAP_LINE: false,
+          //     SNAP_SEGMENT: false,
+          //     SNAP_GRID : false,
+          //     SNAP_GUIDE : false,
+          //     tempSnapConfiguartion: state.snapMask.toJS()
+          //   })));
           break;
         }
         case KEYBOARD_BUTTON_CODE.C:
@@ -111,8 +111,8 @@ export default function keyboard() {
       switch (event.keyCode) {
         case KEYBOARD_BUTTON_CODE.ALT:
         {
-          if (MODE_SNAPPING.includes(mode))
-            store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
+          // if (MODE_SNAPPING.includes(mode))
+          //   store.dispatch(toggleSnap(state.snapMask.merge(state.snapMask.get('tempSnapConfiguartion'))));
           break;
         }
         case KEYBOARD_BUTTON_CODE.CTRL:
