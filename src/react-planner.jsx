@@ -54,6 +54,7 @@ function ReactPlannerContent(props) {
 
   return (
     <div style={{ ...wrapperStyle }}>
+      <Overlay width={width} height={contentH} state={extractedState} {...otherProps} />
       <Toolbar state={extractedState} {...otherProps} />
       <Content width={width} height={contentH} state={extractedState} {...otherProps} onWheel={event => event.preventDefault()} />
       <Sidebar state={extractedState} {...otherProps} />
@@ -76,7 +77,8 @@ ReactPlannerContent.propTypes = {
   sidebarComponents: PropTypes.array,
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
-  softwareSignature: PropTypes.string
+  customOverlays: PropTypes.arrayOf(PropTypes.object),
+  softwareSignature: PropTypes.string,
 };
 
 // Step 3: Wrap the component tree with the Provider component
@@ -102,11 +104,12 @@ ReactPlanner.defaultProps = {
   catalog: new Catalog(),
   plugins: [],
   allowProjectFileSupport: true,
-  softwareSignature: `React-Planner ${VERSION}`,
   toolbarButtons: [],
   sidebarComponents: [],
   footerbarComponents: [],
   customContents: {},
+  customOverlays: {},
+  softwareSignature: `React-Planner ${VERSION}`,
 };
 
 //redux connect

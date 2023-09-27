@@ -53,5 +53,7 @@ export default function Content({ width, height, state, customContents }) {
 Content.propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
+  customContents: PropTypes.object,
+  customOverlays: PropTypes.arrayOf(PropTypes.object),
 };
