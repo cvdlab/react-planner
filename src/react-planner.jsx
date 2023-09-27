@@ -76,17 +76,20 @@ ReactPlannerContent.propTypes = {
   sidebarComponents: PropTypes.array,
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
-  customActions: PropTypes.object,
   softwareSignature: PropTypes.string
 };
 
 // Step 3: Wrap the component tree with the Provider component
 function ReactPlanner(props) {
-  const { state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions, ...customActions } = props;
+  const { state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions } = props;
 
   return (
     <ReactPlannerContext.Provider value={{
-      state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions, ...customActions, store: props.store
+      state, translator, catalog, 
+      projectActions, sceneActions, linesActions, 
+      holesActions, verticesActions, itemsActions, 
+      areaActions, viewer2DActions, viewer3DActions, 
+      groupsActions, store: props.store
     }}>
       <ReactPlannerContent {...props} />
     </ReactPlannerContext.Provider>
@@ -104,7 +107,6 @@ ReactPlanner.defaultProps = {
   sidebarComponents: [],
   footerbarComponents: [],
   customContents: {},
-  customActions: {},
 };
 
 //redux connect
