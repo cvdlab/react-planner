@@ -70,5 +70,7 @@ export default function Content(_ref) {
 Content.propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
+  customContents: PropTypes.object,
+  customOverlays: PropTypes.arrayOf(PropTypes.object)
 };
