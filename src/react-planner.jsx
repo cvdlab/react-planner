@@ -15,6 +15,7 @@ import {
 } from './components/export';
 import { VERSION } from './version';
 import ReactPlannerContext from './utils/react-planner-context';
+import Overlays from './components/overlays';
 
 const { Toolbar } = ToolbarComponents;
 const { Sidebar } = SidebarComponents;
@@ -54,7 +55,7 @@ function ReactPlannerContent(props) {
 
   return (
     <div style={{ ...wrapperStyle }}>
-      <Overlay width={width} height={contentH} state={extractedState} {...otherProps} />
+      <Overlays width={width} height={contentH} state={extractedState} {...otherProps} />
       <Toolbar state={extractedState} {...otherProps} />
       <Content width={width} height={contentH} state={extractedState} {...otherProps} onWheel={event => event.preventDefault()} />
       <Sidebar state={extractedState} {...otherProps} />

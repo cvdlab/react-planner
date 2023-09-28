@@ -1,18 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export default function Overlay({ width, height, state, customOverlays }) {
-  let mode = state.get('mode');
-
+export default function Overlays({ width, height, state, customOverlays }) {
   return (
-      <>
+    <>
       {
-        customOverlays.filter(overlay => overlay.modes.includes(mode)).map(overlay => {
+        customOverlays.map(overlay => {
           let Overlay = overlay.component;
-          return <Overlay key={overlay.key} width={width} height={height} state={state} />
+          return <Overlay width={width} height={height} state={state} />
         })
       }
-      </>
+    </>
   )
 }
 

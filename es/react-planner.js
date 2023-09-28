@@ -19,6 +19,7 @@ import { objectsMap } from './utils/objects-utils';
 import { ToolbarComponents, Content, SidebarComponents, FooterBarComponents } from './components/export';
 import { VERSION } from './version';
 import ReactPlannerContext from './utils/react-planner-context';
+import Overlays from './components/overlays';
 var Toolbar = ToolbarComponents.Toolbar;
 var Sidebar = SidebarComponents.Sidebar;
 var FooterBar = FooterBarComponents.FooterBar;
@@ -62,7 +63,7 @@ function ReactPlannerContent(props) {
   }, [props]);
   return /*#__PURE__*/React.createElement("div", {
     style: _objectSpread({}, wrapperStyle)
-  }, /*#__PURE__*/React.createElement(Overlay, _extends({
+  }, /*#__PURE__*/React.createElement(Overlays, _extends({
     width: width,
     height: contentH,
     state: extractedState
