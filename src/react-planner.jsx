@@ -79,12 +79,13 @@ ReactPlannerContent.propTypes = {
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
   customOverlays: PropTypes.arrayOf(PropTypes.object),
+  customActions: PropTypes.object,
   softwareSignature: PropTypes.string,
 };
 
 // Step 3: Wrap the component tree with the Provider component
 function ReactPlanner(props) {
-  const { state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions } = props;
+  const { state, translator, catalog, projectActions, sceneActions, linesActions, holesActions, verticesActions, itemsActions, areaActions, viewer2DActions, viewer3DActions, groupsActions, ...customActions } = props;
 
   return (
     <ReactPlannerContext.Provider value={{
@@ -92,7 +93,7 @@ function ReactPlanner(props) {
       projectActions, sceneActions, linesActions, 
       holesActions, verticesActions, itemsActions, 
       areaActions, viewer2DActions, viewer3DActions, 
-      groupsActions, store: props.store
+      groupsActions, ...customActions, store: props.store
     }}>
       <ReactPlannerContent {...props} />
     </ReactPlannerContext.Provider>
@@ -110,6 +111,7 @@ ReactPlanner.defaultProps = {
   footerbarComponents: [],
   customContents: {},
   customOverlays: [],
+  customActions: {},
   softwareSignature: `React-Planner ${VERSION}`,
 };
 
