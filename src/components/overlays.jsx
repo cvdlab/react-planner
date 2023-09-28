@@ -14,7 +14,7 @@ export default function Overlays({ width, height, state, customOverlays }) {
   )
 }
 
-Content.propTypes = {
+Overlays.propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,

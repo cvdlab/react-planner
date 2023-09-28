@@ -55,5 +55,4 @@ Content.propTypes = {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
   customContents: PropTypes.object,
-  customOverlays: PropTypes.arrayOf(PropTypes.object),
 };

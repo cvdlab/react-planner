@@ -14,7 +14,7 @@ export default function Overlays(_ref) {
     });
   }));
 }
-Content.propTypes = {
+Overlays.propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,

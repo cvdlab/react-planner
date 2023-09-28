@@ -148,7 +148,7 @@ ReactPlanner.defaultProps = {
   sidebarComponents: [],
   footerbarComponents: [],
   customContents: {},
-  customOverlays: {},
+  customOverlays: [],
   softwareSignature: "React-Planner ".concat(VERSION)
 };
 

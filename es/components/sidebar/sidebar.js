@@ -9,6 +9,7 @@ import PanelGroups from './panel-groups';
 import PanelLayerElements from './panel-layer-elements';
 import * as SharedStyle from '../../styles/shared-style';
 import If from '../../utils/react-if';
+import * as constants from '../../utils/constants';
 var STYLE = {
   display: 'block',
   borderRadius: '10px',
