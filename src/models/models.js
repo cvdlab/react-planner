@@ -299,6 +299,7 @@ export class HistoryStructure extends Record({
 
 export class State extends Record({
   mode: MODE_IDLE,
+  overlays: new List(),
   scene: new Scene(),
   sceneHistory: new HistoryStructure(),
   catalog: new Catalog(),

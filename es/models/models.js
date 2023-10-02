@@ -375,6 +375,7 @@ export var State = /*#__PURE__*/function (_Record14) {
   return _createClass(State);
 }(Record({
   mode: MODE_IDLE,
+  overlays: new List(),
   scene: new Scene(),
   sceneHistory: new HistoryStructure(),
   catalog: new Catalog(),
