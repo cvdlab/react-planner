@@ -104,7 +104,7 @@ export default function Sidebar({ state, sidebarComponents }) {
   }));
 
   return (
-    <div style={{ position: 'fixed', width: 256, right: 5, top: '50%', transform: 'translateY(-50%)', zIndex: 9999 }}>
+    <div style={{ position: 'fixed', width: 290, right: 14, top: '50%', transform: 'translateY(-50%)', zIndex: 9999 }}>
       {isVisible &&
         <aside
           style={STYLE}

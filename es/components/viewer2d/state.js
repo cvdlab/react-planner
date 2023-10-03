@@ -34,7 +34,7 @@ export default function State(_ref) {
     y: "0",
     width: width,
     height: height,
-    fill: SharedStyle.COLORS.white
+    fill: SharedStyle.COLORS.grey
   }), /*#__PURE__*/React.createElement("g", {
     transform: "translate(0, ".concat(scene.height, ") scale(1, -1)"),
     id: "svg-drawing-paper"

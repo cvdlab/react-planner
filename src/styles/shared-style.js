@@ -1,7 +1,8 @@
 // COLORS
 export const COLORS = {
   white: '#FFF',
-  black: '#000'
+  black: '#000',
+  grey: '#F5F5F5',
 };
 
 export const MATERIAL_COLORS = {
