@@ -96,6 +96,8 @@ class Hole {
 
   static updateDrawingHole(state, layerID, x, y) {
     let catalog = state.catalog;
+    x = Math.round(x);
+    y = Math.round(y);
 
     //calculate snap and overwrite coords if needed
     //force snap to segment
@@ -198,6 +200,9 @@ class Hole {
   }
 
   static endDrawingHole(state, layerID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     state = this.updateDrawingHole(state, layerID, x, y).updatedState;
     state = Layer.unselectAll(state, layerID).updatedState;
 
@@ -205,6 +210,9 @@ class Hole {
   }
 
   static beginDraggingHole(state, layerID, holeID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let layer = state.getIn(['scene', 'layers', layerID]);
     let hole = layer.getIn(['holes', holeID]);
     let line = layer.getIn(['lines', hole.line]);
@@ -228,6 +236,8 @@ class Hole {
   }
 
   static updateDraggingHole(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     //calculate snap and overwrite coords if needed
     //force snap to segment
@@ -337,6 +347,9 @@ class Hole {
   }
 
   static endDraggingHole(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     state = this.updateDraggingHole(state, x, y).updatedState;
     state = state.merge({mode: MODE_IDLE});
 

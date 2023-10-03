@@ -15,6 +15,8 @@ var Item = /*#__PURE__*/function () {
   _createClass(Item, null, [{
     key: "create",
     value: function create(state, layerID, type, x, y, width, height, rotation) {
+      x = Math.round(x);
+      y = Math.round(y);
       var itemID = IDBroker.acquireID();
       var item = state.catalog.factoryElement(type, {
         id: itemID,
@@ -77,6 +79,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "updateDrawingItem",
     value: function updateDrawingItem(state, layerID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       if (state.hasIn(['drawingSupport', 'currentID'])) {
         state = state.updateIn(['scene', 'layers', layerID, 'items', state.getIn(['drawingSupport', 'currentID'])], function (item) {
           return item.merge({
@@ -98,6 +102,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "endDrawingItem",
     value: function endDrawingItem(state, layerID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var catalog = state.catalog;
       state = this.updateDrawingItem(state, layerID, x, y, catalog).updatedState;
       state = Layer.unselectAll(state, layerID).updatedState;
@@ -113,6 +119,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "beginDraggingItem",
     value: function beginDraggingItem(state, layerID, itemID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var item = state.getIn(['scene', 'layers', layerID, 'items', itemID]);
       state = state.merge({
         mode: MODE_DRAGGING_ITEM,
@@ -132,6 +140,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "updateDraggingItem",
     value: function updateDraggingItem(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var _state = state,
         draggingSupport = _state.draggingSupport,
         scene = _state.scene;
@@ -158,6 +168,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "endDraggingItem",
     value: function endDraggingItem(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       state = this.updateDraggingItem(state, x, y).updatedState;
       state = state.merge({
         mode: MODE_IDLE
@@ -183,6 +195,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "updateRotatingItem",
     value: function updateRotatingItem(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var _state2 = state,
         rotatingSupport = _state2.rotatingSupport,
         scene = _state2.scene;
@@ -210,6 +224,8 @@ var Item = /*#__PURE__*/function () {
   }, {
     key: "endRotatingItem",
     value: function endRotatingItem(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       state = this.updateRotatingItem(state, x, y).updatedState;
       state = state.merge({
         mode: MODE_IDLE

@@ -102,6 +102,8 @@ var Hole = /*#__PURE__*/function () {
     key: "updateDrawingHole",
     value: function updateDrawingHole(state, layerID, x, y) {
       var catalog = state.catalog;
+      x = Math.round(x);
+      y = Math.round(y);
 
       //calculate snap and overwrite coords if needed
       //force snap to segment
@@ -219,6 +221,8 @@ var Hole = /*#__PURE__*/function () {
   }, {
     key: "endDrawingHole",
     value: function endDrawingHole(state, layerID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       state = this.updateDrawingHole(state, layerID, x, y).updatedState;
       state = Layer.unselectAll(state, layerID).updatedState;
       return {
@@ -228,6 +232,8 @@ var Hole = /*#__PURE__*/function () {
   }, {
     key: "beginDraggingHole",
     value: function beginDraggingHole(state, layerID, holeID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var layer = state.getIn(['scene', 'layers', layerID]);
       var hole = layer.getIn(['holes', holeID]);
       var line = layer.getIn(['lines', hole.line]);
@@ -251,6 +257,9 @@ var Hole = /*#__PURE__*/function () {
   }, {
     key: "updateDraggingHole",
     value: function updateDraggingHole(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
+
       //calculate snap and overwrite coords if needed
       //force snap to segment
       var snap = nearestSnap(state.snapElements, x, y, state.snapMask.merge({
@@ -337,6 +346,8 @@ var Hole = /*#__PURE__*/function () {
   }, {
     key: "endDraggingHole",
     value: function endDraggingHole(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       state = this.updateDraggingHole(state, x, y).updatedState;
       state = state.merge({
         mode: MODE_IDLE

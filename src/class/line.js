@@ -1,4 +1,4 @@
-import {Map, List, fromJS} from 'immutable';
+import { Map, List, fromJS } from 'immutable';
 import {
   Group,
   Layer,
@@ -19,13 +19,18 @@ import {
   MODE_DRAGGING_LINE
 } from '../utils/constants';
 
-class Line{
+class Line {
 
-  static create( state, layerID, type, x0, y0, x1, y1, properties ) {
+  static create(state, layerID, type, x0, y0, x1, y1, properties) {
+    x0 = Math.round(x0);
+    y0 = Math.round(y0);
+    x1 = Math.round(x1);
+    y1 = Math.round(y1);
+
     let lineID = IDBroker.acquireID();
 
-    let { updatedState: stateV0, vertex: v0 } = Vertex.add( state  , layerID, x0, y0, 'lines', lineID );
-    let { updatedState: stateV1, vertex: v1 } = Vertex.add( stateV0, layerID, x1, y1, 'lines', lineID );
+    let { updatedState: stateV0, vertex: v0 } = Vertex.add(state, layerID, x0, y0, 'lines', lineID);
+    let { updatedState: stateV1, vertex: v1 } = Vertex.add(stateV0, layerID, x1, y1, 'lines', lineID);
     state = stateV1;
 
     let line = state.catalog.factoryElement(type, {
@@ -37,61 +42,64 @@ class Line{
 
     state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], line);
 
-    return {updatedState: state, line};
+    return { updatedState: state, line };
   }
 
-  static select( state, layerID, lineID ){
-    state = Layer.select( state, layerID ).updatedState;
+  static select(state, layerID, lineID) {
+    state = Layer.select(state, layerID).updatedState;
 
-    let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
-
-    state = Layer.selectElement( state, layerID, 'lines', lineID ).updatedState;
-    state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
-    state = Layer.selectElement( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
-
-    return {updatedState: state};
-  }
-
-  static remove( state, layerID, lineID ) {
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
-    if( line ) {
+    state = Layer.selectElement(state, layerID, 'lines', lineID).updatedState;
+    state = Layer.selectElement(state, layerID, 'vertices', line.vertices.get(0)).updatedState;
+    state = Layer.selectElement(state, layerID, 'vertices', line.vertices.get(1)).updatedState;
+
+    return { updatedState: state };
+  }
+
+  static remove(state, layerID, lineID) {
+    let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
+
+    if (line) {
       const v0 = line.vertices.get(0);
       const v1 = line.vertices.get(1);
-      
-      state = this.unselect( state, layerID, lineID ).updatedState;
+
+      state = this.unselect(state, layerID, lineID).updatedState;
       line.holes.forEach(holeID => state = Hole.remove(state, layerID, holeID).updatedState);
-      state = Layer.removeElement( state, layerID, 'lines', lineID ).updatedState;
+      state = Layer.removeElement(state, layerID, 'lines', lineID).updatedState;
 
-      line.vertices.forEach(vertexID => state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState);
+      line.vertices.forEach(vertexID => state = Vertex.remove(state, layerID, vertexID, 'lines', lineID).updatedState);
 
-      state.getIn(['scene', 'groups']).forEach( group => state = Group.removeElement(state, group.id, layerID, 'lines', lineID).updatedState );
+      state.getIn(['scene', 'groups']).forEach(group => state = Group.removeElement(state, group.id, layerID, 'lines', lineID).updatedState);
     }
 
-    return {updatedState: state};
+    return { updatedState: state };
   }
 
-  static unselect( state, layerID, lineID ) {
-    let line = state.getIn([ 'scene','layers', layerID, 'lines', lineID ]);
+  static unselect(state, layerID, lineID) {
+    let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
-    if( line ) {
-      state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(0) ).updatedState;
-      state = Layer.unselect( state, layerID, 'vertices', line.vertices.get(1) ).updatedState;
-      state = Layer.unselect( state, layerID, 'lines', lineID ).updatedState;
+    if (line) {
+      state = Layer.unselect(state, layerID, 'vertices', line.vertices.get(0)).updatedState;
+      state = Layer.unselect(state, layerID, 'vertices', line.vertices.get(1)).updatedState;
+      state = Layer.unselect(state, layerID, 'lines', lineID).updatedState;
     }
 
-    return {updatedState: state};
+    return { updatedState: state };
   }
 
-  static split( state, layerID, lineID, x, y ) {
+  static split(state, layerID, lineID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
     let v0 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(0)]);
     let v1 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(1)]);
-    let {x: x0, y: y0} = v0;
-    let {x: x1, y: y1} = v1;
+    let { x: x0, y: y0 } = v0;
+    let { x: x1, y: y1 } = v1;
 
-    let { updatedState: stateL1, line: line0 } = Line.create( state  , layerID, line.type, x0, y0, x, y, line.get('properties'));
-    let { updatedState: stateL2, line: line1 } = Line.create( stateL1, layerID, line.type, x1, y1, x, y, line.get('properties'));
+    let { updatedState: stateL1, line: line0 } = Line.create(state, layerID, line.type, x0, y0, x, y, line.get('properties'));
+    let { updatedState: stateL2, line: line1 } = Line.create(stateL1, layerID, line.type, x1, y1, x, y, line.get('properties'));
     state = stateL2;
 
     let splitPointOffset = GeometryUtils.pointPositionOnLineSegment(x0, y0, x1, y1, x, y);
@@ -111,73 +119,83 @@ class Line{
         if (minVertex.x === x1 && minVertex.y === y1) {
           offset = 1 - offset;
         }
-        state = Hole.create( state, layerID, hole.type, line0.id, offset, hole.properties ).updatedState;
+        state = Hole.create(state, layerID, hole.type, line0.id, offset, hole.properties).updatedState;
       } else {
         let offset = (holeOffset - splitPointOffset) / (1 - splitPointOffset);
         if (minVertex.x === x1 && minVertex.y === y1) {
           offset = 1 - offset;
         }
-        state = Hole.create( state, layerID, hole.type, line1.id, offset, hole.properties ).updatedState;
+        state = Hole.create(state, layerID, hole.type, line1.id, offset, hole.properties).updatedState;
       }
     });
 
     //add splitted lines to the original line's group
     let lineGroups = state
       .getIn(['scene', 'groups'])
-      .filter( group => {
+      .filter(group => {
         const lines = group.getIn(['elements', layerID, 'lines']);
         return lines && lines.contains(lineID);
       });
 
-    lineGroups.forEach( group => {
-      state = Group.addElement( state, group.id, layerID, 'lines', line0.id ).updatedState;
-      state = Group.addElement( state, group.id, layerID, 'lines', line1.id ).updatedState;
+    lineGroups.forEach(group => {
+      state = Group.addElement(state, group.id, layerID, 'lines', line0.id).updatedState;
+      state = Group.addElement(state, group.id, layerID, 'lines', line1.id).updatedState;
     });
 
-    state = Line.remove( state, layerID, lineID ).updatedState;
+    state = Line.remove(state, layerID, lineID).updatedState;
 
     return { updatedState: state, lines: new List([line0, line1]) };
   }
 
-  static addFromPoints( state, layerID, type, points, properties, holes ) {
+  static addFromPoints(state, layerID, type, points, properties, holes) {
     points = new List(points)
-      .sort(({x: x1, y: y1}, {x: x2, y: y2}) => x1 === x2 ? y1 - y2 : x1 - x2 );
+      .sort(({ x: x1, y: y1 }, { x: x2, y: y2 }) => x1 === x2 ? y1 - y2 : x1 - x2);
 
     let pointsPair = points.zip(points.skip(1))
-      .filterNot(([{x: x1, y: y1}, {x: x2, y: y2}]) => x1 === x2 && y1 === y2 );
+      .filterNot(([{ x: x1, y: y1 }, { x: x2, y: y2 }]) => x1 === x2 && y1 === y2);
 
     let lines = [];
 
-    pointsPair.forEach( ([{x: x1, y: y1}, {x: x2, y: y2}]) => {
-      let { updatedState: stateL, line } = this.create( state, layerID, type, x1, y1, x2, y2, properties );
+    pointsPair.forEach(([{ x: x1, y: y1 }, { x: x2, y: y2 }]) => {
+      x1 = Math.round(x1);
+      y1 = Math.round(y1);
+      x2 = Math.round(x2);
+      y2 = Math.round(y2);
+
+      let { updatedState: stateL, line } = this.create(state, layerID, type, x1, y1, x2, y2, properties);
       state = stateL;
 
-      if( holes ) {
+      if (holes) {
         holes.forEach(holeWithOffsetPoint => {
-          let {x: xp, y: yp} = holeWithOffsetPoint.offsetPosition;
+          let { x: xp, y: yp } = holeWithOffsetPoint.offsetPosition;
 
           if (GeometryUtils.isPointOnLineSegment(x1, y1, x2, y2, xp, yp)) {
 
             let newOffset = GeometryUtils.pointPositionOnLineSegment(x1, y1, x2, y2, xp, yp);
 
             if (newOffset >= 0 && newOffset <= 1) {
-              state = Hole.create( state, layerID, holeWithOffsetPoint.hole.type, line.id, newOffset, holeWithOffsetPoint.hole.properties ).updatedState;
+              state = Hole.create(state, layerID, holeWithOffsetPoint.hole.type, line.id, newOffset, holeWithOffsetPoint.hole.properties).updatedState;
             }
           }
         });
       }
 
-      lines.push( line );
+      lines.push(line);
     });
 
     return { updatedState: state, lines: new List(lines) };
   }
 
-  static createAvoidingIntersections( state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles ) {
-    let initialPoints = [{x: x0, y: y0}, {x: x1, y: y1}];
-    let points = [{x: x0, y: y0}, {x: x1, y: y1}];
+  static createAvoidingIntersections(state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles) {
+    x0 = Math.round(x0);
+    y0 = Math.round(y0);
+    x1 = Math.round(x1);
+    y1 = Math.round(y1);
 
-    state = state.getIn(['scene', 'layers', layerID, 'lines']).reduce( ( reducedState, line ) => {
+    let initialPoints = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
+    let points = [{ x: x0, y: y0 }, { x: x1, y: y1 }];
+
+    state = state.getIn(['scene', 'layers', layerID, 'lines']).reduce((reducedState, line) => {
       let [v0, v1] = line.vertices.map(vertexID => reducedState.getIn(['scene', 'layers', layerID, 'vertices']).get(vertexID)).toArray();
 
       let hasCommonEndpoint = (
@@ -187,7 +205,7 @@ class Line{
         GeometryUtils.samePoints(v1, initialPoints[1])
       );
 
-      let intersection = GeometryUtils.twoLineSegmentsIntersection( initialPoints[0], initialPoints[1], v0, v1 );
+      let intersection = GeometryUtils.twoLineSegmentsIntersection(initialPoints[0], initialPoints[1], v0, v1);
 
       if (intersection.type === 'colinear') {
         if (!oldHoles) { oldHoles = []; }
@@ -197,40 +215,43 @@ class Line{
         reducedState.getIn(['scene', 'layers', layerID, 'lines', line.id, 'holes']).forEach(holeID => {
           let hole = reducedState.getIn(['scene', 'layers', layerID, 'holes', holeID]);
           let oldLineLength = GeometryUtils.pointsDistance(v0.x, v0.y, v1.x, v1.y);
-          let offset = GeometryUtils.samePoints( orderedVertices[1], line.vertices.get(1) ) ? ( 1 - hole.offset ) : hole.offset;
-          let offsetPosition = GeometryUtils.extendLine( v0.x, v0.y, v1.x, v1.y, oldLineLength * offset );
+          let offset = GeometryUtils.samePoints(orderedVertices[1], line.vertices.get(1)) ? (1 - hole.offset) : hole.offset;
+          let offsetPosition = GeometryUtils.extendLine(v0.x, v0.y, v1.x, v1.y, oldLineLength * offset);
 
-          oldHoles.push({hole, offsetPosition});
+          oldHoles.push({ hole, offsetPosition });
         });
 
-        reducedState = this.remove( reducedState, layerID, line.id ).updatedState;
+        reducedState = this.remove(reducedState, layerID, line.id).updatedState;
 
         points.push(v0, v1);
       }
 
       if (intersection.type === 'intersecting' && (!hasCommonEndpoint)) {
-        reducedState = this.split( reducedState, layerID, line.id, intersection.point.x, intersection.point.y ).updatedState;
+        reducedState = this.split(reducedState, layerID, line.id, intersection.point.x, intersection.point.y).updatedState;
         points.push(intersection.point);
       }
 
       return reducedState;
 
-    }, state );
+    }, state);
 
-    let { updatedState, lines } = Line.addFromPoints( state, layerID, type, points, oldProperties, oldHoles );
+    let { updatedState, lines } = Line.addFromPoints(state, layerID, type, points, oldProperties, oldHoles);
 
     return { updatedState, lines };
   }
 
-  static replaceVertex ( state, layerID, lineID, vertexIndex, x, y ) {
+  static replaceVertex(state, layerID, lineID, vertexIndex, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let vertexID = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex]);
 
-    state = Vertex.remove( state, layerID, vertexID, 'lines', lineID ).updatedState;
-    let { updatedState: stateV, vertex } = Vertex.add( state, layerID, x, y, 'lines', lineID );
+    state = Vertex.remove(state, layerID, vertexID, 'lines', lineID).updatedState;
+    let { updatedState: stateV, vertex } = Vertex.add(state, layerID, x, y, 'lines', lineID);
     state = stateV;
 
     state = state.setIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex], vertex.id);
-    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], state.getIn(['scene', 'layers', layerID, 'lines', lineID]) );
+    state = state.setIn(['scene', 'layers', layerID, 'lines', lineID], state.getIn(['scene', 'layers', layerID, 'lines', lineID]));
 
     return { updatedState: state, line: state.getIn(['scene', 'layers', layerID, 'lines', lineID]), vertex };
   }
@@ -247,28 +268,31 @@ class Line{
   }
 
   static beginDrawingLine(state, layerID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
     let snap = null;
 
     if (state.snapMask && !state.snapMask.isEmpty()) {
       snap = SnapUtils.nearestSnap(snapElements, x, y, state.snapMask);
-      if (snap) ({x, y} = snap.point);
+      if (snap) ({ x, y } = snap.point);
 
       snapElements = snapElements.withMutations(snapElements => {
         let a, b, c;
-        ({a, b, c} = GeometryUtils.horizontalLine(y));
+        ({ a, b, c } = GeometryUtils.horizontalLine(y));
         SnapUtils.addLineSnap(snapElements, a, b, c, 10, 3, null);
-        ({a, b, c} = GeometryUtils.verticalLine(x));
+        ({ a, b, c } = GeometryUtils.verticalLine(x));
         SnapUtils.addLineSnap(snapElements, a, b, c, 10, 3, null);
       });
     }
 
     let drawingSupport = state.get('drawingSupport').set('layerID', layerID);
 
-    state = Layer.unselectAll( state, layerID ).updatedState;
+    state = Layer.unselectAll(state, layerID).updatedState;
 
-    let { updatedState: stateL, line } = Line.create( state, layerID, drawingSupport.get('type'), x, y, x, y );
-    state = Line.select( stateL, layerID, line.id ).updatedState;
+    let { updatedState: stateL, line } = Line.create(state, layerID, drawingSupport.get('type'), x, y, x, y);
+    state = Line.select(stateL, layerID, line.id).updatedState;
 
     state = state.merge({
       mode: MODE_DRAWING_LINE,
@@ -281,44 +305,49 @@ class Line{
   }
 
   static updateDrawingLine(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let snap = null;
     if (state.snapMask && !state.snapMask.isEmpty()) {
       snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
-      if (snap) ({x, y} = snap.point);
+      if (snap) ({ x, y } = snap.point);
     }
 
     let layerID = state.getIn(['drawingSupport', 'layerID']);
     let lineID = state.getIn(['scene', 'layers', layerID, 'selected', 'lines']).first();
 
-    let { updatedState: stateLV, vertex } = Line.replaceVertex( state, layerID, lineID, 1, x, y );
+    let { updatedState: stateLV, vertex } = Line.replaceVertex(state, layerID, lineID, 1, x, y);
     state = stateLV;
 
-    state = this.select( state, layerID, lineID ).updatedState;
+    state = this.select(state, layerID, lineID).updatedState;
     state = state.merge({ activeSnapElement: snap ? snap.snap : null });
 
     return { updatedState: state };
   }
 
   static endDrawingLine(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     if (state.snapMask && !state.snapMask.isEmpty()) {
       let snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
-      if (snap) ({x, y} = snap.point);
+      if (snap) ({ x, y } = snap.point);
     }
 
     let layerID = state.getIn(['drawingSupport', 'layerID']);
-    let layer = state.getIn(['scene','layers', layerID]);
+    let layer = state.getIn(['scene', 'layers', layerID]);
 
     let lineID = state.getIn(['scene', 'layers', layerID, 'selected', 'lines']).first();
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
 
     let v0 = layer.vertices.get(line.vertices.get(0));
 
-    state = Layer.removeZeroLengthLines( state, layerID ).updatedState;
+    state = Layer.removeZeroLengthLines(state, layerID).updatedState;
     // state = Layer.mergeEqualsVertices( state, layerID, v0.id ).updatedState;
-    state = Line.remove( state, layerID, lineID ).updatedState;
-    state = Line.createAvoidingIntersections( state, layerID, line.type, v0.x, v0.y, x, y ).updatedState;
-    state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    state = Line.remove(state, layerID, lineID).updatedState;
+    state = Line.createAvoidingIntersections(state, layerID, line.type, v0.x, v0.y, x, y).updatedState;
+    state = Layer.detectAndUpdateAreas(state, layerID).updatedState;
 
     state = state.merge({
       mode: MODE_WAITING_DRAWING_LINE,
@@ -330,6 +359,8 @@ class Line{
   }
 
   static beginDraggingLine(state, layerID, lineID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
 
@@ -357,6 +388,8 @@ class Line{
   }
 
   static updateDraggingLine(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     let draggingSupport = state.draggingSupport;
     let snapElements = state.snapElements;
@@ -411,8 +444,8 @@ class Line{
       activeSnapElement,
       scene: state.scene.updateIn(['layers', layerID], layer => layer.withMutations(layer => {
         let lineVertices = layer.getIn(['lines', lineID, 'vertices']);
-        layer.updateIn(['vertices', lineVertices.get(0)], vertex => vertex.merge({x: newVertex0X, y: newVertex0Y}));
-        layer.updateIn(['vertices', lineVertices.get(1)], vertex => vertex.merge({x: newVertex1X, y: newVertex1Y}));
+        layer.updateIn(['vertices', lineVertices.get(0)], vertex => vertex.merge({ x: newVertex0X, y: newVertex0Y }));
+        layer.updateIn(['vertices', lineVertices.get(1)], vertex => vertex.merge({ x: newVertex1X, y: newVertex1Y }));
         return layer;
       }))
     });
@@ -421,7 +454,10 @@ class Line{
   }
 
   static endDraggingLine(state, x, y) {
-    let {draggingSupport} = state;
+    x = Math.round(x);
+    y = Math.round(y);
+
+    let { draggingSupport } = state;
     let layerID = draggingSupport.get('layerID');
     let layer = state.scene.layers.get(layerID);
     let lineID = draggingSupport.get('lineID');
@@ -433,7 +469,7 @@ class Line{
     let maxV = GeometryUtils.maxVertex(vertex0, vertex1);
     let minV = GeometryUtils.minVertex(vertex0, vertex1);
 
-    let lineLength = GeometryUtils.verticesDistance(minV,maxV);
+    let lineLength = GeometryUtils.verticesDistance(minV, maxV);
     let alpha = Math.atan2(maxV.y - minV.y, maxV.x - minV.x);
 
     let holesWithOffsetPosition = [];
@@ -446,7 +482,7 @@ class Line{
         y: pointOnLine * Math.sin(alpha) + minV.y
       };
 
-      holesWithOffsetPosition.push({hole, offsetPosition});
+      holesWithOffsetPosition.push({ hole, offsetPosition });
     });
 
     let diffX = x - draggingSupport.get('startPointX');
@@ -489,17 +525,17 @@ class Line{
 
     let lineGroups = state   //get groups membership if present
       .getIn(['scene', 'groups'])
-      .filter( group => {
+      .filter(group => {
         const lines = group.getIn(['elements', layerID, 'lines']);
         return lines && lines.contains(lineID);
       });
 
-    state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(0) ).updatedState;
-    state = Layer.mergeEqualsVertices( state, layerID, line.vertices.get(1) ).updatedState;
+    state = Layer.mergeEqualsVertices(state, layerID, line.vertices.get(0)).updatedState;
+    state = Layer.mergeEqualsVertices(state, layerID, line.vertices.get(1)).updatedState;
 
-    state = Line.remove( state, layerID, lineID ).updatedState;
+    state = Line.remove(state, layerID, lineID).updatedState;
 
-    if(!GeometryUtils.samePoints({newVertex0X, newVertex0Y}, {newVertex1X, newVertex1Y})) {
+    if (!GeometryUtils.samePoints({ newVertex0X, newVertex0Y }, { newVertex1X, newVertex1Y })) {
       let ret = Line.createAvoidingIntersections(
         state,
         layerID,
@@ -515,14 +551,14 @@ class Line{
       state = ret.updatedState;
 
       //re-add to old line's groups if present
-      ret.lines.forEach( addedLine => {
-        lineGroups.forEach( oldLineGroup => {
-          state = Group.addElement( state, oldLineGroup.id, layerID, 'lines', addedLine.id ).updatedState;
+      ret.lines.forEach(addedLine => {
+        lineGroups.forEach(oldLineGroup => {
+          state = Group.addElement(state, oldLineGroup.id, layerID, 'lines', addedLine.id).updatedState;
         });
       });
     }
 
-    state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    state = Layer.detectAndUpdateAreas(state, layerID).updatedState;
 
     state = state.merge({
       mode: MODE_IDLE,
@@ -534,33 +570,33 @@ class Line{
     return { updatedState: state };
   }
 
-  static setProperties( state, layerID, lineID, properties ) {
+  static setProperties(state, layerID, lineID, properties) {
     state = state.mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'properties'], properties);
 
     return { updatedState: state };
   }
 
-  static setJsProperties( state, layerID, lineID, properties ) {
-    return this.setProperties( state, layerID, lineID, fromJS(properties) );
+  static setJsProperties(state, layerID, lineID, properties) {
+    return this.setProperties(state, layerID, lineID, fromJS(properties));
   }
 
-  static updateProperties( state, layerID, lineID, properties) {
-    properties.forEach( ( v, k ) => {
-      if( state.hasIn(['scene', 'layers', layerID, 'lines', lineID, 'properties', k]) )
+  static updateProperties(state, layerID, lineID, properties) {
+    properties.forEach((v, k) => {
+      if (state.hasIn(['scene', 'layers', layerID, 'lines', lineID, 'properties', k]))
         state = state.mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'properties', k], v);
     });
 
     return { updatedState: state };
   }
 
-  static updateJsProperties( state, layerID, lineID, properties) {
-    return this.updateProperties( state, layerID, lineID, fromJS(properties) );
+  static updateJsProperties(state, layerID, lineID, properties) {
+    return this.updateProperties(state, layerID, lineID, fromJS(properties));
   }
 
-  static setAttributes( state, layerID, lineID, lineAttributes ) {
+  static setAttributes(state, layerID, lineID, lineAttributes) {
 
     let lAttr = lineAttributes.toJS();
-    let {vertexOne, vertexTwo, lineLength} = lAttr;
+    let { vertexOne, vertexTwo, lineLength } = lAttr;
 
     delete lAttr['vertexOne'];
     delete lAttr['vertexTwo'];
@@ -568,25 +604,25 @@ class Line{
 
     state = state
       .mergeIn(['scene', 'layers', layerID, 'lines', lineID], fromJS(lAttr))
-      .mergeIn(['scene', 'layers', layerID, 'vertices', vertexOne.id], {x: vertexOne.x, y: vertexOne.y})
-      .mergeIn(['scene', 'layers', layerID, 'vertices', vertexTwo.id], {x: vertexTwo.x, y: vertexTwo.y})
-      .mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'misc'], new Map({'_unitLength': lineLength._unit}));
+      .mergeIn(['scene', 'layers', layerID, 'vertices', vertexOne.id], { x: vertexOne.x, y: vertexOne.y })
+      .mergeIn(['scene', 'layers', layerID, 'vertices', vertexTwo.id], { x: vertexTwo.x, y: vertexTwo.y })
+      .mergeIn(['scene', 'layers', layerID, 'lines', lineID, 'misc'], new Map({ '_unitLength': lineLength._unit }));
 
-    state = Layer.mergeEqualsVertices( state, layerID, vertexOne.id ).updatedState;
+    state = Layer.mergeEqualsVertices(state, layerID, vertexOne.id).updatedState;
 
     if (vertexOne.x != vertexTwo.x && vertexOne.y != vertexTwo.y) {
-      state = Layer.mergeEqualsVertices( state, layerID, vertexTwo.id ).updatedState;
+      state = Layer.mergeEqualsVertices(state, layerID, vertexTwo.id).updatedState;
     }
 
-    state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
+    state = Layer.detectAndUpdateAreas(state, layerID).updatedState;
 
     return { updatedState: state };
   }
 
-  static setVerticesCoords( state, layerID, lineID, x1, y1, x2, y2 ) {
+  static setVerticesCoords(state, layerID, lineID, x1, y1, x2, y2) {
     let line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
-    state = Vertex.setAttributes( state, layerID, line.vertices.get(0), new Map({ x: x1, y: y1 }) ).updatedState;
-    state = Vertex.setAttributes( state, layerID, line.vertices.get(1), new Map({ x: x2, y: y2 }) ).updatedState;
+    state = Vertex.setAttributes(state, layerID, line.vertices.get(0), new Map({ x: x1, y: y1 })).updatedState;
+    state = Vertex.setAttributes(state, layerID, line.vertices.get(1), new Map({ x: x2, y: y2 })).updatedState;
 
     return { updatedState: state };
   }
