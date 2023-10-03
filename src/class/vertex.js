@@ -15,6 +15,8 @@ import { Layer, Line, Group } from '../class/export';
 class Vertex{
 
   static add( state, layerID, x, y, relatedPrototype, relatedID ) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     let vertex = state.getIn(['scene', 'layers', layerID, 'vertices']).find(vertex => GeometryUtils.samePoints(vertex, {x, y}));
 
@@ -92,6 +94,8 @@ class Vertex{
   }
 
   static beginDraggingVertex(state, layerID, vertexID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     let snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
 
@@ -109,6 +113,9 @@ class Vertex{
   }
 
   static updateDraggingVertex(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let { draggingSupport, snapElements, scene } = state;
 
     let snap = null;
@@ -128,6 +135,9 @@ class Vertex{
   }
 
   static endDraggingVertex(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let { draggingSupport } = state;
     let layerID = draggingSupport.get('layerID');
     let vertexID = draggingSupport.get('vertexID');

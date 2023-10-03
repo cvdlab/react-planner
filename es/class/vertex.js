@@ -17,6 +17,8 @@ var Vertex = /*#__PURE__*/function () {
   _createClass(Vertex, null, [{
     key: "add",
     value: function add(state, layerID, x, y, relatedPrototype, relatedID) {
+      x = Math.round(x);
+      y = Math.round(y);
       var vertex = state.getIn(['scene', 'layers', layerID, 'vertices']).find(function (vertex) {
         return GeometryUtils.samePoints(vertex, {
           x: x,
@@ -123,6 +125,8 @@ var Vertex = /*#__PURE__*/function () {
   }, {
     key: "beginDraggingVertex",
     value: function beginDraggingVertex(state, layerID, vertexID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
       state = state.merge({
         mode: MODE_DRAGGING_VERTEX,
@@ -140,6 +144,8 @@ var Vertex = /*#__PURE__*/function () {
   }, {
     key: "updateDraggingVertex",
     value: function updateDraggingVertex(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var _state = state,
         draggingSupport = _state.draggingSupport,
         snapElements = _state.snapElements,
@@ -169,6 +175,8 @@ var Vertex = /*#__PURE__*/function () {
   }, {
     key: "endDraggingVertex",
     value: function endDraggingVertex(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var _state2 = state,
         draggingSupport = _state2.draggingSupport;
       var layerID = draggingSupport.get('layerID');

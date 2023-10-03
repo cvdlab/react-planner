@@ -93,6 +93,9 @@ class Group{
   }
 
   static setBarycenter( state, groupID, x, y ) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     if (typeof x !== 'undefined') state = state.setIn(['scene', 'groups', groupID, 'x'], x);
     if (typeof y !== 'undefined') state = state.setIn(['scene', 'groups', groupID, 'y'], y);
 
@@ -235,6 +238,9 @@ class Group{
   }
 
   static translate( state, groupID, x, y ) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let deltaX = x - state.getIn(['scene', 'groups', groupID, 'x']);
     let deltaY = y - state.getIn(['scene', 'groups', groupID, 'y']);
 
@@ -289,8 +295,7 @@ class Group{
   }
 
   static rotate( state, groupID, newAlpha ) {
-
-
+    
     let { x: barX, y: barY, rotation } = state.getIn(['scene', 'groups', groupID]);
 
     let alpha = newAlpha - rotation;

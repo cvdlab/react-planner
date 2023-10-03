@@ -21,6 +21,10 @@ var Line = /*#__PURE__*/function () {
   _createClass(Line, null, [{
     key: "create",
     value: function create(state, layerID, type, x0, y0, x1, y1, properties) {
+      x0 = Math.round(x0);
+      y0 = Math.round(y0);
+      x1 = Math.round(x1);
+      y1 = Math.round(y1);
       var lineID = IDBroker.acquireID();
       var _Vertex$add = Vertex.add(state, layerID, x0, y0, 'lines', lineID),
         stateV0 = _Vertex$add.updatedState,
@@ -92,6 +96,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "split",
     value: function split(state, layerID, lineID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var line = state.getIn(['scene', 'layers', layerID, 'lines', lineID]);
       var v0 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(0)]);
       var v1 = state.getIn(['scene', 'layers', layerID, 'vertices', line.vertices.get(1)]);
@@ -175,6 +181,10 @@ var Line = /*#__PURE__*/function () {
           _ref6$2 = _ref6[1],
           x2 = _ref6$2.x,
           y2 = _ref6$2.y;
+        x1 = Math.round(x1);
+        y1 = Math.round(y1);
+        x2 = Math.round(x2);
+        y2 = Math.round(y2);
         var _this$create = _this.create(state, layerID, type, x1, y1, x2, y2, properties),
           stateL = _this$create.updatedState,
           line = _this$create.line;
@@ -203,6 +213,10 @@ var Line = /*#__PURE__*/function () {
     key: "createAvoidingIntersections",
     value: function createAvoidingIntersections(state, layerID, type, x0, y0, x1, y1, oldProperties, oldHoles) {
       var _this2 = this;
+      x0 = Math.round(x0);
+      y0 = Math.round(y0);
+      x1 = Math.round(x1);
+      y1 = Math.round(y1);
       var initialPoints = [{
         x: x0,
         y: y0
@@ -261,6 +275,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "replaceVertex",
     value: function replaceVertex(state, layerID, lineID, vertexIndex, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var vertexID = state.getIn(['scene', 'layers', layerID, 'lines', lineID, 'vertices', vertexIndex]);
       state = Vertex.remove(state, layerID, vertexID, 'lines', lineID).updatedState;
       var _Vertex$add3 = Vertex.add(state, layerID, x, y, 'lines', lineID),
@@ -291,6 +307,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "beginDrawingLine",
     value: function beginDrawingLine(state, layerID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
       var snap = null;
       if (state.snapMask && !state.snapMask.isEmpty()) {
@@ -333,6 +351,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "updateDrawingLine",
     value: function updateDrawingLine(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var snap = null;
       if (state.snapMask && !state.snapMask.isEmpty()) {
         snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
@@ -359,6 +379,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "endDrawingLine",
     value: function endDrawingLine(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       if (state.snapMask && !state.snapMask.isEmpty()) {
         var snap = SnapUtils.nearestSnap(state.snapElements, x, y, state.snapMask);
         if (snap) {
@@ -389,6 +411,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "beginDraggingLine",
     value: function beginDraggingLine(state, layerID, lineID, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var snapElements = SnapSceneUtils.sceneSnapElements(state.scene, new List(), state.snapMask);
       var layer = state.scene.layers.get(layerID);
       var line = layer.lines.get(lineID);
@@ -415,6 +439,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "updateDraggingLine",
     value: function updateDraggingLine(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var draggingSupport = state.draggingSupport;
       var snapElements = state.snapElements;
       var layerID = draggingSupport.get('layerID');
@@ -488,6 +514,8 @@ var Line = /*#__PURE__*/function () {
   }, {
     key: "endDraggingLine",
     value: function endDraggingLine(state, x, y) {
+      x = Math.round(x);
+      y = Math.round(y);
       var _state = state,
         draggingSupport = _state.draggingSupport;
       var layerID = draggingSupport.get('layerID');

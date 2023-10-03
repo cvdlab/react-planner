@@ -15,6 +15,9 @@ import {
 class Item{
 
   static create( state, layerID, type, x, y, width, height, rotation ) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let itemID = IDBroker.acquireID();
 
     let item = state.catalog.factoryElement(type, {
@@ -67,6 +70,9 @@ class Item{
   }
 
   static updateDrawingItem(state, layerID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     if (state.hasIn(['drawingSupport','currentID'])) {
       state = state.updateIn(['scene', 'layers', layerID, 'items', state.getIn(['drawingSupport','currentID'])], item => item.merge({x, y}));
     }
@@ -80,6 +86,9 @@ class Item{
   }
 
   static endDrawingItem(state, layerID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let catalog = state.catalog;
     state = this.updateDrawingItem(state, layerID, x, y, catalog).updatedState;
     state = Layer.unselectAll( state, layerID ).updatedState;
@@ -93,6 +102,8 @@ class Item{
   }
 
   static beginDraggingItem(state, layerID, itemID, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
 
     let item = state.getIn(['scene', 'layers', layerID, 'items', itemID]);
 
@@ -112,6 +123,9 @@ class Item{
   }
 
   static updateDraggingItem(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let {draggingSupport, scene} = state;
 
     let layerID = draggingSupport.get('layerID');
@@ -138,6 +152,9 @@ class Item{
   }
 
   static endDraggingItem(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     state = this.updateDraggingItem(state, x, y).updatedState;
     state = state.merge({ mode: MODE_IDLE });
 
@@ -157,6 +174,9 @@ class Item{
   }
 
   static updateRotatingItem(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     let {rotatingSupport, scene} = state;
 
     let layerID = rotatingSupport.get('layerID');
@@ -185,6 +205,9 @@ class Item{
   }
 
   static endRotatingItem(state, x, y) {
+    x = Math.round(x);
+    y = Math.round(y);
+
     state = this.updateRotatingItem(state, x, y).updatedState;
     state = state.merge({ mode: MODE_IDLE });
 
