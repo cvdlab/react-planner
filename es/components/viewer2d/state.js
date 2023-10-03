@@ -10,7 +10,7 @@ import Scene from './scene';
 import Snap from './snap';
 import * as SharedStyle from '../../styles/shared-style';
 var guideStyle = {
-  stroke: SharedStyle.COLORS.grey,
+  stroke: SharedStyle.SECONDARY_COLOR.main,
   strokewidth: '2.5px'
 };
 export default function State(_ref) {
