@@ -5,7 +5,7 @@ import Snap from './snap';
 import * as SharedStyle from '../../styles/shared-style';
 
 const guideStyle = {
-  stroke: SharedStyle.SECONDARY_COLOR.main,
+  stroke: SharedStyle.COLORS.grey,
   strokewidth:'2.5px'
 };
 

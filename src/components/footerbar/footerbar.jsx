@@ -16,7 +16,7 @@ const footerBarStyle = {
   lineHeight: '14px',
   fontSize: '12px',
   color: SharedStyle.PRIMARY_COLOR.text_main,
-  backgroundColor: SharedStyle.PRIMARY_COLOR.main,
+  backgroundColor: SharedStyle.PRIMARY_COLOR.grey,
   padding: '3px 1em',
   margin: 0,
   boxSizing: 'border-box',
