@@ -315,7 +315,7 @@ class Line{
     let v0 = layer.vertices.get(line.vertices.get(0));
 
     state = Layer.removeZeroLengthLines( state, layerID ).updatedState;
-    state = Layer.mergeEqualsVertices( state, layerID, vertexID ).updatedState;
+    state = Layer.mergeEqualsVertices( state, layerID, v0.id ).updatedState;
     state = Line.remove( state, layerID, lineID ).updatedState;
     state = Line.createAvoidingIntersections( state, layerID, line.type, v0.x, v0.y, x, y ).updatedState;
     state = Layer.detectAndUpdateAreas( state, layerID ).updatedState;
