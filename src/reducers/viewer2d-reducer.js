@@ -1,8 +1,13 @@
+import { 
+  fitSelection,
+} from 'react-svg-pan-zoom';
+
 import {
   UPDATE_2D_CAMERA,
   SELECT_TOOL_PAN,
   SELECT_TOOL_ZOOM_IN,
   SELECT_TOOL_ZOOM_OUT,
+  FIT_SELECTION,
   MODE_2D_PAN,
   MODE_2D_ZOOM_IN,
   MODE_2D_ZOOM_OUT
@@ -21,5 +26,10 @@ export default function (state, action) {
 
     case SELECT_TOOL_ZOOM_OUT:
       return state.set('mode', MODE_2D_ZOOM_OUT);
+
+    case FIT_SELECTION:
+      const viewer2D = state.get('viewer2D');
+
+      return state.merge({viewer2D: fitSelection(viewer2D, ...action.value)});
   }
 }
