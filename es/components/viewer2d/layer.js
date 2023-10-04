@@ -14,6 +14,8 @@ export default function Layer(_ref) {
     layerID = layer.id,
     items = layer.items,
     opacity = layer.opacity;
+
+  // TODO(pg): add holes which should be the holes in areas like stairs
   return /*#__PURE__*/React.createElement("g", {
     opacity: opacity
   }, areas.valueSeq().map(function (area) {

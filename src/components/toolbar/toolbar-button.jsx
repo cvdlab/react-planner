@@ -23,6 +23,12 @@ const STYLE_INNER = {
   flexDirection: 'column',
   alignItems: 'center',
   justifyContent: 'center',
+  //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
+  WebkitTouchCallout: 'none', /* iOS Safari */
+  WebkitUserSelect: 'none', /* Chrome/Safari/Opera */
+  MozUserSelect: 'none', /* Firefox */
+  MsUserSelect: 'none', /* Internet Explorer/Edge */
+  userSelect: 'none'
 }
 
 const STYLE_TOOLTIP = {
@@ -41,7 +47,13 @@ const STYLE_TOOLTIP = {
   bottom: '100%', // Positions the tooltip above the button
   marginBottom: '10px', // Adds some space between the tooltip and the button
   zIndex: '999',
-  fontSize: '12px'
+  fontSize: '12px',
+  //http://stackoverflow.com/questions/826782/how-to-disable-text-selection-highlighting-using-css
+  WebkitTouchCallout: 'none', /* iOS Safari */
+  WebkitUserSelect: 'none', /* Chrome/Safari/Opera */
+  MozUserSelect: 'none', /* Firefox */
+  MsUserSelect: 'none', /* Internet Explorer/Edge */
+  userSelect: 'none'
 };
 
 const STYLE_TOOLTIP_PIN = {

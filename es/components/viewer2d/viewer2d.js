@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import ReactPlannerContext from '../../utils/react-planner-context';
 import { ReactSVGPanZoom, TOOL_NONE, TOOL_PAN, TOOL_ZOOM_IN, TOOL_ZOOM_OUT, TOOL_AUTO, INITIAL_VALUE } from 'react-svg-pan-zoom';
+import ReactPlannerContext from '../../utils/react-planner-context';
 import * as constants from '../../utils/constants';
 import State from './state';
 import * as SharedStyle from '../../styles/shared-style';
@@ -272,7 +272,7 @@ export default function Viewer2D(_ref) {
     SVGHeight = _state$get$toJS.SVGHeight;
   var rulerSize = 15; //px
   var rulerUnitPixelSize = 100;
-  var rulerBgColor = SharedStyle.PRIMARY_COLOR.main;
+  var rulerBgColor = SharedStyle.COLORS.grey;
   var rulerFnColor = SharedStyle.MATERIAL_COLORS['500'].indigo;
   var rulerMkColor = SharedStyle.MATERIAL_COLORS['500'].indigo;
   var sceneWidth = SVGWidth || state.getIn(['scene', 'width']);
