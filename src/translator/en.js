@@ -38,6 +38,7 @@ export default {
   "Length":"Length",
   "Lines":"Lines",
   "Load project": "Load project",
+  "Fetch and generate": "Fetch and generate",
   "Mouse X Coordinate":"Mouse X Coordinate",
   "Mouse Y Coordinate":"Mouse Y Coordinate",
   "Name": "Name",
