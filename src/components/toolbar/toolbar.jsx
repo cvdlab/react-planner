@@ -5,6 +5,7 @@ import { FaFile, FaMousePointer, FaPlus } from 'react-icons/fa';
 import ToolbarButton from './toolbar-button';
 import ToolbarSaveButton from './toolbar-save-button';
 import ToolbarLoadButton from './toolbar-load-button';
+import ToolbarFetchButton from "./toolbar-fetch-button"
 import If from '../../utils/react-if';
 import {
   MODE_IDLE,
@@ -23,8 +24,8 @@ const iconTextStyle = {
   userSelect: 'none'
 };
 
-const Icon2D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>2D</p>;
-const Icon3D = ( {style} ) => <p style={{...iconTextStyle, ...style}}>3D</p>;
+const Icon2D = ({ style }) => <p style={{ ...iconTextStyle, ...style }}>2D</p>;
+const Icon3D = ({ style }) => <p style={{ ...iconTextStyle, ...style }}>3D</p>;
 
 const ASIDE_STYLE = {
   backgroundColor: SharedStyle.PRIMARY_COLOR.main,
@@ -118,8 +119,8 @@ export default class Toolbar extends Component {
         index: 5, condition: true, dom: <ToolbarButton
           active={[MODE_IDLE].includes(mode)}
           tooltip={translator.t('2D View')}
-          onClick={event => projectActions.setMode( MODE_IDLE )}>
-          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D style={{color: alterateColor}} /> : <FaMousePointer style={{color: alterateColor}} />}
+          onClick={event => projectActions.setMode(MODE_IDLE)}>
+          {[MODE_3D_FIRST_PERSON, MODE_3D_VIEW].includes(mode) ? <Icon2D style={{ color: alterateColor }} /> : <FaMousePointer style={{ color: alterateColor }} />}
         </ToolbarButton>
       },
       {
@@ -145,7 +146,11 @@ export default class Toolbar extends Component {
           onClick={event => projectActions.openProjectConfigurator()}>
           <MdSettings />
         </ToolbarButton>
-      }
+      },
+      {
+        index: 9, condition: allowProjectFileSupport,
+        dom: <ToolbarFetchButton state={state} />
+      },
     ];
 
     sorter = sorter.concat(toolbarButtons.map((Component, key) => {
