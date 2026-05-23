@@ -1,14 +1,18 @@
 {
-  "plugins": [
-    "transform-object-rest-spread",
-    "import-glob"
+  "presets": [
+    "@babel/preset-react",
+    "@babel/preset-typescript"
   ],
   "env": {
     "commonjs": {
-      "presets": ["env", "react"]
+      "presets": [
+        ["@babel/preset-env"]
+      ]
     },
     "es": {
-      "presets": [["env", { "modules": false }], "react"]
+      "presets": [
+        ["@babel/preset-env", { "modules": false }]
+      ]
     }
   }
 }

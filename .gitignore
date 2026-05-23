@@ -4,3 +4,6 @@ node_modules
 dist/*
 !dist/index.html
 .vscode
+lib
+es
+demo/dist
