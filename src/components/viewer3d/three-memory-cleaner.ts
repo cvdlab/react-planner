@@ -12,11 +12,11 @@ function disposeTexture(texture: any) {
 }
 
 function disposeMultimaterial(material: any) {
-  if (!(material instanceof (Three as any).MultiMaterial)) {
+  if (!Array.isArray(material)) {
     return;
   }
-  material.materials.forEach((material: any) => {
-    disposeMaterial(material);
+  material.forEach((m: any) => {
+    disposeMaterial(m);
   });
 
 }

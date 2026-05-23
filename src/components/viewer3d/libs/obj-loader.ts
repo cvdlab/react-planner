@@ -695,7 +695,7 @@ OBJLoader.prototype = {
 
         }
 
-        let multiMaterial = new THREE.MultiMaterial(createdMaterials);
+        let multiMaterial = createdMaterials;
         mesh = ( !isLine ? new THREE.Mesh(buffergeometry, multiMaterial) : new THREE.Line(buffergeometry, multiMaterial) );
 
       } else {

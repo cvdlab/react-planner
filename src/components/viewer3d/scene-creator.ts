@@ -700,8 +700,8 @@ function applyOpacity(object, opacity) {
   object.traverse((child) => {
 
     if (child instanceof Three.Mesh) {
-      if (child.material instanceof Three.MultiMaterial) {
-        child.material.materials.forEach(materialChild => {
+      if (Array.isArray(child.material)) {
+        child.material.forEach((materialChild: any) => {
           materialChild.transparent = true;
           if (materialChild.maxOpacity) {
             materialChild.opacity = Math.min(materialChild.maxOpacity, opacity);

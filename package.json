@@ -84,13 +84,14 @@
     "react-container-dimensions": "1.4.1",
     "react-dom": "16.8.5",
     "rimraf": "2.6.3",
-    "three": "0.94.0",
+    "three": "^0.124.0",
+    "@types/three": "^0.125.0",
     "typescript": "^5.3.0",
     "vite": "^8.0.14"
   },
   "peerDependencies": {
     "react": "16.x",
     "react-dom": "16.x",
-    "three": "0.94.x"
+    "three": ">=0.124.0"
   }
 }
