@@ -41,8 +41,9 @@ export default class Viewer3DFirstPerson extends React.Component<Props, any> {
     this.width = props.width;
     this.height = props.height;
     this.stopRendering = false;
-    this.renderer = (window as any).__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
+    this.renderer = (window as any).__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
     (window as any).__threeRenderer = this.renderer;
+    this.renderer.setPixelRatio(window.devicePixelRatio || 1);
   }
 
   componentDidMount() {

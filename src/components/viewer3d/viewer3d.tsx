@@ -38,8 +38,9 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     this.height = props.height;
     this.renderingID = 0;
 
-    this.renderer = (window as any).__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true });
+    this.renderer = (window as any).__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
     (window as any).__threeRenderer = this.renderer;
+    this.renderer.setPixelRatio(window.devicePixelRatio || 1);
   }
 
   componentDidMount() {
