@@ -59,10 +59,6 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     let scene3D = new Three.Scene();
 
     //RENDERER
-    // r155 flipped lights to physically-correct by default; the AmbientLight /
-    // SpotLight intensities below were calibrated for the legacy additive model.
-    // Re-enable legacy lighting until those are retuned.
-    (this.renderer as any).useLegacyLights = true;
     this.renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
     this.renderer.setSize(this.width, this.height);
 
@@ -90,12 +86,15 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     // scene3D.add(axisHelper);
 
     // LIGHT
-    let light = new Three.AmbientLight(0xafafaf); // soft white light
+    // r155 made lights physically-correct (intensity in candela/lumens) and r165
+    // removed useLegacyLights, so legacy values render very dim. ~π× boost on
+    // every light puts us close to the old additive look; tune by eye.
+    let light = new Three.AmbientLight(0xafafaf, 1.0 * Math.PI);
     scene3D.add(light);
 
     // Add another light
 
-    let spotLight1 = new Three.SpotLight(SharedStyle.COLORS.white, 0.30);
+    let spotLight1 = new Three.SpotLight(SharedStyle.COLORS.white, 0.30 * Math.PI);
     spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
     scene3D.add(spotLight1);
 

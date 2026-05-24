@@ -24,7 +24,7 @@ export default function (width: number, height: number, grid: any, font: any) {
     if (counter % 5 == 0) {
       let shape = new TextGeometry(('' + (counter * step)), {
         size: 16,
-        height: 1,
+        depth: 1, // r163 renamed `height` → `depth`; default is 50, hence the thick numbers.
         font: font
       });
 

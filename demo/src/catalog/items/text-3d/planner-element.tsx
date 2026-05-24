@@ -96,7 +96,7 @@ export default {
     let color = element.properties.get("color") || defaultColor;
 
     let mesh = new Mesh(
-      new TextGeometry(text, { size, height: 1, font }),
+      new TextGeometry(text, { size, depth: 1, font }),
       new MeshBasicMaterial({ color }),
     );
 
