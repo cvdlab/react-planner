@@ -12,6 +12,7 @@ import ReactPlannerReducers from './reducers/export';
 import ReactPlannerClasses from './class/export';
 import ElementsFactories from './catalog/factories/export';
 import ReactPlannerUtils from './utils/export';
+import { PlannerContext } from './context';
 
 export {
   Catalog,
@@ -27,5 +28,6 @@ export {
   ReactPlannerReducers,
   ReactPlannerClasses,
   ElementsFactories,
-  ReactPlannerUtils
+  ReactPlannerUtils,
+  PlannerContext
 };

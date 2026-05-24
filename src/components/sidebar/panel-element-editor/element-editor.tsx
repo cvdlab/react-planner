@@ -6,6 +6,7 @@ import { GeometryUtils, MathUtils } from '../../../utils/export';
 import * as SharedStyle from '../../../shared-style';
 import convert from 'convert-units';
 import { MdContentCopy, MdContentPaste } from 'react-icons/md';
+import { PlannerContext } from '../../../context';
 
 const PRECISION = 2;
 
@@ -416,8 +417,4 @@ export default class ElementEditor extends Component<Props, State> {
   layer: PropTypes.object.isRequired
 };
 
-(ElementEditor as any).contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+(ElementEditor as any).contextType = PlannerContext;

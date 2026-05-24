@@ -5,6 +5,7 @@ import * as SharedStyle from '../../shared-style';
 import { TiPlus, TiDelete } from 'react-icons/ti';
 import { FaTrash, FaEye, FaLink, FaUnlink } from 'react-icons/fa';
 import { Map } from 'immutable';
+import { PlannerContext } from '../../context';
 
 import {
   MODE_IDLE, MODE_2D_ZOOM_IN, MODE_2D_ZOOM_OUT, MODE_2D_PAN, MODE_3D_VIEW, MODE_3D_FIRST_PERSON,
@@ -211,12 +212,4 @@ export default class PanelGroups extends Component<Props, State> {
   layers: PropTypes.object.isRequired
 };
 
-(PanelGroups as any).contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  groupsActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+(PanelGroups as any).contextType = PlannerContext;

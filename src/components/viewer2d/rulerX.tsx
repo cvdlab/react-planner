@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { PlannerContext } from '../../context';
 
 type Props = {
   unitPixelSize: number;
@@ -141,6 +142,4 @@ export default class RulerX extends Component<Props, any> {
   markerColor: PropTypes.string
 };
 
-(RulerX as any).contextTypes = {
-  translator: PropTypes.object.isRequired
-};
+(RulerX as any).contextType = PlannerContext;

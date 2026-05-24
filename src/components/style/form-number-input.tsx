@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { MdUpdate } from 'react-icons/md';
 import { KEYBOARD_BUTTON_CODE } from '../../constants';
+import { PlannerContext } from '../../context';
 
 const STYLE_INPUT = {
   display: 'block',
@@ -153,6 +154,4 @@ export default class FormNumberInput extends Component<Props, State> {
   placeholder: PropTypes.string
 };
 
-(FormNumberInput as any).contextTypes = {
-  translator: PropTypes.object.isRequired
-};
+(FormNumberInput as any).contextType = PlannerContext;

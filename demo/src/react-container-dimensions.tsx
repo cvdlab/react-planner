@@ -1,15 +1,7 @@
 import React, { Children, Component } from "react";
-import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
 import elementResizeDetectorMaker from "element-resize-detector";
-import invariant from "invariant";
 
 export default class ContainerDimensions extends Component {
-  static propTypes = {
-    children: PropTypes.oneOfType([PropTypes.element, PropTypes.func])
-      .isRequired,
-  };
-
   static getDomNodeDimensions(node) {
     const { top, right, bottom, left, width, height } =
       node.getBoundingClientRect();
@@ -21,11 +13,13 @@ export default class ContainerDimensions extends Component {
     this.state = {
       initiated: false,
     };
+    this.sentinelRef = React.createRef();
     this.onResize = this.onResize.bind(this);
   }
 
   componentDidMount() {
-    this.parentNode = ReactDOM.findDOMNode(this).parentNode;
+    this.parentNode = this.sentinelRef.current?.parentNode;
+    if (!this.parentNode) return;
     this.elementResizeDetector = elementResizeDetectorMaker({
       strategy: "scroll",
       callOnAdd: false,
@@ -37,7 +31,9 @@ export default class ContainerDimensions extends Component {
 
   componentWillUnmount() {
     this.componentIsMounted = false;
-    this.elementResizeDetector.uninstall(this.parentNode);
+    if (this.elementResizeDetector && this.parentNode) {
+      this.elementResizeDetector.uninstall(this.parentNode);
+    }
   }
 
   onResize() {
@@ -53,13 +49,14 @@ export default class ContainerDimensions extends Component {
   }
 
   render() {
-    invariant(
-      this.props.children,
-      "Expected children to be one of function or React.Element",
-    );
+    if (!this.props.children) {
+      throw new Error(
+        "Expected children to be one of function or React.Element",
+      );
+    }
 
     if (!this.state.initiated) {
-      return <div />;
+      return <div ref={this.sentinelRef} />;
     }
     if (typeof this.props.children === "function") {
       const renderedChildren = this.props.children(this.state);

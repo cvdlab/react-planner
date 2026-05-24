@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
+import { PlannerContext } from '../../context';
 
 const toggleButtonStyle = {
   width: '5.5em',
@@ -98,12 +99,4 @@ export default class FooterToggleButton extends Component<Props, State> {
   title: PropTypes.string
 };
 
-(FooterToggleButton as any).contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+(FooterToggleButton as any).contextType = PlannerContext;

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdNavigateNext } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import { PlannerContext } from '../../context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -112,6 +113,4 @@ export default class CatalogPageItem extends Component<Props, State> {
   oldPage: PropTypes.object.isRequired,
 };
 
-(CatalogPageItem as any).contextTypes = {
-  projectActions: PropTypes.object.isRequired
-};
+(CatalogPageItem as any).contextType = PlannerContext;

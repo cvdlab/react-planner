@@ -4,6 +4,7 @@ import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { FormNumberInput, FormTextInput } from '../style/export';
 import { Map } from 'immutable';
+import { PlannerContext } from '../../context';
 
 import { FaUnlink } from 'react-icons/fa';
 
@@ -184,12 +185,4 @@ export default class PanelGroupEditor extends Component<Props, any> {
   groupID: PropTypes.string
 };
 
-(PanelGroupEditor as any).contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  groupsActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+(PanelGroupEditor as any).contextType = PlannerContext;

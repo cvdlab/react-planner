@@ -1,14 +1,17 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { FaFolderOpen as IconLoad } from 'react-icons/fa';
-import ToolbarButton from './toolbar-button';
-import { browserUpload } from '../../utils/browser';
+import React from "react";
+import PropTypes from "prop-types";
+import { FaFolderOpen as IconLoad } from "react-icons/fa";
+import ToolbarButton from "./toolbar-button";
+import { browserUpload } from "../../utils/browser";
+import { PlannerContext } from "../../context";
 
-type Props = { state: any };
-type Context = { translator: any; projectActions: any };
+type Props = { state: any; translator: any; projectActions: any };
 
-export default function ToolbarLoadButton({ state }: Props, { translator, projectActions }: Context) {
-
+export default function ToolbarLoadButton({
+  state,
+  translator,
+  projectActions,
+}: Props) {
   let loadProjectFromFile = (event: any) => {
     event.preventDefault();
     browserUpload().then((data: any) => {
@@ -17,7 +20,11 @@ export default function ToolbarLoadButton({ state }: Props, { translator, projec
   };
 
   return (
-    <ToolbarButton active={false} tooltip={translator.t("Load project")} onClick={loadProjectFromFile}>
+    <ToolbarButton
+      active={false}
+      tooltip={translator.t("Load project")}
+      onClick={loadProjectFromFile}
+    >
       <IconLoad />
     </ToolbarButton>
   );
@@ -25,9 +32,4 @@ export default function ToolbarLoadButton({ state }: Props, { translator, projec
 
 (ToolbarLoadButton as any).propTypes = {
   state: PropTypes.object.isRequired,
-};
-
-(ToolbarLoadButton as any).contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
 };

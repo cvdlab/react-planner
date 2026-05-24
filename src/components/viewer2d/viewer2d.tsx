@@ -1,5 +1,6 @@
-import React from "react";
+import React, { useContext } from "react";
 import PropTypes from "prop-types";
+import { PlannerContext } from "../../context";
 
 import {
   ReactSVGPanZoom,
@@ -113,9 +114,8 @@ type Context = {
   catalog: any;
 };
 
-export default function Viewer2D(
-  { state, width, height }: Props,
-  {
+export default function Viewer2D({ state, width, height }: Props) {
+  const {
     viewer2DActions,
     linesActions,
     holesActions,
@@ -124,8 +124,8 @@ export default function Viewer2D(
     areaActions,
     projectActions,
     catalog,
-  }: Context,
-) {
+  } = useContext(PlannerContext);
+
   let { viewer2D, mode, scene } = state;
 
   let layerID = scene.selectedLayer;
@@ -480,13 +480,4 @@ export default function Viewer2D(
   height: PropTypes.number.isRequired,
 };
 
-(Viewer2D as any).contextTypes = {
-  viewer2DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  verticesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  areaActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-};
+// (Viewer2D as any).contextType = PlannerContext;

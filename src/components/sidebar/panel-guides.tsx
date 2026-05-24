@@ -5,6 +5,7 @@ import Panel from './panel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
 import { FaTrash, FaTimes } from 'react-icons/fa';
 import { FormNumberInput } from '../../components/style/export';
+import { PlannerContext } from '../../context';
 
 const tabStyle = { margin: '1em' };
 
@@ -196,7 +197,4 @@ export default class PanelGuides extends Component<Props, State> {
   state: PropTypes.object.isRequired
 };
 
-(PanelGuides as any).contextTypes = {
-  translator: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+(PanelGuides as any).contextType = PlannerContext;

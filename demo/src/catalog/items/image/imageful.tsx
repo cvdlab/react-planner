@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {Map} from 'immutable';
+import { PlannerContext } from 'react-planner';
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;
@@ -237,8 +238,4 @@ ImageFul.propTypes = {
   scene: PropTypes.object.isRequired
 };
 
-ImageFul.contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+(ImageFul as any).contextType = PlannerContext;

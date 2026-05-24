@@ -1,5 +1,5 @@
 import React from "react";
-import ReactDOM from "react-dom";
+import { createRoot } from "react-dom/client";
 import ContainerDimensions from "./react-container-dimensions";
 import Immutable, { Map } from "immutable";
 import immutableDevtools from "immutable-devtools";
@@ -80,7 +80,10 @@ let plugins = [
 let toolbarButtons = [ToolbarScreenshotButton];
 
 //render
-ReactDOM.render(
+const container = document.getElementById("app");
+if (!container) throw new Error("#app element not found");
+const root = createRoot(container);
+root.render(
   <Provider store={store}>
     <ContainerDimensions>
       {({ width, height }: { width: number; height: number }) => (
@@ -95,5 +98,4 @@ ReactDOM.render(
       )}
     </ContainerDimensions>
   </Provider>,
-  document.getElementById("app"),
 );

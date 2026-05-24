@@ -1,14 +1,15 @@
-'use strict';
+"use strict";
 
-import React from 'react';
-import PropTypes from 'prop-types';
-import ReactDOM from 'react-dom';
-import * as Three from 'three';
-import { parseData, updateScene } from './scene-creator';
-import { disposeScene } from './three-memory-cleaner';
-import OrbitControls from './libs/orbit-controls';
-import diff from 'immutablediff';
-import * as SharedStyle from '../../shared-style';
+import React from "react";
+import PropTypes from "prop-types";
+import ReactDOM from "react-dom";
+import * as Three from "three";
+import { parseData, updateScene } from "./scene-creator";
+import { disposeScene } from "./three-memory-cleaner";
+import OrbitControls from "./libs/orbit-controls";
+import diff from "immutablediff";
+import * as SharedStyle from "../../shared-style";
+import { PlannerContext } from "../../context";
 
 type Props = {
   state: any;
@@ -17,7 +18,6 @@ type Props = {
 };
 
 export default class Scene3DViewer extends React.Component<Props, any> {
-
   lastMousePosition: any;
   width: number;
   height: number;
@@ -38,24 +38,27 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     this.height = props.height;
     this.renderingID = 0;
 
-    this.renderer = (window as any).__threeRenderer || new Three.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
+    this.renderer =
+      (window as any).__threeRenderer ||
+      new Three.WebGLRenderer({ preserveDrawingBuffer: true, antialias: true });
     (window as any).__threeRenderer = this.renderer;
     this.renderer.setPixelRatio(window.devicePixelRatio || 1);
   }
 
   componentDidMount() {
-
     let actions = {
       areaActions: (this.context as any).areaActions,
       holesActions: (this.context as any).holesActions,
       itemsActions: (this.context as any).itemsActions,
       linesActions: (this.context as any).linesActions,
-      projectActions: (this.context as any).projectActions
+      projectActions: (this.context as any).projectActions,
     };
 
     let { state } = this.props;
     let data = state.scene;
-    let canvasWrapper = ReactDOM.findDOMNode((this.refs as any).canvasWrapper) as HTMLElement;
+    let canvasWrapper = ReactDOM.findDOMNode(
+      (this.refs as any).canvasWrapper,
+    ) as HTMLElement;
 
     let scene3D = new Three.Scene();
 
@@ -75,9 +78,12 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     scene3D.add(camera);
 
     // Set position for the camera
-    let cameraPositionX = -(planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
-    let cameraPositionY = (planData.boundingBox.max.y - planData.boundingBox.min.y) / 2 * 10;
-    let cameraPositionZ = (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
+    let cameraPositionX =
+      -(planData.boundingBox.max.x - planData.boundingBox.min.x) / 2;
+    let cameraPositionY =
+      ((planData.boundingBox.max.y - planData.boundingBox.min.y) / 2) * 10;
+    let cameraPositionZ =
+      (planData.boundingBox.max.z - planData.boundingBox.min.z) / 2;
 
     camera.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
     camera.up = new Three.Vector3(0, 1, 0);
@@ -95,7 +101,10 @@ export default class Scene3DViewer extends React.Component<Props, any> {
 
     // Add another light
 
-    let spotLight1 = new Three.SpotLight(SharedStyle.COLORS.white, 0.30 * Math.PI);
+    let spotLight1 = new Three.SpotLight(
+      SharedStyle.COLORS.white,
+      0.3 * Math.PI,
+    );
     spotLight1.position.set(cameraPositionX, cameraPositionY, cameraPositionZ);
     scene3D.add(spotLight1);
 
@@ -105,8 +114,8 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     let raycaster = new Three.Raycaster();
 
     this.mouseDownEvent = (event: any) => {
-      this.lastMousePosition.x = event.offsetX / this.width * 2 - 1;
-      this.lastMousePosition.y = -event.offsetY / this.height * 2 + 1;
+      this.lastMousePosition.x = (event.offsetX / this.width) * 2 - 1;
+      this.lastMousePosition.y = (-event.offsetY / this.height) * 2 + 1;
     };
 
     this.mouseUpEvent = (event: any) => {
@@ -115,22 +124,25 @@ export default class Scene3DViewer extends React.Component<Props, any> {
       mouse.x = (event.offsetX / this.width) * 2 - 1;
       mouse.y = -(event.offsetY / this.height) * 2 + 1;
 
-      if (Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 && Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02) {
-
+      if (
+        Math.abs(mouse.x - this.lastMousePosition.x) <= 0.02 &&
+        Math.abs(mouse.y - this.lastMousePosition.y) <= 0.02
+      ) {
         raycaster.setFromCamera(mouse, camera);
         let intersects = raycaster.intersectObjects(toIntersect, true);
 
-        if (intersects.length > 0 && !(isNaN(intersects[0].distance))) {
-          (intersects[0].object as any).interact && (intersects[0].object as any).interact();
+        if (intersects.length > 0 && !isNaN(intersects[0].distance)) {
+          (intersects[0].object as any).interact &&
+            (intersects[0].object as any).interact();
         } else {
           (this.context as any).projectActions.unselectAll();
         }
       }
     };
 
-    this.renderer.domElement.addEventListener('mousedown', this.mouseDownEvent);
-    this.renderer.domElement.addEventListener('mouseup', this.mouseUpEvent);
-    this.renderer.domElement.style.display = 'block';
+    this.renderer.domElement.addEventListener("mousedown", this.mouseDownEvent);
+    this.renderer.domElement.addEventListener("mouseup", this.mouseUpEvent);
+    this.renderer.domElement.style.display = "block";
 
     // add the output of the renderer to the html element
     canvasWrapper.appendChild(this.renderer.domElement);
@@ -138,15 +150,27 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     // create orbit controls
     let orbitController = new OrbitControls(camera, this.renderer.domElement);
     let spotLightTarget = new Three.Object3D();
-    spotLightTarget.name = 'spotLightTarget';
-    spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
+    spotLightTarget.name = "spotLightTarget";
+    spotLightTarget.position.set(
+      orbitController.target.x,
+      orbitController.target.y,
+      orbitController.target.z,
+    );
     scene3D.add(spotLightTarget);
     (spotLight1 as any).target = spotLightTarget;
 
     let render = () => {
       orbitController.update();
-      spotLight1.position.set(camera.position.x, camera.position.y, camera.position.z);
-      spotLightTarget.position.set(orbitController.target.x, orbitController.target.y, orbitController.target.z);
+      spotLight1.position.set(
+        camera.position.x,
+        camera.position.y,
+        camera.position.z,
+      );
+      spotLightTarget.position.set(
+        orbitController.target.x,
+        orbitController.target.y,
+        orbitController.target.z,
+      );
       camera.updateMatrix();
       camera.updateMatrixWorld();
 
@@ -174,8 +198,16 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     this.orbitControls?.dispose();
 
     if (this.renderer?.domElement) {
-      if (this.mouseDownEvent) this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
-      if (this.mouseUpEvent)   this.renderer.domElement.removeEventListener('mouseup',   this.mouseUpEvent);
+      if (this.mouseDownEvent)
+        this.renderer.domElement.removeEventListener(
+          "mousedown",
+          this.mouseDownEvent,
+        );
+      if (this.mouseUpEvent)
+        this.renderer.domElement.removeEventListener(
+          "mouseup",
+          this.mouseUpEvent,
+        );
     }
 
     if (this.scene3D) {
@@ -201,7 +233,7 @@ export default class Scene3DViewer extends React.Component<Props, any> {
       holesActions: (this.context as any).holesActions,
       itemsActions: (this.context as any).itemsActions,
       linesActions: (this.context as any).linesActions,
-      projectActions: (this.context as any).projectActions
+      projectActions: (this.context as any).projectActions,
     };
 
     this.width = width;
@@ -213,28 +245,28 @@ export default class Scene3DViewer extends React.Component<Props, any> {
 
     if (nextProps.state.scene !== this.props.state.scene) {
       let changedValues = diff(this.props.state.scene, nextProps.state.scene);
-      updateScene(this.planData, nextProps.state.scene, this.props.state.scene, changedValues.toJS(), actions, (this.context as any).catalog);
+      updateScene(
+        this.planData,
+        nextProps.state.scene,
+        this.props.state.scene,
+        changedValues.toJS(),
+        actions,
+        (this.context as any).catalog,
+      );
     }
 
     this.renderer.setSize(width, height);
   }
 
   render() {
-    return React.createElement('div', { ref: 'canvasWrapper' });
+    return React.createElement("div", { ref: "canvasWrapper" });
   }
 }
 
 (Scene3DViewer as any).propTypes = {
   state: PropTypes.object.isRequired,
   width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
+  height: PropTypes.number.isRequired,
 };
 
-(Scene3DViewer as any).contextTypes = {
-  areaActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired,
-  catalog: PropTypes.object
-};
+(Scene3DViewer as any).contextType = PlannerContext;

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
-import { connect } from 'react-redux';
+import { connect, ReactReduxContext } from 'react-redux';
 
 import Translator from './translator/translator';
 import Catalog from './catalog/catalog';
@@ -14,6 +14,7 @@ import {
   FooterBarComponents
 } from './components/export';
 import { VERSION } from './version';
+import { PlannerContext } from './context';
 import './styles/export';
 
 const { Toolbar } = ToolbarComponents;
@@ -31,6 +32,8 @@ const wrapperStyle = {
 
 class ReactPlanner extends Component<any, any> {
 
+  static contextType = ReactReduxContext;
+
   static defaultProps = {
     translator: new Translator(),
     catalog: new Catalog(),
@@ -43,28 +46,28 @@ class ReactPlanner extends Component<any, any> {
     customContents: {},
   };
 
-  getChildContext() {
-    return {
-      ...objectsMap(actions, (actionNamespace: string) => (this.props as any)[actionNamespace]),
-      translator: this.props.translator,
-      catalog: this.props.catalog,
-    };
-  }
-
-  componentWillMount() {
+  componentDidMount() {
     let { store } = (this.context as any);
     let { projectActions, catalog, stateExtractor, plugins } = this.props;
     plugins.forEach((plugin: any) => plugin(store, stateExtractor));
     projectActions.initCatalog(catalog);
   }
 
-  componentWillReceiveProps(nextProps: any) {
-    let { stateExtractor, state, projectActions, catalog } = nextProps;
+  componentDidUpdate(_prevProps: any) {
+    let { stateExtractor, state, projectActions, catalog } = this.props;
     let plannerState = stateExtractor(state);
     let catalogReady = plannerState.getIn(['catalog', 'ready']);
     if (!catalogReady) {
       projectActions.initCatalog(catalog);
     }
+  }
+
+  getContextValue() {
+    return {
+      ...objectsMap(actions, (actionNamespace: string) => (this.props as any)[actionNamespace]),
+      translator: this.props.translator,
+      catalog: this.props.catalog,
+    };
   }
 
   render() {
@@ -78,12 +81,14 @@ class ReactPlanner extends Component<any, any> {
     let extractedState = stateExtractor(state);
 
     return (
-      <div style={{ ...wrapperStyle, height }}>
-        <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
-        <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={(event: any) => event.preventDefault()} />
-        <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
-        <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
-      </div>
+      <PlannerContext.Provider value={this.getContextValue()}>
+        <div style={{ ...wrapperStyle, height }}>
+          <Toolbar width={toolbarW} height={toolbarH} state={extractedState} {...props} />
+          <Content width={contentW} height={contentH} state={extractedState} {...props} onWheel={(event: any) => event.preventDefault()} />
+          <Sidebar width={sidebarW} height={sidebarH} state={extractedState} {...props} />
+          <FooterBar width={width} height={footerBarH} state={extractedState} {...props} />
+        </div>
+      </PlannerContext.Provider>
     );
   }
 }
@@ -103,16 +108,6 @@ class ReactPlanner extends Component<any, any> {
   footerbarComponents: PropTypes.array,
   customContents: PropTypes.object,
   softwareSignature: PropTypes.string
-};
-
-(ReactPlanner as any).contextTypes = {
-  store: PropTypes.object.isRequired,
-};
-
-(ReactPlanner as any).childContextTypes = {
-  ...objectsMap(actions, () => PropTypes.object),
-  translator: PropTypes.object,
-  catalog: PropTypes.object,
 };
 
 //redux connect

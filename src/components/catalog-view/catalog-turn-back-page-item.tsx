@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { MdNavigateBefore } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
+import { PlannerContext } from '../../context';
 
 const STYLE_BOX = {
   width: '14em',
@@ -89,6 +90,4 @@ export default class CatalogTurnBackPageItem extends Component<Props, State> {
   page: PropTypes.object.isRequired
 };
 
-(CatalogTurnBackPageItem as any).contextTypes = {
-  projectActions: PropTypes.object.isRequired
-};
+(CatalogTurnBackPageItem as any).contextType = PlannerContext;

@@ -8,6 +8,7 @@ import { MODE_SNAPPING } from '../../constants';
 import * as SharedStyle from '../../shared-style';
 import { MdAddCircle, MdWarning } from 'react-icons/md';
 import { VERSION } from '../../version';
+import { PlannerContext } from '../../context';
 
 const footerBarStyle = {
   position: 'absolute',
@@ -191,12 +192,4 @@ export default class FooterBar extends Component<Props, any> {
   softwareSignature: PropTypes.string
 };
 
-(FooterBar as any).contextTypes = {
-  projectActions: PropTypes.object.isRequired,
-  viewer2DActions: PropTypes.object.isRequired,
-  viewer3DActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-};
+(FooterBar as any).contextType = PlannerContext;

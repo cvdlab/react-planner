@@ -7,6 +7,7 @@ import CatalogTurnBackPageItem from './catalog-turn-back-page-item';
 import ContentContainer from '../style/content-container';
 import ContentTitle from '../style/content-title';
 import * as SharedStyle from '../../shared-style';
+import { PlannerContext } from '../../context';
 
 const containerStyle = {
   position: 'fixed',
@@ -231,11 +232,4 @@ export default class CatalogList extends Component<Props, State> {
   style: PropTypes.object
 };
 
-(CatalogList as any).contextTypes = {
-  catalog: PropTypes.object.isRequired,
-  translator: PropTypes.object.isRequired,
-  itemsActions: PropTypes.object.isRequired,
-  linesActions: PropTypes.object.isRequired,
-  holesActions: PropTypes.object.isRequired,
-  projectActions: PropTypes.object.isRequired
-};
+(CatalogList as any).contextType = PlannerContext;
