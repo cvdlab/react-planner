@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 // @ts-nocheck — legacy CSG bridge, types are not maintained here
 import * as THREE from 'three';
-import { Geometry as LegacyGeometry } from 'three/examples/jsm/deprecated/Geometry.js';
+import { Geometry as LegacyGeometry, Face3 as LegacyFace3 } from './legacy-geometry.js';
 
 const EPSILON = 1e-5,
     COPLANAR = 0,
@@ -53,7 +53,7 @@ export default  class ThreeBSP {
             faceVertexUvs = geometry.faceVertexUvs[0][i];
             polygon = new Polygon();
 
-            if (face instanceof THREE.Face3) {
+            if (face instanceof LegacyFace3) {
                 vertex = geometry.vertices[face.a];
                 uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[0].x, faceVertexUvs[0].y) : null;
                 vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[0], uvs);
@@ -69,33 +69,10 @@ export default  class ThreeBSP {
                 vertex = geometry.vertices[face.c];
                 uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[2].x, faceVertexUvs[2].y) : null;
                 vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[2], uvs);
-                vertex.applyMatrix4(this.matrix);
-                polygon.vertices.push(vertex);
-            } else if (typeof THREE.Face4) {
-                vertex = geometry.vertices[face.a];
-                uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[0].x, faceVertexUvs[0].y) : null;
-                vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[0], uvs);
-                vertex.applyMatrix4(this.matrix);
-                polygon.vertices.push(vertex);
-
-                vertex = geometry.vertices[face.b];
-                uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[1].x, faceVertexUvs[1].y) : null;
-                vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[1], uvs);
-                vertex.applyMatrix4(this.matrix);
-                polygon.vertices.push(vertex);
-
-                vertex = geometry.vertices[face.c];
-                uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[2].x, faceVertexUvs[2].y) : null;
-                vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[2], uvs);
-                vertex.applyMatrix4(this.matrix);
-                polygon.vertices.push(vertex);
-
-                vertex = geometry.vertices[face.d];
-                uvs = faceVertexUvs ? new THREE.Vector2(faceVertexUvs[3].x, faceVertexUvs[3].y) : null;
-                vertex = new Vertex(vertex.x, vertex.y, vertex.z, face.vertexNormals[3], uvs);
                 vertex.applyMatrix4(this.matrix);
                 polygon.vertices.push(vertex);
             } else {
+                // Legacy Face4 path removed — `fromBufferGeometry` only produces Face3.
                 throw 'Invalid face type at index ' + i;
             }
 
@@ -207,7 +184,7 @@ export default  class ThreeBSP {
                     vertex_idx_c = vertice_dict[vertex.x + ',' + vertex.y + ',' + vertex.z] = geometry.vertices.length - 1;
                 }
 
-                face = new THREE.Face3(
+                face = new LegacyFace3(
                     vertex_idx_a,
                     vertex_idx_b,
                     vertex_idx_c,

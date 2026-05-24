@@ -1,4 +1,5 @@
 import * as Three from 'three';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
 import { List } from 'immutable';
 import { COLORS } from '../../../shared-style';
 
@@ -21,7 +22,7 @@ export default function (width: number, height: number, grid: any, font: any) {
     let material = new Three.LineBasicMaterial({ color });
 
     if (counter % 5 == 0) {
-      let shape = new (Three as any).TextGeometry(('' + (counter * step)), {
+      let shape = new TextGeometry(('' + (counter * step)), {
         size: 16,
         height: 1,
         font: font

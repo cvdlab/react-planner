@@ -5,6 +5,7 @@ import {
   Vector2,
   BoxGeometry,
   MeshBasicMaterial,
+  MeshPhongMaterial,
   Group
 } from 'three';
 
@@ -106,8 +107,11 @@ export function buildWall(element: any, layer: any, scene: any, textures: any) {
 
   soul.name = 'soul';
 
-  let frontMaterial = new MeshBasicMaterial();
-  let backMaterial = new MeshBasicMaterial();
+  // MeshPhong (not Basic) so the front/back faces can carry a normal map.
+  // r140 unconditionally wires normalMap uniforms whenever material.normalMap
+  // is truthy; assigning one to MeshBasicMaterial crashes refreshUniformsCommon.
+  let frontMaterial = new MeshPhongMaterial();
+  let backMaterial = new MeshPhongMaterial();
 
   applyTexture(frontMaterial, textures[element.properties.get('textureB')], distance, height);
   applyTexture(backMaterial, textures[element.properties.get('textureA')], distance, height);

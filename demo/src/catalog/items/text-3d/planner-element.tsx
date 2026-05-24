@@ -1,10 +1,10 @@
 import {
-  FontLoader,
-  TextGeometry,
   MeshBasicMaterial,
   Mesh,
   BoxHelper,
 } from "three";
+import { FontLoader } from "three/examples/jsm/loaders/FontLoader.js";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
 import React from "react";
 import { HELVETIKER } from "./helvetiker_regular.typeface";
 
