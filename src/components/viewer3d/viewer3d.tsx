@@ -2,7 +2,6 @@
 
 import React from "react";
 import PropTypes from "prop-types";
-import ReactDOM from "react-dom";
 import * as Three from "three";
 import { parseData, updateScene } from "./scene-creator";
 import { disposeScene } from "./three-memory-cleaner";
@@ -29,10 +28,12 @@ export default class Scene3DViewer extends React.Component<Props, any> {
   camera: any;
   scene3D: any;
   planData: any;
+  canvasWrapperRef: React.RefObject<HTMLDivElement | null>;
 
   constructor(props: Props) {
     super(props);
 
+    this.canvasWrapperRef = React.createRef<HTMLDivElement>();
     this.lastMousePosition = {};
     this.width = props.width;
     this.height = props.height;
@@ -56,9 +57,7 @@ export default class Scene3DViewer extends React.Component<Props, any> {
 
     let { state } = this.props;
     let data = state.scene;
-    let canvasWrapper = ReactDOM.findDOMNode(
-      (this.refs as any).canvasWrapper,
-    ) as HTMLElement;
+    let canvasWrapper = this.canvasWrapperRef.current as HTMLElement;
 
     let scene3D = new Three.Scene();
 
@@ -259,7 +258,7 @@ export default class Scene3DViewer extends React.Component<Props, any> {
   }
 
   render() {
-    return React.createElement("div", { ref: "canvasWrapper" });
+    return React.createElement("div", { ref: this.canvasWrapperRef });
   }
 }
 

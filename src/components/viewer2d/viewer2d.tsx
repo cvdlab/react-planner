@@ -103,16 +103,6 @@ function extractElementData(node: any): any {
 }
 
 type Props = { state: any; width: number; height: number };
-type Context = {
-  viewer2DActions: any;
-  linesActions: any;
-  holesActions: any;
-  verticesActions: any;
-  itemsActions: any;
-  areaActions: any;
-  projectActions: any;
-  catalog: any;
-};
 
 export default function Viewer2D({ state, width, height }: Props) {
   const {
@@ -479,5 +469,3 @@ export default function Viewer2D({ state, width, height }: Props) {
   width: PropTypes.number.isRequired,
   height: PropTypes.number.isRequired,
 };
-
-// (Viewer2D as any).contextType = PlannerContext;

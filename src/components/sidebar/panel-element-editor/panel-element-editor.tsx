@@ -26,7 +26,6 @@ import { PlannerContext } from "../../../context";
 import ElementEditor from "./element-editor";
 
 type Props = { state: any };
-type Context = { projectActions: any; translator: any };
 
 export default function PanelElementEditor({ state }: Props) {
   const { translator } = useContext(PlannerContext);
