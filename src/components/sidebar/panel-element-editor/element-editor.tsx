@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { Map, fromJS } from 'immutable';
 import AttributesEditor from './attributes-editor/attributes-editor';
 import { GeometryUtils, MathUtils } from '../../../utils/export';
@@ -411,10 +410,5 @@ export default class ElementEditor extends Component<Props, State> {
   }
 }
 
-(ElementEditor as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  element: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired
-};
 
 (ElementEditor as any).contextType = PlannerContext;

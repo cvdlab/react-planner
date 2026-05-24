@@ -1,8 +1,15 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import ItemAttributesEditor from './item-attributes-editor';
 import LineAttributesEditor from './line-attributes-editor';
 import HoleAttributesEditor from './hole-attributes-editor';
+
+type Props = {
+  element: any;
+  onUpdate: (...args: any[]) => any;
+  onValid?: (...args: any[]) => any;
+  attributeFormData: any;
+  state: any;
+};
 
 
 export default function AttributesEditor({ element, onUpdate, onValid, attributeFormData, state, ...rest }: any) {
@@ -43,10 +50,3 @@ export default function AttributesEditor({ element, onUpdate, onValid, attribute
   return null;
 }
 
-(AttributesEditor as any).propTypes = {
-  element: PropTypes.object.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onValid: PropTypes.func,
-  attributeFormData: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired
-};

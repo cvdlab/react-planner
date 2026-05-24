@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import PanelElementEditor from './panel-element-editor/panel-element-editor';
 import PanelGroupEditor from './panel-group-editor';
 import PanelMultiElementsEditor from './panel-element-editor/panel-multi-elements-editor';
@@ -90,8 +89,3 @@ export default function Sidebar({ state, width, height, sidebarComponents }: Pro
   );
 }
 
-(Sidebar as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
-};

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { PlannerContext } from "../../context";
 import {
   ContentTitle,
@@ -10,6 +9,12 @@ import {
   FormSubmitButton,
   CancelButton,
 } from "../style/export";
+
+type Props = {
+  width: number;
+  height: number;
+  state: any;
+};
 
 export default class ProjectConfigurator extends Component {
   constructor(props, context) {
@@ -95,11 +100,5 @@ export default class ProjectConfigurator extends Component {
     );
   }
 }
-
-ProjectConfigurator.propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  state: PropTypes.object.isRequired,
-};
 
 (ProjectConfigurator as any).contextType = PlannerContext;

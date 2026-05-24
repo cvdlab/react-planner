@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE = {
@@ -10,7 +9,3 @@ const STYLE = {
 export default function ContentTitle({ children, style = {}, ...rest }: any) {
   return <h1 style={{ ...STYLE, ...style }} {...rest}>{children}</h1>;
 }
-
-(ContentTitle as any).propsType = {
-  style: PropTypes.object
-};

@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { UNITS_LENGTH, UNIT_CENTIMETER } from "./../../constants";
 import convert from "convert-units";
 import {
@@ -107,12 +106,3 @@ export default function PropertyLengthMeasure({
   );
 }
 
-(PropertyLengthMeasure as any).propTypes = {
-  value: PropTypes.instanceOf(Map).isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onValid: PropTypes.func,
-  configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object,
-  internalState: PropTypes.object,
-  state: PropTypes.object.isRequired,
-};

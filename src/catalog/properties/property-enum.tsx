@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { Seq } from 'immutable';
 import { FormLabel, FormSelect } from '../../components/style/export';
 import PropertyStyle from './shared-property-style';
@@ -44,11 +43,3 @@ export default function PropertyEnum({ value, onUpdate, configs, sourceElement, 
   );
 }
 
-(PropertyEnum as any).propTypes = {
-  value: PropTypes.any.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object,
-  internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
-};

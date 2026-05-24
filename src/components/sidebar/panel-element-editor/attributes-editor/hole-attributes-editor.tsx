@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import PropertyLengthMeasure from "../../../../catalog/properties/property-lenght-measure";
 import PropertyString from "../../../../catalog/properties/property-string";
 import { PlannerContext } from "../../../../context";
@@ -56,9 +55,3 @@ export default function HoleAttributesEditor({
   );
 }
 
-(HoleAttributesEditor as any).propTypes = {
-  element: PropTypes.object.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  attributeFormData: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired,
-};

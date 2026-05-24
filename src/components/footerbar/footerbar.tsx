@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 import FooterToggleButton from './footer-toggle-button';
 import FooterContentButton from './footer-content-button';
@@ -184,12 +183,5 @@ export default class FooterBar extends Component<Props, any> {
   }
 }
 
-(FooterBar as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  footerbarComponents: PropTypes.array.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  softwareSignature: PropTypes.string
-};
 
 (FooterBar as any).contextType = PlannerContext;

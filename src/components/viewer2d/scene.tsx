@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Layer from './layer';
 import Grids from './grids/grids';
 
@@ -35,8 +34,3 @@ export default class Scene extends Component<Props, any> {
   }
 }
 
-
-(Scene as any).propTypes = {
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
-};

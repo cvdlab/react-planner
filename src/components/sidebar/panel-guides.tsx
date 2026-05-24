@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import Panel from './panel';
 import { Tab, Tabs, TabList, TabPanel } from 'react-tabs';
@@ -193,8 +192,5 @@ export default class PanelGuides extends Component<Props, State> {
   }
 }
 
-(PanelGuides as any).propTypes = {
-  state: PropTypes.object.isRequired
-};
 
 (PanelGuides as any).contextType = PlannerContext;

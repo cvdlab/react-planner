@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import Panel from "../panel";
 import { Seq } from "immutable";
 import { PlannerContext } from "../../../context";
@@ -153,8 +152,5 @@ export default class PanelMultiElementsEditor extends Component<Props, State> {
   }
 }
 
-(PanelMultiElementsEditor as any).propTypes = {
-  state: PropTypes.object.isRequired,
-};
 
 (PanelMultiElementsEditor as any).contextType = PlannerContext;

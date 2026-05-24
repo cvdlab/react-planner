@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as Geometry from '../../utils/geometry';
 
 const STYLE = {
@@ -43,8 +42,3 @@ export default function ActiveDrawingHelper({ snap, width, height }: Props): any
   }
 }
 
-(ActiveDrawingHelper as any).propTypes = {
-  snap: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
-};

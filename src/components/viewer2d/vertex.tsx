@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
 const STYLE = { fill: "#0096fd", stroke: SharedStyle.COLORS.white, cursor: "move" };
@@ -24,7 +23,3 @@ export default function Vertex({ vertex, layer }: Props) {
   );
 }
 
-(Vertex as any).propTypes = {
-  vertex: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired,
-};

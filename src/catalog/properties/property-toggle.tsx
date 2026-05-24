@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FormLabel, Button } from '../../components/style/export';
 import PropertyStyle from './shared-property-style';
 
@@ -40,11 +39,3 @@ export default function PropertyToggle({ value, onUpdate, configs, sourceElement
   );
 }
 
-(PropertyToggle as any).propTypes = {
-  value: PropTypes.any.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object,
-  internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
-};

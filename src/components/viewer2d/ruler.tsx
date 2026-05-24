@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-
 const STYLE = {
   stroke: "#0096fd",
   strokeWidth: "1px"
@@ -38,8 +36,3 @@ export default function Ruler({ length, unit, transform }: Props) {
 
 }
 
-(Ruler as any).propTypes = {
-  length: PropTypes.number.isRequired,
-  unit: PropTypes.string.isRequired,
-  transform: PropTypes.string.isRequired
-};

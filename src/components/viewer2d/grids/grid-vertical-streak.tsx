@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { List } from 'immutable';
 
 type Props = { width: number; height: number; grid: any };
@@ -25,8 +24,3 @@ export default function GridVerticalStreak({ width, height, grid }: Props) {
   return (<g>{rendered}</g>);
 }
 
-(GridVerticalStreak as any).propTypes = {
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  grid: PropTypes.object.isRequired
-};

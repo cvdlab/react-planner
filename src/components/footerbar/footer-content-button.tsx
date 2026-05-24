@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { FaTimes as IconClose } from 'react-icons/fa';
 import { PlannerContext } from '../../context';
@@ -187,16 +186,5 @@ export default class FooterContentButton extends Component<Props, State> {
   }
 }
 
-(FooterContentButton as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  text: PropTypes.string.isRequired,
-  textStyle: PropTypes.object,
-  icon: PropTypes.func,
-  iconStyle: PropTypes.object,
-  content: PropTypes.array.isRequired,
-  toggleState: PropTypes.bool,
-  title: PropTypes.string,
-  titleStyle: PropTypes.object
-};
 
 (FooterContentButton as any).contextType = PlannerContext;

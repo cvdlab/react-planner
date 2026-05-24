@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Scene from './scene';
 import Snap from './snap';
 import * as SharedStyle from '../../shared-style';
@@ -37,7 +36,3 @@ export default function State({ state, catalog }: Props) {
   );
 }
 
-(State as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
-};

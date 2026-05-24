@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { FaPlusCircle as IconAdd } from 'react-icons/fa';
 import * as SharedStyle from '../../shared-style';
 import { PlannerContext } from '../../context';
@@ -164,8 +163,5 @@ export default class CatalogItem extends Component<Props, State> {
   }
 }
 
-(CatalogItem as any).propTypes = {
-  element: PropTypes.object.isRequired,
-};
 
 (CatalogItem as any).contextType = PlannerContext;

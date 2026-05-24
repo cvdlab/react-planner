@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { Map } from "immutable";
 import Panel from "./panel";
 import { TiPlus, TiDelete } from "react-icons/ti";
@@ -382,8 +381,5 @@ export default class PanelLayers extends Component<Props, State> {
   }
 }
 
-(PanelLayers as any).propTypes = {
-  state: PropTypes.object.isRequired,
-};
 
 (PanelLayers as any).contextType = PlannerContext;

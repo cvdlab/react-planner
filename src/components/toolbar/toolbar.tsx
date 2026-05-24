@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import { MdSettings, MdUndo, MdDirectionsRun } from "react-icons/md";
 import { FaFile, FaMousePointer, FaPlus } from "react-icons/fa";
 import ToolbarButton from "./toolbar-button";
@@ -246,11 +245,4 @@ export default class Toolbar extends Component<Props, any> {
   }
 }
 
-(Toolbar as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  allowProjectFileSupport: PropTypes.bool.isRequired,
-  toolbarButtons: PropTypes.array,
-};
 (Toolbar as any).contextType = PlannerContext;

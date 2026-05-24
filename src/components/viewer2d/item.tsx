@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import If from '../../utils/react-if';
 
 const STYLE_LINE = {
@@ -54,9 +53,3 @@ export default function Item({ layer, item, scene, catalog }: Props) {
   );
 }
 
-(Item as any).propTypes = {
-  item: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
-};

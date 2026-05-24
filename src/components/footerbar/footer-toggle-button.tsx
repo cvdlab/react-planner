@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { PlannerContext } from '../../context';
 
@@ -90,13 +89,5 @@ export default class FooterToggleButton extends Component<Props, State> {
   }
 }
 
-(FooterToggleButton as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  toggleOn: PropTypes.func.isRequired,
-  toggleOff: PropTypes.func.isRequired,
-  text: PropTypes.string.isRequired,
-  toggleState: PropTypes.bool,
-  title: PropTypes.string
-};
 
 (FooterToggleButton as any).contextType = PlannerContext;

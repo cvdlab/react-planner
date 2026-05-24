@@ -1,7 +1,6 @@
 "use strict";
 
 import React from 'react';
-import PropTypes from 'prop-types';
 import * as Three from 'three';
 import { parseData, updateScene } from './scene-creator';
 import { disposeScene } from './three-memory-cleaner';
@@ -349,10 +348,5 @@ export default class Viewer3DFirstPerson extends React.Component<Props, any> {
   }
 }
 
-(Viewer3DFirstPerson as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired
-};
 
 (Viewer3DFirstPerson as any).contextType = PlannerContext;

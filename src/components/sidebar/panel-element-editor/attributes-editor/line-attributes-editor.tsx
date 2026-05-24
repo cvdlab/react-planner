@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import { FormNumberInput, FormTextInput } from "../../../style/export";
 import { PropertyLengthMeasure } from "../../../../catalog/properties/export";
 import { PlannerContext } from "../../../../context";
@@ -129,12 +128,5 @@ export default function LineAttributesEditor({
   );
 }
 
-(LineAttributesEditor as any).propTypes = {
-  element: PropTypes.object.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  onValid: PropTypes.func,
-  attributeFormData: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired,
-};
 
 (LineAttributesEditor as any).contextType = PlannerContext;

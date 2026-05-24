@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { FaAngleDown, FaAngleUp } from 'react-icons/fa';
 
@@ -91,8 +90,3 @@ export default class Panel extends Component<Props, State> {
   }
 }
 
-(Panel as any).propTypes = {
-  name: PropTypes.string.isRequired,
-  headComponents: PropTypes.array,
-  opened: PropTypes.bool
-};

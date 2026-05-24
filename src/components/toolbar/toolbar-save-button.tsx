@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { FaSave as IconSave } from "react-icons/fa";
 import { Project } from "../../class/export";
@@ -25,6 +24,3 @@ export default function ToolbarSaveButton({ state, translator }: Props) {
   );
 }
 
-(ToolbarSaveButton as any).propTypes = {
-  state: PropTypes.object.isRequired,
-};

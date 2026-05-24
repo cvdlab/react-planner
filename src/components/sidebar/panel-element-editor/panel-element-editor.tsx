@@ -1,5 +1,4 @@
 import { Seq } from "immutable";
-import PropTypes from "prop-types";
 import React, { useContext } from "react";
 import Panel from "../panel";
 
@@ -77,6 +76,3 @@ export default function PanelElementEditor({ state }: Props) {
   return <div>{scene.layers.valueSeq().map(layerRenderer)}</div>;
 }
 
-(PanelElementEditor as any).propTypes = {
-  state: PropTypes.object.isRequired,
-};

@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import Panel from "./panel";
 import { PlannerContext } from "../../context";
 import {
@@ -302,9 +301,5 @@ export default class PanelLayerElement extends Component<Props, State> {
   }
 }
 
-(PanelLayerElement as any).propTypes = {
-  mode: PropTypes.string.isRequired,
-  layers: PropTypes.object.isRequired,
-};
 
 (PanelLayerElement as any).contextType = PlannerContext;

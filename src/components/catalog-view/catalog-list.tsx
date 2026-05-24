@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import CatalogItem from './catalog-item';
 import CatalogBreadcrumb from './catalog-breadcrumb';
 import CatalogPageItem from './catalog-page-item';
@@ -225,11 +224,5 @@ export default class CatalogList extends Component<Props, State> {
   }
 }
 
-(CatalogList as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  style: PropTypes.object
-};
 
 (CatalogList as any).contextType = PlannerContext;

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import polylabel from 'polylabel';
 import areapolygon from 'area-polygon';
 
@@ -79,8 +78,3 @@ export default function Area({ layer, area, catalog }: Props) {
 
 }
 
-(Area as any).propTypes = {
-  area: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
-};

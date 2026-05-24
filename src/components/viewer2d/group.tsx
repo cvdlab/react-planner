@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import If from "../../utils/react-if";
 import * as sharedStyles from "../../shared-style";
 import { PlannerContext } from "../../context";
@@ -47,11 +46,5 @@ export default function Group({ layer, group }: Props) {
   );
 }
 
-(Group as any).propTypes = {
-  group: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-};
 
 (Group as any).contextType = PlannerContext;

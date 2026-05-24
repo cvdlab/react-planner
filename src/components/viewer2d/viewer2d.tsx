@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import { PlannerContext } from "../../context";
 
 import {
@@ -464,8 +463,3 @@ export default function Viewer2D({ state, width, height }: Props) {
   );
 }
 
-(Viewer2D as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-};

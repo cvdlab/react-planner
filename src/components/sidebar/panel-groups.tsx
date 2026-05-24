@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { TiPlus, TiDelete } from 'react-icons/ti';
@@ -206,10 +205,5 @@ export default class PanelGroups extends Component<Props, State> {
 
 }
 
-(PanelGroups as any).propTypes = {
-  mode: PropTypes.string.isRequired,
-  groups: PropTypes.object.isRequired,
-  layers: PropTypes.object.isRequired
-};
 
 (PanelGroups as any).contextType = PlannerContext;

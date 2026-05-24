@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
 const BASE_STYLE = {
@@ -84,9 +83,3 @@ export default class Button extends Component<Props, State> {
   }
 }
 
-(Button as any).propTypes = {
-  type: PropTypes.string,
-  style: PropTypes.object,
-  styleHover: PropTypes.object,
-  size: PropTypes.oneOf(['large', 'normal', 'small']),
-};

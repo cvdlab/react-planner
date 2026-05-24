@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { MdArrowBack as Arrow } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 
@@ -45,8 +44,5 @@ const CatalogBreadcrumb = ({ names }: Props) => {
   return <div style={breadcrumbStyle}>{labelNames}</div>;
 };
 
-(CatalogBreadcrumb as any).propTypes = {
-  names: PropTypes.arrayOf(PropTypes.object).isRequired
-};
 
 export default CatalogBreadcrumb;

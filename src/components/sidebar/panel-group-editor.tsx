@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import Panel from './panel';
 import * as SharedStyle from '../../shared-style';
 import { FormNumberInput, FormTextInput } from '../style/export';
@@ -180,9 +179,5 @@ export default class PanelGroupEditor extends Component<Props, any> {
 
 }
 
-(PanelGroupEditor as any).propTypes = {
-  state: PropTypes.object.isRequired,
-  groupID: PropTypes.string
-};
 
 (PanelGroupEditor as any).contextType = PlannerContext;

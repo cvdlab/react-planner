@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { MdNavigateNext } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 import { PlannerContext } from '../../context';
@@ -108,9 +107,5 @@ export default class CatalogPageItem extends Component<Props, State> {
   }
 }
 
-(CatalogPageItem as any).propTypes = {
-  page: PropTypes.object.isRequired,
-  oldPage: PropTypes.object.isRequired,
-};
 
 (CatalogPageItem as any).contextType = PlannerContext;

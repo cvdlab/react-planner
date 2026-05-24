@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { FormLabel, FormTextInput } from '../../components/style/export';
 import PropertyStyle from './shared-property-style';
 
@@ -44,11 +43,3 @@ export default function PropertyString({ value, onUpdate, configs, sourceElement
   );
 }
 
-(PropertyString as any).propTypes = {
-  value: PropTypes.any.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  configs: PropTypes.object.isRequired,
-  sourceElement: PropTypes.object,
-  internalState: PropTypes.object,
-  state: PropTypes.object.isRequired
-};

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import Line from './line';
 import Area from './area';
 import Vertex from './vertex';
@@ -44,8 +43,3 @@ export default function Layer({ layer, scene, catalog }: Props) {
 
 }
 
-(Layer as any).propTypes = {
-  layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired
-};

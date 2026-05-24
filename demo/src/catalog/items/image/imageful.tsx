@@ -1,8 +1,21 @@
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {Map} from 'immutable';
 import { PlannerContext } from 'react-planner';
+
+type Props = {
+  element: any;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  distance: any;
+  width: number;
+  height: number;
+  imageUri: string;
+  layer: any;
+  scene: any;
+};
 
 const grabCircleRadius = 10;
 const hoverCircleRadius = 14;
@@ -224,18 +237,5 @@ export default class ImageFul extends Component {
   }
 }
 
-ImageFul.propTypes = {
-  element: PropTypes.object.isRequired,
-  x1: PropTypes.number.isRequired,
-  y1: PropTypes.number.isRequired,
-  x2: PropTypes.number.isRequired,
-  y2: PropTypes.number.isRequired,
-  distance: PropTypes.object.isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  imageUri: PropTypes.string.isRequired,
-  layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired
-};
 
 (ImageFul as any).contextType = PlannerContext;

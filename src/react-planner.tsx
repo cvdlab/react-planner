@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect, ReactReduxContext } from 'react-redux';
 
@@ -16,6 +15,23 @@ import {
 import { VERSION } from './version';
 import { PlannerContext } from './context';
 import './styles/export';
+
+type Props = {
+  translator?: Translator;
+  catalog?: Catalog;
+  allowProjectFileSupport?: boolean;
+  plugins?: (...args: any[]) => any[];
+  autosaveKey?: string;
+  autosaveDelay?: number;
+  width: number;
+  height: number;
+  stateExtractor: (...args: any[]) => any;
+  toolbarButtons?: any[];
+  sidebarComponents?: any[];
+  footerbarComponents?: any[];
+  customContents?: any;
+  softwareSignature?: string;
+};
 
 const { Toolbar } = ToolbarComponents;
 const { Sidebar } = SidebarComponents;
@@ -93,22 +109,6 @@ class ReactPlanner extends Component<any, any> {
   }
 }
 
-(ReactPlanner as any).propTypes = {
-  translator: PropTypes.instanceOf(Translator),
-  catalog: PropTypes.instanceOf(Catalog),
-  allowProjectFileSupport: PropTypes.bool,
-  plugins: PropTypes.arrayOf(PropTypes.func),
-  autosaveKey: PropTypes.string,
-  autosaveDelay: PropTypes.number,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
-  stateExtractor: PropTypes.func.isRequired,
-  toolbarButtons: PropTypes.array,
-  sidebarComponents: PropTypes.array,
-  footerbarComponents: PropTypes.array,
-  customContents: PropTypes.object,
-  softwareSignature: PropTypes.string
-};
 
 //redux connect
 function mapStateToProps(reduxState: any) {

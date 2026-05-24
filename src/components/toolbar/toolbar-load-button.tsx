@@ -1,5 +1,4 @@
 import React from "react";
-import PropTypes from "prop-types";
 import { FaFolderOpen as IconLoad } from "react-icons/fa";
 import ToolbarButton from "./toolbar-button";
 import { browserUpload } from "../../utils/browser";
@@ -30,6 +29,3 @@ export default function ToolbarLoadButton({
   );
 }
 
-(ToolbarLoadButton as any).propTypes = {
-  state: PropTypes.object.isRequired,
-};

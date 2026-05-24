@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import { MdNavigateBefore } from 'react-icons/md';
 import * as SharedStyle from '../../shared-style';
 import { PlannerContext } from '../../context';
@@ -86,8 +85,5 @@ export default class CatalogTurnBackPageItem extends Component<Props, State> {
   }
 }
 
-(CatalogTurnBackPageItem as any).propTypes = {
-  page: PropTypes.object.isRequired
-};
 
 (CatalogTurnBackPageItem as any).contextType = PlannerContext;

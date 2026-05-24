@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 import { MdUpdate } from 'react-icons/md';
 import { KEYBOARD_BUTTON_CODE } from '../../constants';
@@ -142,16 +141,5 @@ export default class FormNumberInput extends Component<Props, State> {
   }
 }
 
-(FormNumberInput as any).propTypes = {
-  value: PropTypes.oneOfType([PropTypes.number, PropTypes.string]),
-  style: PropTypes.object,
-  onChange: PropTypes.func.isRequired,
-  onValid: PropTypes.func,
-  onInvalid: PropTypes.func,
-  min: PropTypes.number,
-  max: PropTypes.number,
-  precision: PropTypes.number,
-  placeholder: PropTypes.string
-};
 
 (FormNumberInput as any).contextType = PlannerContext;

@@ -1,5 +1,4 @@
 import React, { useContext } from "react";
-import PropTypes from "prop-types";
 import FormNumberInput from "../../../style/form-number-input";
 import FormTextInput from "../../../style/form-text-input";
 import { PlannerContext } from "../../../../context";
@@ -97,11 +96,5 @@ export default function ItemAttributesEditor({
   );
 }
 
-(ItemAttributesEditor as any).propTypes = {
-  element: PropTypes.object.isRequired,
-  onUpdate: PropTypes.func.isRequired,
-  attributeFormData: PropTypes.object.isRequired,
-  state: PropTypes.object.isRequired,
-};
 
 (ItemAttributesEditor as any).contextType = PlannerContext;

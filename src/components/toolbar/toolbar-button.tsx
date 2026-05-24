@@ -1,5 +1,4 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
 import * as SharedStyle from '../../shared-style';
 
 //http://www.cssportal.com/css-tooltip-generator/
@@ -91,8 +90,3 @@ export default class ToolbarButton extends Component<Props, State> {
   }
 }
 
-(ToolbarButton as any).propTypes = {
-  active: PropTypes.bool.isRequired,
-  tooltip: PropTypes.string.isRequired,
-  onClick: PropTypes.func.isRequired
-};

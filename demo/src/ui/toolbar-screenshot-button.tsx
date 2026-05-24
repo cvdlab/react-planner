@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 import React from "react";
 import { MdCamera } from "react-icons/md";
 import { ReactPlannerComponents, ReactPlannerConstants } from "react-planner";
@@ -142,6 +141,3 @@ export default function ToolbarScreenshotButton({ mode, translator }: Props) {
   return null;
 }
 
-(ToolbarScreenshotButton as any).propTypes = {
-  mode: PropTypes.string.isRequired,
-};

@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import GridHorizontalStreak from './grid-horizontal-streak';
 import GridVerticalStreak from './grid-vertical-streak';
 
@@ -25,6 +24,3 @@ export default function Grids({ scene }: Props) {
   return (<g>{renderedGrids}</g>);
 }
 
-(Grids as any).propTypes = {
-  scene: PropTypes.object.isRequired
-};

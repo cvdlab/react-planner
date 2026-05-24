@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { GeometryUtils } from '../../utils/export';
 import Ruler from './ruler';
 
@@ -68,9 +67,3 @@ export default function Line({ line, layer, scene, catalog }: Props) {
 
 }
 
-(Line as any).propTypes = {
-  line: PropTypes.object.isRequired,
-  layer: PropTypes.object.isRequired,
-  scene: PropTypes.object.isRequired,
-  catalog: PropTypes.object.isRequired,
-};
