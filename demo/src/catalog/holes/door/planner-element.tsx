@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Three from 'three';
 import {loadObjWithMaterial} from '../../utils/load-obj';
-import path from 'path';
 
 import doorPng from './door.png';
 import doorMtl from './door.mtl';
@@ -129,7 +128,7 @@ export default {
     let obj = doorObj;
     let img = textureJpg;
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+    return loadObjWithMaterial(mtl, obj, img.substring(0, img.lastIndexOf('/') + 1))
       .then(object => {
         cached3DDoor = object;
         return onLoadItem(cached3DDoor.clone())

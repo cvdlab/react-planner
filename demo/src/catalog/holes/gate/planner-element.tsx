@@ -1,6 +1,5 @@
 import React from 'react';
 import * as Three from 'three';
-import path from 'path';
 
 import gateJpg from './gate.jpg';
 export default {

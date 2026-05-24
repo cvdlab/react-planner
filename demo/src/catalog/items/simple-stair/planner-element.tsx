@@ -270,30 +270,30 @@ export default {
 };
 
 function assignUVs(geometry) {
+  // r125: PlaneGeometry/BoxGeometry now produce BufferGeometry, so we work on
+  // the position attribute and write a flat uv attribute (XY-plane mapping).
   geometry.computeBoundingBox();
 
   let max = geometry.boundingBox.max;
   let min = geometry.boundingBox.min;
 
-  let offset = new Three.Vector2(0 - min.x, 0 - min.y);
-  let range = new Three.Vector2(max.x - min.x, max.y - min.y);
+  let offsetX = -min.x;
+  let offsetY = -min.y;
+  let rangeX = max.x - min.x || 1;
+  let rangeY = max.y - min.y || 1;
 
-  geometry.faceVertexUvs[0] = [];
-  let faces = geometry.faces;
+  let position = geometry.attributes.position;
+  let vertexCount = position.count;
+  let uvs = new Float32Array(vertexCount * 2);
 
-  for (let i = 0; i < geometry.faces.length; i++) {
-
-    let v1 = geometry.vertices[faces[i].a];
-    let v2 = geometry.vertices[faces[i].b];
-    let v3 = geometry.vertices[faces[i].c];
-
-    geometry.faceVertexUvs[0].push([
-      new Three.Vector2(( v1.x + offset.x ) / range.x, ( v1.y + offset.y ) / range.y),
-      new Three.Vector2(( v2.x + offset.x ) / range.x, ( v2.y + offset.y ) / range.y),
-      new Three.Vector2(( v3.x + offset.x ) / range.x, ( v3.y + offset.y ) / range.y)
-    ]);
+  for (let i = 0; i < vertexCount; i++) {
+    let x = position.getX(i);
+    let y = position.getY(i);
+    uvs[i * 2]     = (x + offsetX) / rangeX;
+    uvs[i * 2 + 1] = (y + offsetY) / rangeY;
   }
-  geometry.uvsNeedUpdate = true;
+
+  geometry.setAttribute('uv', new Three.BufferAttribute(uvs, 2));
 }
 
 let buildStepCover = (width, height, depth) => {

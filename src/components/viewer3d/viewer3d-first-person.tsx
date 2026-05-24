@@ -157,27 +157,30 @@ export default class Viewer3DFirstPerson extends React.Component<Props, any> {
     pointer.name = 'pointer';
 
     let pointerMaterial = new Three.MeshBasicMaterial({ depthTest: false, depthWrite: false, color: SharedStyle.COLORS.black });
-    let pointerGeometry1 = new (Three as any).Geometry();
-    pointerGeometry1.vertices.push(new Three.Vector3(-10, 0, 0));
-    pointerGeometry1.vertices.push(new Three.Vector3(10, 0, 0));
+    let pointerGeometry1 = new Three.BufferGeometry().setFromPoints([
+      new Three.Vector3(-10, 0, 0),
+      new Three.Vector3(10, 0, 0),
+    ]);
 
     let linePointer1 = new Three.Line(pointerGeometry1, pointerMaterial);
     linePointer1.position.z -= 100;
 
-    let pointerGeometry2 = new (Three as any).Geometry();
-    pointerGeometry2.vertices.push(new Three.Vector3(0, 10, 0));
-    pointerGeometry2.vertices.push(new Three.Vector3(0, -10, 0));
+    let pointerGeometry2 = new Three.BufferGeometry().setFromPoints([
+      new Three.Vector3(0, 10, 0),
+      new Three.Vector3(0, -10, 0),
+    ]);
 
     let linePointer2 = new Three.Line(pointerGeometry2, pointerMaterial);
     (linePointer2 as any).renderDepth = 1e20;
     linePointer2.position.z -= 100;
 
-    let pointerGeometry3 = new (Three as any).Geometry();
-    pointerGeometry3.vertices.push(new Three.Vector3(-1, 1, 0));
-    pointerGeometry3.vertices.push(new Three.Vector3(1, 1, 0));
-    pointerGeometry3.vertices.push(new Three.Vector3(1, -1, 0));
-    pointerGeometry3.vertices.push(new Three.Vector3(-1, -1, 0));
-    pointerGeometry3.vertices.push(new Three.Vector3(-1, 1, 0));
+    let pointerGeometry3 = new Three.BufferGeometry().setFromPoints([
+      new Three.Vector3(-1, 1, 0),
+      new Three.Vector3(1, 1, 0),
+      new Three.Vector3(1, -1, 0),
+      new Three.Vector3(-1, -1, 0),
+      new Three.Vector3(-1, 1, 0),
+    ]);
 
     let linePointer3 = new Three.Line(pointerGeometry3, pointerMaterial);
     linePointer3.position.z -= 100;

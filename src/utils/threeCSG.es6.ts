@@ -1,11 +1,24 @@
 /*jshint esversion: 6 */
+// @ts-nocheck — legacy CSG bridge, types are not maintained here
 import * as THREE from 'three';
+import { Geometry as LegacyGeometry } from 'three/examples/jsm/deprecated/Geometry.js';
 
 const EPSILON = 1e-5,
     COPLANAR = 0,
     FRONT = 1,
     BACK = 2,
     SPANNING = 3;
+
+// Three r125 removed THREE.Geometry from core (moved to examples/jsm/deprecated).
+// BoxGeometry & friends now produce BufferGeometry. ThreeBSP still works against
+// the legacy Geometry shape, so we convert at the boundaries.
+function toLegacyGeometry(geometry) {
+    if (geometry instanceof LegacyGeometry) return geometry;
+    if (geometry && geometry.isBufferGeometry) {
+        return new LegacyGeometry().fromBufferGeometry(geometry);
+    }
+    return geometry;
+}
 
 export default  class ThreeBSP {
     constructor(geometry) {
@@ -19,17 +32,18 @@ export default  class ThreeBSP {
         this.Polygon = Polygon;
         this.Vertex = Vertex;
         this.Node = Node;
-        if (geometry instanceof THREE.Geometry) {
+        if (geometry instanceof Node) {
+            this.tree = geometry;
             this.matrix = new THREE.Matrix4();
+            return this;
         } else if (geometry instanceof THREE.Mesh) {
             // #todo: add hierarchy support
             geometry.updateMatrix();
             this.matrix = geometry.matrix.clone();
-            geometry = geometry.geometry;
-        } else if (geometry instanceof Node) {
-            this.tree = geometry;
+            geometry = toLegacyGeometry(geometry.geometry);
+        } else if (geometry instanceof LegacyGeometry || (geometry && geometry.isBufferGeometry)) {
             this.matrix = new THREE.Matrix4();
-            return this;
+            geometry = toLegacyGeometry(geometry);
         } else {
             throw 'ThreeBSP: Given geometry is unsupported';
         }
@@ -142,8 +156,8 @@ export default  class ThreeBSP {
 
     toGeometry() {
         var i, j,
-            matrix = new THREE.Matrix4().getInverse(this.matrix),
-            geometry = new THREE.Geometry(),
+            matrix = new THREE.Matrix4().copy(this.matrix).invert(),
+            geometry = new LegacyGeometry(),
             polygons = this.tree.allPolygons(),
             polygon_count = polygons.length,
             polygon, polygon_vertice_count,
@@ -209,8 +223,12 @@ export default  class ThreeBSP {
     }
 
     toMesh (material) {
-        var geometry = this.toGeometry(),
-            mesh = new THREE.Mesh(geometry, material);
+        var legacyGeometry = this.toGeometry();
+        // r125 Mesh expects BufferGeometry — convert before handing it off.
+        var bufferGeometry = legacyGeometry.toBufferGeometry
+            ? legacyGeometry.toBufferGeometry()
+            : new THREE.BufferGeometry().fromGeometry(legacyGeometry);
+        var mesh = new THREE.Mesh(bufferGeometry, material);
 
         mesh.position.setFromMatrixPosition(this.matrix);
         mesh.rotation.setFromRotationMatrix(this.matrix);
@@ -581,4 +599,6 @@ class Node {
     }
 }
 
-window.ThreeBSP = ThreeBSP;
+if (typeof window !== 'undefined') {
+    (window as any).ThreeBSP = ThreeBSP;
+}

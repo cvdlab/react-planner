@@ -519,18 +519,19 @@ MTLLoader.MaterialCreator.prototype = {
 
 	loadTexture: function ( url, mapping, onLoad, onProgress, onError ) {
 
-		let texture;
-		let loader = THREE.Loader.Handlers.get( url );
 		let manager = ( this.manager !== undefined ) ? this.manager : THREE.DefaultLoadingManager;
+		// r125 removed THREE.Loader.Handlers — use LoadingManager.getHandler() and
+		// fall back to TextureLoader when no handler is registered for this url.
+		let loader = ( manager.getHandler ? manager.getHandler( url ) : null );
 
-		if ( loader === null ) {
+		if ( ! loader ) {
 
 			loader = new THREE.TextureLoader( manager );
 
 		}
 
 		if ( loader.setCrossOrigin ) loader.setCrossOrigin( this.crossOrigin );
-		texture = loader.load( url, onLoad, onProgress, onError );
+		let texture = loader.load( url, onLoad, onProgress, onError );
 
 		if ( mapping !== undefined ) texture.mapping = mapping;
 

@@ -3,6 +3,7 @@ import {
   MeshPhongMaterial,
   ShapeGeometry,
   Box3,
+  BufferAttribute,
   TextureLoader,
   BackSide,
   FrontSide,
@@ -43,32 +44,31 @@ const applyTexture = (material: any, texture: any, length: number, height: numbe
 };
 
 /**
- * Function that assign UV coordinates to a geometry
- * @param geometry
+ * Function that assigns UV coordinates to a BufferGeometry.
+ * The shape lives in the XY plane (Z=0), so UVs are derived directly from x/y.
  */
 const assignUVs = (geometry: any) => {
   geometry.computeBoundingBox();
 
   let { min, max } = geometry.boundingBox;
 
-  let offset = new Vector2(0 - min.x, 0 - min.y);
-  let range = new Vector2(max.x - min.x, max.y - min.y);
+  let offsetX = -min.x;
+  let offsetY = -min.y;
+  let rangeX = max.x - min.x || 1;
+  let rangeY = max.y - min.y || 1;
 
-  geometry.faceVertexUvs[0] = geometry.faces.map((face: any) => {
+  let position = geometry.attributes.position;
+  let vertexCount = position.count;
+  let uvs = new Float32Array(vertexCount * 2);
 
-    let v1 = geometry.vertices[face.a];
-    let v2 = geometry.vertices[face.b];
-    let v3 = geometry.vertices[face.c];
+  for (let i = 0; i < vertexCount; i++) {
+    let x = position.getX(i);
+    let y = position.getY(i);
+    uvs[i * 2]     = (x + offsetX) / rangeX;
+    uvs[i * 2 + 1] = (y + offsetY) / rangeY;
+  }
 
-    return [
-      new Vector2((v1.x + offset.x) / range.x, (v1.y + offset.y) / range.y),
-      new Vector2((v2.x + offset.x) / range.x, (v2.y + offset.y) / range.y),
-      new Vector2((v3.x + offset.x) / range.x, (v3.y + offset.y) / range.y)
-    ];
-
-  });
-
-  geometry.uvsNeedUpdate = true;
+  geometry.setAttribute('uv', new BufferAttribute(uvs, 2));
 };
 
 export function createArea(element: any, layer: any, scene: any, textures: any) {

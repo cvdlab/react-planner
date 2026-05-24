@@ -1,7 +1,6 @@
 import React from 'react';
 import * as Three from 'three';
 import { loadObjWithMaterial } from '../../utils/load-obj';
-import path from 'path';
 
 import windowCurtainJpg from './window-curtain.jpg';
 import windowMtl from './window.mtl';
@@ -126,7 +125,7 @@ export default {
     let obj = windowObj;
     let img = texturePng;
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+    return loadObjWithMaterial(mtl, obj, img.substring(0, img.lastIndexOf('/') + 1))
       .then(object => {
         cached3DWindow = object;
         return onLoadItem(cached3DWindow.clone());

@@ -165,20 +165,28 @@ export default class Scene3DViewer extends React.Component<Props, any> {
   componentWillUnmount() {
     cancelAnimationFrame(this.renderingID);
 
-    this.orbitControls.dispose();
+    // Guard each teardown step so a half-initialised mount (e.g. componentDidMount
+    // threw before assigning these) doesn't mask the real error with a TypeError.
+    this.orbitControls?.dispose();
 
-    this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
-    this.renderer.domElement.removeEventListener('mouseup', this.mouseUpEvent);
+    if (this.renderer?.domElement) {
+      if (this.mouseDownEvent) this.renderer.domElement.removeEventListener('mousedown', this.mouseDownEvent);
+      if (this.mouseUpEvent)   this.renderer.domElement.removeEventListener('mouseup',   this.mouseUpEvent);
+    }
 
-    disposeScene(this.scene3D);
-    this.scene3D.remove(this.planData.plan);
-    this.scene3D.remove(this.planData.grid);
+    if (this.scene3D) {
+      disposeScene(this.scene3D);
+      if (this.planData) {
+        this.scene3D.remove(this.planData.plan);
+        this.scene3D.remove(this.planData.grid);
+      }
+    }
 
     this.scene3D = null;
     this.planData = null;
     this.camera = null;
     this.orbitControls = null;
-    this.renderer.renderLists.dispose();
+    this.renderer?.renderLists?.dispose();
   }
 
   componentWillReceiveProps(nextProps: Props) {

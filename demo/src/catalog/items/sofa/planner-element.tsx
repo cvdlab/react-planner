@@ -1,6 +1,5 @@
 import {BoxHelper, Box3, ObjectLoader} from 'three';
 import {loadObjWithMaterial} from '../../utils/load-obj';
-import path from 'path';
 import convert from 'convert-units';
 
 import React from 'react';
@@ -107,7 +106,7 @@ export default {
       return Promise.resolve(onLoadItem(object));
     }
 
-    return loadObjWithMaterial(mtl, obj, path.dirname(img) + '/')
+    return loadObjWithMaterial(mtl, obj, img.substring(0, img.lastIndexOf('/') + 1))
       .then(object => {
         cachedJSONSofa = object.toJSON();
         let loader = new ObjectLoader();

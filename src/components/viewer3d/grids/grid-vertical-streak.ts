@@ -13,9 +13,10 @@ export default function (width: number, height: number, grid: any, font: any) {
 
   for (let i = 0; i <= width; i += step) {
 
-    let geometry = new (Three as any).Geometry();
-    geometry.vertices.push(new Three.Vector3(i, 0, 0));
-    geometry.vertices.push(new Three.Vector3(i, 0, -height));
+    let geometry = new Three.BufferGeometry().setFromPoints([
+      new Three.Vector3(i, 0, 0),
+      new Three.Vector3(i, 0, -height),
+    ]);
     let color = colors.get(counter % colors.size);
     let material = new Three.LineBasicMaterial({ color });
 
