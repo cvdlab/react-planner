@@ -247,9 +247,8 @@ export default {
       new Three.MeshBasicMaterial({map: texture})
     ];
 
-    let tMaterial = new Three.MeshFaceMaterial(boxMaterials);
-
-    let plane = new Three.Mesh(geometry, tMaterial);
+    // r125+ removed MeshFaceMaterial — Mesh accepts an array of materials directly.
+    let plane = new Three.Mesh(geometry, boxMaterials);
     plane.position.y = newHeight;
     bancoDouble.add(plane);
 

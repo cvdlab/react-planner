@@ -75,6 +75,56 @@ class Face3 {
 
 export { Face3 };
 
+// BufferAttribute.copyVector{2,3,4}sArray() and copyColorsArray() were removed
+// from three around r144. They used to flatten an array of Vector*/Color into
+// the attribute's typed array. We restore the behaviour locally so the
+// vendored Geometry.toBufferGeometry() path keeps working.
+function _setFromVector2sArray( attr, vectors ) {
+	const arr = attr.array;
+	for ( let i = 0, j = 0, l = vectors.length; i < l; i ++, j += 2 ) {
+		const v = vectors[ i ];
+		arr[ j     ] = v.x;
+		arr[ j + 1 ] = v.y;
+	}
+	return attr;
+}
+function _setFromVector3sArray( attr, vectors ) {
+	const arr = attr.array;
+	for ( let i = 0, j = 0, l = vectors.length; i < l; i ++, j += 3 ) {
+		const v = vectors[ i ];
+		arr[ j     ] = v.x;
+		arr[ j + 1 ] = v.y;
+		arr[ j + 2 ] = v.z;
+	}
+	return attr;
+}
+function _setFromVector4sArray( attr, vectors ) {
+	const arr = attr.array;
+	for ( let i = 0, j = 0, l = vectors.length; i < l; i ++, j += 4 ) {
+		const v = vectors[ i ];
+		arr[ j     ] = v.x;
+		arr[ j + 1 ] = v.y;
+		arr[ j + 2 ] = v.z;
+		arr[ j + 3 ] = v.w;
+	}
+	return attr;
+}
+function _setFromColorsArray( attr, colors ) {
+	const arr = attr.array;
+	for ( let i = 0, j = 0, l = colors.length; i < l; i ++, j += 3 ) {
+		const c = colors[ i ];
+		arr[ j     ] = c.r;
+		arr[ j + 1 ] = c.g;
+		arr[ j + 2 ] = c.b;
+	}
+	return attr;
+}
+function _setFromNumbersArray( attr, values ) {
+	const arr = attr.array;
+	for ( let i = 0, l = values.length; i < l; i ++ ) arr[ i ] = values[ i ];
+	return attr;
+}
+
 const _m1 = new Matrix4();
 const _obj = new Object3D();
 const _offset = new Vector3();
@@ -1434,33 +1484,33 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		const buffergeometry = new BufferGeometry();
 
 		const positions = new Float32Array( geometry.vertices.length * 3 );
-		buffergeometry.setAttribute( 'position', new BufferAttribute( positions, 3 ).copyVector3sArray( geometry.vertices ) );
+		buffergeometry.setAttribute( 'position', _setFromVector3sArray( new BufferAttribute( positions, 3 ), geometry.vertices ) );
 
 		if ( geometry.normals.length > 0 ) {
 
 			const normals = new Float32Array( geometry.normals.length * 3 );
-			buffergeometry.setAttribute( 'normal', new BufferAttribute( normals, 3 ).copyVector3sArray( geometry.normals ) );
+			buffergeometry.setAttribute( 'normal', _setFromVector3sArray( new BufferAttribute( normals, 3 ), geometry.normals ) );
 
 		}
 
 		if ( geometry.colors.length > 0 ) {
 
 			const colors = new Float32Array( geometry.colors.length * 3 );
-			buffergeometry.setAttribute( 'color', new BufferAttribute( colors, 3 ).copyColorsArray( geometry.colors ) );
+			buffergeometry.setAttribute( 'color', _setFromColorsArray( new BufferAttribute( colors, 3 ), geometry.colors ) );
 
 		}
 
 		if ( geometry.uvs.length > 0 ) {
 
 			const uvs = new Float32Array( geometry.uvs.length * 2 );
-			buffergeometry.setAttribute( 'uv', new BufferAttribute( uvs, 2 ).copyVector2sArray( geometry.uvs ) );
+			buffergeometry.setAttribute( 'uv', _setFromVector2sArray( new BufferAttribute( uvs, 2 ), geometry.uvs ) );
 
 		}
 
 		if ( geometry.uvs2.length > 0 ) {
 
 			const uvs2 = new Float32Array( geometry.uvs2.length * 2 );
-			buffergeometry.setAttribute( 'uv2', new BufferAttribute( uvs2, 2 ).copyVector2sArray( geometry.uvs2 ) );
+			buffergeometry.setAttribute( 'uv2', _setFromVector2sArray( new BufferAttribute( uvs2, 2 ), geometry.uvs2 ) );
 
 		}
 
@@ -1482,7 +1532,7 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 				const attribute = new Float32BufferAttribute( morphTarget.data.length * 3, 3 );
 				attribute.name = morphTarget.name;
 
-				array.push( attribute.copyVector3sArray( morphTarget.data ) );
+				array.push( _setFromVector3sArray( attribute, morphTarget.data ) );
 
 			}
 
@@ -1495,14 +1545,14 @@ Geometry.prototype = Object.assign( Object.create( EventDispatcher.prototype ), 
 		if ( geometry.skinIndices.length > 0 ) {
 
 			const skinIndices = new Float32BufferAttribute( geometry.skinIndices.length * 4, 4 );
-			buffergeometry.setAttribute( 'skinIndex', skinIndices.copyVector4sArray( geometry.skinIndices ) );
+			buffergeometry.setAttribute( 'skinIndex', _setFromVector4sArray( skinIndices, geometry.skinIndices ) );
 
 		}
 
 		if ( geometry.skinWeights.length > 0 ) {
 
 			const skinWeights = new Float32BufferAttribute( geometry.skinWeights.length * 4, 4 );
-			buffergeometry.setAttribute( 'skinWeight', skinWeights.copyVector4sArray( geometry.skinWeights ) );
+			buffergeometry.setAttribute( 'skinWeight', _setFromVector4sArray( skinWeights, geometry.skinWeights ) );
 
 		}
 
@@ -1562,8 +1612,8 @@ Geometry.createBufferGeometryFromObject = function ( object ) {
 		const positions = new Float32BufferAttribute( geometry.vertices.length * 3, 3 );
 		const colors = new Float32BufferAttribute( geometry.colors.length * 3, 3 );
 
-		buffergeometry.setAttribute( 'position', positions.copyVector3sArray( geometry.vertices ) );
-		buffergeometry.setAttribute( 'color', colors.copyColorsArray( geometry.colors ) );
+		buffergeometry.setAttribute( 'position', _setFromVector3sArray( positions, geometry.vertices ) );
+		buffergeometry.setAttribute( 'color', _setFromColorsArray( colors, geometry.colors ) );
 
 		if ( geometry.lineDistances && geometry.lineDistances.length === geometry.vertices.length ) {
 

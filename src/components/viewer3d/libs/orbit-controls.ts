@@ -120,7 +120,8 @@ const OrbitControls: any = function (this: any, object: any, domElement: any) {
 
     // so camera.up is the orbit axis
     let quat = new THREE.Quaternion().setFromUnitVectors(object.up, new THREE.Vector3(0, 1, 0));
-    let quatInverse = quat.clone().inverse();
+    // r130 renamed Quaternion.inverse() to invert().
+    let quatInverse = quat.clone().invert();
 
     let lastPosition = new THREE.Vector3();
     let lastQuaternion = new THREE.Quaternion();
