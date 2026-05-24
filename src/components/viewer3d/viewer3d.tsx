@@ -59,6 +59,10 @@ export default class Scene3DViewer extends React.Component<Props, any> {
     let scene3D = new Three.Scene();
 
     //RENDERER
+    // r155 flipped lights to physically-correct by default; the AmbientLight /
+    // SpotLight intensities below were calibrated for the legacy additive model.
+    // Re-enable legacy lighting until those are retuned.
+    (this.renderer as any).useLegacyLights = true;
     this.renderer.setClearColor(new Three.Color(SharedStyle.COLORS.white));
     this.renderer.setSize(this.width, this.height);
 
