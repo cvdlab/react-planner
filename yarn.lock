@@ -2030,6 +2030,15 @@ prop-types@^15.5.0, prop-types@^15.6.0, prop-types@^15.6.2, prop-types@15.7.2:
     object-assign "^4.1.1"
     react-is "^16.8.1"
 
+prop-types@^15.8.1:
+  version "15.8.1"
+  resolved "https://registry.npmjs.org/prop-types/-/prop-types-15.8.1.tgz"
+  integrity sha512-oj87CgZICdulUohogVAR7AjlC0327U4el4L6eAvOqCeudMDVU0NThNaV+b9Df4dXgSP1gXMTnPdhfe/2qDH5cg==
+  dependencies:
+    loose-envify "^1.4.0"
+    object-assign "^4.1.1"
+    react-is "^16.13.1"
+
 q@^1.1.2:
   version "1.5.1"
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
@@ -2058,7 +2067,7 @@ react-icons@3.5.0:
   resolved "https://registry.npmjs.org/react-icons/-/react-icons-3.5.0.tgz"
   integrity sha512-LuKUcavgPWjPrRkIdNbsGw8LqcnhfNN0AGCtU4Td1UkOenJSIWbYppSJrD6zi/TDZOHtTs9opu6ZKB/NFWk21g==
 
-react-is@^16.8.1:
+react-is@^16.13.1, react-is@^16.8.1:
   version "16.13.1"
   resolved "https://registry.npmjs.org/react-is/-/react-is-16.13.1.tgz"
   integrity sha512-24e6ynE2H+OKt4kqsOvNd8kBpV65zoxbA4BVsEOB3ARVWQki/DHzaUoC5KuON/BiccDaCCTZBuOcfZs70kR8bQ==
@@ -2075,13 +2084,13 @@ react-redux@5.0.7:
     loose-envify "^1.1.0"
     prop-types "^15.6.0"
 
-react-svg-pan-zoom@2.18.0:
-  version "2.18.0"
-  resolved "https://registry.npmjs.org/react-svg-pan-zoom/-/react-svg-pan-zoom-2.18.0.tgz"
-  integrity sha512-1nmYFFOd9qL025U4vy2KeHI6ja2GAAMkVELwc2IHTufE9O4r17uCj7V6mW6wIbaC37eWB6CGXiVEESjAKZmvRg==
+react-svg-pan-zoom@^3.13.1:
+  version "3.13.1"
+  resolved "https://registry.npmjs.org/react-svg-pan-zoom/-/react-svg-pan-zoom-3.13.1.tgz"
+  integrity sha512-mUGoXfo255c+T/FAdZ5Fr0paw9OpAz4owGku5bRjUOzSKUmqUJpuYbscuuzOIJWbmrJ0N/9mOWPE8JdjSYITbQ==
   dependencies:
-    prop-types "^15.6.2"
-    transformation-matrix "^1.12.0"
+    prop-types "^15.8.1"
+    transformation-matrix "^2.16.1"
 
 react-tabs@3.0.0:
   version "3.0.0"
@@ -2091,7 +2100,7 @@ react-tabs@3.0.0:
     classnames "^2.2.0"
     prop-types "^15.5.0"
 
-"react@^0.14.0 || ^15.0.0-0 || ^16.0.0-0", react@^16.0.0, react@^16.3.0, react@>=15.0.0, react@16.8.5:
+"react@^0.14.0 || ^15.0.0-0 || ^16.0.0-0", react@^16.0.0, react@^16.3.0, react@16.8.5:
   version "16.8.5"
   resolved "https://registry.npmjs.org/react/-/react-16.8.5.tgz"
   integrity sha512-daCb9TD6FZGvJ3sg8da1tRAtIuw29PbKZW++NN4wqkbEvxL+bZpaaYb4xuftW/SpXmgacf1skXl/ddX6CdOlDw==
@@ -2344,10 +2353,10 @@ to-regex-range@^5.0.1:
   dependencies:
     is-number "^7.0.0"
 
-transformation-matrix@^1.12.0:
-  version "1.15.3"
-  resolved "https://registry.npmjs.org/transformation-matrix/-/transformation-matrix-1.15.3.tgz"
-  integrity sha512-ThJH58GNFKhCw3gIoOtwf3tNwuYjbyEeiGdeq4mNMYWdJctnI896KUqn6PVt7jmNVepqa1bcKQtnMB1HtjsDMA==
+transformation-matrix@^2.16.1:
+  version "2.16.1"
+  resolved "https://registry.npmjs.org/transformation-matrix/-/transformation-matrix-2.16.1.tgz"
+  integrity sha512-tdtC3wxVEuzU7X/ydL131Q3JU5cPMEn37oqVLITjRDSDsnSHVFzW2JiCLfZLIQEgWzZHdSy3J6bZzvKEN24jGA==
 
 trim-repeated@^1.0.0:
   version "1.0.0"
