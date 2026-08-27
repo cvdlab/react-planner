@@ -25,3 +25,22 @@ jobs:
 
       - name: Build project
         run: yarn build
+
+      - name: Smoke test built application
+        run: |
+          python3 -m http.server 8080 --directory demo/dist > /tmp/server.log 2>&1 &
+          server_pid=$!
+          trap 'kill "$server_pid"' EXIT
+
+          for attempt in 1 2 3 4 5; do
+            if curl --fail --silent --show-error http://127.0.0.1:8080/ > /dev/null; then
+              echo "Smoke test passed"
+              exit 0
+            fi
+
+            sleep 1
+          done
+
+          echo "Smoke test failed"
+          cat /tmp/server.log
+          exit 1
